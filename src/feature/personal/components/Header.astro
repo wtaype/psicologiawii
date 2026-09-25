@@ -1,0 +1,75 @@
+---
+// src/feature/personal/components/Header.astro
+// Barra superior con logo de sede, buscador, conmutador de temas y dropdown de usuario
+import Busqueda from './Busqueda.astro';
+import { datosNegocio } from '@/negocio.js';
+---
+
+<header class="ps-topbar">
+  <!-- Identidad de Sede -->
+  <div class="ps-brand">
+    <img src={datosNegocio.logo} alt={datosNegocio.nombre} class="ps-logo" />
+    <div class="ps-brand-text">
+      <span class="ps-brand-title">{datosNegocio.nombre.toUpperCase()}</span>
+      <span class="ps-brand-sub">
+        <span class="ps-badge-online"></span>
+        Sede {datosNegocio.direccionSede} · Centro de Operaciones
+      </span>
+    </div>
+  </div>
+
+  <!-- Buscador Global Modular -->
+  <Busqueda />
+
+  <!-- Acciones Rápidas del Dueño -->
+  <div class="ps-top-actions">
+    <!-- Alternar Tema (Futuro / Luz) -->
+    <button class="ps-btn-icon" id="btnThemeToggle" aria-label="Cambiar tema" title="Alternar tema">
+      <i class="fa-solid fa-circle-half-stroke"></i>
+    </button>
+
+    <!-- Ver Tienda Pública -->
+    <a href="/" target="_blank" class="ps-btn-icon" aria-label="Sitio web público" title="Ver Tienda Pública">
+      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+    </a>
+
+    <!-- Badge del Usuario (Solo Avatar + Nombre + Dropdown al hacer clic) -->
+    <div class="ps-user-container">
+      <div class="ps-user-badge" id="btnUserDropdownTrigger" aria-expanded="false" aria-haspopup="true">
+        <div class="ps-user-avatar">
+          <img 
+            id="topbarUserImg" 
+            src="https://api.dicebear.com/7.x/initials/svg?seed=Wilder&backgroundColor=ff6600,0284c7,10b981" 
+            alt="Avatar" 
+          />
+        </div>
+        <span class="ps-user-name" id="topbarUserName">Wilder Taype</span>
+        <i class="fa-solid fa-chevron-down ps-user-chevron"></i>
+      </div>
+
+      <!-- Dropdown Flotante -->
+      <div class="ps-dropdown-menu" id="userDropdownMenu">
+        <div class="ps-dropdown-header">
+          <strong style="font-size:var(--fz_s4); color:var(--ink); display:block;" id="dropdownUserName">Wilder Taype</strong>
+          <span class="ps-dropdown-email" id="dropdownUserEmail">wilder.taype@gaswii.com</span>
+        </div>
+        <a href="/" target="_blank" class="ps-dropdown-item">
+          <i class="fa-solid fa-store"></i> Ver Tienda Pública
+        </a>
+        <button type="button" class="ps-dropdown-item" data-jump-to="perfil">
+          <i class="fa-solid fa-user-gear"></i> Mi Perfil
+        </button>
+        <button type="button" class="ps-dropdown-item" data-jump-to="negocio">
+          <i class="fa-solid fa-building"></i> Ficha Mi Negocio
+        </button>
+        <button type="button" class="ps-dropdown-item" data-jump-to="ajustes">
+          <i class="fa-solid fa-gear"></i> Ajustes de Sistema
+        </button>
+        <div class="ps-dropdown-divider"></div>
+        <button type="button" class="ps-dropdown-item danger" id="btnLogoutSession">
+          <i class="fa-solid fa-right-from-bracket"></i> Cerrar Sesión
+        </button>
+      </div>
+    </div>
+  </div>
+</header>

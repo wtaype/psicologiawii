@@ -1,0 +1,55 @@
+---
+// src/feature/auth/LoginPage.astro
+// Plantilla maestra de pagina de inicio de sesion dedicada (Bilingue, Anti-FOUC y con Layout Oficial #wimain)
+// Solgas Surquillo (Gaswii)
+
+import Principal from '../../core/layouts/Principal.astro';
+import type { Idioma } from '../../core/idioma/idioma';
+import loginCss from './login.css?inline';
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = 'es' } = Astro.props;
+const isEn = idioma === 'en';
+const ruta = isEn ? '/en/login' : '/login';
+---
+
+<Principal idioma={idioma} ruta={ruta}>
+  <!-- GUARD ANTI-FOUC ULTRA RAPIDO (0ms de latencia en <head>) -->
+  <script slot="head" is:inline>
+    try {
+      const item = localStorage.getItem('wiSmile');
+      if (item) {
+        const parsed = JSON.parse(item);
+        const smile = (parsed && parsed.value) ? parsed.value : parsed;
+        const isExpired = parsed && parsed.expiry && Date.now() > parsed.expiry;
+        if (smile && !isExpired && smile.rol) {
+          const ROL_PATH = { cliente: '/cliente', personal: '/personal', gestor: '/personal', admin: '/personal' };
+          const params = new URLSearchParams(window.location.search);
+          const redirect = params.get('redirect');
+          window.location.replace(redirect || ROL_PATH[smile.rol] || '/');
+        }
+      }
+    } catch (e) {}
+  </script>
+
+  <!-- Inyección de estilos de Auth en el head sin CSS bloqueante -->
+  <style slot="head" is:global set:html={loginCss}></style>
+
+  <!-- Envoltura de tarjeta centrada dentro de #wimain (con Header y Footer oficiales) -->
+  <div class="wilg_page_wrap">
+    <div class="wilg_card">
+      <form id="liForm">
+        <!-- Se puebla dinámicamente con visual.js -->
+      </form>
+    </div>
+  </div>
+
+  <!-- Inicialización del controlador visual -->
+  <script>
+    import { init } from './visualLogin.js';
+    init();
+  </script>
+</Principal>

@@ -1,0 +1,411 @@
+---
+// src/feature/personal/modulos/negocio/Negocio.astro
+// Módulo 3: Ficha de Mi Negocio (Sede, Contacto, Horarios, Zonas y Métricas)
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-negocio">
+  <!-- Encabezado de Sección -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">Ficha de Mi Negocio</h1>
+      <p class="ps-section-sub">
+        Configuración central de sede, teléfonos de despacho, horarios de atención, cobertura de delivery y métricas en tiempo real.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <a href="/" target="_blank" class="ps-btn ps-btn-secondary" title="Ver Tienda Pública">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Tienda
+      </a>
+      <button type="button" class="ps-btn ps-btn-primary" id="btnGuardarNegocio">
+        <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+      </button>
+    </div>
+  </div>
+
+  <div class="ng-container">
+    
+    <!-- 1. Barra de Pestañas Horizontales -->
+    <nav class="ng-tabs-bar" id="ngTabsBar">
+      <button type="button" class="ng-tab-btn active" data-tab="identidad">
+        <i class="fa-solid fa-store"></i> Identidad & Sede
+      </button>
+      <button type="button" class="ng-tab-btn" data-tab="contacto">
+        <i class="fa-solid fa-phone"></i> Contacto & WhatsApp
+      </button>
+      <button type="button" class="ng-tab-btn" data-tab="ubicacion">
+        <i class="fa-solid fa-location-dot"></i> Sede & Google Maps
+      </button>
+      <button type="button" class="ng-tab-btn" data-tab="zonas">
+        <i class="fa-solid fa-motorcycle"></i> Zonas de Cobertura
+      </button>
+      <button type="button" class="ng-tab-btn" data-tab="metricas">
+        <i class="fa-solid fa-chart-line"></i> Métricas & Redes
+      </button>
+      <button type="button" class="ng-tab-btn" data-tab="seo">
+        <i class="fa-solid fa-magnifying-glass"></i> SEO & Palabras Clave
+      </button>
+    </nav>
+
+    <!-- PESTAÑA 1: IDENTIDAD & SEDE -->
+    <div class="ng-tab-content active" id="ngTab-identidad">
+      <div class="ng-card">
+        <div class="ng-card-header">
+          <div>
+            <h2 class="ng-card-title"><i class="fa-solid fa-id-card"></i> Identidad Comercial y Legal</h2>
+            <p class="ng-card-desc">Información oficial de la empresa, autorizaciones gubernamentales y respaldo.</p>
+          </div>
+        </div>
+
+        <div class="ng-grid-2">
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputNombre">Nombre Comercial</label>
+            <input type="text" id="ngInputNombre" class="ng-input" placeholder="Ej: Solgas Surquillo" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputNombreCorto">Nombre Corto / Marca</label>
+            <input type="text" id="ngInputNombreCorto" class="ng-input" placeholder="Ej: Solgas Surquillo" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputRazonSocial">Razón Social</label>
+            <input type="text" id="ngInputRazonSocial" class="ng-input" placeholder="Ej: Distribuidor Autorizado OSINERGMIN Reg. 208492" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputRuc">RUC</label>
+            <input type="text" id="ngInputRuc" class="ng-input" placeholder="20601234567" maxlength="11" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputOsinergmin">Registro OSINERGMIN</label>
+            <input type="text" id="ngInputOsinergmin" class="ng-input" placeholder="Ej: Reg. 208492" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputMarcaRespaldo">Marca de Respaldo</label>
+            <input type="text" id="ngInputMarcaRespaldo" class="ng-input" placeholder="Ej: Solgas S.A." />
+          </div>
+
+          <div class="ng-field">
+            <div class="ng-label">
+              <label for="ngInputLanzamiento">Fecha de Lanzamiento / Fundación</label>
+              <span class="ng-years-badge" id="ngBadgeTrayectoria">
+                <i class="fa-solid fa-calendar-check"></i> <span id="ngYearsText">25+ años</span>
+              </span>
+            </div>
+            <input type="date" id="ngInputLanzamiento" class="ng-input" />
+            <span class="ng-label-hint">Se guarda como Timestamp nativo de Firebase y calcula los años de experiencia automáticamente.</span>
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputLogo">URL del Logo</label>
+            <input type="text" id="ngInputLogo" class="ng-input" placeholder="/imgwii/logo.webp" />
+            <div class="ng-media-preview-box">
+              <img id="ngImgLogoPreview" src="/imgwii/logo.webp" alt="Logo preview" class="ng-logo-preview" />
+              <span class="ng-label-hint">Vista previa en vivo del logotipo de sede</span>
+            </div>
+          </div>
+
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputImagenSede">URL de Portada / Imagen de Sede</label>
+            <input type="text" id="ngInputImagenSede" class="ng-input" placeholder="/imgwii/hero.webp" />
+            <div class="ng-media-preview-box">
+              <img id="ngImgHeroPreview" src="/imgwii/hero.webp" alt="Sede preview" class="ng-hero-preview" />
+              <span class="ng-label-hint">Fotografía principal que se muestra en el Hero y la sección Nosotros</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 2: CONTACTO & WHATSAPP -->
+    <div class="ng-tab-content" id="ngTab-contacto">
+      <div class="ng-card">
+        <div class="ng-card-header">
+          <div>
+            <h2 class="ng-card-title"><i class="fa-solid fa-headset"></i> Canales de Atención y Pedidos Directos</h2>
+            <p class="ng-card-desc">Números que reciben las llamadas de emergencia SOS, pedidos por WhatsApp y correos.</p>
+          </div>
+        </div>
+
+        <div class="ng-grid-2">
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputTelefono">
+              <span>Teléfono Celular de Llamadas</span>
+              <span class="ng-label-hint">Puedes poner 9 dígitos</span>
+            </label>
+            <input type="text" id="ngInputTelefono" class="ng-input" placeholder="+51 936 369 384" />
+            <span class="ng-label-hint" id="hintTelefonoFormato" style="color: #10b981;">✓ Formato oficial: +51 936 369 384</span>
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputTelefonoFijo">
+              <span>Teléfono Fijo de la Sede</span>
+              <span class="ng-label-hint">Central / Local</span>
+            </label>
+            <input type="text" id="ngInputTelefonoFijo" class="ng-input" placeholder="(01) 241-1234" />
+            <span class="ng-label-hint">Central telefónica física del almacén o tienda</span>
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputWhatsapp">
+              <span>Número WhatsApp de Pedidos</span>
+              <span class="ng-label-hint">Puedes poner 9 dígitos</span>
+            </label>
+            <input type="text" id="ngInputWhatsapp" class="ng-input" placeholder="936369384" />
+            <span class="ng-label-hint" id="hintWhatsappFormato" style="color: #10b981;">✓ Enlace directo: wa.me/51936369384</span>
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputEmail">Correo Electrónico de Contacto</label>
+            <input type="email" id="ngInputEmail" class="ng-input" placeholder="pedidos@solgassurquillo.com" />
+            <span class="ng-label-hint">Para recibir cotizaciones y comprobantes</span>
+          </div>
+
+          <div class="ng-field span-2">
+            <div class="ng-label">
+              <span>Mensaje Inicial Predeterminado de WhatsApp</span>
+              <button type="button" class="ng-link-btn" id="btnRestaurarMensajeWs" title="Generar mensaje con el saludo dinámico según la hora actual">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Saludo dinámico actual
+              </button>
+            </div>
+            <textarea id="ngInputWhatsappMensaje" class="ng-input ng-textarea" placeholder="¡Buenas tardes Solgas Surquillo! He visto en su página que tienen el *producto* y deseo consultar precio y pedir un balón de gas para entrega a domicilio."></textarea>
+            <span class="ng-label-hint">Texto inicial que se abre en WhatsApp cuando el cliente hace clic en Pedir por WhatsApp</span>
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputHorario">Horario de Atención (Español)</label>
+            <input type="text" id="ngInputHorario" class="ng-input" placeholder="Lunes a Domingo: 6:00 a.m. a 11:00 p.m. (365 días)" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputHorarioEn">Horario de Atención (Inglés)</label>
+            <input type="text" id="ngInputHorarioEn" class="ng-input" placeholder="Monday to Sunday: 6:00 a.m. to 11:00 p.m. (365 days)" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 3: SEDE CENTRAL & GOOGLE MAPS -->
+    <div class="ng-tab-content" id="ngTab-ubicacion">
+      <div class="ng-card">
+        <div class="ng-card-header">
+          <div>
+            <h2 class="ng-card-title"><i class="fa-solid fa-map-pin"></i> Sede Central y Geolocalización</h2>
+            <p class="ng-card-desc">Ubicación de la planta y almacén principal donde el cliente puede recoger o ubicar por GPS.</p>
+          </div>
+        </div>
+
+        <div class="ng-grid-2">
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputDireccion">Dirección Física Completa</label>
+            <input type="text" id="ngInputDireccion" class="ng-input" placeholder="Jr. Dante 260, Surquillo, Lima 15047" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputDistrito">Distrito de la Sede</label>
+            <input type="text" id="ngInputDistrito" class="ng-input" placeholder="Surquillo" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputCiudad">Ciudad y País</label>
+            <input type="text" id="ngInputCiudad" class="ng-input" placeholder="Lima, PE" />
+          </div>
+
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputMapsUrl">
+              <span><i class="fa-solid fa-map-location-dot"></i> Enlace Compartido de Google Maps</span>
+              <span class="ng-label-hint">Pega el link de Maps o consíguelo con los botones</span>
+            </label>
+            <div class="ng-input-group-maps">
+              <input type="url" id="ngInputMapsUrl" class="ng-input" placeholder="https://maps.app.goo.gl/s86EmxowFcKetJWL8" />
+              <button type="button" class="ng-btn-maps-action" id="btnBuscarGoogleMaps" title="Abrir Google Maps para ubicar el local y copiar el enlace">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Buscar en Google Maps
+              </button>
+              <button type="button" class="ng-btn-maps-action ng-btn-maps-test" id="btnProbarMapsUrl" title="Probar enlace actual de Google Maps">
+                <i class="fa-solid fa-circle-play"></i> Probar Enlace
+              </button>
+            </div>
+            <div class="ng-maps-helper-bar">
+              <span class="ng-label-hint">
+                <i class="fa-solid fa-circle-info"></i> Pulsa <strong>Buscar en Google Maps</strong>, luego en Google Maps haz clic en <strong>Compartir</strong> &gt; <strong>Copiar vínculo</strong> y pégalo aquí.
+              </span>
+              <button type="button" class="ng-link-btn" id="btnAutogenerarMapsUrl" title="Genera el link de Google Maps a partir de la dirección o coordenadas de la sede">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Generar link automático
+              </button>
+            </div>
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputLat">Coordenada Latitud</label>
+            <input type="number" step="any" id="ngInputLat" class="ng-input" placeholder="-12.1177408" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputLng">Coordenada Longitud</label>
+            <input type="number" step="any" id="ngInputLng" class="ng-input" placeholder="-77.0226796" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 4: ZONAS DE COBERTURA & TIEMPOS -->
+    <div class="ng-tab-content" id="ngTab-zonas">
+      <div class="ng-card">
+        <div class="ng-card-header ng-zonas-header">
+          <div>
+            <h2 class="ng-card-title"><i class="fa-solid fa-motorcycle"></i> Zonas de Cobertura y Tiempos de Entrega</h2>
+            <p class="ng-card-desc">Gestiona los distritos a los que llega tu flota de motos y furgones con tiempos estimados de llegada.</p>
+          </div>
+          <button type="button" class="ps-btn ps-btn-secondary" id="btnAgregarZona">
+            <i class="fa-solid fa-plus"></i> Agregar Zona
+          </button>
+        </div>
+
+        <div class="ng-zonas-list" id="ngZonasContainer">
+          <!-- Las filas de zonas se renderizan dinámicamente desde negocio.js -->
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 5: MÉTRICAS & REDES SOCIALES -->
+    <div class="ng-tab-content" id="ngTab-metricas">
+      <div class="ng-card">
+        <div class="ng-card-header">
+          <div>
+            <h2 class="ng-card-title"><i class="fa-solid fa-chart-pie"></i> Estadísticas del Hero y Enlaces Sociales</h2>
+            <p class="ng-card-desc">Cifras de trayectoria que inspiran confianza en la tienda pública y redes oficiales.</p>
+          </div>
+        </div>
+
+        <div class="ng-grid-3">
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputMetricaClientes">Clientes Atendidos</label>
+            <input type="text" id="ngInputMetricaClientes" class="ng-input" placeholder="25K+" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputMetricaBalanza">% Balanza Digital</label>
+            <input type="text" id="ngInputMetricaBalanza" class="ng-input" placeholder="100%" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputMetricaDias">Días de Atención al Año</label>
+            <input type="text" id="ngInputMetricaDias" class="ng-input" placeholder="365" />
+          </div>
+        </div>
+
+        <div class="ng-card-header" style="margin-top: 24px;">
+          <div>
+            <h3 class="ng-card-title" style="font-size: var(--fz_s5);"><i class="fa-solid fa-share-nodes"></i> Redes Sociales Oficiales</h3>
+          </div>
+        </div>
+
+        <div class="ng-grid-3">
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputRedFacebook"><i class="fa-brands fa-facebook"></i> Facebook</label>
+            <input type="url" id="ngInputRedFacebook" class="ng-input" placeholder="https://facebook.com/solgassurquillo" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputRedInstagram"><i class="fa-brands fa-instagram"></i> Instagram</label>
+            <input type="url" id="ngInputRedInstagram" class="ng-input" placeholder="https://instagram.com/solgassurquillo" />
+          </div>
+
+          <div class="ng-field">
+            <label class="ng-label" for="ngInputRedTiktok"><i class="fa-brands fa-tiktok"></i> TikTok</label>
+            <input type="url" id="ngInputRedTiktok" class="ng-input" placeholder="https://tiktok.com/@solgassurquillo" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PESTAÑA 6: SEO & PALABRAS CLAVE (ES / EN) -->
+    <div class="ng-tab-content" id="ngTab-seo">
+      <div class="ng-card">
+        <div class="ng-card-header">
+          <div>
+            <h2 class="ng-card-title"><i class="fa-solid fa-magnifying-glass"></i> Posicionamiento en Google (SEO Local)</h2>
+            <p class="ng-card-desc">Control dinámico de títulos, meta descripciones y palabras clave en español e inglés guardadas en Firestore.</p>
+          </div>
+        </div>
+
+        <div class="ng-grid-2">
+          <!-- Configuración Español -->
+          <div class="ng-field span-2">
+            <h3 class="ng-subheading" style="color: var(--primary, #f60); font-weight: 700; margin-bottom: 8px;">
+              <i class="fa-solid fa-flag"></i> Configuración SEO - Español
+            </h3>
+          </div>
+
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputSeoTituloEs">
+              <span>Título en Google (ES)</span>
+              <span class="ng-label-hint">Recomendado: 50 a 60 caracteres</span>
+            </label>
+            <input type="text" id="ngInputSeoTituloEs" class="ng-input" placeholder="Gas Surquillo y Lima | Gas de Cocina Solgas en 15 Minutos" />
+          </div>
+
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputSeoDescEs">
+              <span>Meta Descripción en Google (ES)</span>
+              <span class="ng-label-hint">Recomendado: 140 a 160 caracteres</span>
+            </label>
+            <textarea id="ngInputSeoDescEs" class="ng-input" rows="3" placeholder="Pide tu gas de cocina en Surquillo, San Borja y San Isidro en 15 min. Balones Solgas 10kg y 45kg con peso exacto garantizado por balanza digital."></textarea>
+          </div>
+
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputSeoKeywordsEs">
+              <span>Palabras Clave en Español (Separadas por comas)</span>
+              <span class="ng-label-hint">Ej: gas surquillo, solgas surquillo telefono, balon de gas san isidro</span>
+            </label>
+            <textarea id="ngInputSeoKeywordsEs" class="ng-input" rows="3" placeholder="gas surquillo, gas delivery san borja, delivery de gas san isidro, solgas surquillo telefono, pedir balon de gas san isidro, balon solgas 10 kg precio, balon solgas 45 kg, gas con balanza digital lima, solgas domicilio express, balon de gas cerca de mi, gas de cocina surquillo 15 minutos"></textarea>
+          </div>
+
+          <!-- Configuración Inglés -->
+          <div class="ng-field span-2" style="margin-top: 16px; border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.1)); padding-top: 16px;">
+            <h3 class="ng-subheading" style="color: #38bdf8; font-weight: 700; margin-bottom: 8px;">
+              <i class="fa-solid fa-globe"></i> Configuración SEO - English
+            </h3>
+          </div>
+
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputSeoTituloEn">
+              <span>Google Title (EN)</span>
+              <span class="ng-label-hint">Recommended: 50 to 60 characters</span>
+            </label>
+            <input type="text" id="ngInputSeoTituloEn" class="ng-input" placeholder="Gas Delivery Lima & Surquillo | Solgas Cooking Gas in 15 Mins" />
+          </div>
+
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputSeoDescEn">
+              <span>Google Meta Description (EN)</span>
+              <span class="ng-label-hint">Recommended: 140 to 160 characters</span>
+            </label>
+            <textarea id="ngInputSeoDescEn" class="ng-input" rows="3" placeholder="Order cooking gas in Surquillo, San Borja, San Isidro & Lima with express delivery in 15 mins. Official Solgas cylinders with exact weight certified by digital scale."></textarea>
+          </div>
+
+          <div class="ng-field span-2">
+            <label class="ng-label" for="ngInputSeoKeywordsEn">
+              <span>Keywords in English (Comma-separated)</span>
+              <span class="ng-label-hint">Ex: gas delivery lima, cooking gas san isidro, solgas san borja delivery</span>
+            </label>
+            <textarea id="ngInputSeoKeywordsEn" class="ng-input" rows="3" placeholder="gas delivery lima, gas cylinder surquillo, cooking gas san isidro, solgas san borja delivery, order gas cylinder lima, lpg gas delivery lima, express gas delivery miraflores"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Script Cliente Autónomo de Mi Negocio -->
+<script>
+  import './negocio.js';
+</script>

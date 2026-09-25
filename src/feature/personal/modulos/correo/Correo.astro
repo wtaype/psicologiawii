@@ -1,0 +1,418 @@
+---
+// src/feature/personal/modulos/correo/Correo.astro
+// Centro de Mensajería y Correo Estilo Hotmail / Outlook (Solgas Surquillo)
+// 3 Paneles: Carpetas (Recibidos, Enviados, Borradores) + Lista de Mensajes + Visor / Redactor con Live Preview
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-correo">
+  
+  <!-- Encabezado del Módulo -->
+  <div class="ps-section-header" style="margin-bottom: 16px;">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-envelope" style="color: var(--brand-orange); margin-right: 8px;"></i>
+        Correo & Mensajería
+      </h1>
+      <p class="ps-section-sub">
+        Gestor oficial estilo Hotmail/Outlook: Bandeja de entrada, enviados, borradores y redactor con Live Preview.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <button type="button" class="ps-btn ps-btn-secondary" id="btnTopRedactar">
+        <i class="fa-solid fa-pen-to-square"></i> Redactar Nuevo
+      </button>
+      <button type="button" class="cr-btn-send" id="btnEnviarCorreo">
+        <i class="fa-solid fa-paper-plane"></i> Enviar Correo Ahora
+      </button>
+    </div>
+  </div>
+
+  <!-- CONTENEDOR SHELL DE 3 PANELES (HOTMAIL / OUTLOOK) -->
+  <div class="cr-outlook-shell">
+    
+    <!-- ═══ PANE 1: NAVEGACIÓN DE CARPETAS (SIDEBAR) ═══ -->
+    <aside class="cr-sidebar-pane">
+      <button type="button" class="cr-btn-compose" id="btnSidebarRedactar">
+        <i class="fa-solid fa-pen"></i> Nuevo Correo
+      </button>
+
+      <nav class="cr-folder-nav" id="crFolderNav">
+        <button type="button" class="cr-folder-item active" data-folder="recibidos">
+          <div class="cr-folder-item-left">
+            <i class="fa-solid fa-inbox"></i>
+            <span>Bandeja de entrada</span>
+          </div>
+          <span class="cr-folder-badge highlight" id="badgeRecibidosCount">3</span>
+        </button>
+
+        <button type="button" class="cr-folder-item" data-folder="enviados">
+          <div class="cr-folder-item-left">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Elementos enviados</span>
+          </div>
+          <span class="cr-folder-badge" id="badgeEnviadosCount">0</span>
+        </button>
+
+        <button type="button" class="cr-folder-item" data-folder="borradores">
+          <div class="cr-folder-item-left">
+            <i class="fa-solid fa-file-lines"></i>
+            <span>Borradores</span>
+          </div>
+          <span class="cr-folder-badge" id="badgeBorradoresCount">0</span>
+        </button>
+
+        <button type="button" class="cr-folder-item" data-folder="plantillas">
+          <div class="cr-folder-item-left">
+            <i class="fa-solid fa-tags"></i>
+            <span>Plantillas de Gas</span>
+          </div>
+          <span class="cr-folder-badge">4</span>
+        </button>
+
+        <button type="button" class="cr-folder-item" data-folder="ajustes">
+          <div class="cr-folder-item-left">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Ajustes de Emisor</span>
+          </div>
+        </button>
+      </nav>
+
+      <div class="cr-sidebar-footer">
+        <strong><i class="fa-solid fa-shield-check" style="color:#10b981;"></i> Emisor Oficial</strong>
+        <span id="crBadgeRemitenteActivo">pedidos@solgassurquillo.com</span>
+        <div style="margin-top:4px; font-size:10px; color:#10b981; font-weight:600;">Dominio Autenticado</div>
+      </div>
+    </aside>
+
+    <!-- ═══ PANE 2: LISTA DE MENSAJES (INBOX / ENVIADOS) ═══ -->
+    <section class="cr-inbox-pane">
+      <div class="cr-inbox-header">
+        <div class="cr-inbox-title-row">
+          <h2 class="cr-inbox-title" id="crCurrentFolderTitle">
+            <i class="fa-solid fa-inbox"></i> Bandeja de entrada
+          </h2>
+          <span class="cr-inbox-count" id="crFolderTotalCount">3 correos</span>
+        </div>
+        <div class="cr-search-box">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input 
+            type="text" 
+            id="crSearchInput" 
+            class="cr-search-input" 
+            placeholder="Buscar por cliente, email o asunto..." 
+          />
+        </div>
+      </div>
+
+      <div class="cr-message-list" id="crMessageList">
+        <!-- Renderizado dinámico desde correo.js -->
+      </div>
+    </section>
+
+    <!-- ═══ PANE 3: VISTA PRINCIPAL (LECTURA / REDACCIÓN / AJUSTES) ═══ -->
+    <main class="cr-main-pane">
+      
+      <!-- SUBVISTA 1: LECTURA DE MENSAJE -->
+      <article class="cr-reading-view" id="crViewReading" style="display: none;">
+        <div class="cr-reading-toolbar">
+          <div class="cr-reading-actions">
+            <button type="button" class="cr-action-btn" id="btnReplyMsg" title="Responder">
+              <i class="fa-solid fa-reply"></i> Responder
+            </button>
+            <button type="button" class="cr-action-btn" id="btnForwardMsg" title="Reenviar">
+              <i class="fa-solid fa-share"></i> Reenviar
+            </button>
+            <button type="button" class="cr-action-btn btn-danger" id="btnDeleteMsg" title="Eliminar correo">
+              <i class="fa-solid fa-trash-can"></i> Eliminar
+            </button>
+          </div>
+          <div>
+            <button type="button" class="cr-action-btn" id="btnOpenWindowMsg" title="Abrir en pestaña nueva">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="cr-reading-header">
+          <h2 class="cr-reading-subject" id="crReadSubject">Cargando asunto...</h2>
+          <div class="cr-reading-meta">
+            <div class="cr-reading-from-box">
+              <div class="cr-reading-avatar" id="crReadAvatar">S</div>
+              <div>
+                <div class="cr-reading-from-name" id="crReadFrom">Remitente</div>
+                <div class="cr-reading-from-email" id="crReadTo">Para: pedidos@solgassurquillo.com</div>
+              </div>
+            </div>
+            <div class="cr-reading-date" id="crReadDate">Fecha</div>
+          </div>
+        </div>
+
+        <div class="cr-reading-body">
+          <iframe id="crReadFrame" class="cr-reading-frame" title="Visor Correo"></iframe>
+        </div>
+      </article>
+
+      <!-- SUBVISTA 2: REDACTOR DE CORREO (COMPOSER) -->
+      <div class="cr-composer-view" id="crViewComposer">
+        <div class="cr-card-head">
+          <h2 class="cr-card-title">
+            <i class="fa-solid fa-pen-to-square"></i> Redactor de Correo Oficial
+          </h2>
+          <div class="cr-card-head-tools">
+            <button type="button" class="cr-tool-btn" id="btnResetPlantilla" title="Restablecer contenido original">
+              <i class="fa-solid fa-rotate-left"></i> Restablecer
+            </button>
+            <button type="button" class="cr-tool-btn" id="btnGuardarBorrador" title="Guardar borrador local">
+              <i class="fa-solid fa-floppy-disk"></i> Borrador
+            </button>
+            <!-- Selector Editor | Vista Previa -->
+            <div class="cr-composer-tabs" id="crComposerTabs">
+              <button type="button" class="cr-tab-btn active" data-tab="editor" id="btnTabEditor">
+                <i class="fa-solid fa-pen-to-square"></i> Editor
+              </button>
+              <button type="button" class="cr-tab-btn" data-tab="preview" id="btnTabPreview">
+                <i class="fa-solid fa-eye"></i> Vista Previa
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <form id="formEnviarCorreo">
+          <input type="hidden" id="crSelectTipo" value="pedido" />
+
+          <!-- SECCIÓN 1: EDITOR (FORMULARIO Y MARKDOWN) -->
+          <div id="crComposerFormWrap">
+            <!-- Selector de Plantilla Rápida -->
+            <div class="cr-pills-bar" id="crPillsCategorias">
+              <button type="button" class="cr-pill-btn active" data-template="pedido">
+                <i class="fa-solid fa-truck-fast"></i> Pedido de Gas
+              </button>
+              <button type="button" class="cr-pill-btn" data-template="comprobante">
+                <i class="fa-solid fa-file-invoice-dollar"></i> Comprobante SUNAT
+              </button>
+              <button type="button" class="cr-pill-btn" data-template="cotizacion">
+                <i class="fa-solid fa-clipboard-list"></i> Cotización GLP
+              </button>
+              <button type="button" class="cr-pill-btn" data-template="libre">
+                <i class="fa-solid fa-envelope-open-text"></i> Mensaje Libre
+              </button>
+            </div>
+
+          <!-- Destinatario y Nombre -->
+          <div class="cr-form-row">
+            <div class="cr-form-group">
+              <div class="cr-label-row">
+                <label class="cr-label" for="crInputTo">Destinatario (Email) *</label>
+                <button type="button" id="btnToggleCc" class="cr-link-btn">+ Copia CC</button>
+              </div>
+              <input type="email" id="crInputTo" class="cr-input" placeholder="cliente@correo.com" required />
+            </div>
+            <div class="cr-form-group">
+              <label class="cr-label" for="crInputNombre">Nombre del Cliente</label>
+              <input type="text" id="crInputNombre" class="cr-input" placeholder="Ej. Valeria Mendoza" />
+            </div>
+          </div>
+
+          <!-- Con Copia (CC) -->
+          <div id="crWrapCc" style="display: none; margin-bottom: 12px;">
+            <label class="cr-label" for="crInputCc">Con Copia (CC)</label>
+            <input type="text" id="crInputCc" class="cr-input" placeholder="administracion@empresa.com" />
+          </div>
+
+          <!-- BLOQUE DINÁMICO 1: PEDIDO DE GAS -->
+          <div id="crFieldsPedido" class="cr-cat-box">
+            <div class="cr-cat-box-title">
+              <i class="fa-solid fa-fire" style="color:var(--brand-orange);"></i> Datos del Pedido Real
+            </div>
+            <div class="cr-form-row">
+              <div class="cr-form-group">
+                <label class="cr-label" for="crPedNumero">N° de Pedido</label>
+                <input type="text" id="crPedNumero" class="cr-input cr-live-input" value="GW-1029" />
+              </div>
+              <div class="cr-form-group">
+                <label class="cr-label" for="crPedPrecio">Total a Pagar (S/)</label>
+                <input type="text" id="crPedPrecio" class="cr-input cr-live-input" value="65.00" />
+              </div>
+            </div>
+            <div class="cr-form-row">
+              <div class="cr-form-group">
+                <label class="cr-label" for="crPedProducto">Producto / Balón</label>
+                <input type="text" id="crPedProducto" class="cr-input cr-live-input" value="Balón SOLGAS Premium 10 kg" />
+              </div>
+              <div class="cr-form-group">
+                <label class="cr-label" for="crPedPago">Método de Pago</label>
+                <input type="text" id="crPedPago" class="cr-input cr-live-input" value="Yape / Plin / Efectivo" />
+              </div>
+            </div>
+            <div class="cr-form-group" style="margin-bottom:0;">
+              <label class="cr-label" for="crPedDireccion">Dirección de Entrega</label>
+              <input type="text" id="crPedDireccion" class="cr-input cr-live-input" value="Surquillo, Lima" />
+            </div>
+          </div>
+
+          <!-- BLOQUE DINÁMICO 2: COMPROBANTE SUNAT -->
+          <div id="crFieldsComprobante" class="cr-cat-box" style="display:none;">
+            <div class="cr-cat-box-title">
+              <i class="fa-solid fa-file-invoice" style="color:var(--brand-orange);"></i> Datos del Comprobante SUNAT
+            </div>
+            <div class="cr-form-row">
+              <div class="cr-form-group">
+                <label class="cr-label" for="crCompTipo">Tipo de Comprobante</label>
+                <select id="crCompTipo" class="cr-input cr-live-input">
+                  <option value="Boleta de Venta Electrónica">Boleta de Venta Electrónica</option>
+                  <option value="Factura Electrónica">Factura Electrónica</option>
+                </select>
+              </div>
+              <div class="cr-form-group">
+                <label class="cr-label" for="crCompSerie">Serie y Número</label>
+                <input type="text" id="crCompSerie" class="cr-input cr-live-input" value="B001-000482" />
+              </div>
+            </div>
+            <div class="cr-form-row">
+              <div class="cr-form-group">
+                <label class="cr-label" for="crCompMonto">Monto Total (S/)</label>
+                <input type="text" id="crCompMonto" class="cr-input cr-live-input" value="65.00" />
+              </div>
+              <div class="cr-form-group">
+                <label class="cr-label" for="crCompDoc">DNI / RUC del Cliente</label>
+                <input type="text" id="crCompDoc" class="cr-input cr-live-input" placeholder="Ej. 72819201" />
+              </div>
+            </div>
+          </div>
+
+          <!-- BLOQUE DINÁMICO 3: COTIZACIÓN -->
+          <div id="crFieldsCotizacion" class="cr-cat-box" style="display:none;">
+            <div class="cr-cat-box-title">
+              <i class="fa-solid fa-building" style="color:var(--brand-orange);"></i> Datos de la Cotización
+            </div>
+            <div class="cr-form-row">
+              <div class="cr-form-group">
+                <label class="cr-label" for="crCotNumero">N° de Cotización</label>
+                <input type="text" id="crCotNumero" class="cr-input cr-live-input" value="COT-2026-08" />
+              </div>
+              <div class="cr-form-group">
+                <label class="cr-label" for="crCotEmpresa">Empresa / Razón Social</label>
+                <input type="text" id="crCotEmpresa" class="cr-input cr-live-input" value="Restaurante El Buen Sabor" />
+              </div>
+            </div>
+            <div class="cr-form-group" style="margin-bottom:0;">
+              <label class="cr-label" for="crCotValidez">Validez de la Oferta</label>
+              <input type="text" id="crCotValidez" class="cr-input cr-live-input" value="15 días calendario" />
+            </div>
+          </div>
+
+          <!-- Asunto -->
+          <div class="cr-form-group">
+            <label class="cr-label" for="crInputSubject">Asunto Oficial *</label>
+            <input type="text" id="crInputSubject" class="cr-input cr-live-input" value="🔥 ¡Tu pedido de gas está confirmado! · Solgas Surquillo" required />
+          </div>
+
+          <!-- Editor Markdown con Toolbar -->
+          <div class="cr-form-group">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 6px;">
+              <label class="cr-label" for="crTextMarkdown" style="margin-bottom:0;">Mensaje / Personalización en Markdown</label>
+              <span style="font-size: 11px; color: var(--muted);" id="crLiveWordsCount">0 palabras</span>
+            </div>
+
+            <div class="cr-md-toolbar" id="crMdToolbar">
+              <div class="cr-md-group">
+                <button type="button" class="cr-md-btn" data-tag="**texto**" title="Negrita"><strong>B</strong></button>
+                <button type="button" class="cr-md-btn" data-tag="*texto*" title="Cursiva"><em>I</em></button>
+                <button type="button" class="cr-md-btn" data-tag="~~texto~~" title="Tachado"><s>S</s></button>
+              </div>
+              <div class="cr-md-group">
+                <button type="button" class="cr-md-btn" data-tag="## Subtítulo" title="H2">H2</button>
+                <button type="button" class="cr-md-btn" data-tag="### Sección" title="H3">H3</button>
+              </div>
+              <div class="cr-md-group">
+                <button type="button" class="cr-md-btn" data-tag="- Item de lista" title="Lista"><i class="fa-solid fa-list-ul"></i></button>
+                <button type="button" class="cr-md-btn" data-tag="- [ ] Tarea" title="Checklist"><i class="fa-solid fa-square-check"></i></button>
+                <button type="button" class="cr-md-btn" data-tag="> Cita" title="Cita"><i class="fa-solid fa-quote-right"></i></button>
+              </div>
+              <div class="cr-md-group">
+                <button type="button" class="cr-md-btn cr-md-btn-table" data-tag="table" title="Tabla"><i class="fa-solid fa-table"></i> Tabla</button>
+                <button type="button" class="cr-md-btn" data-tag="[Enlace](https://solgassurquillo.com)" title="Enlace"><i class="fa-solid fa-link"></i></button>
+              </div>
+            </div>
+
+            <textarea id="crTextMarkdown" class="cr-textarea cr-code-editor cr-live-input" rows="7" placeholder="Escribe el mensaje en Markdown..."></textarea>
+          </div>
+        </div>
+        <!-- FIN SECCIÓN 1: EDITOR -->
+
+        <!-- SECCIÓN 2: VISTA PREVIA (ACTIVADA POR TAB PREVIEW) -->
+        <div id="crComposerPreviewWrap" style="display: none;">
+          <div class="cr-preview-toggle-wrap" style="margin-top: 0;">
+            <div class="cr-live-head">
+              <div class="cr-live-badge-status">
+                <span class="cr-live-dot"></span> Carta Oficial en Tiempo Real
+              </div>
+              <div class="cr-device-switch">
+                <button type="button" class="cr-device-btn active" data-device="desktop">
+                  <i class="fa-solid fa-laptop"></i> Desktop
+                </button>
+                <button type="button" class="cr-device-btn" data-device="mobile">
+                  <i class="fa-solid fa-mobile-screen"></i> Móvil
+                </button>
+              </div>
+            </div>
+            <div class="cr-live-frame-wrap" id="crFrameWrap" style="height: 520px;">
+              <iframe id="crLiveFrame" class="cr-live-frame" title="Previsualización de Correo"></iframe>
+            </div>
+          </div>
+        </div>
+        <!-- FIN SECCIÓN 2: VISTA PREVIA -->
+      </form>
+    </div>
+
+      <!-- SUBVISTA 3: AJUSTES DE EMISOR -->
+      <div class="cr-composer-view" id="crViewSettings" style="display: none;">
+        <div class="cr-card-head">
+          <h2 class="cr-card-title">
+            <i class="fa-solid fa-sliders"></i> Ajustes de Correo y Emisor
+          </h2>
+          <span class="ps-badge ps-badge-success">
+            <i class="fa-solid fa-shield-check"></i> solgassurquillo.com
+          </span>
+        </div>
+
+        <form id="formAjustesCorreo">
+          <div class="cr-form-row">
+            <div class="cr-form-group">
+              <label class="cr-label" for="crAjusteNombre">Nombre del Remitente</label>
+              <input type="text" id="crAjusteNombre" class="cr-input" value="Solgas Surquillo" required />
+            </div>
+            <div class="cr-form-group">
+              <label class="cr-label" for="crAjusteEmail">Correo Emisor Autenticado</label>
+              <input type="email" id="crAjusteEmail" class="cr-input" value="pedidos@solgassurquillo.com" required />
+            </div>
+          </div>
+          <div class="cr-form-group">
+            <label class="cr-label" for="crAjusteReplyTo">Responder A (Reply-To)</label>
+            <input type="email" id="crAjusteReplyTo" class="cr-input" value="pedidos@solgassurquillo.com" />
+          </div>
+
+          <div style="margin-top: 16px;">
+            <button type="submit" class="ps-btn ps-btn-primary">
+              <i class="fa-solid fa-floppy-disk"></i> Guardar Ajustes de Emisor
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </main>
+
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloCorreo } from './correo.js';
+  inicializarModuloCorreo();
+  document.addEventListener('astro:page-load', inicializarModuloCorreo);
+</script>

@@ -1,0 +1,43 @@
+---
+// src/feature/acercas/componentes/AcercasNav.astro
+// Barra horizontal con scroll táctil y tabs para las 8 secciones de Acercas
+import { buildRuta, resolverIdiomaSeccion } from '../idioma/idioma';
+
+interface Props {
+  seccionActiva: 'acerca' | 'terminos' | 'privacidad' | 'cookies' | 'libro-reclamaciones' | 'contacto' | 'redes' | 'feedback';
+  idioma?: string;
+}
+
+const { seccionActiva, idioma = 'es' } = Astro.props;
+const t = resolverIdiomaSeccion({}, idioma);
+
+const navItems = [
+  { id: 'acerca', slug: '/acerca', label: t.nav.acerca, icon: 'fa-solid fa-users' },
+  { id: 'terminos', slug: '/terminos', label: t.nav.terminos, icon: 'fa-solid fa-file-contract' },
+  { id: 'privacidad', slug: '/privacidad', label: t.nav.privacidad, icon: 'fa-solid fa-user-shield' },
+  { id: 'cookies', slug: '/cookies', label: t.nav.cookies, icon: 'fa-solid fa-cookie-bite' },
+  { id: 'libro-reclamaciones', slug: '/libro-reclamaciones', label: t.nav.libro_reclamaciones, icon: 'fa-solid fa-book' },
+  { id: 'contacto', slug: '/contacto', label: t.nav.contacto, icon: 'fa-solid fa-headset' },
+  { id: 'redes', slug: '/redes', label: t.nav.redes, icon: 'fa-solid fa-share-nodes' },
+  { id: 'feedback', slug: '/feedback', label: t.nav.feedback, icon: 'fa-solid fa-star' }
+];
+---
+
+<nav class="acercas-nav-box" aria-label="Navegación institucional Gaswii">
+  <div class="acercas-nav-scroll">
+    {navItems.map((item) => {
+      const href = buildRuta(item.slug, idioma);
+      const isActivo = seccionActiva === item.id;
+      return (
+        <a 
+          href={href} 
+          class={`acercas-nav-link ${isActivo ? 'activo' : ''}`}
+          aria-current={isActivo ? 'page' : undefined}
+        >
+          <i class={item.icon}></i>
+          <span>{item.label}</span>
+        </a>
+      );
+    })}
+  </div>
+</nav>

@@ -1,0 +1,148 @@
+---
+// src/core/componentes/Footer.astro
+// 10. FOOTER INSTITUCIONAL UX/UI - Consultorio Psicológico América
+import { datosNegocio } from '../../negocio.js';
+import { getI18n, buildRuta, type Idioma } from '../idioma/idioma';
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = 'es' } = Astro.props;
+const t = getI18n(idioma).footer;
+const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.horario;
+---
+
+<footer class="footer-main">
+  <div class="page-container">
+    <div class="footer-grid-layout">
+      
+      <!-- Columna 1: Marca, Bio y Teléfono -->
+      <div class="footer-col-brand">
+        <div class="footer-brand-box">
+          <img 
+            src={datosNegocio.logo} 
+            alt={datosNegocio.nombre} 
+            width="44"
+            height="44"
+            class="footer-logo-img" 
+          />
+          <div>
+            <span class="footer-brand-title">{datosNegocio.nombre}</span>
+            <span class="footer-brand-auth">
+              <i class="fa-solid fa-shield-halved color-primary"></i> {datosNegocio.razonSocial}
+            </span>
+          </div>
+        </div>
+        <p class="footer-bio-text">
+          {t.bio}
+        </p>
+        <div class="footer-delivery-box">
+          <span class="footer-delivery-label">{t.delivery_central}</span>
+          <a href={`tel:${datosNegocio.telefonoLimpio}`} class="footer-delivery-btn" title="Llamar a Central" data-negocio-tel-link>
+            <i class="fa-solid fa-phone-volume"></i> <span data-negocio-tel-text>{datosNegocio.telefonoMostrado}</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Columna 2: Páginas Institucionales y Legales -->
+      <div class="footer-col-distritos">
+        <h4 class="footer-col-title">
+          <i class="fa-solid fa-landmark-flag color-primary"></i> {idioma === 'en' ? 'Institutional Pages' : 'Páginas Oficiales'}
+        </h4>
+        <ul class="footer-nav-list">
+          <li>
+            <i class="fa-solid fa-chevron-right"></i> 
+            <a href={buildRuta('/acerca', idioma)}>{idioma === 'en' ? 'About Us' : 'Nosotros'}</a>
+          </li>
+          <li>
+            <i class="fa-solid fa-chevron-right"></i> 
+            <a href={buildRuta('/terminos', idioma)}>{idioma === 'en' ? 'Terms of Service' : 'Términos del Servicio'}</a>
+          </li>
+          <li>
+            <i class="fa-solid fa-chevron-right"></i> 
+            <a href={buildRuta('/privacidad', idioma)}>{idioma === 'en' ? 'Privacy Policy' : 'Política de Privacidad'}</a>
+          </li>
+          <li>
+            <i class="fa-solid fa-chevron-right"></i> 
+            <a href={buildRuta('/cookies', idioma)}>{idioma === 'en' ? 'Cookies Policy' : 'Política de Cookies'}</a>
+          </li>
+          <li>
+            <i class="fa-solid fa-chevron-right"></i> 
+            <a href={buildRuta('/contacto', idioma)}>{idioma === 'en' ? 'Contact & Hub' : 'Contacto y Sede'}</a>
+          </li>
+          <li>
+            <i class="fa-solid fa-chevron-right"></i> 
+            <a href={buildRuta('/redes', idioma)}>{idioma === 'en' ? 'Official Networks' : 'Canales y Redes'}</a>
+          </li>
+          <li>
+            <i class="fa-solid fa-chevron-right"></i> 
+            <a href={buildRuta('/feedback', idioma)}>{idioma === 'en' ? 'Service Feedback' : 'Feedback y Sugerencias'}</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Columna 3: Medios de Pago y Horarios -->
+      <div class="footer-col-pagos">
+        <h4 class="footer-col-title">
+          <i class="fa-solid fa-credit-card color-primary"></i> {t.pagos_titulo}
+        </h4>
+        <p class="footer-desc-text">
+          {t.pagos_desc}
+        </p>
+        <div class="footer-payment-tags">
+          <span class="footer-payment-pill"><i class="fa-solid fa-mobile-screen-button"></i> {t.pago_yape}</span>
+          <span class="footer-payment-pill"><i class="fa-solid fa-wallet"></i> {t.pago_plin}</span>
+          <span class="footer-payment-pill"><i class="fa-solid fa-building-columns"></i> {t.pago_transferencia}</span>
+          <span class="footer-payment-pill"><i class="fa-solid fa-money-bill-wave"></i> {t.pago_efectivo}</span>
+        </div>
+        <div class="footer-schedule-card">
+          <i class="fa-solid fa-clock color-primary"></i>
+          <div>
+            <strong>{t.horario_etiqueta}</strong> <span data-negocio-horario>{horarioTexto}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna 4: Libro de Reclamaciones INDECOPI -->
+      <div class="footer-col-reclamos">
+        <h4 class="footer-col-title">
+          <i class="fa-solid fa-book color-primary"></i> {t.reclamos_titulo}
+        </h4>
+        <p class="footer-desc-text">
+          {t.reclamos_desc}
+        </p>
+        <a 
+          href={buildRuta('/libro-reclamaciones', idioma)} 
+          class="footer-claims-card"
+          title={idioma === 'en' ? 'Open Virtual Complaints Book' : 'Abrir Libro de Reclamaciones Virtual'}
+        >
+          <img 
+            src="/imgwii/Libro-de-reclamaciones.webp" 
+            alt="Libro de Reclamaciones INDECOPI" 
+            width="130"
+            height="55"
+            class="footer-claims-img"
+          />
+          <span class="footer-claims-tag">
+            <i class="fa-solid fa-shield-check"></i> {idioma === 'en' ? 'Virtual Book 100% Compliant' : 'Libro Virtual 100% Conforme'}
+          </span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- Barra Inferior de Copyright -->
+    <div class="footer-bottom-container">
+      <div class="footer-copy-text">
+        © {new Date().getFullYear()} {datosNegocio.nombre}. {t.derechos} {datosNegocio.razonSocial}.
+      </div>
+      <div>
+        <a href="#hero" class="footer-back-top-link" title="Volver al inicio">
+          <i class="fa-solid fa-arrow-up"></i> <span>{t.volver_arriba}</span>
+        </a>
+      </div>
+    </div>
+
+  </div>
+</footer>

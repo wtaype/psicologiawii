@@ -1,0 +1,37 @@
+{
+  "top_badge": "Frequently Asked Questions",
+  "titulo": "Clear Answers to Your Therapy Questions",
+  "subtitulo": "Everything you need to know about session duration, appointment formats, therapeutic approaches, and getting started.",
+  "side_foto_badge_1": "100% Ethical Confidentiality",
+  "side_foto_badge_2": "C.Ps.P. N° 34892",
+  "side_titulo": "Personalized Care & Quick Booking",
+  "side_desc": "Message us on WhatsApp or call our clinic directly to coordinate your appointment in Miraflores, Villa El Salvador, or Live Online.",
+  "btn_ws": "Inquire via WhatsApp",
+  "ws_msg": "Hello Lic. Sofía, I have a question regarding psychological sessions",
+  "faqs": [
+    {
+      "pregunta": "How long does each therapy session last?",
+      "respuesta": "The initial assessment consultation lasts a full 60 minutes to thoroughly review your background and provide immediate guidance. Regular ongoing sessions last 45 minutes."
+    },
+    {
+      "pregunta": "Which clinical approaches do you use?",
+      "respuesta": "We utilize exclusively evidence-based therapeutic models: Cognitive Behavioral Therapy (CBT), Contextual Therapy (ACT), Systemic Psychotherapy for couples and families, and Humanistic Psychotherapy."
+    },
+    {
+      "pregunta": "How does ADHD & ASD diagnostic screening work?",
+      "respuesta": "It is a comprehensive assessment package (S/ 600.00) including clinical interviews, standardized psychometric batteries, behavioral observation, and a formal signed report by a Licensed Psychologist."
+    },
+    {
+      "pregunta": "Where are your physical offices located?",
+      "respuesta": "We operate from two locations: Miraflores Office (Av. Alfredo Benavides 620, Zafiro Building, Suite 403) on Saturdays, and South Lima Office (Av. 3 de Octubre Ruta B, Villa El Salvador) Monday to Friday. We also provide secure online sessions."
+    },
+    {
+      "pregunta": "What are the benefits of the 10-Session Package?",
+      "respuesta": "The 10-session package costs S/ 600.00, providing more than 30% savings over individual sessions. It includes the 1-hour initial intake, 9 regular sessions, and ongoing takeaways between meetings."
+    },
+    {
+      "pregunta": "What payment methods are accepted?",
+      "respuesta": "We accept Yape, Plin digital wallets, direct bank transfers (BCP, BBVA), and Cash at the clinic."
+    }
+  ]
+}

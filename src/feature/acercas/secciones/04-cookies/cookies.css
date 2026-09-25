@@ -1,0 +1,120 @@
+/* ==========================================================================
+   SECCIÓN 04-COOKIES (CSS HIJO) - GASWII
+   Estilos de almacenamiento Local-First y tabla de transparencia
+   ========================================================================== */
+
+.cookies-container {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.cookies-intro-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3.5vh;
+}
+
+@media (max-width: 768px) {
+  .cookies-intro-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.cookies-intro-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 1.25rem;
+  padding: 1.8rem 2rem;
+}
+
+.cookies-intro-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  margin-bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cookies-intro-card p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.94rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Tabla de Inventario de Almacenamiento */
+.cookies-table-box {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 1.25rem;
+  padding: 2rem;
+  margin-bottom: 3.5vh;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+  overflow-x: auto;
+}
+
+.cookies-table-box h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.cookies-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+}
+
+.cookies-table th {
+  padding: 0.9rem 1rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  background: rgba(0, 0, 0, 0.02);
+  border-bottom: 2px solid var(--border-subtle, rgba(0, 0, 0, 0.1));
+}
+
+.cookies-table td {
+  padding: 1.1rem 1rem;
+  border-bottom: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.06));
+  color: var(--text-muted, #64748b);
+  vertical-align: top;
+}
+
+.cookies-table tr:last-child td {
+  border-bottom: none;
+}
+
+.cookie-key-badge {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--cl-orange, #ea580c);
+  background: rgba(234, 88, 12, 0.08);
+  border: 1px solid rgba(234, 88, 12, 0.2);
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.4rem;
+}
+
+.cookie-type-pill {
+  display: inline-block;
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: var(--cl-navy, #022b49);
+  background: rgba(2, 43, 73, 0.06);
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}

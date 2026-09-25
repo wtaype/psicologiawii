@@ -1,0 +1,130 @@
+---
+// src/feature/cliente/layout/Sonrisas.astro
+// Layout Maestro de feature/cliente · Solgas Surquillo
+// Anti-FOUC en 0ms con redirección estricta si no hay sesión wiSmile, CSS inlined y dock móvil
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+import { getModulosActivos } from '../modulos.js';
+
+import witemaCss from '../../../core/wicss/witema.css?inline';
+import clienteCss from '../cliente.css?inline';
+
+interface Props {
+  titulo?: string;
+  moduloActivo?: string;
+  idioma?: string;
+  cliente?: {
+    nombre?: string;
+    nombreCompleto?: string;
+    email?: string;
+  };
+}
+
+const { 
+  titulo = 'Solgas Surquillo · Realizar Pedido',
+  moduloActivo = 'pedidos',
+  idioma = 'es',
+  cliente = {}
+} = Astro.props;
+
+const listaModulos = getModulosActivos();
+---
+
+<!DOCTYPE html>
+<html lang={idioma} data-theme="futuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>{titulo}</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+  <!-- Guard Anti-FOUC 0ms: Tema, Sidebar y Seguridad Estricta de Sesión -->
+  <script is:inline>
+    try {
+      // 1. Blindaje de Seguridad en 0ms: Si no hay wiSmile activo, redirigir al inicio inmediatamente
+      const raw = localStorage.getItem('wiSmile');
+      if (!raw) {
+        document.documentElement.style.display = 'none';
+        window.location.replace('/');
+      } else {
+        let user = null;
+        try {
+          const parsed = JSON.parse(raw);
+          user = (parsed && parsed.value) ? parsed.value : parsed;
+          if (parsed && parsed.expiry && Date.now() > parsed.expiry) user = null;
+        } catch(err) {
+          user = null;
+        }
+
+        if (!user || (!user.uid && !user.usuario && !user.nombre)) {
+          document.documentElement.style.display = 'none';
+          window.location.replace('/');
+        } else {
+          window.__GASWII_USER__ = user;
+        }
+      }
+
+      // 2. Anti-FOUC de Tema y Preferencias
+      const savedTheme = localStorage.getItem('gaswii_theme_cliente') || localStorage.getItem('wiTema') || 'futuro';
+      document.documentElement.dataset.theme = savedTheme;
+      if (localStorage.getItem('gaswii_sidebar_cliente') === 'true') {
+        document.documentElement.classList.add('is-collapsed');
+      }
+    } catch (e) {
+      document.documentElement.style.display = 'none';
+      window.location.replace('/');
+    }
+  </script>
+
+  <!-- Tipografías e Iconos -->
+  <link rel="stylesheet" href="/google/fonts.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css" />
+
+  <!-- Estilos Globales Inlined (Cero request HTTP adicional) -->
+  <style is:global set:html={witemaCss}></style>
+  <style is:global set:html={clienteCss}></style>
+
+  <!-- Inyección de Estilos Específicos por Módulo -->
+  <slot name="modulo-css" />
+</head>
+<body>
+
+  <!-- Topbar Unificada -->
+  <Header cliente={cliente} />
+
+  <!-- Sidebar Lateral Reactivo -->
+  <Sidebar moduloActivo={moduloActivo} />
+
+  <!-- Shell Principal (100vh Desktop) -->
+  <main class="cl-main-shell">
+    <slot />
+  </main>
+
+  <!-- Dock Inferior Móvil -->
+  <nav class="cl-mobile-nav" aria-label="Navegación Móvil">
+    {listaModulos.map((m) => {
+      const isActive = m.id === moduloActivo;
+      return (
+        <button 
+          type="button" 
+          class={`cl-m-btn ${isActive ? 'active' : ''}`} 
+          data-panel-target={m.id}
+          id={`mBtn-${m.id}`}
+        >
+          <i class={m.icono}></i>
+          <span>{m.nombre}</span>
+        </button>
+      );
+    })}
+  </nav>
+
+  <!-- Contenedor Flotante de Notificaciones Widev -->
+  <div id="notificationsContainer"></div>
+
+  <!-- Controlador Cliente Global -->
+  <script>
+    import '../cliente.js';
+  </script>
+</body>
+</html>

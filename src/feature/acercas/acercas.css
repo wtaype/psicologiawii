@@ -1,0 +1,241 @@
+/* ==========================================================================
+   ACERCAS GLOBAL FEATURE STYLES (MADRE) - GASWII
+   Contenedor .pagewii (85vw), tokens witema.css y componentes transversales
+   ========================================================================== */
+
+/* ── 0. CONTENEDOR MAESTRO INSTITUCIONAL (.pagewii = 85vw) ── */
+.pagewii {
+  width: 100%;
+  max-width: 85vw;
+  margin: 0 auto;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 1024px) {
+  .pagewii {
+    max-width: 92vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .pagewii {
+    max-width: 94vw;
+    padding: 0 10px;
+  }
+}
+
+/* ── 1. WRAPPER GENERAL DE PÁGINA ── */
+.acercas-page-wrapper {
+  padding: 3.5vh 0 8vh;
+  min-height: 70vh;
+  position: relative;
+}
+
+/* ── 2. CABECERA HERO INSTITUCIONAL (AcercasHeader) ── */
+.acercas-header {
+  margin-bottom: 3.5vh;
+  text-align: center;
+  position: relative;
+}
+
+.acercas-header-inner {
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.acercas-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 1rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(234, 88, 12, 0.12);
+  color: var(--cl-orange, #ea580c);
+  border: 1px solid rgba(234, 88, 12, 0.25);
+  margin-bottom: 1.5vh;
+}
+
+.acercas-badge-pill i {
+  font-size: 0.85rem;
+}
+
+.acercas-header-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2rem, 3.2vw, 3.2rem);
+  font-weight: 800;
+  color: var(--text-bright, #0f172a);
+  line-height: 1.15;
+  margin-bottom: 1.2vh;
+  letter-spacing: -0.02em;
+}
+
+.acercas-header-desc {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(0.95rem, 1.05vw, 1.12rem);
+  color: var(--text-muted, #64748b);
+  line-height: 1.6;
+  margin-bottom: 1.8vh;
+}
+
+.acercas-header-meta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted, #64748b);
+  flex-wrap: wrap;
+}
+
+.acercas-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* ── 3. NAVEGACIÓN RÁPIDA ENTRE SECCIONES (AcercasNav) ── */
+.acercas-nav-box {
+  margin-bottom: 4vh;
+  border-bottom: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  padding-bottom: 1.2vh;
+}
+
+.acercas-nav-scroll {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  padding: 0.3rem 0;
+}
+
+.acercas-nav-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.acercas-nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 999px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--text-muted, #64748b);
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.acercas-nav-link:hover {
+  color: var(--cl-orange, #ea580c);
+  border-color: rgba(234, 88, 12, 0.4);
+  background: rgba(234, 88, 12, 0.04);
+  transform: translateY(-1px);
+}
+
+.acercas-nav-link.activo {
+  color: #ffffff;
+  background: var(--cl-orange, #ea580c);
+  border-color: var(--cl-orange, #ea580c);
+  box-shadow: 0 4px 12px rgba(234, 88, 12, 0.28);
+}
+
+.acercas-nav-link i {
+  font-size: 0.88rem;
+}
+
+/* ── 4. TARJETAS INSTITUCIONALES BASE ── */
+.acercas-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 1.25rem;
+  padding: 2.2rem;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.acercas-card:hover {
+  border-color: rgba(234, 88, 12, 0.3);
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.08);
+}
+
+/* ── 5. ASISTENCIA RÁPIDA / BANNER INFERIOR ── */
+.acercas-help-banner {
+  margin-top: 5vh;
+  padding: 2rem 2.5rem;
+  background: linear-gradient(135deg, rgba(234, 88, 12, 0.06) 0%, rgba(2, 43, 73, 0.04) 100%);
+  border: 1px solid rgba(234, 88, 12, 0.2);
+  border-radius: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.acercas-help-info h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  margin-bottom: 0.4rem;
+}
+
+.acercas-help-info p {
+  color: var(--text-muted, #64748b);
+  font-size: 0.92rem;
+  margin: 0;
+}
+
+.acercas-help-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+}
+
+.btn-acercas-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: 999px;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.btn-acercas-action.primary {
+  background: var(--cl-orange, #ea580c);
+  color: #ffffff;
+}
+
+.btn-acercas-action.primary:hover {
+  background: #c2410c;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+}
+
+.btn-acercas-action.secondary {
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-bright, #0f172a);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.15));
+}
+
+.btn-acercas-action.secondary:hover {
+  border-color: var(--cl-orange, #ea580c);
+  color: var(--cl-orange, #ea580c);
+  transform: translateY(-2px);
+}

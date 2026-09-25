@@ -1,0 +1,55 @@
+---
+// src/feature/inicio/inicioPage.astro
+// Orquestador Principal de Secciones de Inicio - Consultorio Psicológico América
+import Principal from '../../core/layouts/Principal.astro';
+import type { Idioma } from '../../core/idioma/idioma';
+import { buildRuta } from '../../core/idioma/idioma';
+import Hero from './secciones/01-hero/Hero.astro';
+import Productos from './secciones/02-productos/Productos.astro';
+import Garantia from './secciones/03-garantia/Garantia.astro';
+import Tecnico from './secciones/04-tecnico/Tecnico.astro';
+import Separador from './secciones/05-separador/Separador.astro';
+import Calculadora from './secciones/06-calculadora/Calculadora.astro';
+import Mapa from './secciones/07-mapa/Mapa.astro';
+import Nosotros from './secciones/08-nosotros/Nosotros.astro';
+import Faq from './secciones/09-faq/Faq.astro';
+import inicioCss from './inicio.css?inline';
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const ruta = buildRuta('/', idioma);
+---
+
+<Principal idioma={idioma} ruta={ruta}>
+  <style slot="head" is:global set:html={inicioCss}></style>
+  
+  <!-- 1. Hero CRO Autónomo: Bienvenida Terapéutica, Colegiatura y Selector de Sedes -->
+  <Hero idioma={idioma} />
+
+  <!-- 2. Catálogo Oficial de Especialidades Clínicas y Evaluaciones -->
+  <Productos idioma={idioma} />
+
+  <!-- 3. Rigor Científico, Terapias con Evidencia y Ética Profesional -->
+  <Garantia idioma={idioma} />
+
+  <!-- 4. Metodología Terapéutica en 3 Pasos Claros -->
+  <Tecnico idioma={idioma} />
+
+  <!-- 5. Separador de Orientación Empática Directa -->
+  <Separador idioma={idioma} />
+
+  <!-- 6. Cotizador Transparente de Sesiones y Paquetes de Ahorro Familiar -->
+  <Calculadora idioma={idioma} />
+
+  <!-- 7. Sedes Oficiales (Miraflores, Villa El Salvador y Online) -->
+  <Mapa idioma={idioma} />
+
+  <!-- 8. Trayectoria, Compromiso y Vocación (+6 Años) -->
+  <Nosotros idioma={idioma} />
+
+  <!-- 9. Preguntas Frecuentes Clínicas y Asistencia -->
+  <Faq idioma={idioma} />
+</Principal>

@@ -1,0 +1,16 @@
+---
+// src/pages/cookies.astro
+// Página Pública: Política de Cookies y Almacenamiento Local (Español)
+import Principal from '../core/layouts/Principal.astro';
+import Cookies from '../feature/acercas/secciones/04-cookies/Cookies.astro';
+import { buildRuta } from '../core/idioma/idioma';
+import { datosNegocio } from '../negocio.js';
+
+const idioma = 'es';
+const ruta = buildRuta('/cookies', idioma);
+const title = `Política de Cookies · ${datosNegocio.nombre} | Almacenamiento Local-First`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Cookies idioma={idioma} />
+</Principal>

@@ -1,0 +1,210 @@
+---
+// src/feature/personal/modulos/dashboard/Dashboard.astro
+// Módulo 1: Panel General / Dashboard de Operaciones para el Dueño
+import { 
+  clientesRecientesDemo, 
+  notasInicialesDemo 
+} from '../../data/personalData.js';
+import { datosNegocio } from '@/negocio.js';
+
+const precioBalon10 = datosNegocio.productos[0]?.precioPEN 
+  ? `S/ ${Number(datosNegocio.productos[0].precioPEN).toFixed(2)}` 
+  : 'S/ 65.00';
+
+const estadisticas = [
+  { id: 'stat1', titulo: precioBalon10, subtitulo: `${datosNegocio.productos[0]?.nombre || 'Balón 10kg'} (Precio Web)`, icono: 'fa-solid fa-fire-burner', color: 'orange' },
+  { id: 'stat2', titulo: 'S/ 2,840.00', subtitulo: 'Facturado SUNAT', icono: 'fa-solid fa-file-invoice-dollar', color: 'green' },
+  { id: 'stat3', titulo: '124 Clientes', subtitulo: 'Registrados en Gaswii', icono: 'fa-solid fa-address-book', color: 'blue' },
+  { id: 'stat4', titulo: '3 Notas', subtitulo: 'En tu Notepad', icono: 'fa-solid fa-note-sticky', color: 'purple' }
+];
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = true } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-dashboard">
+  <!-- Encabezado de Sección -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">Panel General</h1>
+      <p class="ps-section-sub">Gestión de precios vigentes en la web, atención por WhatsApp y clientes registrados.</p>
+    </div>
+    <div class="ps-header-actions">
+      <a 
+        href={`https://wa.me/${datosNegocio.telefonoLimpio || '51936369384'}`}
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="ps-btn ps-btn-secondary"
+        title="Abrir canal WhatsApp de Solgas Surquillo"
+      >
+        <i class="fa-brands fa-whatsapp" style="color:var(--green);"></i> WhatsApp Pedidos
+      </a>
+      <button class="ps-btn ps-btn-primary" data-jump-to="productos">
+        <i class="fa-solid fa-tags"></i> Actualizar Precios Web
+      </button>
+    </div>
+  </div>
+
+  <!-- Métricas Principales (KPIs) -->
+  <div class="db-stats-grid">
+    {estadisticas.map((st) => (
+      <div class="db-stat-card">
+        <div class={`db-stat-icon ${st.color}`}>
+          <i class={st.icono}></i>
+        </div>
+        <div class="db-stat-info">
+          <span class="db-stat-val" id={st.id === 'stat4' ? 'dashNotesCount' : undefined}>{st.titulo}</span>
+          <span class="db-stat-lbl">{st.subtitulo}</span>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <!-- Contenido: Precios Web + Clientes Frecuentes + Widget Notepad -->
+  <div class="db-layout-grid">
+    
+    <!-- Columna Izquierda: Precios y Clientes -->
+    <div style="display:flex; flex-direction:column; gap:20px;">
+      
+      <!-- Tabla: Precios Vigentes en la Web (Sede Dante 260) -->
+      <div class="db-table-wrap">
+        <div class="db-table-head">
+          <div>
+            <strong class="db-table-head-title">Precios Vigentes en la Web Principal</strong>
+            <p style="font-size:var(--fz_s3); color:var(--muted); margin:0;">Estos son los precios que los clientes ven al entrar a gaswii.com</p>
+          </div>
+          <button class="ps-btn ps-btn-secondary" style="padding:4px 10px; font-size:var(--fz_s3);" data-jump-to="productos">
+            <i class="fa-solid fa-pen-to-square"></i> Modificar
+          </button>
+        </div>
+
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Tipo</th>
+              <th>Precio Líquido</th>
+              <th>Envase</th>
+              <th>Stock</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            {datosNegocio.productos.map((p) => (
+              <tr>
+                <td><strong>{p.nombre}</strong></td>
+                <td><span class="ps-badge ps-badge-blue">{p.tipo || p.tipoCategoria || 'Gas GLP'}</span></td>
+                <td><strong style="color:var(--brand-orange); font-size:var(--fz_m);">S/ {Number(p.precioPEN || 0).toFixed(2)}</strong></td>
+                <td>{p.precioEnvase && p.precioEnvase > 0 ? `S/ ${Number(p.precioEnvase).toFixed(2)}` : '—'}</td>
+                <td>{p.stock} unid.</td>
+                <td><span class="ps-badge ps-badge-success">{p.estado || 'Activo'}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Tabla: Clientes Registrados Recientes -->
+      <div class="db-table-wrap">
+        <div class="db-table-head">
+          <div>
+            <strong class="db-table-head-title">Directorio de Clientes Recientes</strong>
+            <p style="font-size:var(--fz_s3); color:var(--muted); margin:0;">Usuarios registrados desde la web y clientes habituales de Surquillo</p>
+          </div>
+          <button class="ps-btn ps-btn-secondary" style="padding:4px 10px; font-size:var(--fz_s3);" data-jump-to="clientes">
+            Ver los 124 clientes
+          </button>
+        </div>
+
+        <table class="db-table">
+          <thead>
+            <tr>
+              <th>Cliente</th>
+              <th>Teléfono</th>
+              <th>Dirección de Entrega</th>
+              <th>Pedido Habitual</th>
+              <th>Comprobante</th>
+            </tr>
+          </thead>
+          <tbody>
+            {clientesRecientesDemo.map((c) => (
+              <tr>
+                <td><strong>{c.nombre}</strong></td>
+                <td>
+                  <a href={`tel:${c.telefono.replace(/\s+/g, '')}`} style="color:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">
+                    <i class="fa-solid fa-phone" style="font-size:11px; color:var(--brand-orange);"></i> {c.telefono}
+                  </a>
+                </td>
+                <td style="max-width:200px; font-size:var(--fz_s3); color:var(--muted);">{c.direccion}</td>
+                <td><span class="ps-badge ps-badge-blue">{c.habitual}</span></td>
+                <td><span class="ps-badge ps-badge-purple">{c.comprobante}</span></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Columna Derecha: Widget Notepad Rápido -->
+    <div class="db-quicknote-card">
+      <div class="db-quicknote-head">
+        <strong class="db-quicknote-title">Notepad Rápido</strong>
+        <button class="ps-btn ps-btn-secondary" style="padding:4px 8px; font-size:var(--fz_s3);" data-jump-to="notepad">
+          Abrir Notepad
+        </button>
+      </div>
+
+      <!-- Lista dinámica de notas recientes -->
+      <div id="dashNotesList" class="db-notes-list">
+        {notasInicialesDemo.map((n) => (
+          <div class="db-note-item">
+            <div class="db-note-info">
+              <div class="db-note-title" style={n.done ? 'text-decoration:line-through; opacity:0.6;' : ''}>
+                {n.titulo}
+              </div>
+              <div class="db-note-snippet">{n.texto.substring(0, 45)}…</div>
+            </div>
+            <button 
+              type="button" 
+              class="db-btn-toggle-note" 
+              data-id={n.id} 
+              style={`color: ${n.done ? 'var(--green)' : 'var(--muted)'};`}
+            >
+              <i class={`fa-${n.done ? 'solid fa-circle-check' : 'regular fa-circle'}`}></i>
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <!-- Formulario de apunte express -->
+      <form id="formDashQuickNote" class="db-quicknote-form">
+        <input 
+          type="text" 
+          id="inputDashQuickTitle" 
+          class="db-quicknote-input" 
+          placeholder="Título de apunte…" 
+          autocomplete="off"
+        />
+        <textarea 
+          id="inputDashQuickText" 
+          rows="3" 
+          class="db-quicknote-textarea" 
+          placeholder="Nota o pendiente del día…"
+        ></textarea>
+        <button type="submit" class="ps-btn ps-btn-primary" style="padding:6px 12px; font-size:var(--fz_s4); width:100%;">
+          <i class="fa-solid fa-plus"></i> Guardar en Notepad
+        </button>
+      </form>
+    </div>
+
+  </div>
+</section>
+
+<!-- Script Cliente Autónomo para Mini-Notepad Unificado -->
+<script>
+  import './dashboard.js';
+</script>

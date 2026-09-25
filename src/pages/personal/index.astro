@@ -1,0 +1,8 @@
+---
+// src/pages/personal/index.astro
+// Entrada canónica para /personal (Dashboard del Dueño) · Solgas Surquillo
+import PersonalPage from '@/feature/personal/personalPage.astro';
+import { moduloDefecto } from '@/feature/personal/modulos.js';
+---
+
+<PersonalPage idioma="es" moduloActivo={moduloDefecto} />

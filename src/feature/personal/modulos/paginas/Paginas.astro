@@ -1,0 +1,126 @@
+---
+// src/feature/personal/modulos/paginas/Paginas.astro
+// Módulo de Páginas: Editor Institucional & Google SERP Simulator (Solgas Surquillo)
+// 100% JS Nativo · Integrado con @widev · 0 CSS Inline
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-paginas" data-paginas-init="false">
+  
+  <!-- CABECERA SUPERIOR STICKY -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-file-lines sn-header-icon"></i>
+        Páginas · Editor Institucional & Google SERP
+      </h1>
+      <p class="ps-section-sub">
+        Gestión centralizada del contenido de las páginas estáticas y optimización de metadatos SEO en buscadores.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <button type="button" class="ps-btn ps-btn-primary" id="btnPgGuardar">
+        <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+      </button>
+    </div>
+  </div>
+
+  <!-- SELECTOR HORIZONTAL DE PÁGINAS -->
+  <div class="pg-nav-list" id="pgNavList">
+    <!-- Render dinámico desde paginas.js -->
+  </div>
+
+  <!-- LAYOUT DIVIDIDO (FORMULARIO 55% / SIMULADOR SERP 45%) -->
+  <div class="pg-split-layout">
+    
+    <!-- COLUMNA 1: FORMULARIO DE CONTENIDO -->
+    <div class="pg-card">
+      <div class="pg-card-title">
+        <span><i class="fa-solid fa-pen-to-square sn-title-icon"></i> Contenido de la Página</span>
+        <span class="pg-route-badge" id="pgRouteBadge">/</span>
+      </div>
+
+      <div class="sn-form-group sn-mb-14">
+        <label class="sn-label" for="pgInpH1">Encabezado Principal (H1)</label>
+        <input type="text" id="pgInpH1" class="sn-input" />
+      </div>
+
+      <div class="sn-form-group sn-mb-14">
+        <label class="sn-label" for="pgInpSubtitulo">Subtítulo o Resumen de Sección</label>
+        <input type="text" id="pgInpSubtitulo" class="sn-input" />
+      </div>
+
+      <div class="sn-form-row sn-mb-14">
+        <div class="sn-form-group">
+          <label class="sn-label" for="pgInpTelefono">Teléfono Central Mostrado</label>
+          <input type="tel" id="pgInpTelefono" class="sn-input" />
+        </div>
+        <div class="sn-form-group">
+          <label class="sn-label" for="pgInpHorario">Horario de Atención</label>
+          <input type="text" id="pgInpHorario" class="sn-input" />
+        </div>
+      </div>
+
+      <div class="sn-form-group sn-mb-14">
+        <label class="sn-label" for="pgInpMetaTitle">Meta Título (Google SERP Title)</label>
+        <input type="text" id="pgInpMetaTitle" class="sn-input" />
+        <div class="pg-serp-chars-counter">
+          <span>Longitud recomendada: 50-60 caracteres</span>
+          <span class="pg-chars-pill" id="pgTitleCharCount">0/60</span>
+        </div>
+      </div>
+
+      <div class="sn-form-group">
+        <label class="sn-label" for="pgInpMetaDesc">Meta Descripción (Snippet)</label>
+        <textarea id="pgInpMetaDesc" class="sn-input pg-meta-desc-textarea"></textarea>
+        <div class="pg-serp-chars-counter">
+          <span>Longitud recomendada: 140-160 caracteres</span>
+          <span class="pg-chars-pill" id="pgDescCharCount">0/160</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLUMNA 2: SIMULADOR DE GOOGLE SERP EN VIVO -->
+    <div class="pg-serp-wrap">
+      <div class="pg-serp-card">
+        <h2 class="pg-serp-title">
+          <i class="fa-brands fa-google sn-title-icon pg-google-icon"></i>
+          Simulador de Resultado en Google
+        </h2>
+
+        <div class="pg-google-box">
+          <div class="pg-google-url-row">
+            <img src="/favicon.ico" alt="Favicon" class="pg-google-favicon" />
+            <span class="pg-google-site-name">Solgas Surquillo</span>
+            <span class="pg-google-url-path">https://solgassurquillo.com <span id="pgSerpUrlPath"></span></span>
+          </div>
+
+          <a href="#" class="pg-google-headline" id="pgSerpHeadline" onclick="return false;">
+            Cargando título...
+          </a>
+
+          <div class="pg-google-desc" id="pgSerpDesc">
+            Cargando descripción...
+          </div>
+        </div>
+
+        <p class="pg-serp-hint">
+          💡 Esta vista previa muestra la apariencia exacta de cómo los usuarios verán tu página en los resultados orgánicos de Google en dispositivos móviles y de escritorio.
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloPaginas } from './paginas.js';
+  inicializarModuloPaginas();
+  document.addEventListener('astro:page-load', inicializarModuloPaginas);
+</script>

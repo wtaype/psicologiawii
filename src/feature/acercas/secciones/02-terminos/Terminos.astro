@@ -1,0 +1,97 @@
+---
+// src/feature/acercas/secciones/02-terminos/Terminos.astro
+// Sección 02: Términos y Condiciones Oficiales del Servicio de GLP
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdiomaSeccion } from '../../idioma/idioma';
+import AcercasHeader from '../../componentes/AcercasHeader.astro';
+import AcercasNav from '../../componentes/AcercasNav.astro';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+
+import acercasMadreCss from '../../acercas.css?inline';
+import terminosHijoCss from './terminos.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdiomaSeccion({ es, en }, idioma);
+
+const telLimpio = datosNegocio.telefonoLimpio;
+const telMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
+const wsNumero = datosNegocio.whatsapp;
+const wsLink = `https://wa.me/${wsNumero}?text=${encodeURIComponent(
+  idioma === 'en'
+    ? `Hello ${datosNegocio.nombre}, I have a question regarding terms of service.`
+    : `Hola ${datosNegocio.nombre}, tengo una consulta sobre los términos del servicio.`
+)}`;
+
+const clausulas = [
+  { num: '1', tit: t.clausula_1_tit, desc: t.clausula_1_desc },
+  { num: '2', tit: t.clausula_2_tit, desc: t.clausula_2_desc },
+  { num: '3', tit: t.clausula_3_tit, desc: t.clausula_3_desc },
+  { num: '4', tit: t.clausula_4_tit, desc: t.clausula_4_desc },
+  { num: '5', tit: t.clausula_5_tit, desc: t.clausula_5_desc },
+  { num: '6', tit: t.clausula_6_tit, desc: t.clausula_6_desc },
+  { num: '7', tit: t.clausula_7_tit, desc: t.clausula_7_desc },
+  { num: '8', tit: t.clausula_8_tit, desc: t.clausula_8_desc },
+  { num: '9', tit: t.clausula_9_tit, desc: t.clausula_9_desc },
+  { num: '10', tit: t.clausula_10_tit, desc: t.clausula_10_desc }
+];
+---
+
+<style is:global set:html={acercasMadreCss}></style>
+<style is:global set:html={terminosHijoCss}></style>
+
+<div class="acercas-page-wrapper">
+  <div class="pagewii">
+
+    <AcercasHeader 
+      badge={t.terminos_badge}
+      badgeIcon="fa-solid fa-file-contract"
+      titulo={t.terminos_titulo}
+      desc={t.terminos_desc}
+      idioma={idioma}
+    />
+
+    <AcercasNav seccionActiva="terminos" idioma={idioma} />
+
+    <div class="terminos-container">
+      <div class="terminos-notice-banner">
+        <i class="fa-solid fa-scale-balanced"></i>
+        <span>{t.vigencia_nota}</span>
+      </div>
+
+      <div class="terminos-grid">
+        {clausulas.map((c) => (
+          <article class="terminos-clause-card">
+            <div class="terminos-clause-header">
+              <span class="terminos-clause-num">{c.num}</span>
+              <h2 class="terminos-clause-title">{c.tit}</h2>
+            </div>
+            <p class="terminos-clause-body">{c.desc}</p>
+          </article>
+        ))}
+      </div>
+
+      <!-- Banner de Asistencia Directa Padre -->
+      <div class="acercas-help-banner">
+        <div class="acercas-help-info">
+          <h4>{t.comun.ayuda_titulo}</h4>
+          <p>{t.comun.ayuda_desc}</p>
+        </div>
+        <div class="acercas-help-actions">
+          <a href={wsLink} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary">
+            <i class="fa-brands fa-whatsapp"></i> {t.comun.btn_whatsapp}
+          </a>
+          <a href={`tel:${telLimpio}`} class="btn-acercas-action secondary">
+            <i class="fa-solid fa-phone"></i> {telMostrado}
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

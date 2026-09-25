@@ -1,0 +1,47 @@
+{
+  "topbar": {
+    "sede_label": "Miraflores & Villa El Salvador Offices",
+    "despacho_label": "In-Person & Online Appointments",
+    "dias_ano": "days of clinical care",
+    "llamar_movil": "Call",
+    "llamar_titulo": "Call Clinic"
+  },
+  "nav": {
+    "slogan_brand": "Comprehensive Psychological & Psychotherapy Care",
+    "servicios": "Specialties",
+    "productos": "Specialties",
+    "balanza": "Approaches",
+    "seguridad": "Methodology",
+    "calculadora": "Packages",
+    "ubicacion": "Offices",
+    "nosotros": "About Us",
+    "login": "Staff",
+    "pedir": "Book Appointment",
+    "sticky_llamar": "Call",
+    "sticky_pedir": "Book via WhatsApp",
+    "ir_tienda_publica": "Go to Home",
+    "inicio_titulo": "América Psychology Clinic"
+  },
+  "footer": {
+    "bio": "América Psychology Clinic. Professional clinical care with scientific rigor and human warmth. Specialized in individual, couples, and family therapy, ADHD/ASD screening, and personal development workshops.",
+    "cobertura_titulo": "Our Clinical Offices",
+    "pagos_titulo": "Payment Methods & Hours",
+    "pagos_desc": "We accept the following payment methods for sessions and packages:",
+    "horario_etiqueta": "Business Hours:",
+    "pago_yape": "YAPE",
+    "pago_plin": "PLIN",
+    "pago_transferencia": "BANK TRANSFER",
+    "pago_efectivo": "CASH",
+    "reclamos_titulo": "Complaints Book",
+    "reclamos_desc": "In accordance with INDECOPI Consumer Protection and Defense Code regulations.",
+    "derechos": "All rights reserved.",
+    "desarrollo": "High performance development by",
+    "delivery_central": "Appointments Desk:",
+    "volver_arriba": "Back to top"
+  },
+  "sistema": {
+    "cargando": "Loading...",
+    "error_general": "An unexpected error occurred. Please try again.",
+    "copiado": "Copied to clipboard!"
+  }
+}

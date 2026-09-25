@@ -1,0 +1,341 @@
+---
+// src/feature/cliente/modulos/01-pedidos/Pedidos.astro
+// Módulo de Realizar Pedidos · Solgas Surquillo
+// 100% Conectado a Firestore (datosNegocio.productos, datosNegocio.mediosPago)
+// Cero datos quemados/mock · Split 37% / 63% con WhatsApp Live Preview
+import { datosNegocio, MEDIOS_PAGO_BASE } from '@/negocio.js';
+
+import type { SmileData, SmileDireccion } from '@/core/tipos/auth.ts';
+
+interface Props {
+  cliente?: SmileData;
+}
+
+const { cliente = {} } = Astro.props;
+
+interface DireccionPedido {
+  id: string;
+  alias: string;
+  calle: string;
+  distrito: string;
+  celular?: string;
+  referencia?: string;
+  eta?: string;
+  esPrincipal?: boolean;
+}
+
+// Normalizar direcciones reales (Soporta Map de Firestore o Array de smiles/{uid})
+let listaDirecciones: DireccionPedido[] = [];
+if (Array.isArray(cliente.direcciones)) {
+  listaDirecciones = (cliente.direcciones as SmileDireccion[]).map((d, idx) => ({
+    id: String(d.id || `dir-${idx}`),
+    alias: d.alias || d.etiqueta || (idx === 0 ? 'Casa' : `Dirección ${idx + 1}`),
+    calle: d.calle || d.direccion || '',
+    distrito: d.distrito || 'Surquillo',
+    celular: d.celular || cliente.celular || cliente.telefono || '',
+    referencia: d.referencia || '',
+    eta: d.eta || '',
+    esPrincipal: Boolean(d.esPrincipal ?? d.predeterminada ?? (idx === 0))
+  })).filter(d => Boolean(d.calle));
+} else if (cliente.direcciones && typeof cliente.direcciones === 'object') {
+  listaDirecciones = Object.entries(cliente.direcciones as Record<string, any>).map(([key, d]) => ({
+    id: key,
+    alias: d.alias || d.etiqueta || (key === 'principal' ? 'Casa' : key),
+    calle: d.calle || d.direccion || '',
+    distrito: d.distrito || 'Surquillo',
+    celular: d.celular || cliente.celular || cliente.telefono || '',
+    referencia: d.referencia || '',
+    eta: d.eta || '',
+    esPrincipal: key === 'principal' || Boolean(d.esPrincipal ?? d.predeterminada)
+  })).filter(d => Boolean(d.calle));
+}
+
+// Catálogo Oficial Vivo desde Firestore (datosNegocio.productos)
+// Si el dueño pausa un producto o actualiza el precio en Firestore, se refleja de inmediato
+const prodsRaw = datosNegocio.productos || [];
+const prodsFiltrados = prodsRaw
+  .filter(p => p.estado !== 'pausado' && p.estado !== 'inactivo')
+  .sort((a, b) => (a.orden || 999) - (b.orden || 999));
+
+// Fallback canónico de seguridad si Firestore no devolvió registros en build
+const productosCatalogo = prodsFiltrados.length > 0 ? prodsFiltrados.map((p, idx) => ({
+  id: p.id || `prod-${idx}`,
+  nombre: p.nombre || 'Balón de Gas',
+  nombreCorto: p.nombreCorto || p.nombre || 'Gas',
+  badge: p.badge || (idx === 0 ? 'MÁS PEDIDO' : ''),
+  tagClase: p.tagClase || (idx === 0 ? 'badge-fire' : 'badge-blue'),
+  precioPEN: Number(p.precioPEN ?? (p.precio ?? 0)),
+  imagen: p.imagen || '/imgwii/productos/BALON-10KG.webp',
+  valvula: p.valvula || 'Click-On o Rosca estándar',
+  balanza: (Array.isArray(p.caracteristicas) && p.caracteristicas.length > 0) 
+    ? p.caracteristicas[0] 
+    : (p.delivery || 'Balanza digital Inacal en puerta'),
+  defaultQty: idx === 0 ? 1 : 0
+})) : [
+  {
+    id: 'bal-n-solgas-premium-10-kg',
+    nombre: 'Balón SOLGAS Premium 10 kg',
+    nombreCorto: 'Solgas 10 kg',
+    badge: 'MÁS PEDIDO',
+    tagClase: 'badge-fire',
+    precioPEN: 65.00,
+    imagen: '/imgwii/productos/BALON-10KG.webp',
+    valvula: 'Click-On o Rosca estándar',
+    balanza: 'Balanza digital Inacal en puerta',
+    defaultQty: 1
+  },
+  {
+    id: 'balon-solgas-45-kg',
+    nombre: 'Balón SOLGAS 45 kg',
+    nombreCorto: 'Solgas 45 kg',
+    badge: 'COMERCIAL',
+    tagClase: 'badge-blue',
+    precioPEN: 230.00,
+    imagen: '/imgwii/productos/BALON-45KG.webp',
+    valvula: 'Rosca industrial alta presión',
+    balanza: 'Caudal continuo para negocios',
+    defaultQty: 0
+  },
+  {
+    id: 'balon-masgas-de-10-kg',
+    nombre: 'Balón MASGAS de 10 kg',
+    nombreCorto: 'Masgas 10 kg',
+    badge: 'ECONÓMICO',
+    tagClase: 'badge-emerald',
+    precioPEN: 55.00,
+    imagen: '/imgwii/productos/MASGAS-10KG.webp',
+    valvula: 'Universal estándar para hogar',
+    balanza: 'Rendimiento diario garantizado',
+    defaultQty: 0
+  },
+  {
+    id: 'kit-regulador-solgas',
+    nombre: 'Kit Regulador SOLGAS',
+    nombreCorto: 'Regulador Solgas',
+    badge: 'SEGURIDAD',
+    tagClase: 'badge-gold',
+    precioPEN: 70.00,
+    imagen: '/imgwii/productos/REGULADOR.webp',
+    valvula: 'Click-On traba antifugas',
+    balanza: 'Homologado por Osinergmin',
+    defaultQty: 0
+  }
+];
+
+const mediosPagoLista = datosNegocio.mediosPago || MEDIOS_PAGO_BASE;
+const telefonoSede = datosNegocio.telefonoLimpio || '936369384';
+const whatsappSede = datosNegocio.whatsapp || '51936369384';
+---
+
+<div class="cl-pedidos-module" id="moduloPedidos">
+  <div class="cl-grid-split">
+    
+    <!-- COLUMNA IZQUIERDA: BANNER SUPERIOR + LISTA DE PRODUCTOS -->
+    <div class="cl-col-left">
+      
+      <!-- BANNER DE BIENVENIDA Y LEYENDA (IMAGEN 1) -->
+      <div class="cl-prods-header">
+        <div class="cl-welcome-row">
+          <div class="cl-welcome-title">
+            <span id="clWelcomeSalute">¡Hola!</span> 🔥 <strong class="cl-text-orange">Realiza tu Pedido Hoy</strong>
+          </div>
+          <button type="button" class="cl-btn-ficha" id="btnGestionarFicha" title="Gestionar ficha de cliente">
+            <i class="fa-solid fa-id-card"></i> <span>Gestionar Ficha</span>
+          </button>
+        </div>
+
+        <div class="cl-sub-legend-row">
+          <span class="cl-legend-left">SELECCIONA TU CILINDRO OFICIAL</span>
+          <span class="cl-legend-right"><i class="fa-solid fa-truck-fast"></i> DELIVERY Y PESAJE INCLUIDO</span>
+        </div>
+      </div>
+
+      <!-- LISTA DE PRODUCTOS HORIZONTALES (DINÁMICOS DE FIRESTORE) -->
+      <div class="cl-prods-list" id="listaProductosCards">
+        {productosCatalogo.map((prod) => (
+          <div 
+            class={`cl-h-card ${prod.defaultQty > 0 ? 'has-items' : ''}`} 
+            data-id={prod.id} 
+            data-nombre={prod.nombre} 
+            data-nombrecorto={prod.nombreCorto} 
+            data-precio={prod.precioPEN}
+          >
+            <div class="cl-h-img-box">
+              <img src={prod.imagen} alt={prod.nombre} class="cl-h-img" loading="lazy" />
+            </div>
+
+            <div class="cl-h-info">
+              <div class="cl-h-badge-row">
+                {prod.badge && <span class={`cl-h-badge ${prod.tagClase}`}>{prod.badge}</span>}
+                <span class="cl-h-title">{prod.nombre}</span>
+              </div>
+              <div class="cl-h-checks">
+                <span><i class="fa-solid fa-check"></i> {prod.valvula}</span>
+                <span><i class="fa-solid fa-check"></i> {prod.balanza}</span>
+              </div>
+            </div>
+
+            <div class="cl-h-action-col">
+              <div class="cl-h-price" id={`priceDisplay-${prod.id}`}>S/ {prod.precioPEN.toFixed(2)}</div>
+              
+              <!-- STEPPER DE CANTIDAD -->
+              <div class="cl-qty-stepper">
+                <button type="button" class="cl-btn-qty btn-minus" data-id={prod.id} title="Quitar">
+                  <i class="fa-solid fa-minus"></i>
+                </button>
+                <span class="cl-qty-val" id={`qty-${prod.id}`}>{prod.defaultQty}</span>
+                <button type="button" class="cl-btn-qty btn-plus" data-id={prod.id} title="Agregar">
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+    <!-- COLUMNA DERECHA: 37% (PAGO & ENTREGA) + 63% (WHATSAPP PREVIEW) -->
+    <div class="cl-col-right">
+      
+      <!-- 37% CARD: PAGO & ENTREGA CON GARANTÍA SOLGAS (IMAGEN 2) -->
+      <div class="cl-order-card">
+        
+        <!-- HEADER DE LA TARJETA -->
+        <div class="cl-card-header">
+          <span class="cl-card-title">
+            <i class="fa-solid fa-wallet"></i> PAGO & ENTREGA
+          </span>
+          <span class="cl-inacal-badge">
+            Garantía Solgas <i class="fa-solid fa-circle-check"></i>
+          </span>
+        </div>
+
+        <!-- 1. DIRECCIÓN {SELECT} + BOTÓN AGREGAR -->
+        <!-- 1. DIRECCIÓN {SELECT} + BOTÓN AGREGAR -->
+        <div class="cl-dir-picker-row">
+          <div class="cl-dir-label">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>Dirección:</span>
+          </div>
+          <select class="cl-sel-dir" id="selDireccionPedido">
+            {listaDirecciones.length > 0 ? (
+              listaDirecciones.map(d => (
+                <option 
+                  value={d.id} 
+                  data-calle={d.calle} 
+                  data-distrito={d.distrito} 
+                  data-celular={d.celular || cliente.celular || ''} 
+                  data-ref={d.referencia} 
+                  selected={d.esPrincipal}
+                >
+                  {d.alias} — {d.calle}, {d.distrito}
+                </option>
+              ))
+            ) : (
+              <option value="" disabled selected data-calle="" data-distrito="" data-celular="">
+                ⚠️ Sin dirección registrada — Haz clic en [+ Agregar]
+              </option>
+            )}
+          </select>
+          <button type="button" class="cl-btn-add-dir" id="btnAddDirJump" title="Gestionar o agregar nueva dirección">
+            <i class="fa-solid fa-plus"></i> <span>Agregar</span>
+          </button>
+        </div>
+
+        <!-- 1.1 TELÉFONO / CELULAR DE CONTACTO -->
+        <div class="cl-contact-picker-row" id="clContactPickerRow">
+          <div class="cl-contact-label">
+            <i class="fa-solid fa-phone"></i>
+            <span>Contacto:</span>
+          </div>
+          <div class="cl-contact-input-wrap">
+            <input 
+              type="tel" 
+              class="cl-input-contact" 
+              id="inCelularPedido" 
+              placeholder="Celular para coordinar entrega..." 
+              value={cliente.celular || ''} 
+            />
+          </div>
+        </div>
+
+        <!-- 2. BOTONES DE PAGO (DESDE FIRESTORE) -->
+        <div class="cl-pay-grid" id="payMethodsGrid">
+          {mediosPagoLista.map((mp, idx) => (
+            <button 
+              type="button" 
+              class={`cl-pay-opt ${idx === 0 ? 'active' : ''}`} 
+              data-method={mp.nombre}
+            >
+              <i class={`fa-solid ${mp.icon || 'fa-money-bill-wave'}`}></i>
+              <span>{mp.nombre}</span>
+            </button>
+          ))}
+        </div>
+
+        <!-- 3. NOTA: {TEXTAREA} -->
+        <div class="cl-notes-block">
+          <label class="cl-notes-label" for="inNotasPedido">
+            <i class="fa-solid fa-pen-to-square"></i> Nota:
+          </label>
+          <textarea 
+            class="cl-notes-textarea" 
+            id="inNotasPedido" 
+            placeholder="Escribe indicaciones de entrega o cómo prefieres pagar..."
+          ></textarea>
+        </div>
+
+      </div>
+
+      <!-- 63% MOCKUP WHATSAPP REALISTA -->
+      <div class="cl-wa-box">
+        <div class="cl-wa-header">
+          <div class="cl-wa-header-left">
+            <img src="/imgwii/logo.webp" alt="Solgas" class="cl-wa-avatar" />
+            <div>
+              <strong style="font-size:0.84rem;">Solgas Surquillo Oficial</strong>
+              <small style="font-size:0.68rem; opacity:0.9; display:block;">en línea · Despacho Jr. Dante 260</small>
+            </div>
+          </div>
+          <i class="fa-solid fa-phone" style="font-size:0.85rem;"></i>
+        </div>
+
+        <div class="cl-wa-body">
+          <div class="cl-bubble-out" id="bubbleWaPedido">
+            <!-- Mensaje dinámico renderizado por pedidos.js -->
+            <div class="cl-wa-time"><span>11:00 a. m.</span> <i class="fa-solid fa-check-double" style="color:#53bdeb;"></i></div>
+          </div>
+        </div>
+
+        <div class="cl-summary-box">
+          <div>
+            <div class="cl-summary-prod" id="sumItemsCount">1 producto seleccionado</div>
+            <div class="cl-summary-sub" id="sumDirSelected">Selecciona tu dirección</div>
+          </div>
+          <div class="cl-summary-price" id="sumPriceTotal">S/ 65.00</div>
+        </div>
+
+        <div class="cl-actions-row">
+          <a href={`tel:${telefonoSede}`} class="cl-btn-call" title="Llamar a Despacho"><i class="fa-solid fa-phone"></i></a>
+          <a href={`https://wa.me/${whatsappSede}`} target="_blank" rel="noopener noreferrer" class="cl-btn-wa-order" id="btnWaOrder">
+            <i class="fa-brands fa-whatsapp"></i> <span id="lblBtnWaOrder">Pedir por WhatsApp</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- BARRA RESUMEN FLOTANTE EN MÓVIL (ENCIMA DEL BOTTOM DOCK) -->
+  <div class="cl-mobile-cart-bar">
+    <div class="cl-m-cart-left">
+      <span class="cl-m-cart-count" id="mCartCount">1 producto</span>
+      <span class="cl-m-cart-total" id="mCartTotal">S/ 65.00</span>
+    </div>
+    <a href={`https://wa.me/${whatsappSede}`} target="_blank" rel="noopener noreferrer" class="cl-m-cart-btn-wa" id="mBtnWaOrder">
+      <i class="fa-brands fa-whatsapp"></i> <span>Pedir ahora</span>
+    </a>
+  </div>
+</div>

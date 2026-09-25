@@ -1,0 +1,290 @@
+/* ==========================================================================
+   03-GARANTIA (PESAJE) SECTION STYLES - SOLGAS SURQUILLO (GASWII)
+   Diseño Oficial CRO: 2 Columnas sobre .pagewii (85vw)
+   ========================================================================== */
+
+#pesaje, #garantia, .sec-garantia {
+  padding: 8vh 0;
+  background: var(--bg-surface, #091122);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 3.5vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 900px) {
+  .split-grid {
+    grid-template-columns: 1fr !important;
+    gap: 4vh !important;
+  }
+}
+
+/* Columna Izquierda: Tarjeta con Borde de Acento y Foto */
+.pesaje-image-frame {
+  border: 2px solid var(--border-accent, rgba(224, 86, 0, 0.4));
+  background: var(--bg-card, #0b1329);
+  border-radius: 1.5vh;
+  padding: 10px;
+  transition: border-color 0.3s ease, transform 0.3s ease;
+  overflow: hidden;
+  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.5);
+}
+
+.pesaje-image-frame:hover {
+  border-color: var(--primary, #ff6600);
+  transform: translateY(-0.2vh);
+}
+
+.pesaje-media-container {
+  border-radius: 1.2vh;
+  height: 48vh;
+  min-height: 400px;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.pesaje-media-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.pesaje-caption-overlay {
+  color: #fff;
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 8, 17, 0.7) 55%, rgba(5, 8, 17, 0.95) 100%);
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6vh;
+  padding: 2.2vh 1.8vw;
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.pesaje-caption-badge {
+  color: #34d399;
+  font-size: 0.76rem;
+  background: rgba(16, 185, 129, 0.2);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  border-radius: 999px;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.35vh 0.85vw;
+  font-weight: 700;
+  display: inline-flex;
+}
+
+.pesaje-caption-title {
+  font-size: clamp(1rem, 1.15vw, 1.25rem);
+  color: #fff;
+  letter-spacing: -0.01em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  margin: 0;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-weight: 800;
+}
+
+/* Columna Derecha */
+.pesaje-top-badge {
+  color: #38bdf8;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(2, 132, 199, 0.18);
+  border: 1px solid rgba(2, 132, 199, 0.4);
+  border-radius: 999px;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 2vh;
+  padding: 0.45vh 1.1vw;
+  font-weight: 700;
+  display: inline-flex;
+}
+
+.pesaje-main-title {
+  color: var(--text-bright, #fff);
+  letter-spacing: -0.02em;
+  margin: 0 0 1.8vh;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.8rem, 2.4vw, 2.7rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.pesaje-main-desc {
+  font-size: clamp(0.92rem, 1vw, 1.05rem);
+  color: var(--text-muted, #94a3b8);
+  margin: 0 0 3.2vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  line-height: 1.65;
+}
+
+.pesaje-main-desc strong {
+  color: var(--text-bright, #fff);
+}
+
+/* Grilla de 3 Métricas de Ecuación */
+.pesaje-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.1vw;
+  margin-bottom: 3.5vh;
+}
+
+@media (max-width: 768px) {
+  .pesaje-stats-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5vh;
+  }
+}
+
+.pesaje-stat-card {
+  text-align: center;
+  border-radius: 1vh;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2.2vh 1vw;
+  transition: transform 0.2s, border-color 0.2s;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.pesaje-stat-card:hover {
+  transform: translateY(-0.25vh);
+}
+
+.pesaje-stat-card.card-tara {
+  background: var(--bg-card, #0f172a);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+}
+
+.pesaje-stat-card.card-glp {
+  background: rgba(255, 102, 0, 0.08);
+  border: 1.8px solid var(--primary, #ff6600);
+}
+
+.pesaje-stat-card.card-glp .pesaje-stat-val,
+.pesaje-stat-card.card-glp .pesaje-stat-label {
+  color: var(--primary, #ff6600) !important;
+}
+
+.pesaje-stat-card.card-total {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1.8px solid #10b981;
+}
+
+.pesaje-stat-card.card-total .pesaje-stat-val,
+.pesaje-stat-card.card-total .pesaje-stat-label {
+  color: #10b981 !important;
+}
+
+.pesaje-stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #94a3b8);
+  margin-bottom: 0.6vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+}
+
+.pesaje-stat-val {
+  color: var(--text-bright, #fff);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5vh;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.4rem, 1.8vw, 2rem);
+  font-weight: 800;
+}
+
+.pesaje-stat-sub {
+  font-size: 0.74rem;
+  color: #64748b;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 500;
+}
+
+.card-glp .pesaje-stat-sub,
+.card-total .pesaje-stat-sub {
+  color: #94a3b8;
+}
+
+/* Botonera de Acciones */
+.pesaje-actions-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1vw;
+}
+
+@media (max-width: 768px) {
+  .pesaje-actions-row {
+    flex-direction: column;
+    width: 100%;
+  }
+  .pesaje-actions-row > button,
+  .pesaje-actions-row > a {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.btn-pesaje-wa {
+  color: #fff;
+  font-size: clamp(0.85rem, 0.95vw, 1rem);
+  cursor: pointer;
+  background: var(--accent-emerald, #10b981);
+  border: none;
+  border-radius: 1vh;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 1.4vh 1.6vw;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  box-shadow: 0 0.5vh 1.5vh rgba(16, 185, 129, 0.35);
+}
+
+.btn-pesaje-wa:hover {
+  background: #059669;
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.8vh 2vh rgba(16, 185, 129, 0.5);
+}
+
+.btn-pesaje-call {
+  color: #fff;
+  font-size: clamp(0.85rem, 0.95vw, 1rem);
+  background: var(--accent-cyan, #0284c7);
+  border: none;
+  border-radius: 1vh;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 1.4vh 1.6vw;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+  display: inline-flex;
+  box-shadow: 0 0.5vh 1.5vh rgba(2, 132, 199, 0.35);
+}
+
+.btn-pesaje-call:hover {
+  background: #0369a1;
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.8vh 2vh rgba(2, 132, 199, 0.5);
+}

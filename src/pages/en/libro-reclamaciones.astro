@@ -1,0 +1,16 @@
+---
+// src/pages/en/libro-reclamaciones.astro
+// Public Page: Virtual Claims and Complaints Book INDECOPI (English)
+import Principal from '../../core/layouts/Principal.astro';
+import LibroReclamaciones from '../../feature/acercas/secciones/05-libro-reclamaciones/LibroReclamaciones.astro';
+import { buildRuta } from '../../core/idioma/idioma';
+import { datosNegocio } from '../../negocio.js';
+
+const idioma = 'en';
+const ruta = buildRuta('/libro-reclamaciones', idioma);
+const title = `Virtual Complaints Book · ${datosNegocio.nombre} | INDECOPI Compliance`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <LibroReclamaciones idioma={idioma} />
+</Principal>

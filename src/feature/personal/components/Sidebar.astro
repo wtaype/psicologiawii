@@ -1,0 +1,39 @@
+---
+// src/feature/personal/components/Sidebar.astro
+// Menú lateral con los módulos operacionales activos y botón Colapsar
+import { getModulosActivos } from '../modulos.js';
+
+interface Props {
+  moduloActivo?: string;
+}
+
+const { moduloActivo = 'dashboard' } = Astro.props;
+const listaModulos = getModulosActivos();
+---
+
+<aside class="ps-sidebar" id="sidebarMenu">
+  <nav class="ps-nav" aria-label="Menú del dueño">
+    {listaModulos.map((m) => {
+      const isActive = m.id === moduloActivo;
+      return (
+        <button 
+          class={`ps-nav-item ${isActive ? 'active' : ''}`} 
+          data-panel-target={m.id}
+          title={m.nombre}
+        >
+          <i class={m.icono}></i>
+          <span class="ps-nav-text">{m.nombre}</span>
+          {m.badge && <span class="ps-nav-badge">{m.badge}</span>}
+        </button>
+      );
+    })}
+  </nav>
+
+  <!-- Pie con Botón Colapsar -->
+  <div class="ps-sidebar-footer">
+    <button class="ps-btn-collapse" id="btnCollapseSidebar" title="Colapsar menú lateral">
+      <i class="fa-solid fa-arrow-left-long" id="iconCollapse"></i>
+      <span id="labelCollapse">Colapsar</span>
+    </button>
+  </div>
+</aside>

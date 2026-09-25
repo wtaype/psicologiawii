@@ -1,0 +1,66 @@
+---
+// src/feature/inicio/secciones/05-separador/Separador.astro
+// 5. BANNER SEPARADOR DE ORIENTACIÓN DIRECTA Y ATENCIÓN EMPÁTICA
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import separadorCss from './separador.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const telefonoLimpio = datosNegocio.telefonoLimpio;
+const telefonoMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
+const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(t.ws_msg)}`;
+---
+
+<style is:global set:html={separadorCss}></style>
+
+<section class="sos-banner-wrapper" style="background: linear-gradient(135deg, var(--brand-primary) 0%, #20352c 100%);">
+  <div class="pagewii sos-banner-content">
+    
+    <!-- Bloque Informativo Izquierdo -->
+    <div class="sos-info-block">
+      <div class="sos-icon-box" style="background: rgba(255,255,255,0.15); color: #fff;">
+        <i class="fa-solid fa-comments"></i>
+      </div>
+      <div class="sos-text-box">
+        <h2 class="sos-title" style="color: #fff;">{t.titulo}</h2>
+        <p class="sos-sub" style="color: rgba(255,255,255,0.9);">
+          {t.sub_1} <strong>{t.sub_destacado}</strong> {t.sub_2} <span>{telefonoMostrado}</span> {t.sub_3}
+        </p>
+      </div>
+    </div>
+
+    <!-- Bloque de Botones Dual -->
+    <div class="sos-actions-block">
+      <a 
+        href={`tel:${telefonoLimpio}`} 
+        class="btn-sos-call"
+        title={t.btn_llamada}
+        style="background: #ffffff; color: var(--brand-primary); font-weight: 700; border-radius: 1vh;"
+      >
+        <i class="fa-solid fa-phone"></i>
+        <span>{t.btn_llamada}</span>
+      </a>
+
+      <a 
+        href={wsLink} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="btn-sos-wa"
+        title={t.btn_ws}
+        style="background: #25d366; color: #fff; font-weight: 700; border-radius: 1vh;"
+      >
+        <i class="fa-brands fa-whatsapp"></i> 
+        <span>{t.btn_ws}</span>
+      </a>
+    </div>
+
+  </div>
+</section>

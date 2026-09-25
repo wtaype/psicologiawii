@@ -1,0 +1,22 @@
+---
+// src/core/componentes/StickyBar.astro
+// 11. BARRA FLOTANTE STICKY PARA SMARTPHONES - Consultorio Psicológico América
+import { datosNegocio } from '../../negocio.js';
+import { getI18n, type Idioma } from '../idioma/idioma';
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = 'es' } = Astro.props;
+const t = getI18n(idioma).nav;
+---
+
+<div class="mobile-sticky-bar">
+  <a href={`tel:${datosNegocio.telefonoLimpio}`} class="btn-call sticky-btn-call" title="Llamar a Consultorio">
+    <i class="fa-solid fa-phone"></i> <span>{t.sticky_llamar}</span>
+  </a>
+  <a href={`https://wa.me/${datosNegocio.whatsappNumero}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`} target="_blank" rel="noopener noreferrer" class="btn-whatsapp sticky-btn-order" title="Agendar Consulta por WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i> <span>{t.sticky_pedir}</span>
+  </a>
+</div>

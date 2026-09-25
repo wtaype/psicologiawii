@@ -1,0 +1,115 @@
+---
+// src/feature/inicio/secciones/03-garantia/Garantia.astro
+// 3. SECCIÓN ENFOQUES TERAPÉUTICOS Y ÉTICA PROFESIONAL
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import garantiaCss from './garantia.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const telefonoLimpio = datosNegocio.telefonoLimpio;
+const telefonoMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
+const direccionSede = datosNegocio.direccionSede;
+
+const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(t.ws_msg)}`;
+---
+
+<style is:global set:html={garantiaCss}></style>
+
+<section id="enfoques" class="sec-garantia section-py-surface">
+  <div class="pagewii">
+    <div class="split-grid items-center">
+      
+      <!-- Columna Izquierda: Tarjeta con Borde de Acento y Foto de Consultorio -->
+      <div>
+        <div class="pesaje-image-frame">
+          <div class="pesaje-media-container">
+            <img 
+              src="/imgwii/Psychotherapy_office_interior.jpeg" 
+              alt="Consultorio Psicológico América - Espacio terapéutico seguro y acogedor" 
+              width="500" 
+              height="400" 
+              loading="lazy"
+              decoding="async" 
+              class="pesaje-media-img"
+            />
+            <div class="pesaje-caption-overlay">
+              <span class="pesaje-caption-badge">
+                <i class="fa-solid fa-shield-heart"></i> 
+                <span>{t.foto_badge}</span>
+              </span>
+              <span class="pesaje-caption-title">{t.foto_titulo}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Información CRO, 3 Pilares Clínicos y Botones -->
+      <div>
+        <div class="badge-serenidad pesaje-top-badge">
+          <i class="fa-solid fa-check-double"></i> 
+          <span>{t.top_badge.toUpperCase()}</span>
+        </div>
+
+        <h2 class="pesaje-main-title">{t.titulo}</h2>
+        
+        <p class="pesaje-main-desc">
+          {t.descripcion_1} <strong>{direccionSede}</strong> {t.descripcion_2}
+        </p>
+
+        <!-- Pilares Clínicos: 3 Tarjetas -->
+        <div class="pesaje-stats-grid">
+          <div class="pesaje-stat-card card-tara">
+            <div class="pesaje-stat-label">{t.tara_label}</div>
+            <div class="pesaje-stat-val val-tara" style="color: var(--brand-primary);">{t.tara_val}</div>
+            <div class="pesaje-stat-sub">{t.tara_sub}</div>
+          </div>
+
+          <div class="pesaje-stat-card card-glp">
+            <div class="pesaje-stat-label">{t.glp_label}</div>
+            <div class="pesaje-stat-val" style="color: var(--brand-blue);">{t.glp_val}</div>
+            <div class="pesaje-stat-sub">{t.glp_sub}</div>
+          </div>
+
+          <div class="pesaje-stat-card card-total">
+            <div class="pesaje-stat-label">{t.total_label}</div>
+            <div class="pesaje-stat-val" style="color: var(--brand-accent);">{t.total_val}</div>
+            <div class="pesaje-stat-sub">{t.total_sub}</div>
+          </div>
+        </div>
+
+        <!-- Botones de Acción Dual -->
+        <div class="pesaje-actions-row">
+          <a 
+            href={wsLink} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="btn-whatsapp btn-pesaje-wa"
+            title={t.btn_ws}
+          >
+            <i class="fa-brands fa-whatsapp"></i> 
+            <span>{t.btn_ws}</span>
+          </a>
+
+          <a 
+            href={`tel:${telefonoLimpio}`} 
+            class="btn-call btn-pesaje-call"
+            title={`${t.btn_llamar_prefijo} ${telefonoMostrado}`}
+          >
+            <i class="fa-solid fa-phone"></i> 
+            <span>{t.btn_llamar_prefijo} <span>{telefonoMostrado}</span></span>
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>

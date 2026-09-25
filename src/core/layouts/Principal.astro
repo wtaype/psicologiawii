@@ -1,0 +1,165 @@
+---
+// src/core/layouts/Principal.astro
+// 🌟 Layout Maestro Unificado con Estilos Inlined via set:html (0 CSS generado en compilación)
+import Topbar from '../componentes/Topbar.astro';
+import Header from '../componentes/Header.astro';
+import MobileDrawer from '../componentes/MobileDrawer.astro';
+import Footer from '../componentes/Footer.astro';
+import StickyBar from '../componentes/StickyBar.astro';
+
+import { getMeta, getJsonLd } from '../seo.js';
+import type { Idioma } from '../idioma/idioma';
+
+import witemaCss from '../wicss/witema.css?inline';
+import appCss from '../wicss/app.css?inline';
+import googleCss from '../../../public/google/fonts.min.css?raw';
+import awesomeCss from '../../../public/fontawesome/css/all.min.css?raw';
+
+const globalCss = googleCss + '\n' + awesomeCss + '\n' + witemaCss + '\n' + appCss;
+
+interface Props {
+  idioma?: Idioma;
+  ruta?: string;
+}
+
+const { idioma = 'es', ruta = '/' } = Astro.props;
+const meta = getMeta(ruta, idioma);
+const jsonLd = getJsonLd(ruta, idioma);
+---
+
+<!DOCTYPE html>
+<html lang={idioma} data-theme="luz" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>{meta.title}</title>
+  <meta name="description" content={meta.description} />
+  <meta name="keywords" content={meta.keywords} />
+  <link rel="canonical" href={meta.canonical} />
+
+  <!-- Directivas para Rastreadores de Google y Miniaturas SERP -->
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="googlebot" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+  <meta name="thumbnail" content={meta.ogImage} />
+
+  <!-- Hreflang cruzado para SEO Internacional y Local -->
+  <link rel="alternate" hreflang="es" href={meta.hreflang.es} />
+  <link rel="alternate" hreflang="en" href={meta.hreflang.en} />
+  <link rel="alternate" hreflang="x-default" href={meta.hreflang.default} />
+
+  <!-- OpenGraph y Twitter Cards Enriquecidos con Dimensiones y Alt -->
+  <meta property="og:type" content={meta.ogType} />
+  <meta property="og:site_name" content={meta.siteName} />
+  <meta property="og:title" content={meta.ogTitle} />
+  <meta property="og:description" content={meta.ogDescription} />
+  <meta property="og:image" content={meta.ogImage} />
+  <meta property="og:image:secure_url" content={meta.ogImage} />
+  <meta property="og:image:type" content={meta.ogImageType} />
+  <meta property="og:image:width" content={String(meta.ogImageWidth)} />
+  <meta property="og:image:height" content={String(meta.ogImageHeight)} />
+  <meta property="og:image:alt" content={meta.ogImageAlt} />
+  <meta property="og:url" content={meta.canonical} />
+  <meta property="og:locale" content={meta.locale} />
+  <meta property="og:locale:alternate" content={meta.localeAlternate} />
+  
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={meta.ogTitle} />
+  <meta name="twitter:description" content={meta.ogDescription} />
+  <meta name="twitter:image" content={meta.ogImage} />
+  <meta name="twitter:image:alt" content={meta.ogImageAlt} />
+
+  <!-- Schema.org JSON-LD para Google Rich Snippets -->
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+
+  <!-- Fuentes Locales Precargadas Críticas (Above-the-Fold: Outfit-700 & Poppins-400) -->
+  <link rel="preload" href="/google/Outfit-700.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+  <link rel="preload" href="/google/Poppins-400.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+  <!-- Anti-FOUC Inmediato y Smart (0ms bloqueo, 78 bytes) -->
+  <script is:inline>try{document.documentElement.dataset.theme=localStorage.getItem('wiTema')||(matchMedia('(prefers-color-scheme:light)').matches?'luz':'futuro')}catch(e){}</script>
+
+  <!-- Estilos Globales Inlined (app.css + fonts.css + fontawesome): 0 CSS compilado, 0 peticiones bloqueantes -->
+  <style is:global data-astro-transition-persist="global-css" set:html={globalCss}></style>
+
+  <!-- Slot Head para que cada feature (inicio, cliente, personal) inyecte su CSS con set:html -->
+  <slot name="head" />
+</head>
+
+<body>
+  <!-- 1. Topbar Oficial -->
+  <Topbar idioma={idioma} />
+
+  <!-- 2. Header Sticky Bilingüe con Botones de Acción -->
+  <Header idioma={idioma} ruta={ruta} />
+
+  <!-- 3. Drawer Móvil con Navegación y Llamada Rápida -->
+  <MobileDrawer idioma={idioma} ruta={ruta} />
+
+  <!-- 4. Contenido Principal de la Página (Estándar Workwii #wimain) -->
+  <main id="wimain">
+    <slot />
+  </main>
+
+  <!-- 5. Footer Institucional -->
+  <Footer idioma={idioma} />
+
+  <!-- 6. Barra Sticky Móvil -->
+  <StickyBar idioma={idioma} />
+
+  <!-- Despachador Global On-Demand Unificado con wiSmart() -->
+  <script>
+    import { wiTema, wiSmart } from '@widev';
+
+    // Reactividad Smart para modo claro/oscuro del sistema
+    wiTema.listen();
+
+    // Puente de compatibilidad global ultra-ligero para interacción
+    (window as any).toggleTema = () => wiTema.toggle();
+    (window as any).abrirModalLogin = (vista = 'login') => {
+      import('../../feature/auth/visualLogin.js').then((m) => {
+        m.initListeners();
+        m.abrirLogin(vista);
+      });
+    };
+    (window as any).cerrarModalLogin = () => {
+      const modal = document.getElementById('wi_auth_modal');
+      if (modal) {
+        modal.classList.remove('active');
+        setTimeout(() => modal.remove(), 200);
+      }
+    };
+
+    // Modal Pedido On-Demand (0 KiB en carga inicial)
+    (window as any).abrirModalPedido = (producto?: string) => {
+      import('../../feature/inicio/lib/modalPedido.js').then((m) => {
+        m.abrirModalPedido(producto);
+      });
+    };
+    (window as any).cerrarModalPedido = () => {
+      import('../../feature/inicio/lib/modalPedido.js').then((m) => {
+        m.cerrarModalPedido();
+      });
+    };
+
+    (window as any).abrirDrawer = () => {
+      document.getElementById('mobileDrawer')?.classList.add('open');
+      document.getElementById('drawerBackdrop')?.classList.add('active');
+    };
+    (window as any).cerrarDrawer = () => {
+      document.getElementById('mobileDrawer')?.classList.remove('open');
+      document.getElementById('drawerBackdrop')?.classList.remove('active');
+    };
+
+    // Carga Inteligente de Interactividad (wiSmart: touchstart, scroll, click, mousemove)
+    wiSmart({
+      js: [
+        async () => {
+          const { initInicioInteractivo } = await import('../../feature/inicio/lib/inicioInteractivo.js');
+          initInicioInteractivo();
+        }
+      ]
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,34 @@
+---
+// src/core/componentes/Topbar.astro
+// 1. TOP BAR OFICIAL - Consultorio Psicológico América
+import { datosNegocio } from '../../negocio.js';
+import { getI18n, type Idioma } from '../idioma/idioma';
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = 'es' } = Astro.props;
+const t = getI18n(idioma).topbar;
+---
+
+<div class="topbar-main">
+  <div class="page-container topbar-content">
+    <div class="topbar-group">
+      <span class="topbar-auth-pill">
+        <i class="fa-solid fa-certificate"></i> <span>{datosNegocio.registroColegio}</span>
+      </span>
+      <span class="desktop-only">
+        {t.sede_label} • {t.despacho_label}
+      </span>
+    </div>
+    <div class="topbar-group-right">
+      <span class="desktop-only"><i class="fa-solid fa-calendar-check"></i> <span>Previa Cita</span></span>
+      <a href={`tel:${datosNegocio.telefonoLimpio}`} class="topbar-phone-link" title={t.llamar_titulo} data-negocio-tel-link>
+        <i class="fa-solid fa-phone"></i> 
+        <span class="desktop-only" data-negocio-tel-text>{datosNegocio.telefonoMostrado}</span>
+        <span class="mobile-only">{t.llamar_movil}</span>
+      </a>
+    </div>
+  </div>
+</div>

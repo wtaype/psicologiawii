@@ -1,0 +1,16 @@
+---
+// src/pages/en/privacidad.astro
+// Public Page: Privacy Policy & Data Protection (English)
+import Principal from '../../core/layouts/Principal.astro';
+import Privacidad from '../../feature/acercas/secciones/03-privacidad/Privacidad.astro';
+import { buildRuta } from '../../core/idioma/idioma';
+import { datosNegocio } from '../../negocio.js';
+
+const idioma = 'en';
+const ruta = buildRuta('/privacidad', idioma);
+const title = `Privacy Policy · ${datosNegocio.nombre} | Personal Data Protection Law 29733`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Privacidad idioma={idioma} />
+</Principal>

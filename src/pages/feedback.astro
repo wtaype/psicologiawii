@@ -1,0 +1,16 @@
+---
+// src/pages/feedback.astro
+// Página Pública: Feedback y Calificación del Servicio (Español)
+import Principal from '../core/layouts/Principal.astro';
+import Feedback from '../feature/acercas/secciones/08-feedback/Feedback.astro';
+import { buildRuta } from '../core/idioma/idioma';
+import { datosNegocio } from '../negocio.js';
+
+const idioma = 'es';
+const ruta = buildRuta('/feedback', idioma);
+const title = `Feedback y Experiencia · ${datosNegocio.nombre} | Tu Opinión Nos Hace Mejores`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Feedback idioma={idioma} />
+</Principal>

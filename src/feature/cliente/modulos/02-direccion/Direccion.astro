@@ -1,0 +1,215 @@
+---
+// src/feature/cliente/modulos/02-direccion/Direccion.astro
+// Módulo de Gestión de Direcciones de Entrega · Solgas Surquillo
+// Formulario ultra rápido y directo + Lista interactiva en dos columnas
+import { datosNegocio } from '@/negocio.js';
+
+interface Props {
+  cliente?: any;
+}
+
+const { cliente = {} } = Astro.props;
+const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.length > 0 
+  ? datosNegocio.distritos 
+  : [
+      { id: 'surquillo', nombre: 'Surquillo', eta: '12–15 min' },
+      { id: 'miraflores', nombre: 'Miraflores', eta: '15–20 min' },
+      { id: 'san-isidro', nombre: 'San Isidro', eta: '20–25 min' },
+      { id: 'san-borja', nombre: 'San Borja', eta: '18–22 min' },
+      { id: 'barranco', nombre: 'Barranco', eta: '20–25 min' },
+      { id: 'surco', nombre: 'Santiago de Surco', eta: '22–28 min' }
+    ];
+---
+
+<div class="cl-direccion-module" id="moduloDireccion">
+  <!-- CABECERA DEL MÓDULO -->
+  <div class="cd-panel-head">
+    <div class="cd-panel-title">
+      <i class="fa-solid fa-map-location-dot"></i>
+      <span>Mis Direcciones de Entrega</span>
+    </div>
+    <span class="cd-panel-subtitle">
+      Gestiona tus puntos de entrega para pedidos rápidos de gas con delivery oficial inmediato en Surquillo y zonas aledañas.
+    </span>
+  </div>
+
+  <!-- LAYOUT SPLIT: EDITOR IZQUIERDA + LISTA DERECHA -->
+  <div class="cd-layout-split">
+    <!-- ==========================================
+         COLUMNA IZQUIERDA: FORMULARIO EDITOR
+         ========================================== -->
+    <div class="cd-card-editor">
+      <div class="cd-card-header">
+        <div class="cd-card-title" id="cdEditorTitle">
+          <i class="fa-solid fa-circle-plus" id="cdEditorIcon"></i>
+          <span id="cdEditorTitleText">Registrar Dirección</span>
+        </div>
+      </div>
+
+      <form id="cdFormDireccion" autocomplete="off">
+        <input type="hidden" id="cdFormId" value="" />
+
+        <!-- 1. BOTONES DIRECTOS DE TIPO DE LUGAR (SIN LABEL NI INPUT DE TEXTO) -->
+        <div class="cd-chips-row" id="cdChipsRow" role="radiogroup" aria-label="Tipo de Lugar">
+          <button type="button" class="cd-chip-btn active" data-alias="Casa">
+            <i class="fa-solid fa-house"></i> <span>Casa</span>
+          </button>
+          <button type="button" class="cd-chip-btn" data-alias="Trabajo">
+            <i class="fa-solid fa-briefcase"></i> <span>Trabajo</span>
+          </button>
+          <button type="button" class="cd-chip-btn" data-alias="Empresa">
+            <i class="fa-solid fa-building"></i> <span>Empresa</span>
+          </button>
+          <button type="button" class="cd-chip-btn" data-alias="Oficina">
+            <i class="fa-solid fa-desktop"></i> <span>Oficina</span>
+          </button>
+          <button type="button" class="cd-chip-btn" data-alias="Otros">
+            <i class="fa-solid fa-location-dot"></i> <span>Otros</span>
+          </button>
+        </div>
+
+        <!-- 2. CALLE Y DEP / INT -->
+        <div class="cd-form-row">
+          <div class="cd-form-group">
+            <label class="cd-form-label" for="cdFormCalle">
+              <i class="fa-solid fa-location-dot"></i> Calle, Jr. o Av.:
+            </label>
+            <input 
+              type="text" 
+              class="cd-input" 
+              id="cdFormCalle" 
+              placeholder="Ej: Calle Dante 261" 
+              required 
+            />
+          </div>
+
+          <div class="cd-form-group">
+            <label class="cd-form-label" for="cdFormDpto">
+              <i class="fa-solid fa-door-open"></i> Dep / Int / Piso:
+            </label>
+            <input 
+              type="text" 
+              class="cd-input" 
+              id="cdFormDpto" 
+              placeholder="Ej: Dpto 301, Piso 2" 
+            />
+          </div>
+        </div>
+
+        <!-- 3. DISTRITO Y CELULAR / TELÉFONO -->
+        <div class="cd-form-row">
+          <div class="cd-form-group">
+            <label class="cd-form-label" for="cdFormDistrito">
+              <i class="fa-solid fa-map"></i> Distrito de Despacho:
+            </label>
+            <select class="cd-select" id="cdFormDistrito">
+              {distritosCobertura.map((dist: any) => (
+                <option 
+                  value={dist.nombre} 
+                  selected={dist.nombre === 'Surquillo'}
+                  data-eta={dist.eta || '15–20 min'}
+                >
+                  {dist.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div class="cd-form-group">
+            <label class="cd-form-label" for="cdFormCelular">
+              <i class="fa-solid fa-phone"></i> Celular / Telf Contacto:
+            </label>
+            <input 
+              type="tel" 
+              class="cd-input" 
+              id="cdFormCelular" 
+              placeholder="Ej: 961 229 280" 
+            />
+          </div>
+        </div>
+
+        <!-- 4. REFERENCIAS SOLITO EN TEXTAREA -->
+        <div class="cd-form-group">
+          <label class="cd-form-label" for="cdFormReferencia">
+            <i class="fa-solid fa-circle-info"></i> Referencia para el Repartidor:
+          </label>
+          <textarea 
+            class="cd-textarea" 
+            id="cdFormReferencia" 
+            placeholder="Ej: Frente al parque, rejas negras, timbrar dos veces..."
+          ></textarea>
+        </div>
+
+        <!-- 5. DOS COLUMNAS ESTILO APPLE: SWITCH PRINCIPAL + TIEMPO APROX -->
+        <div class="cd-apple-row">
+          <!-- CARD APPLE: DIRECCIÓN PRINCIPAL -->
+          <label class="cd-apple-card cd-apple-clickable" for="cdFormPrincipal">
+            <div class="cd-apple-card-info">
+              <span class="cd-apple-title">
+                <i class="fa-solid fa-star cd-star-icon"></i> Principal
+              </span>
+              <span class="cd-apple-desc">Predeterminar dirección</span>
+            </div>
+            <div class="cd-apple-switch">
+              <input type="checkbox" id="cdFormPrincipal" checked />
+              <span class="cd-slider"></span>
+            </div>
+          </label>
+
+          <!-- CARD APPLE: TIEMPO ESTIMADO DINÁMICO -->
+          <div class="cd-apple-card cd-apple-static">
+            <div class="cd-apple-card-info">
+              <span class="cd-apple-title">
+                <i class="fa-solid fa-truck-fast cd-truck-icon"></i> Tiempo Aprox.
+              </span>
+              <span class="cd-apple-desc">Entrega estimada</span>
+            </div>
+            <div class="cd-apple-badge-eta" id="cdTiempoAproxBadge">
+              12–15 min
+            </div>
+          </div>
+        </div>
+
+        <!-- ACCIONES DEL FORMULARIO -->
+        <div class="cd-form-actions">
+          <button type="submit" class="cd-btn-save" id="cdBtnGuardarDireccion">
+            <i class="fa-solid fa-floppy-disk"></i> <span id="cdBtnGuardarText">Guardar Dirección</span>
+          </button>
+          <button type="button" class="cd-btn-cancel-edit" id="cdBtnCancelarEdicion">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ==========================================
+         COLUMNA DERECHA: LISTA DE DIRECCIONES
+         ========================================== -->
+    <div class="cd-card-list">
+      <div class="cd-card-header">
+        <div class="cd-card-title">
+          <i class="fa-solid fa-list-check"></i>
+          <span>Mis Direcciones Guardadas</span>
+        </div>
+        <span class="cd-badge-count" id="cdBadgeCount">0</span>
+      </div>
+
+      <!-- BUSCADOR EN VIVO -->
+      <div class="cd-search-box">
+        <i class="fa-solid fa-magnifying-glass cd-search-icon"></i>
+        <input 
+          type="text" 
+          class="cd-search-input" 
+          id="cdSearchDir" 
+          placeholder="Buscar por alias, calle o distrito..." 
+          autocomplete="off"
+        />
+      </div>
+
+      <!-- LISTA SCROLLEABLE DE TARJETAS -->
+      <div class="cd-dirs-scroll" id="listaDireccionesCards">
+        <!-- Renderizado reactivo desde direccion.js -->
+      </div>
+    </div>
+  </div>
+</div>

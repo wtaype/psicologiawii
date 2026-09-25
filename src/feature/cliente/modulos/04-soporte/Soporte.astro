@@ -1,0 +1,234 @@
+---
+// src/feature/cliente/modulos/04-soporte/Soporte.astro
+// Módulo de Soporte Oficial y Atención al Cliente · Solgas Surquillo
+// 100% Humano, Smart, Split Layout 2 Columnas · Tokens witema.css
+import { datosNegocio } from '@/negocio.js';
+
+interface Props {
+  cliente?: any;
+}
+const { cliente = {} } = Astro.props;
+const whatsappSede = datosNegocio.whatsapp || '51961229280';
+---
+
+<div class="cl-soporte-module" id="moduloSoporte">
+  <!-- 1. ENCABEZADO DEL MÓDULO CON BADGE DE ATENCIÓN ACTIVA -->
+  <div class="sp-panel-head">
+    <div class="sp-head-left">
+      <div class="sp-panel-title">
+        <i class="fa-solid fa-headset"></i>
+        <span>Centro de Atención y Soporte Solgas</span>
+      </div>
+      <span class="sp-panel-subtitle">
+        Estamos aquí para ayudarte con comprobantes electrónicos, consultas sobre tu gas o cotizaciones para tu negocio.
+      </span>
+    </div>
+
+    <!-- BADGE DE ATENCIÓN EN VIVO -->
+    <div class="sp-head-badge">
+      <span class="sp-live-dot"></span>
+      <span>Sede Surquillo · Atención Activa</span>
+    </div>
+  </div>
+
+  <!-- 2. LAYOUT SPLIT: 2 COLUMNAS (50% / 50%) APROVECHANDO 100% DEL ESPACIO -->
+  <div class="sp-layout-split">
+    <!-- ========================================================
+         COLUMNA IZQUIERDA: FORMULARIO HUMANO Y SMART
+         ======================================================== -->
+    <div class="sp-card-editor">
+      <div class="sp-card-header">
+        <div class="sp-card-title">
+          <i class="fa-solid fa-paper-plane"></i>
+          <span>Envíanos un Mensaje</span>
+        </div>
+      </div>
+
+      <form id="formSoporteTicket" autocomplete="off">
+        <!-- Fila 1: ¿En qué te ayudamos hoy? con wiSelect -->
+        <div class="sp-form-group">
+          <label class="sp-form-label" for="spSelectTipo">
+            <i class="fa-solid fa-circle-question"></i> ¿En qué podemos ayudarte hoy?:
+          </label>
+          <select class="sp-select" id="spSelectTipo">
+            <option value="comprobante">Comprobante de Pago (Boleta / Factura SUNAT)</option>
+            <option value="pedido">Consulta sobre la entrega de mi pedido</option>
+            <option value="cotizacion">Cotización para Negocio o Restaurante (45kg)</option>
+            <option value="valvula">Ayuda o asistencia con mi balón o válvula</option>
+            <option value="otro">Otra consulta o sugerencia para Solgas</option>
+          </select>
+        </div>
+
+        <!-- Fila Contextual Comprobante SUNAT (Condicional) -->
+        <div class="sp-form-row" id="spCamposComprobante" style="display:grid;">
+          <div class="sp-form-group">
+            <label class="sp-form-label" for="spSelectTipoComp">
+              <i class="fa-solid fa-receipt"></i> Tipo de Comprobante:
+            </label>
+            <select class="sp-select" id="spSelectTipoComp">
+              <option value="boleta">Boleta de Venta (DNI)</option>
+              <option value="factura">Factura Comercial (RUC)</option>
+            </select>
+          </div>
+
+          <div class="sp-form-group">
+            <label class="sp-form-label" for="spInputDocComp" id="spLabelDocComp">
+              <i class="fa-solid fa-hashtag"></i> N° de Documento (DNI/RUC):
+            </label>
+            <input 
+              type="text" 
+              class="sp-input" 
+              id="spInputDocComp" 
+              placeholder="Ingresa tu DNI o RUC" 
+              maxlength="11" 
+            />
+          </div>
+        </div>
+
+        <div class="sp-form-group" id="spGrupoRazonSocial" style="display:none;">
+          <label class="sp-form-label" for="spInputRazonComp">
+            <i class="fa-solid fa-building"></i> Razón Social de la Empresa:
+          </label>
+          <input 
+            type="text" 
+            class="sp-input" 
+            id="spInputRazonComp" 
+            placeholder="Ej: Mi Empresa S.A.C." 
+          />
+        </div>
+
+        <!-- Fila Contextual Cotización Mayorista (Condicional) -->
+        <div class="sp-form-row" id="spCamposCotizacion" style="display:none;">
+          <div class="sp-form-group">
+            <label class="sp-form-label" for="spSelectTipoNegocio">
+              <i class="fa-solid fa-utensils"></i> Rubro de Negocio:
+            </label>
+            <select class="sp-select" id="spSelectTipoNegocio">
+              <option value="restaurante">Restaurante / Pollería / Fuente de soda</option>
+              <option value="panaderia">Panadería / Pastelería</option>
+              <option value="lavanderia">Lavandería / Tintorería</option>
+              <option value="empresa">Empresa / Taller / Fábrica</option>
+              <option value="hogar">Uso doméstico intensivo</option>
+            </select>
+          </div>
+
+          <div class="sp-form-group">
+            <label class="sp-form-label" for="spSelectBalonCotiz">
+              <i class="fa-solid fa-boxes-stacked"></i> Capacidad de Balón:
+            </label>
+            <select class="sp-select" id="spSelectBalonCotiz">
+              <option value="45kg">Balón Industrial de 45 kg</option>
+              <option value="15kg">Balón Comercial de 15 kg</option>
+              <option value="10kg">Balones estándar de 10 kg por volumen</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Fila Contextual Asistencia de Válvula / Balón (Condicional) -->
+        <div class="sp-form-group" id="spCamposValvula" style="display:none;">
+          <label class="sp-form-label" for="spSelectTipoValvula">
+            <i class="fa-solid fa-gear"></i> Tipo de Válvula o Asistencia:
+          </label>
+          <select class="sp-select" id="spSelectTipoValvula">
+            <option value="premium">Válvula Premium Clip-On (Palanca roja)</option>
+            <option value="rosca">Válvula Tradicional de Rosca</option>
+            <option value="pesaje">Solicito comprobación con balanza digital</option>
+            <option value="manguera">Cambio o revisión de manguera y regulador</option>
+          </select>
+        </div>
+
+        <!-- Fila Mensaje Detallado (Con respiro y espacio para explicarse) -->
+        <div class="sp-form-group">
+          <label class="sp-form-label" for="spTextareaDetalle">
+            <i class="fa-solid fa-comment-dots"></i> Cuéntanos tu consulta o mensaje:
+          </label>
+          <textarea 
+            class="sp-textarea" 
+            id="spTextareaDetalle" 
+            placeholder="Escribe aquí con total confianza. Indícanos los detalles de tu consulta o tu dirección para ayudarte con rapidez..." 
+            required
+            style="min-height: 120px;"
+          ></textarea>
+        </div>
+
+        <!-- Botón de Envío Naranja Solgas -->
+        <div class="sp-form-actions">
+          <button type="submit" class="sp-btn-save" id="btnEnviarTicket">
+            <i class="fa-solid fa-paper-plane"></i>
+            <span>Enviar Mensaje al Equipo Solgas</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ========================================================
+         COLUMNA DERECHA: CANALES DIRECTOS (ARRIBA) + HISTORIAL (ABAJO)
+         ======================================================== -->
+    <div class="sp-right-col">
+      <!-- TARJETA 1 (ARRIBA): CANALES DE ATENCIÓN DIRECTA -->
+      <div class="sp-card-section">
+        <div class="sp-card-header">
+          <div class="sp-card-title">
+            <i class="fa-solid fa-phone-volume"></i>
+            <span>Atención Directa e Inmediata</span>
+          </div>
+        </div>
+
+        <div class="sp-channels-grid">
+          <a href="tel:014456677" class="sp-channel-card">
+            <div class="sp-channel-head">
+              <i class="fa-solid fa-phone" style="color:var(--cl-orange);"></i>
+              <span>Central Telefónica Sede</span>
+            </div>
+            <span class="sp-channel-desc">Surquillo y alrededores</span>
+            <span class="sp-channel-val">(01) 445-6677</span>
+          </a>
+
+          <a href="tel:51961229280" class="sp-channel-card">
+            <div class="sp-channel-head">
+              <i class="fa-solid fa-mobile-screen" style="color:var(--cl-orange);"></i>
+              <span>Celular Directo</span>
+            </div>
+            <span class="sp-channel-desc">Llamadas y WhatsApp directo</span>
+            <span class="sp-channel-val">961 229 280</span>
+          </a>
+        </div>
+
+        <div style="font-size:0.75rem; color:var(--muted); line-height:1.4; display:flex; align-items:center; gap:8px;">
+          <i class="fa-solid fa-scale-balanced" style="color:var(--cl-emerald); font-size:0.9rem;"></i>
+          <span><strong>Balanza Digital Certificada:</strong> Si deseas comprobar el peso de tu balón en tu puerta, solicítalo sin costo a nuestro repartidor.</span>
+        </div>
+
+        <!-- Botón Directo WhatsApp Oficial con mensaje prellenado inteligente -->
+        <a 
+          href={`https://wa.me/${whatsappSede}?text=${encodeURIComponent('Hola Solgas Surquillo, necesito ayuda con mi pedido de gas.')}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="sp-btn-wa-full"
+          id="spBtnWhatsApp"
+        >
+          <i class="fa-brands fa-whatsapp" style="font-size:1.15rem;"></i>
+          <span>Escribir directamente por WhatsApp</span>
+        </a>
+      </div>
+
+      <!-- TARJETA 2 (ABAJO): MIS CONSULTAS RECIENTES (SMART CACHE WISOPORTE) -->
+      <div class="sp-card-section">
+        <div class="sp-card-header">
+          <div class="sp-card-title">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            <span>Mis Mensajes y Consultas</span>
+          </div>
+          <span class="cd-badge-count" id="spBadgeTicketsCount">0</span>
+        </div>
+
+        <div class="sp-tickets-scroll" id="listaTicketsRecientes">
+          <div class="sp-empty-tickets" id="spEmptyTickets">
+            <i class="fa-solid fa-folder-open"></i>
+            <span>Aún no has enviado mensajes. Cuando nos envíes una consulta o trámite, aparecerá aquí con su estado de atención.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,108 @@
+---
+// src/core/componentes/MobileDrawer.astro
+// DRAWER MÓVIL INTERACTIVO - Solgas Surquillo (100% Cero CSS Inline)
+import app from '../../app.js';
+import { datosNegocio } from '../../negocio.js';
+import { getI18n, IDIOMAS, buildRuta, type Idioma } from '../idioma/idioma';
+
+interface Props {
+  idioma?: Idioma;
+  ruta?: string;
+}
+
+const { idioma = 'es', ruta = '/' } = Astro.props;
+const t = getI18n(idioma).nav;
+
+// Extraer ruta base canónica sin prefijos de idioma existentes
+let rutaBase = (ruta || '/').replace(/\/$/, '') || '/';
+for (const code of Object.keys(IDIOMAS)) {
+  if (rutaBase === `/${code}`) {
+    rutaBase = '/';
+    break;
+  }
+  if (rutaBase.startsWith(`/${code}/`)) {
+    rutaBase = rutaBase.slice(code.length + 1) || '/';
+    break;
+  }
+}
+
+const baseHash = idioma === 'es' ? (ruta !== '/' ? '/' : '') : `/${idioma}`;
+const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.horario;
+---
+
+<!-- BACKDROP PARA DRAWER MÓVIL -->
+<div class="drawer-backdrop" id="drawerBackdrop" onclick="window.cerrarDrawer && window.cerrarDrawer()"></div>
+
+<!-- DRAWER MÓVIL INTERACTIVO -->
+<aside class="mobile-drawer" id="mobileDrawer">
+  <div class="drawer-brand-header">
+    <div class="drawer-brand-box">
+      <img src={datosNegocio.logo} alt={datosNegocio.nombre} width="44" height="44" class="drawer-logo-img" />
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <!-- Selector Dinámico de Idiomas Móvil -->
+      <div class="header-pill-group" title="Idioma / Language">
+        {Object.entries(IDIOMAS).map(([code, info]) => (
+          <a 
+            href={buildRuta(rutaBase, code)} 
+            data-lang={code}
+            class={`header-pill-btn ${idioma === code ? 'active' : ''}`}
+          >
+            {code.toUpperCase()}
+          </a>
+        ))}
+      </div>
+
+      <button onclick="window.cerrarDrawer && window.cerrarDrawer()" aria-label="Cerrar Menú" class="drawer-close-btn">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Navegación Drawer -->
+  <nav class="drawer-nav-list">
+    <a href={`${baseHash}#servicios`} onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-nav-link"><i class="fa-solid fa-stethoscope drawer-nav-icon color-primary"></i> <span>{t.servicios}</span></a>
+    <a href={`${baseHash}#enfoques`} onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-nav-link"><i class="fa-solid fa-brain drawer-nav-icon color-brand-blue"></i> <span>{t.balanza}</span></a>
+    <a href={`${baseHash}#metodologia`} onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-nav-link"><i class="fa-solid fa-calendar-check drawer-nav-icon color-gold"></i> <span>{t.seguridad}</span></a>
+    <a href={`${baseHash}#paquetes`} onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-nav-link"><i class="fa-solid fa-calculator drawer-nav-icon color-emerald"></i> <span>{t.calculadora}</span></a>
+    <a href={`${baseHash}#sedes`} onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-nav-link"><i class="fa-solid fa-location-dot drawer-nav-icon color-brand-blue"></i> <span>{t.ubicacion}</span></a>
+    <a href={`${baseHash}#nosotros`} onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-nav-link"><i class="fa-solid fa-id-card-clip drawer-nav-icon color-primary"></i> <span>{t.nosotros}</span></a>
+  </nav>
+
+  <!-- Botones en Drawer Móvil -->
+  <div class="drawer-footer-actions">
+    <!-- Botón Login Móvil -->
+    <button id="drawerBtnLogin" onclick="window.cerrarDrawer && window.cerrarDrawer(); window.abrirModalLogin && window.abrirModalLogin();" class="btn-outline w-full justify-center">
+      <i class="fa-solid fa-circle-user"></i> <span>{t.login}</span>
+    </button>
+
+    <!-- Card Usuario Móvil (Cuando está autenticado) -->
+    <div id="drawerUserPerfil" class="drawer-user-card" data-idioma={idioma}>
+      <a id="drawerPerfilLink" href="/cliente" onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-user-link">
+        <img id="drawerUserAvatar" src="" alt="Avatar" class="drawer-user-avatar" />
+        <div>
+          <div id="drawerUserNombre" class="drawer-user-name">Cliente VIP</div>
+          <div id="drawerUserBadge" class="drawer-user-badge">@usuario</div>
+        </div>
+      </a>
+      <button type="button" onclick="window.cerrarSesionHeader && window.cerrarSesionHeader()" class="drawer-btn-logout" title="Cerrar Sesión">
+        <i class="fa-solid fa-right-from-bracket"></i>
+      </button>
+    </div>
+
+    <!-- Botón Agendar Cita Móvil -->
+    <a href={`https://wa.me/${datosNegocio.whatsappNumero}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`} target="_blank" rel="noopener noreferrer" onclick="window.cerrarDrawer && window.cerrarDrawer()" class="btn-whatsapp w-full justify-center">
+      <i class="fa-brands fa-whatsapp"></i> <span>{t.pedir}</span>
+    </a>
+
+    <!-- Enlace Telefónico Rápido -->
+    <a href={`tel:${datosNegocio.telefonoLimpio}`} class="btn-outline w-full justify-center" data-negocio-tel-link>
+      <i class="fa-solid fa-phone"></i> <span data-negocio-tel-text>{datosNegocio.telefonoMostrado}</span>
+    </a>
+
+    <div class="text-center font-bold text-muted text-xs">
+      <i class="fa-solid fa-clock"></i> <span data-negocio-horario>{horarioTexto}</span>
+    </div>
+  </div>
+</aside>

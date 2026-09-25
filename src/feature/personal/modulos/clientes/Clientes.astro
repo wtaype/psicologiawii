@@ -1,0 +1,247 @@
+---
+// src/feature/personal/modulos/clientes/Clientes.astro
+// Módulo de Clientes: Directorio CRM Inteligente (Solgas Surquillo)
+// 100% JS Nativo · Integrado con @widev, Firestore y smiles (rol: cliente) · 0 CSS Inline
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-clientes" data-clientes-init="false">
+  
+  <!-- CABECERA SUPERIOR STICKY -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-address-book sn-header-icon"></i>
+        Clientes · Directorio CRM Oficial
+      </h1>
+      <p class="ps-section-sub">
+        Gestión de cartera recurrente de Surquillo, Miraflores y San Borja con métricas de consumo y WhatsApp directo.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <button type="button" class="ps-btn ps-btn-primary" id="btnNuevoCliente">
+        <i class="fa-solid fa-user-plus"></i> Registrar Cliente
+      </button>
+    </div>
+  </div>
+
+  <!-- KPIS SUPERIORES -->
+  <div class="cl-kpi-grid">
+    <div class="cl-kpi-card">
+      <div class="cl-kpi-icon-wrap">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="cl-kpi-data">
+        <span class="cl-kpi-val" id="clKpiTotal">0</span>
+        <span class="cl-kpi-lbl">Total Clientes en Cartera</span>
+      </div>
+    </div>
+
+    <div class="cl-kpi-card">
+      <div class="cl-kpi-icon-wrap cl-kpi-icon-vip">
+        <i class="fa-solid fa-crown"></i>
+      </div>
+      <div class="cl-kpi-data">
+        <span class="cl-kpi-val" id="clKpiVip">0</span>
+        <span class="cl-kpi-lbl">Clientes VIP Recurrentes</span>
+      </div>
+    </div>
+
+    <div class="cl-kpi-card">
+      <div class="cl-kpi-icon-wrap cl-kpi-icon-green">
+        <i class="fa-solid fa-user-check"></i>
+      </div>
+      <div class="cl-kpi-data">
+        <span class="cl-kpi-val" id="clKpiNuevos">0</span>
+        <span class="cl-kpi-lbl">Nuevos este Mes</span>
+      </div>
+    </div>
+
+    <div class="cl-kpi-card">
+      <div class="cl-kpi-icon-wrap cl-kpi-icon-blue">
+        <i class="fa-solid fa-fire"></i>
+      </div>
+      <div class="cl-kpi-data">
+        <span class="cl-kpi-val" id="clKpiConsumo">S/ 0.00</span>
+        <span class="cl-kpi-lbl">LTV Consumo Facturado</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT DIVIDIDO (DIRECTORIO 62% / FICHA CRM 38%) -->
+  <div class="cl-split-layout">
+    
+    <!-- COLUMNA 1: TABLA DEL DIRECTORIO -->
+    <div class="cl-card">
+      <div class="cl-toolbar">
+        <div class="cl-filters-wrap" id="clFiltersWrap">
+          <button type="button" class="cl-filter-pill active" data-filter="todos">Todos</button>
+          <button type="button" class="cl-filter-pill" data-filter="vip">VIP (≥5 pedidos)</button>
+          <button type="button" class="cl-filter-pill" data-filter="frecuente">Frecuentes</button>
+          <button type="button" class="cl-filter-pill" data-filter="nuevo">Nuevos</button>
+        </div>
+
+        <div class="cl-search-box">
+          <i class="fa-solid fa-magnifying-glass cl-search-icon"></i>
+          <input 
+            type="text" 
+            id="clSearchInput" 
+            class="cl-search-input" 
+            placeholder="Buscar por DNI, nombre, calle o cel..." 
+            autocomplete="off" 
+          />
+        </div>
+      </div>
+
+      <div class="cl-table-responsive">
+        <table class="cl-table">
+          <thead>
+            <tr>
+              <th>Cliente / Documento</th>
+              <th>Celular</th>
+              <th>Dirección Principal</th>
+              <th class="sn-text-center">Pedidos</th>
+              <th>Plan</th>
+              <th class="sn-text-right">Acción</th>
+            </tr>
+          </thead>
+          <tbody id="clTableBody">
+            <!-- Renderizado dinámico desde clientes.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COLUMNA 2: FICHA CRM INTERACTIVA (EN VIVO) -->
+    <div class="cl-crm-wrap">
+      <div class="cl-crm-card">
+        <div class="cl-crm-head">
+          <img src="https://imgwii.web.app/smile.avif" alt="Avatar" class="cl-crm-avatar-lg" id="clCrmAvatar" />
+          <div class="cl-crm-info-head">
+            <h2 class="cl-crm-title" id="clCrmNombre">Cargando...</h2>
+            <p class="cl-crm-subtitle" id="clCrmDoc">DNI: -</p>
+          </div>
+        </div>
+
+        <div class="cl-crm-stats">
+          <div class="cl-crm-stat-box">
+            <span class="cl-crm-stat-val" id="clCrmTotalPedidos">0 pedidos</span>
+            <span class="cl-crm-stat-lbl">Historial Total</span>
+          </div>
+          <div class="cl-crm-stat-box">
+            <span class="cl-crm-stat-val" id="clCrmMontoConsumido">S/ 0.00</span>
+            <span class="cl-crm-stat-lbl">Volumen Comprado</span>
+          </div>
+        </div>
+
+        <div class="cl-crm-section-title">
+          <i class="fa-solid fa-sliders"></i> Preferencias del Cliente
+        </div>
+
+        <div class="cl-crm-detail-row">
+          <span class="cl-crm-detail-lbl">Balón Habitual:</span>
+          <span id="clCrmBalonHabitual">Balón SOLGAS 10 kg</span>
+        </div>
+        <div class="cl-crm-detail-row">
+          <span class="cl-crm-detail-lbl">Método de Pago:</span>
+          <span id="clCrmPagoHabitual">Yape / Plin</span>
+        </div>
+        <div class="cl-crm-detail-row">
+          <span class="cl-crm-detail-lbl">Último Despacho:</span>
+          <span id="clCrmUltimoPedido">Hoy</span>
+        </div>
+
+        <div class="cl-crm-section-title sn-mt-14">
+          <i class="fa-solid fa-map-location-dot"></i> Dirección y Cobertura
+        </div>
+
+        <div id="clCrmAddressWrap">
+          <!-- Renderizado dinámico -->
+        </div>
+
+        <div class="cl-crm-actions">
+          <button type="button" class="cl-crm-btn cl-crm-btn-ws" id="btnCrmWs">
+            <i class="fa-brands fa-whatsapp"></i> Conversar por WhatsApp
+          </button>
+          <button type="button" class="cl-crm-btn cl-crm-btn-call" id="btnCrmCall">
+            <i class="fa-solid fa-phone"></i> Llamar al Celular
+          </button>
+          <button type="button" class="cl-crm-btn cl-crm-btn-sunat" id="btnCrmSunat">
+            <i class="fa-solid fa-file-invoice-dollar"></i> Emitir Comprobante SUNAT
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- MODAL: REGISTRAR NUEVO CLIENTE -->
+  <div class="cl-modal-overlay" id="clModalOverlay">
+    <div class="cl-modal">
+      <div class="cl-modal-head">
+        <h3 class="cl-modal-title">
+          <i class="fa-solid fa-user-plus sn-title-icon"></i> Nuevo Cliente CRM
+        </h3>
+        <button type="button" class="cl-modal-close" id="btnModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="formModalCliente" class="cl-modal-form">
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="clModalDocTipo">Tipo Documento</label>
+            <select id="clModalDocTipo" class="sn-select">
+              <option value="DNI">DNI (Persona Natural)</option>
+              <option value="RUC">RUC (Empresa)</option>
+              <option value="CE">Carnet de Extranjería</option>
+            </select>
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="clModalDoc">N° Documento *</label>
+            <input type="text" id="clModalDoc" class="sn-input" placeholder="71779978" required />
+          </div>
+        </div>
+
+        <div class="sn-form-group">
+          <label class="sn-label" for="clModalNombre">Nombre Completo o Razón Social *</label>
+          <input type="text" id="clModalNombre" class="sn-input" placeholder="Ej. Ana Belén Flores" required />
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="clModalCelular">Celular WhatsApp</label>
+            <input type="tel" id="clModalCelular" class="sn-input" placeholder="961229280" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="clModalBalon">Balón Habitual</label>
+            <input type="text" id="clModalBalon" class="sn-input" value="Balón SOLGAS Premium 10 kg" />
+          </div>
+        </div>
+
+        <div class="sn-form-group">
+          <label class="sn-label" for="clModalDireccion">Dirección de Entrega</label>
+          <input type="text" id="clModalDireccion" class="sn-input" placeholder="Jr. Dante 260, Surquillo" />
+        </div>
+
+        <div class="cl-modal-actions">
+          <button type="submit" class="ps-btn ps-btn-primary" id="btnModalGuardar">
+            <i class="fa-solid fa-check"></i> Guardar Cliente
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloClientes } from './clientes.js';
+  inicializarModuloClientes();
+  document.addEventListener('astro:page-load', inicializarModuloClientes);
+</script>

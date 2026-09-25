@@ -1,0 +1,101 @@
+---
+// src/feature/inicio/secciones/08-nosotros/Nosotros.astro
+// 8. SECCIÓN NOSOTROS · TRAYECTORIA Y COMPROMISO PROFESIONAL
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import nosotrosCss from './nosotros.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const telefonoLimpio = datosNegocio.telefonoLimpio;
+const telefonoMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
+const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(t.ws_msg)}`;
+---
+
+<style is:global set:html={nosotrosCss}></style>
+
+<section id="nosotros" class="seccion-nosotros section-py-surface">
+  <div class="pagewii">
+    <div class="nosotros-split items-center">
+      
+      <!-- Columna Izquierda: 2 Tarjetas Fotográficas Clínicas -->
+      <div class="nosotros-media-grid">
+        
+        <!-- Tarjeta 1: Especialista Sofía -->
+        <div class="nosotros-card-photo">
+          <div class="nosotros-img-box">
+            <img 
+              src="/imgwii/Sofia1.jpg" 
+              alt="Lic. Sofía Reynaga - Psicóloga Colegiada" 
+              class="nosotros-card-img" 
+              loading="lazy"
+              decoding="async" 
+              width="300" 
+              height="220"
+            />
+          </div>
+          <div class="nosotros-img-caption">{t.pie_foto_1}</div>
+        </div>
+
+        <!-- Tarjeta 2: Consultorio y Recepción -->
+        <div class="nosotros-card-photo">
+          <div class="nosotros-img-box">
+            <img 
+              src="/imgwii/Reception_desk_at_psychology_office.jpeg" 
+              alt="Consultorio Psicológico América" 
+              class="nosotros-card-img" 
+              loading="lazy"
+              decoding="async" 
+              width="300" 
+              height="220"
+            />
+          </div>
+          <div class="nosotros-img-caption">{t.pie_foto_2}</div>
+        </div>
+
+      </div>
+
+      <!-- Columna Derecha: Autoridad Clínica y Botones -->
+      <div>
+        <span class="badge-serenidad nosotros-badge">
+          <i class="fa-solid fa-award"></i> 
+          <span>{t.anos_badge}</span>
+        </span>
+
+        <h2 class="nosotros-title">{t.titulo}</h2>
+        <p class="nosotros-text">{t.parrafo_1}</p>
+        <p class="nosotros-text">{t.parrafo_2}</p>
+
+        <div class="nosotros-actions">
+          <a 
+            href={`tel:${telefonoLimpio}`} 
+            class="btn-call btn-nosotros-call"
+            title={`${t.btn_llamar} ${telefonoMostrado}`}
+          >
+            <i class="fa-solid fa-phone"></i> 
+            <span>{t.btn_llamar} <span>{telefonoMostrado}</span></span>
+          </a>
+
+          <a 
+            href={wsLink} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="btn-whatsapp btn-nosotros-wa"
+            title={t.btn_ws}
+          >
+            <i class="fa-brands fa-whatsapp"></i> 
+            <span>{t.btn_ws}</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

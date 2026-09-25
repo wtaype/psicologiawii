@@ -1,0 +1,37 @@
+{
+  "top_badge": "Preguntas Frecuentes",
+  "titulo": "Resolvemos tus Dudas sobre la Terapia Psicológica",
+  "subtitulo": "Todo lo que necesitas saber sobre horarios, modalidades de atención, enfoques clínicos y cómo iniciar tu proceso terapéutico.",
+  "side_foto_badge_1": "100% Confidencialidad Ética",
+  "side_foto_badge_2": "C.Ps.P. N° 34892",
+  "side_titulo": "Atención Personalizada y Reserva Rápida",
+  "side_desc": "Escríbenos por WhatsApp o llámanos directamente para coordinar tu horario ideal en Miraflores, Villa El Salvador o Modalidad Online.",
+  "btn_ws": "Consultar por WhatsApp",
+  "ws_msg": "Hola Lic. Sofía, tengo una consulta sobre las sesiones psicológicas",
+  "faqs": [
+    {
+      "pregunta": "¿Cuánto dura cada sesión psicológica?",
+      "respuesta": "La primera consulta de evaluación inicial tiene una duración completa de 1 hora para conocer tu historia a profundidad y brindar las primeras pautas. Las sesiones regulares de tratamiento tienen una duración de 45 minutos."
+    },
+    {
+      "pregunta": "¿Qué enfoques de terapia aplican en el consultorio?",
+      "respuesta": "Aplicamos exclusivamente Terapias Basadas en Evidencia: Terapia Cognitivo Conductual (TCC), Psicoterapia Contextual (ACT), Psicoterapia Sistémica para parejas y familias, y Psicoterapia Humanista, asegurando rigor científico y calidez humana."
+    },
+    {
+      "pregunta": "¿Cómo se realiza el descarte diagnóstico de TDAH y TEA?",
+      "respuesta": "Es un proceso de evaluación neuropsicológica integral con un valor de S/ 600.00. Incluye anamnesis clínica, pruebas estandarizadas validadas, observación conductual y la entrega de un informe psicológico formal firmado por Psicóloga Colegiada y Habilitada."
+    },
+    {
+      "pregunta": "¿En qué sedes atienden de manera presencial?",
+      "respuesta": "Atendemos en dos sedes estratégicas: Sede Miraflores (Av. Alfredo Benavides 620, Edificio Zafiro, Of. 403, a 2 cuadras de estación Benavides) los días sábados, y Sede Lima Sur (Av. 3 de Octubre Ruta B, Villa El Salvador) de lunes a viernes. Además, brindamos atención virtual para todo el Perú."
+    },
+    {
+      "pregunta": "¿Qué beneficios tiene el Paquete de 10 Sesiones?",
+      "respuesta": "El paquete completo tiene un valor de S/ 600.00, lo que representa un ahorro de más del 30% frente a sesiones individuales. Incluye la primera consulta de 1 hora, 9 sesiones regulares de 45 min y acompañamiento con recomendaciones continuas."
+    },
+    {
+      "pregunta": "¿Qué medios de pago aceptan?",
+      "respuesta": "Aceptamos billeteras digitales Yape y Plin, Transferencia bancaria directa (BCP, BBVA) y Efectivo en consultorio presencial."
+    }
+  ]
+}

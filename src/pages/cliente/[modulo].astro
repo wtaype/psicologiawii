@@ -1,0 +1,16 @@
+---
+// src/pages/cliente/[modulo].astro
+// Ruta dinámica para los módulos del feature cliente (ej: /cliente/pedidos, /cliente/direccion)
+import ClientePage from '@/feature/cliente/clientePage.astro';
+import { getModulosActivos, moduloDefecto } from '@/feature/cliente/modulos.js';
+
+export function getStaticPaths() {
+  return getModulosActivos().map((m) => ({
+    params: { modulo: m.id }
+  }));
+}
+
+const { modulo = moduloDefecto } = Astro.params;
+---
+
+<ClientePage moduloActivo={modulo} />

@@ -1,0 +1,53 @@
+/* ==========================================================================
+   INICIO GLOBAL FEATURE STYLES - GASWII
+   Estilos y variables compartidas para las secciones de Inicio
+   ========================================================================== */
+
+/* ── 0. CONTENEDOR MAESTRO DE INICIO (.pagewii = 85vw) ── */
+.pagewii {
+  width: 100%;
+  max-width: 85vw;
+  margin: 0 auto;
+  box-sizing: border-box !important;
+}
+
+@media (max-width: 1024px) {
+  .pagewii {
+    max-width: 92vw;
+  }
+}
+
+@media (max-width: 768px) {
+  .pagewii {
+    max-width: 94vw;
+    padding: 0 10px;
+  }
+}
+
+.section-py-surface {
+  padding: 7vh 0;
+  background: var(--bg-surface);
+}
+
+.section-py-body {
+  padding: 7vh 0;
+  background: var(--bg-body);
+}
+
+.section-header-box {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 5vh;
+}
+
+.section-header-title {
+  font-size: clamp(1.7rem, 2.5vw, 2.8rem);
+  margin-bottom: 1.2vh;
+  font-family: 'Outfit', sans-serif;
+  color: var(--text-bright);
+}
+
+.section-header-desc {
+  color: var(--text-muted);
+  font-size: clamp(0.9rem, 0.95vw, 1.05rem);
+}

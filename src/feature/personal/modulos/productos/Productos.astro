@@ -1,0 +1,310 @@
+---
+// src/feature/personal/modulos/productos/Productos.astro
+// Módulo 5: Catálogo de Productos & Inventario (Solgas Surquillo)
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-productos">
+  <!-- Encabezado de Sección -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">Catálogo & Inventario</h1>
+      <p class="ps-section-sub">
+        Gestión centralizada de balones de gas, precios de venta, control de stock y fichas técnicas bilingües conectadas a Firestore.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <button type="button" class="ps-btn ps-btn-secondary" id="prBtnSincronizar" title="Recargar desde Firestore">
+        <i class="fa-solid fa-rotate"></i> Sincronizar
+      </button>
+      <button type="button" class="ps-btn ps-btn-primary" id="prBtnNuevo">
+        <i class="fa-solid fa-plus"></i> Nuevo Producto
+      </button>
+    </div>
+  </div>
+
+  <div class="pr-container">
+    
+    <!-- 1. Barra de Métricas de Inventario -->
+    <div class="pr-metrics-grid">
+      <div class="pr-metric-card">
+        <div class="pr-metric-icon total">
+          <i class="fa-solid fa-boxes-stacked"></i>
+        </div>
+        <div class="pr-metric-info">
+          <span class="pr-metric-num" id="prStatTotal">0</span>
+          <span class="pr-metric-label">Total en Catálogo</span>
+        </div>
+      </div>
+
+      <div class="pr-metric-card">
+        <div class="pr-metric-icon active">
+          <i class="fa-solid fa-circle-check"></i>
+        </div>
+        <div class="pr-metric-info">
+          <span class="pr-metric-num" id="prStatActivos">0</span>
+          <span class="pr-metric-label">Activos en Tienda</span>
+        </div>
+      </div>
+
+      <div class="pr-metric-card">
+        <div class="pr-metric-icon alert">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+        <div class="pr-metric-info">
+          <span class="pr-metric-num" id="prStatStockBajo">0</span>
+          <span class="pr-metric-label">Alerta Stock Bajo</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Toolbar: Filtros de Categoría y Buscador -->
+    <div class="pr-toolbar">
+      <div class="pr-filters-group" id="prFiltrosGroup">
+        <button type="button" class="pr-filter-pill active" data-categoria="todos">
+          <i class="fa-solid fa-layer-group"></i> Todos
+        </button>
+        <button type="button" class="pr-filter-pill" data-categoria="gas">
+          <i class="fa-solid fa-fire-flame-curved"></i> Balones de Gas
+        </button>
+        <button type="button" class="pr-filter-pill" data-categoria="accesorio">
+          <i class="fa-solid fa-wrench"></i> Válvulas y Accesorios
+        </button>
+      </div>
+
+      <div class="pr-actions-group">
+        <div class="pr-search-box">
+          <i class="fa-solid fa-magnifying-glass pr-search-icon"></i>
+          <input
+            type="search"
+            id="prInputBuscar"
+            class="pr-search-input"
+            placeholder="Buscar balón o código..."
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Grid Dinámico de Tarjetas de Productos -->
+    <div class="pr-grid" id="prGridProductos">
+      <!-- Inyectado por productos.js desde Firestore / Caché -->
+    </div>
+
+    <!-- 4. Estado Vacío (Zero Data) -->
+    <div class="pr-empty-box" id="prEmptyState" style="display: none;">
+      <div class="pr-empty-icon">
+        <i class="fa-solid fa-box-open"></i>
+      </div>
+      <h3 class="pr-empty-title">No hay productos en el catálogo</h3>
+      <p class="pr-empty-desc">
+        Aún no tienes balones o accesorios registrados en Firestore. Haz clic en el botón de abajo para registrar el primero.
+      </p>
+      <button type="button" class="ps-btn ps-btn-primary" id="prBtnCrearPrimero">
+        <i class="fa-solid fa-plus"></i> Crear Primer Producto
+      </button>
+    </div>
+
+  </div>
+</section>
+
+<!-- 5. Modal Bilingüe de Alta Presentación (87vw × 70vh mín. · 2 Columnas) -->
+<div class="modal-overlay modal pr-modal-backdrop" id="prModalBackdrop">
+  <div class="pr-modal-dialog">
+    <header class="pr-modal-header">
+      <h2 class="pr-modal-title" id="prModalTitle">
+        <i class="fa-solid fa-pen-to-square"></i> Ficha de Producto
+      </h2>
+      <button type="button" class="modal-close-btn pr-modal-close" id="prBtnCerrarModal" data-modal-close title="Cerrar ventana">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </header>
+
+    <form id="prFormProducto" class="pr-modal-body-split">
+      <input type="hidden" id="prFormId" />
+
+      <!-- ── COLUMNA IZQUIERDA: IDENTIDAD, PREVIEW Y NÚMEROS (360px) ── -->
+      <div class="pr-col-comercial">
+        <!-- Vista previa en tiempo real -->
+        <div class="pr-modal-preview-box">
+          <img id="prModalPreviewImg" src="/imgwii/productos/BALON-10KG.webp" alt="Vista previa del balón" class="pr-modal-preview-img" style="display: none;" />
+          <div id="prModalPreviewEmpty" class="pr-modal-preview-empty">
+            <i class="fa-solid fa-image"></i>
+            <span>Sin imagen cargada</span>
+          </div>
+        </div>
+
+        <div class="pr-f-field">
+          <label class="pr-f-label" for="prFormImagen">Ruta de Imagen WebP</label>
+          <input type="text" id="prFormImagen" class="pr-f-input" placeholder="/imgwii/productos/BALON-10KG.webp" />
+          <span class="pr-f-help">Vista previa automática al cambiar la ruta.</span>
+        </div>
+
+        <div class="pr-f-grid-2">
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormCategoria">Categoría *</label>
+            <select id="prFormCategoria" class="pr-f-select" required>
+              <option value="gas">Balón de Gas</option>
+              <option value="accesorio">Válvula / Accesorio</option>
+            </select>
+          </div>
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormEstado">Estado</label>
+            <select id="prFormEstado" class="pr-f-select">
+              <option value="activo">Activo (Visible)</option>
+              <option value="pausado">Pausado (Oculto)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="pr-f-grid-2">
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormPrecio">Precio Venta (S/) *</label>
+            <input type="number" id="prFormPrecio" class="pr-f-input" step="0.5" min="0" placeholder="65" required />
+          </div>
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormPrecioEnvase">Con Envase (S/)</label>
+            <input type="number" id="prFormPrecioEnvase" class="pr-f-input" step="0.5" min="0" placeholder="0" />
+          </div>
+        </div>
+
+        <div class="pr-f-grid-3">
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormStock">Stock *</label>
+            <input type="number" id="prFormStock" class="pr-f-input" min="0" placeholder="50" required />
+          </div>
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormStockMin">Alerta Min</label>
+            <input type="number" id="prFormStockMin" class="pr-f-input" min="0" placeholder="10" />
+          </div>
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormOrden">Orden</label>
+            <input type="number" id="prFormOrden" class="pr-f-input" min="1" placeholder="1" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ── COLUMNA DERECHA: FICHA TÉCNICA BILINGÜE (FLEX 1) ── -->
+      <div class="pr-col-ficha">
+        <div class="pr-modal-tabs">
+          <button type="button" class="pr-modal-tab-btn active" data-target="pane-es">
+            <i class="fa-solid fa-language"></i> Español [ES]
+          </button>
+          <button type="button" class="pr-modal-tab-btn" data-target="pane-en">
+            <i class="fa-solid fa-globe"></i> English [EN]
+          </button>
+        </div>
+
+        <!-- PESTAÑA ESPAÑOL -->
+        <div class="pr-lang-pane active" id="pane-es">
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormNombreEs">Nombre Oficial (ES) *</label>
+            <input type="text" id="prFormNombreEs" class="pr-f-input" placeholder="Ej: Balón SOLGAS Premium 10 kg" required />
+          </div>
+
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormDescEs">Descripción Comercial (ES)</label>
+            <textarea id="prFormDescEs" class="pr-f-textarea" rows="2" placeholder="Peso exacto garantizado de planta, llama azul constante..."></textarea>
+          </div>
+
+          <div class="pr-f-grid-3">
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormPesoEs">Peso Neto</label>
+              <input type="text" id="prFormPesoEs" class="pr-f-input" placeholder="10 kg neto" />
+            </div>
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormPesoFullEs">Peso Total / Tara</label>
+              <input type="text" id="prFormPesoFullEs" class="pr-f-input" placeholder="22.5 kg (Tara 12.5 + Gas 10)" />
+            </div>
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormValvulaEs">Tipo de Válvula</label>
+              <input type="text" id="prFormValvulaEs" class="pr-f-input" placeholder="Click-On (Acople Rápido)" />
+            </div>
+          </div>
+
+          <div class="pr-f-grid-2">
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormDeliveryEs">Delivery</label>
+              <input type="text" id="prFormDeliveryEs" class="pr-f-input" placeholder="Todo Incluido, despacho en puerta" />
+            </div>
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormSeguridadEs">Seguridad</label>
+              <input type="text" id="prFormSeguridadEs" class="pr-f-input" placeholder="Garantía desde planta de Solgas" />
+            </div>
+          </div>
+
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormGarantiasEs">Puntos de Garantía Oficial (Una línea por beneficio)</label>
+            <textarea id="prFormGarantiasEs" class="pr-f-textarea" rows="3" placeholder="Misma garantía de peso exacto de origen y base&#10;Llama azul constante y duradera&#10;Cilindro inspeccionado libre de corrosión&#10;Entrega inmediata sin costo de flete"></textarea>
+          </div>
+        </div>
+
+        <!-- PESTAÑA ENGLISH -->
+        <div class="pr-lang-pane" id="pane-en">
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormNombreEn">Official Name (EN)</label>
+            <input type="text" id="prFormNombreEn" class="pr-f-input" placeholder="Ex: SOLGAS Premium 10 kg Gas Cylinder" />
+          </div>
+
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormDescEn">Commercial Description (EN)</label>
+            <textarea id="prFormDescEn" class="pr-f-textarea" rows="2" placeholder="Guaranteed exact weight from Solgas plant origin, long-lasting blue flame..."></textarea>
+          </div>
+
+          <div class="pr-f-grid-3">
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormPesoEn">Net Weight</label>
+              <input type="text" id="prFormPesoEn" class="pr-f-input" placeholder="10 kg net" />
+            </div>
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormPesoFullEn">Total Weight / Tare</label>
+              <input type="text" id="prFormPesoFullEn" class="pr-f-input" placeholder="22.5 kg (Tare 12.5 + Gas 10)" />
+            </div>
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormValvulaEn">Valve Type</label>
+              <input type="text" id="prFormValvulaEn" class="pr-f-input" placeholder="Click-On (Quick Connect) Valve" />
+            </div>
+          </div>
+
+          <div class="pr-f-grid-2">
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormDeliveryEn">Delivery</label>
+              <input type="text" id="prFormDeliveryEn" class="pr-f-input" placeholder="All-Inclusive, doorstep delivery" />
+            </div>
+            <div class="pr-f-field">
+              <label class="pr-f-label" for="prFormSeguridadEn">Safety</label>
+              <input type="text" id="prFormSeguridadEn" class="pr-f-input" placeholder="Guaranteed from Solgas plant" />
+            </div>
+          </div>
+
+          <div class="pr-f-field">
+            <label class="pr-f-label" for="prFormGarantiasEn">Official Guarantee Points (One per line)</label>
+            <textarea id="prFormGarantiasEn" class="pr-f-textarea" rows="3" placeholder="Same guarantee of exact weight from origin and base&#10;Constant and long-lasting blue flame&#10;Inspected cylinder free of corrosion&#10;Immediate delivery without freight cost"></textarea>
+          </div>
+        </div>
+      </div>
+    </form>
+
+    <footer class="pr-modal-footer">
+      <div class="pr-modal-footer-info">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Conectado con Firestore en tiempo real
+      </div>
+      <div class="pr-modal-footer-actions">
+        <button type="button" class="ps-btn ps-btn-secondary modal-close-btn" id="prBtnCancelarModal" data-modal-close>
+          Cancelar
+        </button>
+        <button type="submit" form="prFormProducto" class="ps-btn ps-btn-primary" id="prBtnGuardarModal">
+          <i class="fa-solid fa-floppy-disk"></i> Guardar Producto
+        </button>
+      </div>
+    </footer>
+  </div>
+</div>
+
+<!-- Script Autónomo del Módulo Productos -->
+<script>
+  import './productos.js';
+</script>

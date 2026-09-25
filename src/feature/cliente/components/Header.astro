@@ -1,0 +1,114 @@
+---
+// src/feature/cliente/components/Header.astro
+// Barra superior oficial de Solgas Surquillo con branding, buscador web/móvil, toggle de tema y dropdown de perfil
+import { datosNegocio } from '@/negocio.js';
+
+interface Props {
+  cliente?: {
+    nombre?: string;
+    nombreCompleto?: string;
+    email?: string;
+  };
+}
+
+const { cliente = {} } = Astro.props;
+---
+
+<header class="cl-topbar">
+  <!-- Identidad de Sede Solgas Surquillo -->
+  <a href="/cliente" class="cl-brand">
+    <img src="/imgwii/logo.webp" alt={datosNegocio.nombre || 'Solgas'} class="cl-logo" />
+    <div class="cl-brand-info">
+      <span class="cl-brand-title">SOLGAS <span>SURQUILLO</span></span>
+      <span class="cl-brand-sub">
+        <span class="cl-live-dot"></span> Sede {datosNegocio.direccionSede || 'Jr. Dante 260'} · Despacho Activo
+      </span>
+    </div>
+  </a>
+
+  <!-- Buscador en Web (Desktop) -->
+  <div class="cl-search-box">
+    <i class="fa-solid fa-magnifying-glass cl-search-icon"></i>
+    <input 
+      type="search" 
+      id="clSearchInput" 
+      class="cl-search-input" 
+      placeholder="Buscar balones, peso, accesorios..." 
+      autocomplete="off" 
+      spellcheck="false"
+      aria-label="Buscar productos"
+    />
+  </div>
+
+  <!-- Acciones Superiores -->
+  <div class="cl-topbar-right">
+    <!-- Icono Buscador en Móvil (Super Pro) -->
+    <button type="button" class="cl-btn-icon cl-btn-search-mobile" id="btnSearchMobile" title="Buscar productos" aria-label="Abrir buscador">
+      <i class="fa-solid fa-magnifying-glass"></i>
+    </button>
+
+    <!-- Alternar Tema -->
+    <button type="button" class="cl-btn-icon" id="btnThemeToggle" title="Alternar tema" aria-label="Alternar tema">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+
+    <!-- Ver Tienda Pública -->
+    <a href="/" target="_blank" class="cl-btn-icon" title="Ver Tienda Pública" aria-label="Ver Tienda">
+      <i class="fa-solid fa-store"></i>
+    </a>
+
+    <!-- Dropdown de Usuario / Cliente Autenticado -->
+    <div class="cl-user-dropdown-container">
+      <button type="button" class="cl-user-chip-btn" id="btnUserChip" aria-expanded="false" aria-haspopup="true">
+        <div class="cl-avatar-sm" id="topbarAvatarLetter">{cliente.nombre ? cliente.nombre.charAt(0).toUpperCase() : 'G'}</div>
+        <div class="cl-user-meta">
+          <span class="cl-user-name" id="topbarUserName">{cliente.nombre || 'Cargando...'}</span>
+          <span class="cl-user-badge" id="topbarUserPlan">Cliente VIP</span>
+        </div>
+        <i class="fa-solid fa-chevron-down cl-chevron"></i>
+      </button>
+
+      <!-- Menú Desplegable -->
+      <div class="cl-dropdown-menu" id="menuUserDropdown">
+        <div class="cl-dd-header">
+          <div class="cl-dd-user" id="dropdownUserFullName">{cliente.nombreCompleto || cliente.nombre || 'Mi Perfil'}</div>
+          <div class="cl-dd-mail" id="dropdownUserEmail">{cliente.email || ''}</div>
+        </div>
+        <a href="/" target="_blank" class="cl-dd-item destacado">
+          <i class="fa-solid fa-store"></i> <span>Ver Tienda Pública</span>
+        </a>
+        <button type="button" class="cl-dd-item" data-jump-to="cuenta">
+          <i class="fa-solid fa-user-gear"></i> <span>Mi Cuenta</span>
+        </button>
+        <button type="button" class="cl-dd-item" data-jump-to="direccion">
+          <i class="fa-solid fa-map-location-dot"></i> <span>Mis Direcciones</span>
+        </button>
+        <button type="button" class="cl-dd-item" data-jump-to="soporte">
+          <i class="fa-solid fa-headset"></i> <span>Soporte & Pedidos</span>
+        </button>
+        <div class="cl-dd-divider"></div>
+        <button type="button" class="cl-dd-item danger" id="btnLogoutSession">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Cerrar Sesión</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Barra de Búsqueda Desplegable en Móvil (Super Pro) -->
+<div class="cl-mobile-search-bar" id="mobileSearchBar">
+  <div class="cl-mobile-search-bar-inner">
+    <i class="fa-solid fa-magnifying-glass cl-mobile-search-icon"></i>
+    <input 
+      type="search" 
+      id="clSearchInputMobile" 
+      placeholder="Buscar balones de gas o accesorios..." 
+      autocomplete="off" 
+      spellcheck="false" 
+      aria-label="Buscar productos móvil"
+    />
+  </div>
+  <button type="button" class="cl-btn-close-search" id="btnCloseMobileSearch" title="Cerrar búsqueda" aria-label="Cerrar búsqueda">
+    <i class="fa-solid fa-xmark"></i>
+  </button>
+</div>

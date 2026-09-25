@@ -1,0 +1,155 @@
+---
+// src/feature/personal/modulos/personal/Personal.astro
+// Módulo de Personal: Equipo Operativo & Gestión de Flota (Solgas Surquillo)
+// 100% JS Nativo · Integrado con @widev y smiles (rol: personal) · 0 CSS Inline
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-personal" data-personal-init="false">
+  
+  <!-- CABECERA SUPERIOR STICKY -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-users sn-header-icon"></i>
+        Personal · Equipo Operativo & Flota
+      </h1>
+      <p class="ps-section-sub">
+        Control de conductores motorizados, vehículos de reparto asignados y estado de turno en tiempo real.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <button type="button" class="ps-btn ps-btn-primary" id="btnNuevoPersonal">
+        <i class="fa-solid fa-user-plus"></i> Registrar Personal
+      </button>
+    </div>
+  </div>
+
+  <!-- KPIS SUPERIORES -->
+  <div class="pe-kpi-grid">
+    <div class="pe-kpi-card">
+      <div class="pe-kpi-icon-wrap">
+        <i class="fa-solid fa-id-badge"></i>
+      </div>
+      <div class="pe-kpi-data">
+        <span class="pe-kpi-val" id="peKpiTotal">0</span>
+        <span class="pe-kpi-lbl">Total Conductores</span>
+      </div>
+    </div>
+
+    <div class="pe-kpi-card">
+      <div class="pe-kpi-icon-wrap pe-kpi-icon-amber">
+        <i class="fa-solid fa-motorcycle"></i>
+      </div>
+      <div class="pe-kpi-data">
+        <span class="pe-kpi-val" id="peKpiEnRuta">0</span>
+        <span class="pe-kpi-lbl">En Ruta de Reparto</span>
+      </div>
+    </div>
+
+    <div class="pe-kpi-card">
+      <div class="pe-kpi-icon-wrap pe-kpi-icon-green">
+        <i class="fa-solid fa-store"></i>
+      </div>
+      <div class="pe-kpi-data">
+        <span class="pe-kpi-val" id="peKpiDisponibles">0</span>
+        <span class="pe-kpi-lbl">Disponibles en Base</span>
+      </div>
+    </div>
+
+    <div class="pe-kpi-card">
+      <div class="pe-kpi-icon-wrap pe-kpi-icon-blue">
+        <i class="fa-solid fa-box-open"></i>
+      </div>
+      <div class="pe-kpi-data">
+        <span class="pe-kpi-val" id="peKpiEntregas">0</span>
+        <span class="pe-kpi-lbl">Entregas Realizadas Hoy</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRID DE TARJETAS DE CHOFERES -->
+  <div class="pe-drivers-grid" id="peDriversGrid">
+    <!-- Render dinámico desde personalMod.js -->
+  </div>
+
+  <!-- MODAL: REGISTRAR NUEVO PERSONAL -->
+  <div class="cl-modal-overlay" id="peModalOverlay">
+    <div class="cl-modal">
+      <div class="cl-modal-head">
+        <h3 class="cl-modal-title">
+          <i class="fa-solid fa-user-plus sn-title-icon"></i> Registrar Personal Operativo
+        </h3>
+        <button type="button" class="cl-modal-close" id="btnPeModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="formPePersonal" class="cl-modal-form">
+        <div class="sn-form-group">
+          <label class="sn-label" for="peModalNombre">Nombres y Apellidos *</label>
+          <input type="text" id="peModalNombre" class="sn-input" placeholder="Ej. Roberto Gómez Silva" required />
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="peModalCelular">Celular WhatsApp</label>
+            <input type="tel" id="peModalCelular" class="sn-input" placeholder="936369384" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="peModalDoc">DNI</label>
+            <input type="text" id="peModalDoc" class="sn-input" placeholder="71779978" />
+          </div>
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="peModalCargo">Cargo</label>
+            <select id="peModalCargo" class="sn-select">
+              <option value="Repartidor Motorizado">Repartidor Motorizado</option>
+              <option value="Conductor de Furgón">Conductor de Furgón</option>
+              <option value="Técnico de Instalación">Técnico de Instalación</option>
+            </select>
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="peModalVehiculo">Vehículo Asignado</label>
+            <select id="peModalVehiculo" class="sn-select">
+              <option value="Moto de Carga GLP">Moto de Carga GLP</option>
+              <option value="Furgón Hyundai Porter">Furgón Hyundai Porter</option>
+              <option value="Unidad Asistencia Técnica">Unidad Asistencia Técnica</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="peModalPlaca">N° de Placa</label>
+            <input type="text" id="peModalPlaca" class="sn-input" placeholder="6741-4B" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="peModalCuadrante">Cuadrante Principal</label>
+            <input type="text" id="peModalCuadrante" class="sn-input" placeholder="Surquillo Centro" />
+          </div>
+        </div>
+
+        <div class="cl-modal-actions">
+          <button type="submit" class="ps-btn ps-btn-primary" id="btnPeModalGuardar">
+            <i class="fa-solid fa-check"></i> Guardar Conductor
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloPersonal } from './personalMod.js';
+  inicializarModuloPersonal();
+  document.addEventListener('astro:page-load', inicializarModuloPersonal);
+</script>

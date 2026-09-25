@@ -1,0 +1,120 @@
+---
+// src/feature/personal/modulos/galeria/Galeria.astro
+// Módulo de Galería: Gestor de Medios Cloudflare R2 (Solgas Surquillo)
+// 100% JS Nativo · Integrado con @widev y r2Storage.js · 0 CSS Inline
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-galeria" data-galeria-init="false">
+  
+  <!-- CABECERA SUPERIOR STICKY -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-images sn-header-icon"></i>
+        Galería · Bucket Cloudflare R2 (gaswii-media)
+      </h1>
+      <p class="ps-section-sub">
+        Gestión de imágenes de balones, marca y fotos de la sede Dante 260 con CDN oficial y optimización WebP.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <button type="button" class="ps-btn ps-btn-primary" id="btnGlSubirTrigger">
+        <i class="fa-solid fa-cloud-arrow-up"></i> Subir Nueva Imagen
+      </button>
+    </div>
+  </div>
+
+  <!-- TOOLBAR Y FILTROS -->
+  <div class="gl-toolbar">
+    <div class="gl-filters" id="glFiltersWrap">
+      <button type="button" class="gl-filter-pill active" data-cat="todas">Todas</button>
+      <button type="button" class="gl-filter-pill" data-cat="balones">Balones GLP</button>
+      <button type="button" class="gl-filter-pill" data-cat="sede">Sede Dante</button>
+      <button type="button" class="gl-filter-pill" data-cat="delivery">Reparto y Flota</button>
+      <button type="button" class="gl-filter-pill" data-cat="accesorios">Accesorios</button>
+      <button type="button" class="gl-filter-pill" data-cat="banners">Banners</button>
+    </div>
+
+    <div class="gl-toolbar-right">
+      <span class="gl-stats-badge" id="glStatsBadge">6 archivos · Cloudflare R2</span>
+    </div>
+  </div>
+
+  <!-- GRID DE IMÁGENES -->
+  <div class="gl-grid" id="glGridContainer">
+    <!-- Render dinámico desde galeria.js -->
+  </div>
+
+  <!-- MODAL DE SUBIDA DIRECTA A CLOUDFLARE R2 -->
+  <div class="gl-modal-overlay" id="glModalSubida">
+    <div class="gl-modal">
+      <div class="cl-modal-head">
+        <h3 class="cl-modal-title">
+          <i class="fa-solid fa-cloud-arrow-up sn-title-icon"></i> Subir a Cloudflare R2
+        </h3>
+        <button type="button" class="cl-modal-close" id="btnGlModalClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="formGlSubida" class="cl-modal-form">
+        <input type="file" id="glFileInput" accept="image/*" style="display:none;" />
+        
+        <div class="gl-dropzone" id="glDropzone">
+          <i class="fa-solid fa-cloud-arrow-up gl-dropzone-icon"></i>
+          <div class="gl-dropzone-txt">Arrastra tu imagen aquí o haz clic para buscar</div>
+          <div class="gl-dropzone-sub">Formatos recomendados: WebP, PNG, JPG (Máx. 5 MB)</div>
+        </div>
+
+        <div class="sn-form-group">
+          <label class="sn-label" for="glSelectCategoria">Categoría de Archivo</label>
+          <select id="glSelectCategoria" class="sn-select">
+            <option value="balones">Balones GLP</option>
+            <option value="sede">Sede Dante</option>
+            <option value="delivery">Reparto y Flota</option>
+            <option value="accesorios">Accesorios</option>
+            <option value="banners">Banners</option>
+          </select>
+        </div>
+
+        <div class="sn-form-group">
+          <label class="sn-label" for="glInpTitulo">Título o Nombre Descriptivo</label>
+          <input type="text" id="glInpTitulo" class="sn-input" placeholder="Ej. Balón 10kg Premium con precinto" />
+        </div>
+
+        <div class="sn-form-group">
+          <label class="sn-label" for="glInpAlt">Texto Alternativo (ALT) para Google SEO</label>
+          <input type="text" id="glInpAlt" class="sn-input" placeholder="Ej. Balón de gas Solgas 10 kg en Surquillo" />
+        </div>
+
+        <div class="cl-modal-actions">
+          <button type="submit" class="ps-btn ps-btn-primary" id="btnGlSubmitSubida">
+            <i class="fa-solid fa-upload"></i> Subir a R2
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- LIGHTBOX PARA INSPECCIÓN EN PANTALLA COMPLETA -->
+  <div class="gl-lightbox-overlay" id="glLightbox">
+    <button type="button" class="gl-lightbox-close" id="btnGlLightboxClose">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <img src="" alt="Vista previa" class="gl-lightbox-img" id="glLightboxImg" />
+    <div class="gl-lightbox-meta" id="glLightboxMeta"></div>
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloGaleria } from './galeria.js';
+  inicializarModuloGaleria();
+  document.addEventListener('astro:page-load', inicializarModuloGaleria);
+</script>

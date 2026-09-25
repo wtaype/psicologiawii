@@ -1,0 +1,58 @@
+---
+// src/feature/acercas/componentes/AcercasHeader.astro
+// Cabecera institucional transversal con badge, título Outfit y metadatos
+import { datosNegocio } from '../../../negocio.js';
+
+interface Props {
+  badge?: string;
+  badgeIcon?: string;
+  titulo: string;
+  desc?: string;
+  fechaActualizacion?: string;
+  idioma?: string;
+}
+
+const {
+  badge = datosNegocio.razonSocial || 'Distribuidor Autorizado Solgas',
+  badgeIcon = 'fa-solid fa-shield-halved',
+  titulo,
+  desc,
+  fechaActualizacion = 'Septiembre 2026',
+  idioma = 'es'
+} = Astro.props;
+
+const labelActualizado = idioma === 'en' ? 'Last updated:' : 'Vigencia oficial:';
+const sedeDistrito = (datosNegocio.distritoSede || 'Surquillo').toUpperCase();
+---
+
+<header class="acercas-header">
+  <div class="acercas-header-inner">
+    {badge && (
+      <div class="acercas-badge-pill">
+        <i class={badgeIcon}></i>
+        <span>{badge}</span>
+      </div>
+    )}
+
+    <h1 class="acercas-header-title">{titulo}</h1>
+
+    {desc && (
+      <p class="acercas-header-desc">{desc}</p>
+    )}
+
+    <div class="acercas-header-meta">
+      <div class="acercas-meta-item">
+        <i class="fa-solid fa-building color-primary"></i>
+        <span>{datosNegocio.nombreCorto || 'Solgas'} · {sedeDistrito}</span>
+      </div>
+      <div class="acercas-meta-item">
+        <i class="fa-solid fa-id-card color-primary"></i>
+        <span>RUC {datosNegocio.ruc}</span>
+      </div>
+      <div class="acercas-meta-item">
+        <i class="fa-solid fa-calendar-check color-primary"></i>
+        <span>{labelActualizado} {fechaActualizacion}</span>
+      </div>
+    </div>
+  </div>
+</header>

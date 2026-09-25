@@ -1,0 +1,170 @@
+---
+// src/core/componentes/Header.astro
+// 2. HEADER CON BOTONES LOGIN Y PEDIR GAS - Solgas Surquillo (100% Cero CSS Inline)
+import app from '../../app.js';
+import { datosNegocio } from '../../negocio.js';
+import { getI18n, IDIOMAS, buildRuta, type Idioma } from '../idioma/idioma';
+
+interface Props {
+  idioma?: Idioma;
+  ruta?: string;
+}
+
+const { idioma = 'es', ruta = '/' } = Astro.props;
+const t = getI18n(idioma).nav;
+const esPersonal = ruta === '/personal';
+const esCliente = ruta === '/cliente';
+
+// Extraer ruta base canónica sin prefijos de idioma existentes
+let rutaBase = (ruta || '/').replace(/\/$/, '') || '/';
+for (const code of Object.keys(IDIOMAS)) {
+  if (rutaBase === `/${code}`) {
+    rutaBase = '/';
+    break;
+  }
+  if (rutaBase.startsWith(`/${code}/`)) {
+    rutaBase = rutaBase.slice(code.length + 1) || '/';
+    break;
+  }
+}
+
+const baseHash = idioma === 'es' ? '' : `/${idioma}`;
+const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
+---
+
+<header class="header-main">
+  <div class="page-container header-container">
+    
+    <!-- Logo y Título -->
+    <a href={urlInicio} title={esPersonal || esCliente ? (t.ir_tienda_publica || 'Ir a la Tienda Pública GasWii') : (t.inicio_titulo || 'GasWii Inicio')} class="header-brand-link">
+      <img 
+        src={datosNegocio.logo} 
+        alt={datosNegocio.nombre} 
+        width="44"
+        height="44"
+        class="header-logo-img"
+      />
+      <div>
+        <span class="desktop-only header-brand-title">
+          {datosNegocio.nombre.split(' ')[0]} <span>{datosNegocio.nombre.split(' ').slice(1).join(' ')}</span>
+        </span>
+        <span class="desktop-only header-brand-sub">
+          {esPersonal ? (
+            <span class="inline-flex items-center gap-1"><i class="fa-solid fa-building"></i> Consola Staff & Despachos</span>
+          ) : esCliente ? (
+            <span class="inline-flex items-center gap-1"><i class="fa-solid fa-star"></i> Portal Cliente VIP</span>
+          ) : (
+            <span>{t.slogan_brand}</span>
+          )}
+        </span>
+      </div>
+    </a>
+
+    <!-- Navegación Desktop: Adaptativa según el Rol y la Ruta -->
+    {esPersonal ? (
+      <div class="desktop-only header-group-desktop">
+        <span class="header-badge-status personal">
+          <i class="fa-solid fa-tower-broadcast"></i> Consola Operativa Base <span data-negocio-direccion>{datosNegocio.direccionSede}</span>
+        </span>
+        <a href="/" class="btn-outline btn-compact" title="Ver Tienda Pública">
+          <i class="fa-solid fa-store icon-brand-orange"></i> <span>Ver Tienda Pública</span>
+        </a>
+      </div>
+    ) : esCliente ? (
+      <div class="desktop-only header-group-desktop">
+        <span class="header-badge-status cliente">
+          <i class="fa-solid fa-gem"></i> Área Exclusiva Cliente VIP
+        </span>
+        <a href="/" class="btn-outline btn-compact" title="Ver Catálogo Completo">
+          <i class="fa-solid fa-fire icon-brand-orange"></i> <span>Catálogo y Precios</span>
+        </a>
+      </div>
+    ) : (
+      <nav class="desktop-only header-nav-desktop">
+        <a href="#servicios" class="header-nav-item">{t.productos}</a>
+        <a href="#enfoques" class="header-nav-item">{t.balanza}</a>
+        <a href="#metodologia" class="header-nav-item">{t.seguridad}</a>
+        <a href="#paquetes" class="header-nav-item">{t.calculadora}</a>
+        <a href="#sedes" class="header-nav-item">{t.ubicacion}</a>
+        <a href="#nosotros" class="header-nav-item">{t.nosotros}</a>
+      </nav>
+    )}
+
+    <!-- Controles: Idioma, Tema, Botón Login y Botón Pedir -->
+    <div class="header-actions-row">
+      
+      <!-- Switcher Dinámico de Idiomas (Escalable para N idiomas) -->
+      <div class="header-pill-group" title="Idioma / Language">
+        {Object.entries(IDIOMAS).map(([code, info]) => (
+          <a 
+            href={buildRuta(rutaBase, code)} 
+            data-lang={code}
+            class={`header-pill-btn ${idioma === code ? 'active' : ''}`}
+          >
+            {code.toUpperCase()}
+          </a>
+        ))}
+      </div>
+
+      <!-- Switcher Tema (Luz / Futuro) -->
+      <button 
+        id="themeToggleBtn" 
+        onclick="window.toggleTema && window.toggleTema()"
+        aria-label="Cambiar tema" 
+        class="header-theme-toggle"
+        title="Cambiar Tema"
+      >
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+      </button>
+
+      <!-- Contenedor Auth Desktop -->
+      <div id="headerAuthContainer" class="desktop-only header-auth-box">
+        <!-- Botón LOGIN -->
+        <button id="headerBtnLogin" onclick="window.abrirModalLogin && window.abrirModalLogin()" class="header-btn-login" title="Iniciar Sesión o Registrarse">
+          <i class="fa-solid fa-circle-user"></i> <span>{t.login}</span>
+        </button>
+
+        <!-- Card Perfil Usuario -->
+        <div id="headerUserPerfil" class="header-user-card" data-idioma={idioma}>
+          <a href="/cliente" id="headerPerfilLink" class="header-user-link">
+            <img id="headerUserAvatar" src="" alt="Foto de perfil" class="header-user-avatar" />
+            <div class="header-user-info">
+              <span id="headerUserNombre" class="header-user-name">Cliente</span>
+              <div class="header-user-meta">
+                <span id="headerUserBadge" class="header-user-badge">@usuario</span>
+              </div>
+            </div>
+          </a>
+          <button type="button" onclick="window.cerrarSesionHeader && window.cerrarSesionHeader()" title="Cerrar Sesión" class="header-btn-logout">
+            <i class="fa-solid fa-right-from-bracket"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Anti-Flash Inmediato (0ms) para Perfil de Usuario -->
+      <script is:inline>try{const u=JSON.parse(localStorage.getItem('wiSmile')||'{}');if(u.uid||u.nombre){const d=(u.rol==='personal'||u.rol==='gestor'||u.rol==='admin')?'/personal':'/cliente';const p=location.pathname.startsWith('/en')?`/en${d}`:d;const a=document.getElementById('headerPerfilLink'),b=document.getElementById('drawerPerfilLink');if(a)a.href=p;if(b)b.href=p;}}catch(e){}</script>
+
+      <!-- Botón AGENDAR CITA -->
+      {!esPersonal && (
+        <a 
+          href={`https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="header-btn-order desktop-only" 
+          title="Agendar Consulta por WhatsApp"
+          style="display: inline-flex; text-decoration: none;"
+        >
+          <i class="fa-brands fa-whatsapp"></i> <span>{t.pedir}</span>
+        </a>
+      )}
+
+      <!-- Botón Hamburguesa Móvil -->
+      <button class="mobile-only header-btn-mobile-toggle" onclick="window.abrirDrawer && window.abrirDrawer()" aria-label="Abrir Menú">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+    </div>
+
+
+  </div>
+</header>

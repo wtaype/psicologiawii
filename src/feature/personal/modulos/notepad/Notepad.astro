@@ -1,0 +1,99 @@
+---
+// src/feature/personal/modulos/notepad/Notepad.astro
+// Módulo 2: Notepad de Gestión (70% Canvas de Escritura / 30% Lista Resumida)
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-notepad">
+  <!-- Encabezado de Sección -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">Notepad de Gestión</h1>
+      <p class="ps-section-sub">Espacio amplio de anotaciones, bitácora de planta, acuerdos comerciales y recordatorios con sincronización en segundo plano.</p>
+    </div>
+    <div class="ps-header-actions">
+      <button class="ps-btn ps-btn-secondary" id="btnNewNoteCanvas">
+        <i class="fa-solid fa-file-circle-plus"></i> Nueva Nota
+      </button>
+      <button class="ps-btn ps-btn-primary" id="btnSaveNotepadFull">
+        <i class="fa-solid fa-floppy-disk"></i> Guardar Nota
+      </button>
+    </div>
+  </div>
+
+  <!-- Layout Dividido 70% / 30% -->
+  <div class="np-layout">
+    
+    <!-- 70% CANVAS DE ESCRITURA Y EDICIÓN -->
+    <div class="np-canvas-card">
+      <input type="hidden" id="notepadCurrentId" value="" />
+
+      <div class="np-top-bar">
+        <div class="ps-tag-pill-group" id="tagPillGroup">
+          <span class="ps-tag-pill active" data-tag="Nota"><i class="fa-solid fa-note-sticky"></i> Nota</span>
+          <span class="ps-tag-pill" data-tag="Urgente"><i class="fa-solid fa-circle-exclamation"></i> Urgente</span>
+          <span class="ps-tag-pill" data-tag="Planta"><i class="fa-solid fa-industry"></i> Planta</span>
+          <span class="ps-tag-pill" data-tag="Pedidos"><i class="fa-solid fa-truck"></i> Pedidos</span>
+          <span class="ps-tag-pill" data-tag="Ideas"><i class="fa-solid fa-lightbulb"></i> Ideas</span>
+          <span class="ps-tag-pill" data-tag="SUNAT"><i class="fa-solid fa-file-invoice"></i> SUNAT</span>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:12px;">
+          <button type="button" class="np-pin-btn-canvas" id="btnPinCanvas" title="Fijar nota en la parte superior">
+            <i class="fa-regular fa-thumbtack"></i> Fijar
+          </button>
+          <span id="noteEditorStatus" class="np-status-text">Nueva nota</span>
+        </div>
+      </div>
+
+      <input 
+        type="text" 
+        id="notepadTitle" 
+        class="np-title-input" 
+        placeholder="Título principal del apunte…" 
+        autocomplete="off"
+      />
+
+      <textarea 
+        id="notepadContent" 
+        class="np-textarea notas-textarea" 
+        placeholder="Comienza a redactar aquí… Anota compromisos con clientes, pedidos especiales de balones 45kg, calibraciones de balanza Inacal o recordatorios de compras."
+      ></textarea>
+
+      <div class="np-toolbar">
+        <div class="np-counts">
+          <span id="noteCharCount">0 caracteres</span>
+          <span>•</span>
+          <span id="noteWordCount">0 palabras</span>
+        </div>
+        <div class="np-actions">
+          <button class="ps-btn ps-btn-secondary" id="btnClearNote" style="padding:6px 14px;">
+            <i class="fa-solid fa-eraser"></i> Limpiar
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 30% LISTA RESUMIDA DE NOTAS (10 PALABRAS + ...) -->
+    <div class="np-list-card">
+      <div class="np-list-header">
+        <strong class="np-list-title">Mis Apuntes</strong>
+        <span class="ps-badge ps-badge-blue" id="notepadBadgeCount">Cargando...</span>
+      </div>
+
+      <div class="np-scroll-list" id="notepadCompactList">
+        <!-- Renderizado dinámicamente con resumen de 10 palabras desde dataNotepad.js -->
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Script Cliente Autónomo del Notepad Modular -->
+<script>
+  import './notepad.js';
+</script>

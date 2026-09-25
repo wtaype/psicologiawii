@@ -1,0 +1,16 @@
+---
+// src/pages/en/contacto.astro
+// Public Page: Contact & Hub Surquillo (English)
+import Principal from '../../core/layouts/Principal.astro';
+import Contacto from '../../feature/acercas/secciones/06-contacto/Contacto.astro';
+import { buildRuta } from '../../core/idioma/idioma';
+import { datosNegocio } from '../../negocio.js';
+
+const idioma = 'en';
+const ruta = buildRuta('/contacto', idioma);
+const title = `Contact & Hub · ${datosNegocio.nombre} | Hotline, WhatsApp & Location`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Contacto idioma={idioma} />
+</Principal>

@@ -1,0 +1,188 @@
+---
+// src/feature/personal/modulos/entradas/Entradas.astro
+// Módulo de Entradas: Redactor de Blog SEO Estilo Workwii (Solgas Surquillo)
+// 100% JS Nativo · Integrado con @widev · 0 CSS Inline
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-entradas" data-entradas-init="false">
+  
+  <!-- CABECERA SUPERIOR STICKY -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-newspaper sn-header-icon"></i>
+        Entradas · Blog SEO y Contenido
+      </h1>
+      <p class="ps-section-sub">
+        Redactor Markdown estilo Workwii con vista previa en vivo, asignación de portada y posicionamiento orgánico en Google.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <button type="button" class="ps-btn ps-btn-secondary" id="btnNuevaEntrada">
+        <i class="fa-solid fa-pen-nib"></i> Nueva Entrada
+      </button>
+      <button type="button" class="ps-btn ps-btn-primary" id="btnGuardarEntrada">
+        <i class="fa-solid fa-floppy-disk"></i> Guardar Artículo
+      </button>
+    </div>
+  </div>
+
+  <!-- KPIS SUPERIORES -->
+  <div class="en-kpi-grid">
+    <div class="en-kpi-card">
+      <div class="en-kpi-icon-wrap">
+        <i class="fa-solid fa-book-open"></i>
+      </div>
+      <div class="en-kpi-data">
+        <span class="en-kpi-val" id="enKpiTotal">0</span>
+        <span class="en-kpi-lbl">Total Entradas Creadas</span>
+      </div>
+    </div>
+
+    <div class="en-kpi-card">
+      <div class="en-kpi-icon-wrap en-kpi-icon-green">
+        <i class="fa-solid fa-globe"></i>
+      </div>
+      <div class="en-kpi-data">
+        <span class="en-kpi-val" id="enKpiPublicados">0</span>
+        <span class="en-kpi-lbl">Publicados en Web</span>
+      </div>
+    </div>
+
+    <div class="en-kpi-card">
+      <div class="en-kpi-icon-wrap en-kpi-icon-amber">
+        <i class="fa-solid fa-file-pen"></i>
+      </div>
+      <div class="en-kpi-data">
+        <span class="en-kpi-val" id="enKpiBorradores">0</span>
+        <span class="en-kpi-lbl">Borradores en Progreso</span>
+      </div>
+    </div>
+
+    <div class="en-kpi-card">
+      <div class="en-kpi-icon-wrap en-kpi-icon-blue">
+        <i class="fa-solid fa-magnifying-glass-chart"></i>
+      </div>
+      <div class="en-kpi-data">
+        <span class="en-kpi-val">100%</span>
+        <span class="en-kpi-lbl">Optimización SEO</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT DIVIDIDO (LISTADO 48% / EDITOR DUAL 52%) -->
+  <div class="en-split-layout">
+    
+    <!-- COLUMNA 1: LISTADO DE ARTÍCULOS -->
+    <div class="en-card">
+      <div class="en-toolbar">
+        <div class="en-filters" id="enFiltersWrap">
+          <button type="button" class="en-filter-pill active" data-filter="todos">Todos</button>
+          <button type="button" class="en-filter-pill" data-filter="publicado">Publicados</button>
+          <button type="button" class="en-filter-pill" data-filter="borrador">Borradores</button>
+        </div>
+      </div>
+
+      <div class="en-table-responsive">
+        <table class="en-table">
+          <thead>
+            <tr>
+              <th>Artículo</th>
+              <th>Categoría</th>
+              <th>Estado</th>
+              <th class="sn-text-right">Acción</th>
+            </tr>
+          </thead>
+          <tbody id="enTableBody">
+            <!-- Renderizado dinámico desde entradas.js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- COLUMNA 2: EDITOR DUAL CON TABS (EDITOR | LIVE PREVIEW) -->
+    <div class="en-editor-wrap">
+      <div class="en-card">
+        <div class="en-editor-head">
+          <h2 class="en-editor-title">
+            <i class="fa-solid fa-feather-pointed sn-title-icon"></i> Redacción & Preview
+          </h2>
+
+          <div class="en-tabs-switch">
+            <button type="button" class="en-tab-btn active" id="enTabEditor">
+              <i class="fa-solid fa-code"></i> Editor
+            </button>
+            <button type="button" class="en-tab-btn" id="enTabPreview">
+              <i class="fa-solid fa-eye"></i> Vista Previa
+            </button>
+          </div>
+        </div>
+
+        <input type="hidden" id="enInpId" />
+
+        <div class="sn-form-group sn-mb-14">
+          <label class="sn-label" for="enInpTitulo">Título del Artículo</label>
+          <input type="text" id="enInpTitulo" class="sn-input" placeholder="Ej. ¿Cómo saber si tu balón de gas está lleno?" />
+        </div>
+
+        <div class="sn-form-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="enInpSlug">Slug URL</label>
+            <input type="text" id="enInpSlug" class="sn-input" placeholder="como-saber-si-esta-lleno" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="enSelectEstado">Estado</label>
+            <select id="enSelectEstado" class="sn-select">
+              <option value="publicado">Publicado</option>
+              <option value="borrador">Borrador</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sn-form-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="enSelectCategoria">Categoría</label>
+            <select id="enSelectCategoria" class="sn-select">
+              <option value="Consejos de Seguridad">Consejos de Seguridad</option>
+              <option value="Precios y Mercado">Precios y Mercado</option>
+              <option value="Empresas y Restaurantes">Empresas y Restaurantes</option>
+            </select>
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="enInpPortada">URL Imagen de Portada</label>
+            <input type="text" id="enInpPortada" class="sn-input" placeholder="https://media.solgassurquillo.com/..." />
+          </div>
+        </div>
+
+        <!-- PANELES DE CONTENIDO (EDITOR / PREVIEW) -->
+        <div class="en-tab-pane active sn-mt-14" id="enPaneEditor">
+          <div class="sn-form-group">
+            <label class="sn-label" for="enInpContenido">Contenido en Formato Markdown</label>
+            <textarea id="enInpContenido" class="en-content-textarea" placeholder="Escribe el artículo usando Markdown (## Titulo, **negrita**, listas, etc.)..."></textarea>
+          </div>
+        </div>
+
+        <div class="en-tab-pane sn-mt-14" id="enPanePreview">
+          <div class="en-live-preview-box" id="enLivePreview">
+            <!-- Vista previa en tiempo real -->
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloEntradas } from './entradas.js';
+  inicializarModuloEntradas();
+  document.addEventListener('astro:page-load', inicializarModuloEntradas);
+</script>

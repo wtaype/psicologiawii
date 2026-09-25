@@ -1,0 +1,23 @@
+# Cache-Control inmutable para bundles y scripts generados por Astro
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache-Control inmutable para fuentes tipográficas locales WOFF2
+/google/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache-Control inmutable para iconos de FontAwesome
+/fontawesome/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache-Control inmutable para imágenes WebP optimizadas
+/imgwii/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Cache-Control para assets estáticos y placeholder SVG
+/wpuntos.svg
+  Cache-Control: public, max-age=31536000, immutable
+/favicon.ico
+  Cache-Control: public, max-age=86400
+/robots.txt
+  Cache-Control: public, max-age=86400

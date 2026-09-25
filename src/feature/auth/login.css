@@ -1,0 +1,525 @@
+/* ==========================================================================
+   LOGIN CSS - SOLGAS SURQUILLO (GASWII)
+   Estilos unificados Premium para Modal On-Demand y Página /login (#wimain)
+   Diseño WiTema: Poppins, Outfit, gradiente Solgas Naranja, Glassmorphism
+   0 !important - Especificidad limpia y proporcionalidad estándar SaaS
+   ========================================================================== */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+/* ==================== 1. WRAPPER EN PÁGINA (/login en #wimain) ==================== */
+.wilg_page_wrap {
+  min-height: calc(100vh - 160px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem 3.5rem;
+  position: relative;
+  width: 100%;
+}
+
+/* Glow ambiental cálido */
+.wilg_page_wrap::before {
+  content: '';
+  position: absolute;
+  top: 15%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 480px;
+  max-width: 90vw;
+  height: 340px;
+  background: radial-gradient(circle, rgba(255, 102, 0, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ==================== 2. TARJETA DE ACCESO (480px Desktop) ==================== */
+.wilg_card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  background: rgba(13, 20, 40, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  box-shadow: 
+    0 24px 55px -12px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 0 35px -5px rgba(255, 102, 0, 0.18);
+  backdrop-filter: blur(20px);
+  z-index: 1;
+  overflow: hidden;
+  animation: liEntrar 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: max-width 0.25s ease;
+}
+
+.wilg_card.modo-registro {
+  max-width: 580px;
+}
+
+@keyframes liEntrar {
+  from { opacity: 0; transform: translateY(16px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ==================== 3. FORMULARIO Y ESTRUCTURA ==================== */
+#liForm {
+  padding: 2.5rem 2.4rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* CABECERA */
+.wilg_head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+  padding-bottom: 0.2rem;
+}
+
+/* LOGO BANNER OFICIAL NÍTIDO */
+.wilg_brand_logo {
+  height: 50px;
+  width: auto;
+  max-width: 240px;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease;
+}
+
+.wilg_brand_logo:hover {
+  transform: scale(1.03);
+}
+
+.wilg_head h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin: 0.25rem 0 0;
+  letter-spacing: -0.02em;
+}
+
+.wilg_head p {
+  font-size: 0.88rem;
+  color: #94a3b8;
+  margin: 0;
+  line-height: 1.35;
+}
+
+/* BOTÓN GOOGLE SSO */
+.wilg_btn_google {
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 11px;
+  font-size: 0.94rem;
+  font-weight: 500;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.wilg_btn_google img {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
+.wilg_btn_google:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-1px);
+}
+
+/* SEPARADOR O */
+.wilg_or {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #64748b;
+  font-size: 0.76rem;
+  margin: 0.1rem 0;
+}
+
+.wilg_or::before, .wilg_or::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.wilg_or span {
+  padding: 0 0.75rem;
+}
+
+/* ==================== 4. CAMPOS E INPUTS ==================== */
+.wilg_grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem 0.85rem;
+}
+
+.wilg_grupo.wilg_col_full {
+  grid-column: 1 / -1;
+}
+
+.wilg_grupo {
+  position: relative;
+  width: 100%;
+}
+
+.wilg_grupo > i:first-of-type {
+  position: absolute;
+  left: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #ff6600;
+  opacity: 0.75;
+  font-size: 0.92rem;
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 2;
+}
+
+.wilg_grupo:focus-within > i:first-of-type {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.wilg_grupo input {
+  width: 100%;
+  height: 50px;
+  padding: 0 2.6rem 0 2.7rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 11px;
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.wilg_grupo input:hover {
+  border-color: rgba(255, 102, 0, 0.45);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.wilg_grupo input:focus {
+  border-color: #ff6600;
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.2);
+}
+
+.wilg_grupo input::placeholder {
+  color: #64748b;
+  opacity: 0.85;
+}
+
+/* PREVENCIÓN DE FONDO BLANCO EN AUTOCOMPLETADO DE NAVEGADOR */
+.wilg_grupo input:-webkit-autofill,
+.wilg_grupo input:-webkit-autofill:hover,
+.wilg_grupo input:-webkit-autofill:focus,
+.wilg_grupo input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px #131b2e inset !important;
+  box-shadow: 0 0 0 1000px #131b2e inset !important;
+  -webkit-text-fill-color: #ffffff !important;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* OJO CONTRASEÑA (Especificidad limpia sin !important) */
+#liForm .wilg_ojo {
+  position: absolute;
+  right: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  font-size: 0.92rem;
+  cursor: pointer;
+  z-index: 3;
+  padding: 0.3rem;
+  transition: color 0.2s;
+}
+
+#liForm .wilg_ojo:hover {
+  color: #ff6600;
+}
+
+/* ==================== 5. BOTÓN SUBMIT ==================== */
+.wilg_btn {
+  width: 100%;
+  height: 50px;
+  background: linear-gradient(135deg, #ff6600 0%, #ff7a1a 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 11px;
+  font-size: 1rem;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 6px 20px rgba(255, 102, 0, 0.32);
+  transition: all 0.2s ease;
+}
+
+.wilg_btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 25px rgba(255, 102, 0, 0.45);
+}
+
+.wilg_btn.inactivo, .wilg_btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+  pointer-events: none;
+}
+
+/* CHECKBOX DE TÉRMINOS Y CONDICIONES */
+.wilg_terminos_check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.82rem;
+  color: #94a3b8;
+  cursor: pointer;
+  user-select: none;
+  line-height: 1.4;
+  padding: 0.2rem 0.2rem 0.1rem;
+}
+
+.wilg_terminos_check input[type="checkbox"] {
+  width: 17px;
+  height: 17px;
+  min-width: 17px;
+  margin-top: 2px;
+  accent-color: #ff6600;
+  cursor: pointer;
+}
+
+.wilg_terminos_check a {
+  color: #ff6600;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.wilg_terminos_check a:hover {
+  color: #ff8533;
+}
+
+/* PREVIEW USUARIO GOOGLE */
+.wilg_user_preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1rem;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  margin-bottom: 0.4rem;
+  text-align: center;
+}
+
+.wilg_user_preview strong {
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.wilg_user_preview small {
+  color: #94a3b8;
+  font-size: 0.8rem;
+  margin-top: 0.15rem;
+}
+
+#liForm #CompletarGoogle {
+  margin-top: 0.6rem;
+}
+
+/* ==================== 6. ENLACES EN UNA SOLA COLUMNA LIMPIA ==================== */
+#liForm .wilg_links_col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.55rem;
+  padding-top: 0.2rem;
+  text-align: center;
+}
+
+#liForm .wilg_foot_row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.86rem;
+  color: #94a3b8;
+  margin: 0;
+  white-space: nowrap;
+}
+
+#liForm .wilg_reg,
+#liForm .wilg_log {
+  color: #ff6600;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s, text-decoration 0.2s;
+  user-select: none;
+}
+
+#liForm .wilg_reg:hover,
+#liForm .wilg_log:hover {
+  color: #ff8533;
+  text-decoration: underline;
+}
+
+#liForm .wilg_rec {
+  color: #94a3b8;
+  font-size: 0.82rem;
+  font-weight: 400;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+#liForm .wilg_rec i {
+  font-size: 0.76rem;
+  opacity: 0.8;
+}
+
+#liForm .wilg_rec:hover {
+  color: #ffffff;
+}
+
+#liForm .wilg_foot_back {
+  font-size: 0.86rem;
+  color: #ff6600;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: color 0.2s;
+  user-select: none;
+}
+
+#liForm .wilg_foot_back:hover {
+  color: #ff8533;
+  text-decoration: underline;
+}
+
+/* ==================== 7. MODAL OVERLAY ON-DEMAND (#wi_auth_modal) ==================== */
+#wi_auth_modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: blur(10px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 1.5rem 1rem;
+  animation: liFade 0.2s ease forwards;
+}
+
+#wi_auth_modal.active {
+  display: flex;
+}
+
+@keyframes liFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* BOTÓN CERRAR MODAL EN TARJETA */
+.wilg_card .modalX {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.06);
+  color: #94a3b8;
+  border: none;
+  width: 2.1rem;
+  height: 2.1rem;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.wilg_card .modalX:hover {
+  background: #ff6600;
+  color: #ffffff;
+  transform: rotate(90deg) scale(1.08);
+}
+
+/* ==================== 8. RESPONSIVE (Móvil 100/10) ==================== */
+@media (max-width: 540px) {
+  .wilg_card {
+    max-width: 100%;
+    border-radius: 14px;
+  }
+  .wilg_brand_logo {
+    height: 44px;
+  }
+  .wilg_head h2 {
+    font-size: 1.42rem;
+  }
+  .wilg_head p {
+    font-size: 0.84rem;
+  }
+  .wilg_btn_google {
+    height: 44px;
+    font-size: 0.9rem;
+  }
+  .wilg_grid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem 0;
+  }
+  .wilg_grupo input {
+    height: 46px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+  .wilg_btn {
+    height: 46px;
+    font-size: 0.95rem;
+    border-radius: 10px;
+  }
+  #liForm {
+    padding: 1.6rem 1.2rem 1.4rem;
+    gap: 0.85rem;
+  }
+  #liForm .wilg_foot_row {
+    flex-direction: column;
+    gap: 0.2rem;
+    font-size: 0.86rem;
+  }
+  #liForm .wilg_rec {
+    font-size: 0.82rem;
+  }
+}

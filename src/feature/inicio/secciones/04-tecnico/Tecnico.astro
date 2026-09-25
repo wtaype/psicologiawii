@@ -1,0 +1,109 @@
+---
+// src/feature/inicio/secciones/04-tecnico/Tecnico.astro
+// 4. SECCIÓN METODOLOGÍA TERAPÉUTICA EN 3 PASOS
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import tecnicoCss from './tecnico.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(t.ws_msg)}`;
+---
+
+<style is:global set:html={tecnicoCss}></style>
+
+<section id="metodologia" class="sec-seguridad section-py-body">
+  <div class="pagewii">
+    <div class="seguridad-split items-center">
+      
+      <!-- Columna Izquierda: Información de Metodología y Pasos -->
+      <div>
+        <span class="badge-serenidad seguridad-badge">
+          <i class="fa-solid fa-hand-holding-heart"></i> 
+          <span>{t.badge.toUpperCase()}</span>
+        </span>
+
+        <h2 class="seguridad-title">{t.titulo}</h2>
+        <p class="seguridad-desc">{t.descripcion}</p>
+
+        <!-- 3 Pasos con Iconos Clínicos -->
+        <ul class="seguridad-steps-list">
+          <li class="seguridad-step-item">
+            <div class="seguridad-icon-box orange" style="background: var(--brand-soft); color: var(--brand-primary); border: 1px solid rgba(50,83,70,0.2);">
+              <i class="fa-solid fa-clipboard-user"></i>
+            </div>
+            <div class="seguridad-step-content">
+              <h3>{t.paso_1_titulo}</h3>
+              <p>{t.paso_1_desc}</p>
+            </div>
+          </li>
+
+          <li class="seguridad-step-item">
+            <div class="seguridad-icon-box blue" style="background: rgba(35,101,125,0.12); color: var(--brand-blue); border: 1px solid rgba(35,101,125,0.25);">
+              <i class="fa-solid fa-map-location-dot"></i>
+            </div>
+            <div class="seguridad-step-content">
+              <h3>{t.paso_2_titulo}</h3>
+              <p>{t.paso_2_desc}</p>
+            </div>
+          </li>
+
+          <li class="seguridad-step-item">
+            <div class="seguridad-icon-box emerald" style="background: rgba(38,122,87,0.12); color: var(--green); border: 1px solid rgba(38,122,87,0.25);">
+              <i class="fa-solid fa-seedling"></i>
+            </div>
+            <div class="seguridad-step-content">
+              <h3>{t.paso_3_titulo}</h3>
+              <p>{t.paso_3_desc}</p>
+            </div>
+          </li>
+        </ul>
+
+        <!-- Botón de Inicio Terapéutico -->
+        <a 
+          href={wsLink} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="btn-whatsapp btn-seguridad-cta"
+          title={t.btn_pedir}
+          style="background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-hover) 100%); color:#fff; border-radius: 1vh; box-shadow: 0 0.8vh 2.2vh var(--brand-glow-primary);"
+        >
+          <i class="fa-brands fa-whatsapp"></i> 
+          <span>{t.btn_pedir}</span>
+        </a>
+      </div>
+
+      <!-- Columna Derecha: Tarjeta Fotográfica con Badge -->
+      <div>
+        <div class="seguridad-image-card">
+          <div class="seguridad-media-box">
+            <img 
+              src="/imgwii/Therapist_holding_notebook.jpeg" 
+              alt="Atención psicológica personalizada - Consultorio Psicológico América" 
+              width="500" 
+              height="400" 
+              loading="lazy"
+              decoding="async" 
+              class="seguridad-media-img"
+            />
+            <div class="seguridad-caption-card">
+              <span class="seguridad-caption-pill">
+                <i class="fa-solid fa-circle-check"></i> 
+                <span>{t.foto_badge}</span>
+              </span>
+              <span class="seguridad-caption-header">{t.foto_titulo}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

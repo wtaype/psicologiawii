@@ -1,0 +1,161 @@
+/* ==========================================================================
+   SECCIÓN 08-FEEDBACK (CSS HIJO) - GASWII
+   Selector táctil de estrellas y chips interactivos de calidad
+   ========================================================================== */
+
+.feedback-container {
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.feedback-box {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
+  margin-bottom: 4vh;
+}
+
+/* Selector de Estrellas */
+.feedback-stars-wrapper {
+  text-align: center;
+  padding: 1.5rem 0 2rem;
+  border-bottom: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  margin-bottom: 2rem;
+}
+
+.feedback-stars-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  margin-bottom: 1.2rem;
+}
+
+.feedback-stars-row {
+  display: inline-flex;
+  gap: 0.8rem;
+  font-size: 2.4rem;
+  cursor: pointer;
+}
+
+.feedback-star-btn {
+  background: none;
+  border: none;
+  font-size: 2.5rem;
+  color: #cbd5e1;
+  cursor: pointer;
+  padding: 0 0.2rem;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+}
+
+.feedback-star-btn:hover,
+.feedback-star-btn.active {
+  color: #f59e0b;
+  transform: scale(1.18);
+}
+
+.feedback-star-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #d97706;
+  margin-top: 0.8rem;
+  min-height: 28px;
+}
+
+/* Motivos / Chips de Calidad */
+.feedback-motivos-section {
+  margin-bottom: 2rem;
+}
+
+.feedback-motivos-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  margin-bottom: 1rem;
+}
+
+.feedback-motivos-grid {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.feedback-motivo-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 1.2rem;
+  border-radius: 999px;
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.15));
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-bright, #0f172a);
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+}
+
+.feedback-motivo-chip:hover {
+  border-color: var(--cl-orange, #ea580c);
+  background: rgba(234, 88, 12, 0.05);
+}
+
+.feedback-motivo-chip.selected {
+  background: rgba(234, 88, 12, 0.12);
+  border-color: var(--cl-orange, #ea580c);
+  color: var(--cl-orange, #ea580c);
+  font-weight: 600;
+}
+
+/* Formulario Campos */
+.feedback-fields-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.2rem;
+  margin-top: 1.5rem;
+}
+
+@media (max-width: 640px) {
+  .feedback-fields-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.feedback-field-full {
+  grid-column: 1 / -1;
+}
+
+/* Caja de Éxito */
+.feedback-success-card {
+  display: none;
+  text-align: center;
+  padding: 3rem 2rem;
+  background: var(--bg-surface, #ffffff);
+  border: 2px solid var(--cl-emerald, #059669);
+  border-radius: 1.5rem;
+  box-shadow: 0 10px 30px -5px rgba(5, 150, 105, 0.15);
+  margin-bottom: 4vh;
+}
+
+.feedback-success-card.visible {
+  display: block;
+}
+
+.feedback-success-icon {
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--cl-emerald, #059669);
+  font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}

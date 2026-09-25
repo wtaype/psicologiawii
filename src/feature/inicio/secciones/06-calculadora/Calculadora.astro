@@ -1,0 +1,167 @@
+---
+// src/feature/inicio/secciones/06-calculadora/Calculadora.astro
+// 6. COTIZADOR TRANSPARENTE DE SESIONES Y PAQUETES DE AHORRO FAMILIAR
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import calcCss from './calculadora.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const telefonoLimpio = datosNegocio.telefonoLimpio;
+const whatsappNumero = datosNegocio.whatsappLimpio;
+const defaultWsLink = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(t.ws_msg)}`;
+---
+
+<style is:global set:html={calcCss}></style>
+
+<section id="paquetes" class="sec-calculadora section-py-surface" data-lang={idioma}>
+  <div class="pagewii">
+    
+    <!-- Encabezado de Sección Centrado -->
+    <header class="calc-header-box">
+      <span class="badge-serenidad calc-top-badge">
+        <i class="fa-solid fa-coins"></i> 
+        <span>{t.top_badge.toUpperCase()}</span>
+      </span>
+      <h2 class="calc-main-title">{t.titulo}</h2>
+      <p class="calc-main-desc">{t.subtitulo}</p>
+    </header>
+
+    <!-- Grilla 2 Columnas -->
+    <div class="calc-split-grid items-stretch">
+      
+      <!-- Panel Izquierdo: Controles y Resultado -->
+      <div class="calc-card-controls">
+        <div>
+          <!-- Selector 1: Servicio Clínico -->
+          <div class="calc-select-group mb-4">
+            <label class="calc-range-label" for="calcServicio">
+              <span><i class="fa-solid fa-brain"></i> {t.personas_label}</span>
+            </label>
+            <select id="calcServicio" class="calc-select-tamano">
+              <option value="85" data-nombre="Psicoterapia Individual">Psicoterapia Individual (S/ 85.00)</option>
+              <option value="100" data-nombre="Terapia de Pareja y Familiar">Terapia de Pareja y Familiar (S/ 100.00)</option>
+              <option value="85" data-nombre="Terapia Infantil y TEA">Terapia Infantil y TEA (S/ 85.00)</option>
+              <option value="600" data-fijo="true" data-nombre="Paquete 10 Sesiones Ahorro" selected>Paquete 10 Sesiones (S/ 600.00 - Ahorro 30%)</option>
+              <option value="600" data-fijo="true" data-nombre="Descarte Diagnóstico TDAH y TEA">Descarte Diagnóstico TDAH / TEA (S/ 600.00)</option>
+            </select>
+          </div>
+
+          <!-- Selector 2: Modalidad -->
+          <div class="calc-select-group mb-4">
+            <label class="calc-range-label" for="calcModalidad">
+              <span><i class="fa-solid fa-location-dot"></i> {t.tamano_label}</span>
+            </label>
+            <select id="calcModalidad" class="calc-select-tamano">
+              <option value="presencial-miraflores">{t.opcion_10} - Miraflores (Sábados)</option>
+              <option value="presencial-ves">{t.opcion_10} - Villa El Salvador (Lun-Vie)</option>
+              <option value="virtual" selected>{t.opcion_45}</option>
+            </select>
+          </div>
+
+          <!-- Slider: Cantidad de Sesiones -->
+          <div class="calc-range-group" id="groupSesiones">
+            <label class="calc-range-label" for="calcSesiones">
+              <span><i class="fa-solid fa-calendar-days"></i> {t.horas_label}</span>
+              <span id="sesionesDisplay" class="calc-val-display">10 {t.horas_unidad}</span>
+            </label>
+            <input 
+              type="range" 
+              id="calcSesiones" 
+              min="1" 
+              max="10" 
+              value="10" 
+              class="calc-range-slider"
+              data-unidad={t.horas_unidad}
+            />
+          </div>
+        </div>
+
+        <!-- Tarjeta Interior de Resultado -->
+        <div class="calc-result-box">
+          <div class="calc-result-label">{t.resultado_label.toUpperCase()}</div>
+          <div id="calcTotalResult" class="calc-result-days">S/ 600.00</div>
+          <div class="calc-result-guarantee">
+            <i class="fa-solid fa-circle-check" style="color: var(--brand-primary);"></i> 
+            <span>{t.garantia_rendimiento}</span>
+          </div>
+          <a 
+            href={defaultWsLink} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            id="btnCalcWs"
+            class="btn-whatsapp btn-calc-pedir"
+            title={t.btn_pedir}
+            data-ws-num={whatsappNumero}
+          >
+            <i class="fa-brands fa-whatsapp"></i> 
+            <span>{t.btn_pedir}</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Panel Derecho: Imagen y 4 Consejos -->
+      <div class="calc-card-tips">
+        <div>
+          <div class="calc-tips-media">
+            <img 
+              src="/imgwii/Couple_holding_hands_in_therapy.jpeg" 
+              alt="Acompañamiento psicológico profesional - Consultorio América" 
+              width="600" 
+              height="350" 
+              loading="lazy"
+              decoding="async" 
+              class="calc-tips-img"
+            />
+            <div class="calc-tips-badge-overlay">
+              <span class="badge-serenidad calc-media-badge">
+                <i class="fa-solid fa-heart"></i> {t.foto_badge}
+              </span>
+            </div>
+          </div>
+
+          <div class="calc-tips-content">
+            <h3 class="calc-tips-title">
+              <i class="fa-solid fa-lightbulb" style="color: var(--accent-gold);"></i> 
+              <span>{t.tips_titulo}</span>
+            </h3>
+            <ul class="calc-tips-list">
+              <li class="calc-tip-item">
+                <i class="fa-solid fa-circle-check" style="color: var(--brand-primary);"></i>
+                <div><strong>{t.tip_1_tit}</strong> {t.tip_1_desc}</div>
+              </li>
+              <li class="calc-tip-item">
+                <i class="fa-solid fa-circle-check" style="color: var(--brand-primary);"></i>
+                <div><strong>{t.tip_2_tit}</strong> {t.tip_2_desc}</div>
+              </li>
+              <li class="calc-tip-item">
+                <i class="fa-solid fa-circle-check" style="color: var(--brand-primary);"></i>
+                <div><strong>{t.tip_3_tit}</strong> {t.tip_3_desc}</div>
+              </li>
+              <li class="calc-tip-item">
+                <i class="fa-solid fa-circle-check" style="color: var(--brand-primary);"></i>
+                <div><strong>{t.tip_4_tit}</strong> {t.tip_4_desc}</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="calc-dudas-row">
+          <span class="calc-dudas-text">{t.dudas_pregunta}</span>
+          <a href={`tel:${telefonoLimpio}`} class="btn-call btn-calc-consultar" title={t.btn_consultar}>
+            <i class="fa-solid fa-phone"></i> 
+            <span>{t.btn_consultar}</span>
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

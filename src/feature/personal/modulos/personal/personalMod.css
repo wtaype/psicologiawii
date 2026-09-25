@@ -1,0 +1,225 @@
+/* src/feature/personal/modulos/personal/personalMod.css */
+/* Estilos del Módulo Personal & Choferes de Reparto (Solgas Surquillo) */
+/* 100% Adaptado a witema.css y @widev · 0 CSS inline */
+
+/* ── GRID DE KPIS SUPERIORES ── */
+.pe-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.pe-kpi-card {
+  background: var(--surface, #0e192c);
+  border: 1px solid var(--brd, #21314b);
+  border-radius: var(--br_m, 12px);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.pe-kpi-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand-orange, #ff6600);
+}
+
+.pe-kpi-icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: var(--brand-orange-subtle, rgba(255, 102, 0, 0.12));
+  color: var(--brand-orange, #ff6600);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+}
+
+.pe-kpi-icon-green {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+.pe-kpi-icon-amber {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.pe-kpi-icon-blue {
+  background: rgba(2, 132, 199, 0.12);
+  color: #0284c7;
+}
+
+.pe-kpi-data {
+  display: flex;
+  flex-direction: column;
+}
+
+.pe-kpi-val {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--tx, #f3f6fc);
+  line-height: 1.2;
+}
+
+.pe-kpi-lbl {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--tx2, #90a4c3);
+}
+
+/* ── GRID DE TARJETAS DE CHOFERES ── */
+.pe-drivers-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.pe-driver-card {
+  background: var(--surface, #0e192c);
+  border: 1px solid var(--brd, #21314b);
+  border-radius: var(--br_m, 12px);
+  padding: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.pe-driver-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand-orange, #ff6600);
+}
+
+.pe-driver-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.pe-driver-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--brd, #21314b);
+}
+
+.pe-driver-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.pe-driver-name {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--tx, #f3f6fc);
+  line-height: 1.2;
+}
+
+.pe-driver-cargo {
+  font-size: 11.5px;
+  color: var(--brand-orange, #ff6600);
+  font-weight: 600;
+}
+
+.pe-status-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  width: fit-content;
+}
+
+.pe-status-pill.disponible {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+}
+
+.pe-status-pill.en_ruta {
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+}
+
+.pe-status-pill.descanso {
+  background: rgba(148, 163, 184, 0.15);
+  color: #94a3b8;
+}
+
+.pe-driver-details {
+  background: var(--inp, #14223a);
+  border: 1px solid var(--brd, #21314b);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 12px;
+}
+
+.pe-detail-row {
+  display: flex;
+  justify-content: space-between;
+  color: var(--tx, #f3f6fc);
+}
+
+.pe-detail-lbl {
+  color: var(--tx2, #90a4c3);
+}
+
+.pe-driver-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: auto;
+}
+
+.pe-btn-driver {
+  flex: 1;
+  padding: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  border: 1px solid var(--brd, #21314b);
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+
+.pe-btn-driver.ws {
+  background: rgba(37, 211, 102, 0.1);
+  color: #25d366;
+  border-color: rgba(37, 211, 102, 0.3);
+}
+
+.pe-btn-driver.ws:hover {
+  background: #25d366;
+  color: #ffffff;
+}
+
+.pe-btn-driver.toggle {
+  background: var(--inp, #14223a);
+  color: var(--tx, #f3f6fc);
+}
+
+.pe-btn-driver.toggle:hover {
+  border-color: var(--brand-orange, #ff6600);
+  color: var(--brand-orange, #ff6600);
+}

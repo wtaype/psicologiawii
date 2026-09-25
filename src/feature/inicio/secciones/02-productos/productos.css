@@ -1,0 +1,461 @@
+/* ==========================================================================
+   02-PRODUCTOS SECTION STYLES - SOLGAS SURQUILLO (GASWII)
+   Diseño Oficial CRO: 4 Columnas sobre .pagewii (85vw), Marco Blanco y Dual CTA
+   100% Cero CSS Inline · Variables de WiTema y Poppins/Outfit
+   ========================================================================== */
+
+#productos, .sec-productos {
+  padding: 8vh 0;
+  background: var(--bg-body, #060913);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+/* ── 1. CABECERA DE LA SECCIÓN ── */
+.sec-prods-header,
+.section-header-box {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 5vh auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.sec-prods-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(255, 102, 0, 0.12);
+  color: var(--mco, #ff6600);
+  border: 1px solid rgba(255, 102, 0, 0.25);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sec-prods-title,
+.section-header-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.8rem, 2.8vw, 2.6rem);
+  font-weight: 800;
+  color: var(--text-bright, #ffffff);
+  line-height: 1.15;
+  margin: 0;
+}
+
+.sec-prods-sub,
+.section-header-desc {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(0.92rem, 1.05vw, 1.05rem);
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── 2. GRID DE PRODUCTOS (4 Columnas en Desktop 85vw .pagewii) ── */
+.catalog-grid,
+.sec-prods-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.6vw;
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 1024px) {
+  .catalog-grid,
+  .sec-prods-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 2.5vh !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .catalog-grid,
+  .sec-prods-grid {
+    grid-template-columns: 1fr !important;
+    gap: 3vh !important;
+  }
+}
+
+/* ── 3. TARJETA COMERCIAL CRO (CLEAN-CARD + PRODUCTO-CARD-BOX) ── */
+.producto-card-box,
+.card-balon {
+  background: var(--bg-card, #0b1329);
+  border: 1px solid var(--border-card, rgba(255, 255, 255, 0.08));
+  border-radius: 1.5vh;
+  padding: 2.2vh 1.4vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.producto-card-box:hover,
+.card-balon:hover {
+  transform: translateY(-0.4vh);
+  border-color: var(--primary, #ff6600);
+  box-shadow: 0 1vh 3vh rgba(255, 102, 0, 0.2);
+}
+
+/* Bloque Superior e Inferior para Alineación Perfecta */
+.card-main-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.card-footer-content {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-top: 1.5vh;
+}
+
+/* Cabecera de la Tarjeta */
+.producto-top-bar,
+.card-header-pills {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5vw;
+  margin-bottom: 1.5vh;
+}
+
+.producto-badge {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.78rem;
+  white-space: nowrap;
+  border-radius: 1vh;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.4vh 0.8vw;
+  font-weight: 700;
+}
+
+.producto-badge.badge-fire {
+  background: rgba(255, 102, 0, 0.15);
+  color: #ff7a1a;
+  border: 1px solid rgba(255, 102, 0, 0.35);
+}
+
+.producto-badge.badge-blue {
+  background: rgba(2, 132, 199, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(2, 132, 199, 0.35);
+}
+
+.producto-badge.badge-emerald {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.35);
+}
+
+.producto-badge.badge-gold {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.35);
+}
+
+.producto-tipo-badge {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.78rem;
+  color: var(--text-muted, #94a3b8);
+  background: var(--bg-subtle, rgba(255, 255, 255, 0.05));
+  border: 1px solid var(--border-card, rgba(255, 255, 255, 0.08));
+  white-space: nowrap;
+  border-radius: 1vh;
+  padding: 0.35vh 0.7vw;
+  font-weight: 600;
+}
+
+/* Área Fotográfica (Caja Blanca Inmaculada Proporcional, Cero Cuadriculado Inset) */
+.producto-media-frame,
+.card-img-box {
+  background: #ffffff;
+  border: 1px solid var(--border-card, rgba(255, 255, 255, 0.1));
+  border-radius: 1.2vh;
+  height: 22vh;
+  min-height: 190px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-bottom: 2vh;
+  padding: 1.2vh;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.producto-img-tag,
+.card-img {
+  object-fit: contain;
+  width: auto;
+  max-width: 100%;
+  max-height: 100%;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.producto-card-box:hover .producto-img-tag,
+.card-balon:hover .card-img {
+  transform: scale(1.05);
+}
+
+/* Pastilla Flotante de Peso/Capacidad */
+.producto-capacidad-tag,
+.card-weight-pill {
+  position: absolute;
+  bottom: 0.8vh;
+  right: 0.8vw;
+  background: rgba(10, 15, 31, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1vh;
+  padding: 0.35vh 0.75vw;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: 0 0.4vh 1vh rgba(0, 0, 0, 0.3);
+}
+
+.producto-capacidad-tag i,
+.card-weight-dot {
+  color: #10b981;
+  font-size: 0.7rem;
+}
+
+/* Título de la Tarjeta */
+.card-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.1rem, 1.15vw, 1.25rem);
+  font-weight: 700;
+  color: var(--text-bright, #ffffff);
+  margin: 0 0 1.2vh 0;
+  line-height: 1.25;
+}
+
+/* 3 Filas de Especificaciones */
+.card-specs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+  margin-bottom: 1.6vh;
+  padding: 0;
+  list-style: none;
+}
+
+.card-spec-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(0.78rem, 0.8vw, 0.86rem);
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.4;
+}
+
+.card-spec-icon {
+  font-size: 0.85rem;
+  width: 16px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.card-spec-icon.valve { color: var(--primary, #ff6600); }
+.card-spec-icon.weight { color: #10b981; }
+.card-spec-icon.safety { color: #0284c7; }
+
+.card-spec-label {
+  color: var(--text-bright, #e2e8f0);
+  font-weight: 700;
+  margin-right: 0.3rem;
+}
+
+/* Garantía Solgas Checklist */
+.card-guarantee-box {
+  margin-bottom: 0.5vh;
+  padding-top: 1.4vh;
+  border-top: 1px solid var(--border-card, rgba(255, 255, 255, 0.08));
+}
+
+.card-guarantee-heading {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #94a3b8);
+  display: block;
+  margin-bottom: 0.8vh;
+}
+
+.card-guarantee-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+}
+
+.card-guarantee-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(0.74rem, 0.78vw, 0.82rem);
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.35;
+}
+
+.card-guarantee-item i {
+  color: #10b981;
+  font-size: 0.8rem;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+/* Fila de Precios */
+.card-price-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 1.4vh;
+  border-top: 1px solid var(--border-card, rgba(255, 255, 255, 0.08));
+  margin-bottom: 1.5vh;
+}
+
+.card-price-col-left {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.card-price-caption {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #34d399;
+  display: block;
+  margin-bottom: 0.2vh;
+}
+
+.producto-price-val,
+.card-price-value {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.5rem, 1.8vw, 2.2rem);
+  font-weight: 900;
+  color: var(--primary, #ff6600);
+  line-height: 1;
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+}
+
+.card-price-curr {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-muted, #94a3b8);
+}
+
+.card-price-col-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.card-delivery-caption {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.7rem;
+  color: var(--text-muted, #94a3b8);
+  display: block;
+}
+
+.card-delivery-badge {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #10b981;
+}
+
+/* Botonera Dual: WhatsApp (80%) + Teléfono (20%) */
+.card-actions {
+  display: flex;
+  gap: 0.5vw;
+  align-items: center;
+  width: 100%;
+}
+
+.btn-card-ws,
+.btn-whatsapp {
+  flex: 1;
+  background: var(--accent-emerald, #10b981);
+  color: #ffffff;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(0.78rem, 0.82vw, 0.88rem);
+  font-weight: 700;
+  border-radius: 0.9vh;
+  padding: 1.1vh 0.8vw;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0.4vh 1.2vh rgba(16, 185, 129, 0.25);
+  box-sizing: border-box;
+}
+
+.btn-card-ws:hover,
+.btn-whatsapp:hover {
+  background: #059669;
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.6vh 1.8vh rgba(16, 185, 129, 0.4);
+}
+
+.btn-card-call,
+.btn-call {
+  background: var(--accent-cyan, #0284c7);
+  color: #ffffff;
+  font-size: 0.88rem;
+  border-radius: 0.9vh;
+  padding: 1.1vh 1vw;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 0.4vh 1.2vh rgba(2, 132, 199, 0.25);
+  box-sizing: border-box;
+}
+
+.btn-card-call:hover,
+.btn-call:hover {
+  background: #0369a1;
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.6vh 1.8vh rgba(2, 132, 199, 0.4);
+}

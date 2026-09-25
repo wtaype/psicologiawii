@@ -1,0 +1,16 @@
+---
+// src/pages/en/redes.astro
+// Public Page: Official Social Media & Community Channels (English)
+import Principal from '../../core/layouts/Principal.astro';
+import Redes from '../../feature/acercas/secciones/07-redes/Redes.astro';
+import { buildRuta } from '../../core/idioma/idioma';
+import { datosNegocio } from '../../negocio.js';
+
+const idioma = 'en';
+const ruta = buildRuta('/redes', idioma);
+const title = `Official Social Media · ${datosNegocio.nombre} | Facebook, Instagram, TikTok & WhatsApp`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Redes idioma={idioma} />
+</Principal>

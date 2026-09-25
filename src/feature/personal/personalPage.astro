@@ -1,0 +1,113 @@
+---
+// src/feature/personal/personalPage.astro
+// Entrada Principal del Feature Personal (Solgas Surquillo)
+// Layout: Sonrisa.astro · Los 14 Módulos Operativos · 100% Cero CSS Inline
+
+import Sonrisa from './layout/Sonrisa.astro';
+
+// Módulos 1 a 6
+import Dashboard from './modulos/dashboard/Dashboard.astro';
+import dashboardCss from './modulos/dashboard/dashboard.css?inline';
+import Notepad from './modulos/notepad/Notepad.astro';
+import notepadCss from './modulos/notepad/notepad.css?inline';
+import Negocio from './modulos/negocio/Negocio.astro';
+import negocioCss from './modulos/negocio/negocio.css?inline';
+import Correo from './modulos/correo/Correo.astro';
+import correoCss from './modulos/correo/correo.css?inline';
+import Productos from './modulos/productos/Productos.astro';
+import productosCss from './modulos/productos/productos.css?inline';
+import Sunat from './modulos/sunat/Sunat.astro';
+import sunatCss from './modulos/sunat/sunat.css?inline';
+
+// Módulos 7 a 14 (Fase 3 Completada)
+import Clientes from './modulos/clientes/Clientes.astro';
+import clientesCss from './modulos/clientes/clientes.css?inline';
+import Whatsapp from './modulos/whatsapp/Whatsapp.astro';
+import whatsappCss from './modulos/whatsapp/whatsapp.css?inline';
+import Galeria from './modulos/galeria/Galeria.astro';
+import galeriaCss from './modulos/galeria/galeria.css?inline';
+import Entradas from './modulos/entradas/Entradas.astro';
+import entradasCss from './modulos/entradas/entradas.css?inline';
+import Paginas from './modulos/paginas/Paginas.astro';
+import paginasCss from './modulos/paginas/paginas.css?inline';
+import Personal from './modulos/personal/Personal.astro';
+import personalModCss from './modulos/personal/personalMod.css?inline';
+import Perfil from './modulos/perfil/Perfil.astro';
+import perfilCss from './modulos/perfil/perfil.css?inline';
+import Ajustes from './modulos/ajustes/Ajustes.astro';
+import ajustesCss from './modulos/ajustes/ajustes.css?inline';
+
+import { moduloDefecto } from './modulos.js';
+
+interface Props {
+  idioma?: string;
+  moduloActivo?: string;
+}
+
+const { idioma = 'es', moduloActivo = moduloDefecto } = Astro.props;
+
+// Combinación estática de todas las hojas de estilo de módulos
+const estilosModulos = [
+  dashboardCss,
+  notepadCss,
+  negocioCss,
+  correoCss,
+  productosCss,
+  sunatCss,
+  clientesCss,
+  whatsappCss,
+  galeriaCss,
+  entradasCss,
+  paginasCss,
+  personalModCss,
+  perfilCss,
+  ajustesCss
+].join('\n');
+---
+
+<Sonrisa titulo="Dashboard del Dueño · Solgas Surquillo" moduloActivo={moduloActivo} idioma={idioma}>
+  <!-- Inyección limpia de CSS de los 14 módulos (0 CSS en runtime) -->
+  <style slot="modulo-css" is:global set:html={estilosModulos}></style>
+
+  <!-- MÓDULO 1: DASHBOARD -->
+  <Dashboard esActivo={moduloActivo === 'dashboard'} />
+
+  <!-- MÓDULO 2: NOTEPAD (70% Canvas / 30% Lista) -->
+  <Notepad esActivo={moduloActivo === 'notepad'} />
+
+  <!-- MÓDULO 3: MI NEGOCIO (Ficha de Sede, Canales y Zonas) -->
+  <Negocio esActivo={moduloActivo === 'negocio'} />
+
+  <!-- MÓDULO 4: CORREO (Centro Oficial de Envíos con Resend) -->
+  <Correo esActivo={moduloActivo === 'correo'} />
+
+  <!-- MÓDULO 5: PRODUCTOS (Catálogo Oficial e Inventario) -->
+  <Productos esActivo={moduloActivo === 'productos'} />
+
+  <!-- MÓDULO 6: SUNAT (Registro Fácil de Comprobantes B001 / F001) -->
+  <Sunat esActivo={moduloActivo === 'sunat'} />
+
+  <!-- MÓDULO 7: CLIENTES (Directorio CRM Oficial desde smiles) -->
+  <Clientes esActivo={moduloActivo === 'clientes'} />
+
+  <!-- MÓDULO 8: WHATSAPP (Centro de Mensajería & Sandbox Smartphone) -->
+  <Whatsapp esActivo={moduloActivo === 'whatsapp'} />
+
+  <!-- MÓDULO 9: GALERÍA (Bucket Cloudflare R2 gaswii-media) -->
+  <Galeria esActivo={moduloActivo === 'galeria'} />
+
+  <!-- MÓDULO 10: ENTRADAS (Blog SEO Markdown Estilo Workwii) -->
+  <Entradas esActivo={moduloActivo === 'entradas'} />
+
+  <!-- MÓDULO 11: PÁGINAS (Editor Institucional & Google SERP Simulator) -->
+  <Paginas esActivo={moduloActivo === 'paginas'} />
+
+  <!-- MÓDULO 12: PERSONAL (Equipo Operativo & Gestión de Flota) -->
+  <Personal esActivo={moduloActivo === 'personal'} />
+
+  <!-- MÓDULO 13: MI PERFIL (Ficha del Dueño wiSmile & Seguridad) -->
+  <Perfil esActivo={moduloActivo === 'perfil'} />
+
+  <!-- MÓDULO 14: AJUSTES (Switch Maestro & Centro de Respaldo JSON) -->
+  <Ajustes esActivo={moduloActivo === 'ajustes'} />
+</Sonrisa>

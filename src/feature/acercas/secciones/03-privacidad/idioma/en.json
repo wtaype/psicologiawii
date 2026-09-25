@@ -1,0 +1,21 @@
+{
+  "privacidad_badge": "DATA PROTECTION · PERUVIAN LAW N° 29733",
+  "privacidad_titulo": "Privacy Policy & Personal Data Processing",
+  "privacidad_desc": "Your privacy and trust are paramount. Learn how we protect your personal data in accordance with the laws of the Republic of Peru.",
+  "marco_legal": "Statement pursuant to Peruvian Law N° 29733 (Personal Data Protection Act) and its Supreme Decree N° 003-2013-JUS.",
+  "banco_titulo": "1. Data Bank Controller",
+  "banco_desc": "Collected data belongs to the personal data bank named 'Gaswii Customers and Orders', legally held and safeguarded by Solgas Surquillo.",
+  "finalidad_titulo": "2. Purpose of Data Processing",
+  "finalidad_desc": "Information provided (name, delivery address, phone number, ID/Tax number) is exclusively used to: fulfill and dispatch home gas orders, issue SUNAT electronic tax invoices, verify scale and exact weight delivery, and provide customer support and claims handling.",
+  "consentimiento_titulo": "3. Free & Informed Consent",
+  "consentimiento_desc": "By registering, placing an order, or reaching out through digital channels, you provide free, prior, express, and informed consent for the processing of your personal data under this policy.",
+  "transferencia_titulo": "4. No Third-Party Data Sharing",
+  "transferencia_desc": "Solgas Surquillo guarantees that we never sell, lease, or share your data with third parties for marketing purposes. Data is accessed solely by authorized delivery personnel and legal regulatory bodies (SUNAT, OSINERGMIN).",
+  "arco_titulo": "5. ARCO Rights (Access, Rectification, Cancellation & Opposition)",
+  "arco_desc": "As the data subject, you may exercise your legally guaranteed ARCO rights at any time. You can inspect stored data, correct inaccuracies, request data deletion, or revoke consent by sending a formal request to our email or physical hub.",
+  "arco_plazos": "Statutory response times are: 20 business days for Access, and 10 business days for Rectification, Cancellation, or Opposition pursuant to Supreme Decree N° 003-2013-JUS.",
+  "seguridad_titulo": "6. Security & Local-First Architecture",
+  "seguridad_desc": "We apply robust encryption and technical standards. Session credentials and local preferences reside primarily on your own device (Local-First), minimizing unnecessary cloud exposure.",
+  "contacto_legal_titulo": "Official Channel for ARCO Rights Requests",
+  "btn_enviar_solicitud": "Send ARCO Request via Email"
+}

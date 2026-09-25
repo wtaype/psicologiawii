@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "acerca": "Nosotros",
+    "terminos": "Términos",
+    "privacidad": "Privacidad",
+    "cookies": "Cookies",
+    "libro_reclamaciones": "Libro de Reclamaciones",
+    "contacto": "Contacto",
+    "redes": "Redes Sociales",
+    "feedback": "Feedback"
+  },
+  "comun": {
+    "volver_inicio": "Volver al Inicio",
+    "distribuidor_oficial": "Distribuidor Oficial Autorizado",
+    "sede_oficial": "Sede Central Surquillo, Lima",
+    "actualizado": "Última actualización:",
+    "garantia_seguridad": "Garantía de Seguridad y Balanza Calibrada",
+    "ayuda_titulo": "¿Necesitas atención o consultar un pedido?",
+    "ayuda_desc": "Nuestro equipo de atención al cliente en Surquillo está disponible de lunes a domingo.",
+    "btn_whatsapp": "Chatear por WhatsApp",
+    "btn_llamar": "Llamar a Central",
+    "btn_volver": "Ir al Catálogo"
+  }
+}

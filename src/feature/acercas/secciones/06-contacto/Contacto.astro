@@ -1,0 +1,173 @@
+---
+// src/feature/acercas/secciones/06-contacto/Contacto.astro
+// Sección 06: Central de Contacto y Sede Surquillo (Datos Canónicos de negocio.js)
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdiomaSeccion } from '../../idioma/idioma';
+import AcercasHeader from '../../componentes/AcercasHeader.astro';
+import AcercasNav from '../../componentes/AcercasNav.astro';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+
+import acercasMadreCss from '../../acercas.css?inline';
+import contactoHijoCss from './contacto.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdiomaSeccion({ es, en }, idioma);
+
+const telLimpio = datosNegocio.telefonoLimpio;
+const telMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
+const wsNumero = datosNegocio.whatsapp;
+const wsLink = `https://wa.me/${wsNumero}?text=${encodeURIComponent(
+  idioma === 'en'
+    ? `Hello ${datosNegocio.nombre}, I want to request a cylinder delivery.`
+    : `Hola ${datosNegocio.nombre}, deseo solicitar un balón de gas con balanza digital.`
+)}`;
+
+const mapsUrl = datosNegocio.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(datosNegocio.direccionSede + ' ' + datosNegocio.distritoSede)}`;
+const wazeUrl = `https://waze.com/ul?q=${encodeURIComponent(datosNegocio.direccionSede + ' ' + datosNegocio.distritoSede)}`;
+const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.horario;
+---
+
+<style is:global set:html={acercasMadreCss}></style>
+<style is:global set:html={contactoHijoCss}></style>
+
+<div class="acercas-page-wrapper">
+  <div class="pagewii">
+
+    <AcercasHeader 
+      badge={t.contacto_badge}
+      badgeIcon="fa-solid fa-headset"
+      titulo={t.contacto_titulo}
+      desc={t.contacto_desc}
+      idioma={idioma}
+    />
+
+    <AcercasNav seccionActiva="contacto" idioma={idioma} />
+
+    <div class="contacto-container">
+
+      <!-- Grid de 4 Canales Oficiales -->
+      <div class="contacto-cards-grid">
+        
+        <!-- Canal 1: Sede Física Surquillo -->
+        <article class="contacto-channel-card">
+          <div class="contacto-channel-top">
+            <div class="contacto-channel-icon orange">
+              <i class="fa-solid fa-location-dot"></i>
+            </div>
+            <div>
+              <h2 class="contacto-channel-title">{t.card_sede_tit}</h2>
+              <span class="contacto-channel-main-val">{datosNegocio.direccionSede}</span>
+              <p class="contacto-channel-desc">{t.card_sede_desc}</p>
+            </div>
+          </div>
+          <div class="contacto-actions-row">
+            <a href={mapsUrl} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary">
+              <i class="fa-solid fa-map-location-dot"></i> {t.btn_ver_mapa}
+            </a>
+            <a href={wazeUrl} target="_blank" rel="noopener noreferrer" class="btn-acercas-action secondary">
+              <i class="fa-brands fa-waze"></i> {t.btn_waze}
+            </a>
+          </div>
+        </article>
+
+        <!-- Canal 2: Central Telefónica -->
+        <article class="contacto-channel-card">
+          <div class="contacto-channel-top">
+            <div class="contacto-channel-icon blue">
+              <i class="fa-solid fa-phone-volume"></i>
+            </div>
+            <div>
+              <h2 class="contacto-channel-title">{t.card_tel_tit}</h2>
+              <span class="contacto-channel-main-val">{telMostrado}</span>
+              <p class="contacto-channel-desc">{t.card_tel_desc}</p>
+            </div>
+          </div>
+          <div class="contacto-actions-row">
+            <a href={`tel:${telLimpio}`} class="btn-acercas-action primary">
+              <i class="fa-solid fa-phone"></i> {t.btn_llamar_ahora}
+            </a>
+          </div>
+        </article>
+
+        <!-- Canal 3: WhatsApp Directo -->
+        <article class="contacto-channel-card">
+          <div class="contacto-channel-top">
+            <div class="contacto-channel-icon green">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <div>
+              <h2 class="contacto-channel-title">{t.card_ws_tit}</h2>
+              <span class="contacto-channel-main-val">+{wsNumero}</span>
+              <p class="contacto-channel-desc">{t.card_ws_desc}</p>
+            </div>
+          </div>
+          <div class="contacto-actions-row">
+            <a href={wsLink} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary">
+              <i class="fa-brands fa-whatsapp"></i> {t.btn_ws_ahora}
+            </a>
+          </div>
+        </article>
+
+        <!-- Canal 4: Horarios de Atención -->
+        <article class="contacto-channel-card">
+          <div class="contacto-channel-top">
+            <div class="contacto-channel-icon gold">
+              <i class="fa-solid fa-clock"></i>
+            </div>
+            <div>
+              <h2 class="contacto-channel-title">{t.card_horario_tit}</h2>
+              <span class="contacto-channel-main-val">{horarioTexto}</span>
+              <p class="contacto-channel-desc">{t.card_horario_desc}</p>
+            </div>
+          </div>
+          <div class="contacto-actions-row">
+            <span class="cookie-type-pill" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+              <i class="fa-solid fa-shield-check color-emerald"></i> Atención 365 días
+            </span>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Distritos de Cobertura -->
+      <section class="contacto-distritos-box">
+        <h3>
+          <i class="fa-solid fa-motorcycle color-primary"></i>
+          {t.distritos_titulo}
+        </h3>
+        <div class="contacto-distritos-chips">
+          {datosNegocio.distritos.map((dist: any) => (
+            <div class="contacto-distrito-chip">
+              <i class="fa-solid fa-check color-emerald"></i>
+              <span>{dist.nombre}</span>
+              <span class="time">{dist.tiempo}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Banner de Asistencia Directa Padre -->
+      <div class="acercas-help-banner">
+        <div class="acercas-help-info">
+          <h4>{t.mensaje_rapido_tit}</h4>
+          <p>{t.mensaje_rapido_desc}</p>
+        </div>
+        <div class="acercas-help-actions">
+          <a href={wsLink} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary">
+            <i class="fa-brands fa-whatsapp"></i> {t.comun.btn_whatsapp}
+          </a>
+          <a href={`tel:${telLimpio}`} class="btn-acercas-action secondary">
+            <i class="fa-solid fa-phone"></i> {telMostrado}
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

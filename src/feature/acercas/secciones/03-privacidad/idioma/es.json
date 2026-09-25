@@ -1,0 +1,21 @@
+{
+  "privacidad_badge": "PROTECCIÓN DE DATOS PERSONALES · LEY N° 29733",
+  "privacidad_titulo": "Política de Privacidad y Tratamiento de Datos",
+  "privacidad_desc": "Tu privacidad y confianza son esenciales. Conoce cómo protegemos tus datos personales conforme a la legislación de la República del Perú.",
+  "marco_legal": "Declaración conforme a la Ley N° 29733 (Ley de Protección de Datos Personales) y su Reglamento D.S. N° 003-2013-JUS.",
+  "banco_titulo": "1. Titular del Banco de Datos",
+  "banco_desc": "Los datos recopilados forman parte del banco de datos personales denominado 'Clientes y Pedidos Gaswii', bajo la titularidad y custodia responsable de Solgas Surquillo.",
+  "finalidad_titulo": "2. Finalidad del Tratamiento de Datos",
+  "finalidad_desc": "La información proporcionada (nombres, dirección de entrega, teléfono, DNI/RUC) se utiliza exclusivamente para: procesar y despachar pedidos de gas a tu domicilio, emitir comprobantes de pago electrónicos ante la SUNAT, verificar la balanza y peso exacto, y brindar atención técnica o resolución de reclamos.",
+  "consentimiento_titulo": "3. Consentimiento Libre e Informado",
+  "consentimiento_desc": "Al registrarte, realizar un pedido o comunicarte por nuestros canales digitales, otorgas tu consentimiento libre, previo, expreso e informado para el tratamiento de tus datos personales conforme a esta política.",
+  "transferencia_titulo": "4. No Transferencia a Terceros",
+  "transferencia_desc": "Solgas Surquillo garantiza que no comercializa, alquila ni cede tus datos personales a terceros con fines publicitarios. Los datos únicamente son accesibles por nuestro personal autorizado y entidades estatales facultadas por ley (SUNAT, OSINERGMIN).",
+  "arco_titulo": "5. Derechos ARCO (Acceso, Rectificación, Cancelación y Oposición)",
+  "arco_desc": "Como titular de tus datos personales, puedes ejercer en cualquier momento tus derechos ARCO garantizados por ley. Puedes solicitar ver qué datos conservamos, corregir errores, solicitar su supresión o revocar el consentimiento enviando una solicitud formal a nuestro correo electrónico o mesa de partes física.",
+  "arco_plazos": "Los plazos de atención son: 20 días hábiles para derecho de Acceso y 10 días hábiles para Rectificación, Cancelación u Oposición conforme al Art. 55 del Reglamento de la Ley N° 29733.",
+  "seguridad_titulo": "6. Seguridad y Enfoque Local-First",
+  "seguridad_desc": "Aplicamos estrictas medidas técnicas y de encriptación. Tu sesión y preferencias se gestionan prioritariamente en tu propio dispositivo (Local-First), minimizando la exposición de datos en la nube.",
+  "contacto_legal_titulo": "Canal Oficial para Ejercicio de Derechos ARCO",
+  "btn_enviar_solicitud": "Enviar Solicitud ARCO por Correo"
+}

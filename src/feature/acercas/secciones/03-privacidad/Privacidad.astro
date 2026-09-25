@@ -1,0 +1,160 @@
+---
+// src/feature/acercas/secciones/03-privacidad/Privacidad.astro
+// Sección 03: Política de Privacidad y Derechos ARCO (Ley N° 29733 Perú)
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdiomaSeccion } from '../../idioma/idioma';
+import AcercasHeader from '../../componentes/AcercasHeader.astro';
+import AcercasNav from '../../componentes/AcercasNav.astro';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+
+import acercasMadreCss from '../../acercas.css?inline';
+import privacidadHijoCss from './privacidad.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdiomaSeccion({ es, en }, idioma);
+
+const emailLegal = datosNegocio.email || 'atencion@gaswii.pe';
+const emailSubject = encodeURIComponent(
+  idioma === 'en'
+    ? `Request for ARCO Rights Exercise - ${datosNegocio.nombre}`
+    : `Solicitud de Ejercicio de Derechos ARCO - ${datosNegocio.nombre}`
+);
+const mailtoArco = `mailto:${emailLegal}?subject=${emailSubject}`;
+---
+
+<style is:global set:html={acercasMadreCss}></style>
+<style is:global set:html={privacidadHijoCss}></style>
+
+<div class="acercas-page-wrapper">
+  <div class="pagewii">
+
+    <AcercasHeader 
+      badge={t.privacidad_badge}
+      badgeIcon="fa-solid fa-user-shield"
+      titulo={t.privacidad_titulo}
+      desc={t.privacidad_desc}
+      idioma={idioma}
+    />
+
+    <AcercasNav seccionActiva="privacidad" idioma={idioma} />
+
+    <div class="privacidad-container">
+      
+      <!-- Banner de Marco Legal Peruano -->
+      <div class="privacidad-banner-law">
+        <i class="fa-solid fa-gavel"></i>
+        <span>{t.marco_legal}</span>
+      </div>
+
+      <!-- 1. Titular del Banco de Datos -->
+      <article class="privacidad-card">
+        <div class="privacidad-card-header">
+          <i class="fa-solid fa-database"></i>
+          <h2 class="privacidad-card-title">{t.banco_titulo}</h2>
+        </div>
+        <p class="privacidad-card-body">{t.banco_desc}</p>
+      </article>
+
+      <!-- 2. Finalidad del Tratamiento -->
+      <article class="privacidad-card">
+        <div class="privacidad-card-header">
+          <i class="fa-solid fa-bullseye"></i>
+          <h2 class="privacidad-card-title">{t.finalidad_titulo}</h2>
+        </div>
+        <p class="privacidad-card-body">{t.finalidad_desc}</p>
+      </article>
+
+      <!-- 3. Consentimiento Libre e Informado -->
+      <article class="privacidad-card">
+        <div class="privacidad-card-header">
+          <i class="fa-solid fa-handshake-angle"></i>
+          <h2 class="privacidad-card-title">{t.consentimiento_titulo}</h2>
+        </div>
+        <p class="privacidad-card-body">{t.consentimiento_desc}</p>
+      </article>
+
+      <!-- 4. No Transferencia -->
+      <article class="privacidad-card">
+        <div class="privacidad-card-header">
+          <i class="fa-solid fa-shield-halved"></i>
+          <h2 class="privacidad-card-title">{t.transferencia_titulo}</h2>
+        </div>
+        <p class="privacidad-card-body">{t.transferencia_desc}</p>
+      </article>
+
+      <!-- 5. Derechos ARCO -->
+      <article class="privacidad-card">
+        <div class="privacidad-card-header">
+          <i class="fa-solid fa-key"></i>
+          <h2 class="privacidad-card-title">{t.arco_titulo}</h2>
+        </div>
+        <p class="privacidad-card-body">{t.arco_desc}</p>
+
+        <!-- Grilla de las 4 letras ARCO -->
+        <div class="arco-chips-grid">
+          <div class="arco-chip">
+            <span class="arco-chip-letter">A</span>
+            <span class="arco-chip-label">{idioma === 'en' ? 'Access' : 'Acceso'}</span>
+          </div>
+          <div class="arco-chip">
+            <span class="arco-chip-letter">R</span>
+            <span class="arco-chip-label">{idioma === 'en' ? 'Rectification' : 'Rectificación'}</span>
+          </div>
+          <div class="arco-chip">
+            <span class="arco-chip-letter">C</span>
+            <span class="arco-chip-label">{idioma === 'en' ? 'Cancellation' : 'Cancelación'}</span>
+          </div>
+          <div class="arco-chip">
+            <span class="arco-chip-letter">O</span>
+            <span class="arco-chip-label">{idioma === 'en' ? 'Opposition' : 'Oposición'}</span>
+          </div>
+        </div>
+
+        <p class="privacidad-card-body" style="font-size: 0.88rem; margin-top: 1rem;">
+          <i class="fa-solid fa-clock color-emerald" style="margin-right: 0.4rem;"></i>
+          {t.arco_plazos}
+        </p>
+
+        <!-- Caja de Contacto Directo para ARCO -->
+        <div class="arco-channel-box">
+          <div class="arco-channel-info">
+            <h4>{t.contacto_legal_titulo}</h4>
+            <p><i class="fa-solid fa-envelope"></i> {emailLegal}</p>
+          </div>
+          <a href={mailtoArco} class="btn-acercas-action primary">
+            <i class="fa-solid fa-paper-plane"></i> {t.btn_enviar_solicitud}
+          </a>
+        </div>
+      </article>
+
+      <!-- 6. Seguridad y Enfoque Local-First -->
+      <article class="privacidad-card">
+        <div class="privacidad-card-header">
+          <i class="fa-solid fa-laptop-code"></i>
+          <h2 class="privacidad-card-title">{t.seguridad_titulo}</h2>
+        </div>
+        <p class="privacidad-card-body">{t.seguridad_desc}</p>
+      </article>
+
+      <!-- Banner de Asistencia Directa Padre -->
+      <div class="acercas-help-banner">
+        <div class="acercas-help-info">
+          <h4>{t.comun.ayuda_titulo}</h4>
+          <p>{t.comun.ayuda_desc}</p>
+        </div>
+        <div class="acercas-help-actions">
+          <a href={`tel:${datosNegocio.telefonoLimpio}`} class="btn-acercas-action secondary">
+            <i class="fa-solid fa-phone"></i> {datosNegocio.telefonoMostrado}
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,100 @@
+---
+// src/feature/personal/layout/Sonrisa.astro
+// Layout Maestro para el Feature Personal (Dashboard del Dueño Gaswii Surquillo)
+import Header from '../components/Header.astro';
+import Sidebar from '../components/Sidebar.astro';
+
+import witemaCss from '../../../core/wicss/witema.css?inline';
+import personalCss from '../personal.css?inline';
+
+interface Props {
+  titulo?: string;
+  moduloActivo?: string;
+  idioma?: string;
+}
+
+const { 
+  titulo = 'Dashboard del Dueño · Solgas Surquillo',
+  moduloActivo = 'dashboard',
+  idioma = 'es' 
+} = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang={idioma} data-theme="futuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>{titulo}</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+  <!-- Guard de Seguridad Anti-FOUC en 0ms y Preferencias de Tema -->
+  <script is:inline>
+    try {
+      // 1. Blindaje de Seguridad: Validación síncrona en 0ms
+      const raw = localStorage.getItem('wiSmile');
+      if (!raw) {
+        document.documentElement.style.display = 'none';
+        window.location.replace('/');
+      } else {
+        let user = null;
+        try {
+          const parsed = JSON.parse(raw);
+          user = (parsed && parsed.value) ? parsed.value : parsed;
+          if (parsed && parsed.expiry && Date.now() > parsed.expiry) user = null;
+        } catch(err) {
+          user = null;
+        }
+
+        const rolesValidos = ['personal', 'gestor', 'admin'];
+        if (!user || !rolesValidos.includes(user.rol)) {
+          document.documentElement.style.display = 'none';
+          window.location.replace('/');
+        }
+      }
+
+      // 2. Anti-FOUC de Tema y Sidebar Colapsado
+      const savedTheme = localStorage.getItem('wiTema') || localStorage.getItem('witema') || localStorage.getItem('gaswii-theme') || 'futuro';
+      document.documentElement.dataset.theme = savedTheme;
+      if (localStorage.getItem('gaswii_sidebar_collapsed') === 'true') {
+        document.documentElement.classList.add('is-collapsed');
+      }
+    } catch (e) {
+      document.documentElement.style.display = 'none';
+      window.location.replace('/');
+    }
+  </script>
+
+  <!-- Tipografías e Iconos -->
+  <link rel="stylesheet" href="/google/fonts.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css" />
+
+  <!-- Estilos Globales Inlined (0 CSS generado en tiempo de ejecución) -->
+  <style is:global set:html={witemaCss}></style>
+  <style is:global set:html={personalCss}></style>
+
+  <!-- Slot para estilos específicos de módulos -->
+  <slot name="modulo-css" />
+</head>
+<body>
+
+  <!-- Topbar Unificada -->
+  <Header />
+
+  <!-- Sidebar con los 14 Módulos -->
+  <Sidebar moduloActivo={moduloActivo} />
+
+  <!-- Shell Principal -->
+  <main class="ps-main-shell">
+    <slot />
+  </main>
+
+  <div id="notificationsContainer"></div>
+
+  <!-- Controlador Cliente Personal -->
+  <script>
+    import '../personal.js';
+  </script>
+</body>
+</html>

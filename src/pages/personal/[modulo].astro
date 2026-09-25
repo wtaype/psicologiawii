@@ -1,0 +1,16 @@
+---
+// src/pages/personal/[modulo].astro
+// Ruta dinámica para los módulos del feature personal (ej: /personal/dashboard, /personal/notepad)
+import PersonalPage from '@/feature/personal/personalPage.astro';
+import { getModulosActivos, moduloDefecto } from '@/feature/personal/modulos.js';
+
+export function getStaticPaths() {
+  return getModulosActivos().map((m) => ({
+    params: { modulo: m.id }
+  }));
+}
+
+const { modulo = moduloDefecto } = Astro.params;
+---
+
+<PersonalPage idioma="es" moduloActivo={modulo} />

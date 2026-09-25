@@ -1,0 +1,463 @@
+/* src/feature/cliente/modulos/04-soporte/soporte.css */
+/* Módulo 04: Soporte & Mesa de Ayuda · Solgas Surquillo */
+/* Diseño idéntico a 02-direccion y 03-cuenta · Split Layout 100% · Tokens witema.css */
+
+.cl-soporte-module {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+}
+
+/* ============================================================
+   ENCABEZADO DEL MÓDULO (CABECERA + BADGE ATENCIÓN)
+   ============================================================ */
+.sp-panel-head {
+  background: var(--cl-card-bg);
+  border: 1px solid var(--cl-card-border);
+  border-radius: 1.2vh;
+  padding: 1.2vh 1.4vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1.2vh;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.sp-head-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sp-panel-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1rem, 1.25vw, 1.35rem);
+  font-weight: 800;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sp-panel-title i {
+  color: var(--cl-orange);
+}
+
+.sp-panel-subtitle {
+  font-size: clamp(0.72rem, 0.78vw, 0.82rem);
+  color: var(--muted);
+}
+
+/* BADGE DE ESTADO DE ATENCIÓN */
+.sp-head-badge {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sp-live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cl-emerald);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  animation: spPulse 2s infinite;
+}
+
+@keyframes spPulse {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.4); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+}
+
+/* ============================================================
+   LAYOUT SPLIT: 2 COLUMNAS (50% / 50%) APROVECHANDO 100% VIEWPORT
+   ============================================================ */
+.sp-layout-split {
+  display: grid;
+  grid-template-columns: minmax(360px, 48%) 1fr;
+  gap: 1.4vw;
+  flex: 1;
+  min-height: 0;
+}
+
+/* ============================================================
+   COLUMNA IZQUIERDA: FORMULARIO GENERADOR DE TICKET / SOLICITUD
+   ============================================================ */
+.sp-card-editor {
+  background: var(--cl-card-bg);
+  border: 1px solid var(--cl-card-border);
+  border-radius: 1.2vh;
+  padding: 2vh 1.6vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8vh;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.sp-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.2vh;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+  margin-bottom: 0.4vh;
+}
+
+.sp-card-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  font-weight: 800;
+  color: var(--cl-orange);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  letter-spacing: 0.02em;
+}
+
+/* FILAS Y GRUPOS */
+.sp-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-block: 0.4vh;
+}
+
+.sp-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+  margin-block: 0.4vh;
+}
+
+.sp-form-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 2px;
+}
+
+.sp-form-label i {
+  color: var(--cl-orange);
+  font-size: 0.76rem;
+}
+
+.sp-input,
+.sp-select,
+.sp-textarea {
+  width: 100%;
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px 14px;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 0.84rem;
+  outline: none;
+  transition: all 0.18s;
+  box-sizing: border-box;
+}
+
+.sp-textarea {
+  resize: vertical;
+  min-height: 85px;
+  max-height: 140px;
+}
+
+.sp-input:focus,
+.sp-select:focus,
+.sp-textarea:focus {
+  border-color: var(--cl-orange);
+  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+  background: var(--surface);
+}
+
+/* ARMONIZACIÓN DE WISELECT EN SOPORTE */
+.cl-soporte-module .wi-select-trigger {
+  width: 100%;
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0 14px;
+  box-sizing: border-box;
+}
+
+.cl-soporte-module .wi-select-trigger:focus-visible,
+.cl-soporte-module .wi-select-trigger.wi-select-open {
+  border-color: var(--cl-orange);
+  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+}
+
+.cl-soporte-module .wi-select-label {
+  font-family: inherit;
+  font-size: 0.84rem;
+  color: var(--ink);
+}
+
+/* BOTONES DE ACCIÓN */
+.sp-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0.8vh;
+}
+
+.sp-btn-save {
+  flex: 1;
+  padding: 12px 20px;
+  background: var(--cl-orange);
+  border: none;
+  border-radius: 9px;
+  color: #fff;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 0.92rem;
+  font-weight: 800;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.18s;
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.25);
+}
+
+.sp-btn-save:hover {
+  background: #ea580c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(255, 102, 0, 0.35);
+}
+
+/* ============================================================
+   COLUMNA DERECHA: CANALES DIRECTOS (ARRIBA) + HISTORIAL (ABAJO)
+   ============================================================ */
+.sp-right-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4vw;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.sp-card-section {
+  background: var(--cl-card-bg);
+  border: 1px solid var(--cl-card-border);
+  border-radius: 1.2vh;
+  padding: 2vh 1.6vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+/* CANALES DE CONTACTO DIRECTO */
+.sp-channels-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-block: 0.4vh;
+}
+
+.sp-channel-card {
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-decoration: none;
+  transition: all 0.18s;
+  color: inherit;
+}
+
+.sp-channel-card:hover {
+  border-color: var(--cl-orange);
+  background: rgba(255, 102, 0, 0.03);
+  transform: translateY(-1px);
+}
+
+.sp-channel-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sp-channel-desc {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.sp-channel-val {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--cl-orange);
+  margin-top: 2px;
+}
+
+.sp-btn-wa-full {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  background: #25d366;
+  color: #fff;
+  border-radius: 9px;
+  padding: 11px 18px;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.18s;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
+  margin-top: 4px;
+}
+
+.sp-btn-wa-full:hover {
+  background: #20ba5a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
+}
+
+/* HISTORIAL DE TICKETS (SMART CACHE WISOPORTE) */
+.sp-tickets-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 290px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.sp-ticket-item {
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: border-color 0.18s;
+}
+
+.sp-ticket-item:hover {
+  border-color: rgba(255, 102, 0, 0.4);
+}
+
+.sp-ticket-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.sp-ticket-id {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--ink);
+}
+
+.sp-ticket-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.sp-ticket-badge.pendiente {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.sp-ticket-badge.atendido {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--cl-emerald);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.sp-ticket-badge.en_proceso {
+  background: rgba(2, 132, 199, 0.12);
+  color: #38bdf8;
+  border: 1px solid rgba(2, 132, 199, 0.3);
+}
+
+.sp-ticket-detalle {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.sp-ticket-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  color: var(--muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 4px;
+}
+
+.sp-empty-tickets {
+  padding: 3vh 1.5vw;
+  text-align: center;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+}
+
+.sp-empty-tickets i {
+  font-size: 1.8rem;
+  color: var(--line);
+}
+
+/* ============================================================
+   RESPONSIVE EN MÓVILES (< 900px)
+   ============================================================ */
+@media (max-width: 900px) {
+  .sp-layout-split {
+    grid-template-columns: 1fr;
+  }
+  .sp-form-row {
+    grid-template-columns: 1fr;
+  }
+  .sp-channels-grid {
+    grid-template-columns: 1fr;
+  }
+  .sp-panel-head {
+    width: 100%;
+  }
+}

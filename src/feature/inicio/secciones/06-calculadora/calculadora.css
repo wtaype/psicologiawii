@@ -1,0 +1,348 @@
+/* ==========================================================================
+   06-CALCULADORA SECTION STYLES - SOLGAS SURQUILLO (GASWII)
+   Diseño Oficial CRO: Sliders Interactivos sobre .pagewii (85vw)
+   ========================================================================== */
+
+#calculadora, .sec-calculadora {
+  padding: 8vh 0;
+  background: var(--bg-surface, #091122);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.calc-header-box {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 5vh auto;
+}
+
+.calc-top-badge {
+  color: #ff7a1a;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(255, 102, 0, 0.15);
+  border: 1px solid rgba(255, 102, 0, 0.35);
+  border-radius: 9999px;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4vh 1.1vw;
+  font-weight: 700;
+  display: inline-flex;
+}
+
+.calc-main-title {
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin: 1.5vh 0 1.2vh;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.8rem, 2.6vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.calc-main-desc {
+  font-size: clamp(0.92rem, 1vw, 1.05rem);
+  color: #94a3b8;
+  max-width: 650px;
+  margin: 0 auto;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  line-height: 1.6;
+}
+
+/* Grilla de 2 Columnas */
+.calc-split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: 3vw;
+}
+
+@media (max-width: 900px) {
+  .calc-split-grid {
+    grid-template-columns: 1fr !important;
+    gap: 4vh !important;
+  }
+}
+
+/* Panel Izquierdo: Controles y Resultado */
+.calc-card-controls {
+  background: var(--bg-card, #0f172a);
+  border: 1.5px solid rgba(249, 115, 22, 0.45);
+  border-radius: 1.5vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3vh 2vw;
+  transition: border-color 0.3s;
+  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+.calc-card-controls:hover {
+  border-color: var(--primary, #ff6600);
+}
+
+.calc-range-group {
+  margin-bottom: 2.2vh;
+}
+
+.calc-range-label {
+  font-size: 0.92rem;
+  color: var(--text-bright, #fff);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.2vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+}
+
+.calc-range-label i {
+  color: #f97316;
+  margin-right: 0.4rem;
+}
+
+.calc-val-display {
+  color: #f97316;
+  font-size: 1.05rem;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-weight: 800;
+}
+
+.calc-range-slider {
+  accent-color: #f97316;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 1vh;
+  height: 6px;
+  border-radius: 3px;
+}
+
+.calc-select-tamano {
+  color: #fff;
+  width: 100%;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  background: #0f172a;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 1vh;
+  outline: none;
+  padding: 1.4vh 1vw;
+  transition: border-color 0.2s;
+  box-sizing: border-box;
+}
+
+.calc-select-tamano:focus {
+  border-color: #f97316;
+}
+
+/* Tarjeta Interior de Resultado */
+.calc-result-box {
+  text-align: center;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.2vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2vh;
+  padding: 2.5vh 1.5vw;
+}
+
+.calc-result-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  margin-bottom: 0.6vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+}
+
+.calc-result-days {
+  color: #f97316;
+  letter-spacing: -0.02em;
+  margin: 0.5vh 0;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(2.8rem, 3.8vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+.calc-result-guarantee {
+  font-size: 0.82rem;
+  color: #10b981;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 2vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+}
+
+.btn-calc-pedir {
+  color: #fff;
+  width: 100%;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: #10b981;
+  border: none;
+  border-radius: 1vh;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 1.3vh 1.8vw;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0.5vh 1.5vh rgba(16, 185, 129, 0.25);
+  box-sizing: border-box;
+}
+
+.btn-calc-pedir:hover {
+  background: #059669;
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.8vh 2vh rgba(16, 185, 129, 0.4);
+}
+
+/* Panel Derecho: Imagen y Consejos */
+.calc-card-tips {
+  background: var(--bg-card, #0f172a);
+  border: 1px solid var(--border-card, rgba(255, 255, 255, 0.1));
+  border-radius: 1.5vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2vh 1.6vw;
+  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+.calc-tips-media {
+  border-radius: 1vh;
+  height: 240px;
+  margin-bottom: 2vh;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.calc-tips-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.calc-tips-badge-overlay {
+  background: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(5, 8, 17, 0.92) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 1.5vh 1.2vw;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.calc-media-badge {
+  color: #fff;
+  font-size: 0.74rem;
+  background: rgba(249, 115, 22, 0.85);
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35vh 0.85vw;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+}
+
+.calc-tips-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.12rem;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.5vh;
+  font-weight: 800;
+}
+
+.calc-tips-title i {
+  color: #f59e0b;
+}
+
+.calc-tips-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1vh;
+  margin: 0 0 2vh;
+  padding: 0;
+  list-style: none;
+}
+
+.calc-tip-item {
+  font-size: 0.84rem;
+  color: #94a3b8;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  line-height: 1.5;
+}
+
+.calc-tip-item i {
+  color: #10b981;
+  margin-top: 0.25rem;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+}
+
+.calc-tip-item strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.calc-dudas-row {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1vw;
+  padding-top: 1.6vh;
+}
+
+.calc-dudas-text {
+  font-size: 0.82rem;
+  color: #94a3b8;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+}
+
+.btn-calc-consultar {
+  color: #fff;
+  font-size: 0.82rem;
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.8vh;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.8vh 1.4vw;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-calc-consultar:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #fff;
+}

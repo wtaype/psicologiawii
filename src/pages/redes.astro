@@ -1,0 +1,16 @@
+---
+// src/pages/redes.astro
+// Página Pública: Redes Sociales Oficiales y Canales Verificados (Español)
+import Principal from '../core/layouts/Principal.astro';
+import Redes from '../feature/acercas/secciones/07-redes/Redes.astro';
+import { buildRuta } from '../core/idioma/idioma';
+import { datosNegocio } from '../negocio.js';
+
+const idioma = 'es';
+const ruta = buildRuta('/redes', idioma);
+const title = `Redes Oficiales · ${datosNegocio.nombre} | Comunidad, Facebook, Instagram y TikTok`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Redes idioma={idioma} />
+</Principal>

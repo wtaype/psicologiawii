@@ -1,0 +1,16 @@
+---
+// src/pages/en/cookies.astro
+// Public Page: Cookies & Local Storage Policy (English)
+import Principal from '../../core/layouts/Principal.astro';
+import Cookies from '../../feature/acercas/secciones/04-cookies/Cookies.astro';
+import { buildRuta } from '../../core/idioma/idioma';
+import { datosNegocio } from '../../negocio.js';
+
+const idioma = 'en';
+const ruta = buildRuta('/cookies', idioma);
+const title = `Cookies Policy · ${datosNegocio.nombre} | Local-First Storage Transparency`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Cookies idioma={idioma} />
+</Principal>

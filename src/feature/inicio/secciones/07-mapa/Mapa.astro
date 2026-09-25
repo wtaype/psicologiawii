@@ -1,0 +1,112 @@
+---
+// src/feature/inicio/secciones/07-mapa/Mapa.astro
+// 7. SECCIÓN SEDES DE ATENCIÓN Y MAPA DE UBICACIÓN
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import mapaCss from './mapa.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const direccionSede = datosNegocio.direccionSede;
+const telefonoMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
+const horarioDespacho = datosNegocio.horario;
+const mapsUrl = datosNegocio.mapsUrl;
+const mapEmbedUrl = `https://maps.google.com/maps?q=-12.1264,-77.0278&hl=${idioma}&z=16&output=embed`;
+---
+
+<style is:global set:html={mapaCss}></style>
+
+<section id="sedes" class="seccion-mapa section-py-body">
+  <div class="pagewii">
+    
+    <!-- Encabezado de Sección -->
+    <header class="mapa-header-box">
+      <span class="badge-serenidad mapa-top-badge">
+        <i class="fa-solid fa-map-location-dot"></i> 
+        <span>{t.top_badge.toUpperCase()}</span>
+      </span>
+      <h2 class="mapa-main-title">{t.titulo}</h2>
+      <p class="mapa-main-desc">{t.subtitulo}</p>
+    </header>
+
+    <!-- Contenedor Unificado de Sedes y Mapa -->
+    <div class="clean-card mapa-box-wrapper">
+      
+      <!-- Fila de Información Central de Sedes -->
+      <div class="mapa-info-grid">
+        
+        <!-- Columna 1: Dirección Sede Miraflores -->
+        <div class="mapa-info-col">
+          <div class="mapa-icon-box icon-orange" style="background: var(--brand-soft); color: var(--brand-primary); border: 1px solid rgba(50,83,70,0.25);">
+            <i class="fa-solid fa-location-dot"></i>
+          </div>
+          <div>
+            <div class="mapa-info-label">{t.dir_label}</div>
+            <div class="mapa-info-val" style="font-size: 0.85rem;">{direccionSede}</div>
+          </div>
+        </div>
+
+        <!-- Columna 2: Horarios -->
+        <div class="mapa-info-col">
+          <div class="mapa-icon-box icon-blue" style="background: rgba(35,101,125,0.12); color: var(--brand-blue); border: 1px solid rgba(35,101,125,0.25);">
+            <i class="fa-solid fa-clock"></i>
+          </div>
+          <div>
+            <div class="mapa-info-label">{t.horario_label}</div>
+            <div class="mapa-info-val" style="font-size: 0.85rem;">{horarioDespacho}</div>
+          </div>
+        </div>
+
+        <!-- Columna 3: Teléfono Citas -->
+        <div class="mapa-info-col">
+          <div class="mapa-icon-box icon-green" style="background: rgba(38,122,87,0.12); color: var(--green); border: 1px solid rgba(38,122,87,0.25);">
+            <i class="fa-solid fa-phone"></i>
+          </div>
+          <div>
+            <div class="mapa-info-label">{t.tel_label}</div>
+            <div class="mapa-info-val" style="font-size: 0.85rem;">{telefonoMostrado}</div>
+          </div>
+        </div>
+
+        <!-- Columna 4: Botón Abrir Maps -->
+        <div class="mapa-btn-col">
+          <a 
+            href={mapsUrl} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="mapa-btn-action"
+            title={t.btn_maps}
+            style="background: var(--brand-primary); color: #fff; border-radius: 1vh;"
+          >
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> 
+            <span>{t.btn_maps}</span>
+          </a>
+        </div>
+
+      </div>
+
+      <!-- Mapa Embebido de Miraflores -->
+      <div class="mapa-frame-box">
+        <iframe 
+          src={mapEmbedUrl} 
+          width="100%" 
+          height="100%" 
+          class="mapa-iframe-embed" 
+          allowfullscreen="" 
+          loading="lazy" 
+          referrerpolicy="no-referrer-when-downgrade" 
+          title="Ubicación Consultorio Psicológico América - Sede Miraflores"
+        ></iframe>
+      </div>
+
+    </div>
+
+  </div>
+</section>

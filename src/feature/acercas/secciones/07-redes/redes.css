@@ -1,0 +1,120 @@
+/* ==========================================================================
+   SECCIÓN 07-REDES (CSS HIJO) - GASWII
+   Tarjetas con gradientes de marca y aviso de seguridad
+   ========================================================================== */
+
+.redes-container {
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.redes-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.6rem;
+  margin-bottom: 4vh;
+}
+
+@media (max-width: 768px) {
+  .redes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.redes-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 1.25rem;
+  padding: 2.2rem;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1.5rem;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.redes-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.1);
+}
+
+.redes-card.facebook:hover { border-color: #1877f2; }
+.redes-card.instagram:hover { border-color: #e1306c; }
+.redes-card.tiktok:hover { border-color: #000000; }
+.redes-card.whatsapp:hover { border-color: #25d366; }
+
+.redes-card-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+}
+
+.redes-card.facebook .redes-card-icon { background: rgba(24, 119, 242, 0.1); color: #1877f2; }
+.redes-card.instagram .redes-card-icon { background: rgba(225, 48, 108, 0.1); color: #e1306c; }
+.redes-card.tiktok .redes-card-icon { background: rgba(0, 0, 0, 0.08); color: var(--text-bright, #0f172a); }
+.redes-card.whatsapp .redes-card-icon { background: rgba(37, 211, 102, 0.12); color: #25d366; }
+
+.redes-card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  margin-bottom: 0.4rem;
+}
+
+.redes-card-desc {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.92rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Alerta de Seguridad */
+.redes-security-box {
+  background: rgba(234, 88, 12, 0.06);
+  border: 1px solid rgba(234, 88, 12, 0.25);
+  border-radius: 1.25rem;
+  padding: 1.8rem 2.2rem;
+  margin-bottom: 4vh;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.redes-security-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(234, 88, 12, 0.15);
+  color: var(--cl-orange, #ea580c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.redes-security-content h4 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  margin-bottom: 0.3rem;
+}
+
+.redes-security-content p {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.9rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.6;
+  margin: 0;
+}

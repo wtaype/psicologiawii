@@ -1,0 +1,16 @@
+---
+// src/pages/acerca.astro
+// Página Pública: Nosotros / Acerca de Solgas Surquillo (Español)
+import Principal from '../core/layouts/Principal.astro';
+import Acerca from '../feature/acercas/secciones/01-acerca/Acerca.astro';
+import { buildRuta } from '../core/idioma/idioma';
+import { datosNegocio } from '../negocio.js';
+
+const idioma = 'es';
+const ruta = buildRuta('/acerca', idioma);
+const title = `Nosotros · ${datosNegocio.nombre} | 26 Años de Trayectoria y Garantía`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Acerca idioma={idioma} />
+</Principal>

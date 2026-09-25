@@ -1,0 +1,157 @@
+---
+// src/feature/personal/modulos/perfil/Perfil.astro
+// Módulo de Mi Perfil: Ficha de Usuario y Seguridad (Solgas Surquillo)
+// 100% JS Nativo · Integrado con @widev y wiSmile · 0 CSS Inline
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-perfil" data-perfil-init="false">
+  
+  <!-- CABECERA SUPERIOR STICKY -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-user-gear sn-header-icon"></i>
+        Mi Perfil · Administrador del Negocio
+      </h1>
+      <p class="ps-section-sub">
+        Gestión de datos del titular, credenciales de acceso, teléfono de contacto y sincronización de sesión wiSmile.
+      </p>
+    </div>
+  </div>
+
+  <!-- LAYOUT DIVIDIDO (FORMULARIOS 60% / TARJETA ID 40%) -->
+  <div class="pf-split-layout">
+    
+    <!-- COLUMNA 1: FORMULARIOS DE DATOS Y SEGURIDAD -->
+    <div>
+      <!-- Tarjeta 1: Datos Personales -->
+      <div class="pf-card">
+        <h2 class="pf-card-title">
+          <i class="fa-solid fa-user-pen sn-title-icon"></i> Datos de la Cuenta
+        </h2>
+
+        <form id="formPfDatos">
+          <div class="sn-form-row">
+            <div class="sn-form-group">
+              <label class="sn-label" for="pfInpNombre">Nombre</label>
+              <input type="text" id="pfInpNombre" class="sn-input" required />
+            </div>
+            <div class="sn-form-group">
+              <label class="sn-label" for="pfInpApellidos">Apellidos</label>
+              <input type="text" id="pfInpApellidos" class="sn-input" required />
+            </div>
+          </div>
+
+          <div class="sn-form-row">
+            <div class="sn-form-group">
+              <label class="sn-label" for="pfInpUsuario">Nombre de Usuario</label>
+              <input type="text" id="pfInpUsuario" class="sn-input" required />
+            </div>
+            <div class="sn-form-group">
+              <label class="sn-label" for="pfInpCelular">Celular WhatsApp</label>
+              <input type="tel" id="pfInpCelular" class="sn-input" required />
+            </div>
+          </div>
+
+          <div class="sn-form-group sn-mb-14">
+            <label class="sn-label" for="pfInpEmail">Correo Electrónico</label>
+            <input type="email" id="pfInpEmail" class="sn-input" required />
+          </div>
+
+          <div class="sn-form-group sn-mb-14">
+            <label class="sn-label" for="pfInpAvatar">URL Foto de Avatar</label>
+            <input type="text" id="pfInpAvatar" class="sn-input" />
+          </div>
+
+          <div class="pf-flex-end">
+            <button type="submit" class="ps-btn ps-btn-primary" id="btnPfGuardar">
+              <i class="fa-solid fa-check"></i> Actualizar Perfil
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Tarjeta 2: Cambio de Contraseña -->
+      <div class="pf-card">
+        <h2 class="pf-card-title">
+          <i class="fa-solid fa-key sn-title-icon"></i> Seguridad y Cambio de Contraseña
+        </h2>
+
+        <form id="formPfPassword">
+          <div class="sn-form-group sn-mb-14">
+            <label class="sn-label" for="pfInpPassActual">Contraseña Actual</label>
+            <input type="password" id="pfInpPassActual" class="sn-input" placeholder="••••••••" required />
+          </div>
+
+          <div class="sn-form-row">
+            <div class="sn-form-group">
+              <label class="sn-label" for="pfInpPassNuevo">Nueva Contraseña</label>
+              <input type="password" id="pfInpPassNuevo" class="sn-input" placeholder="Mínimo 6 caracteres" required />
+            </div>
+            <div class="sn-form-group">
+              <label class="sn-label" for="pfInpPassConf">Confirmar Contraseña</label>
+              <input type="password" id="pfInpPassConf" class="sn-input" placeholder="Repite la contraseña" required />
+            </div>
+          </div>
+
+          <div class="pf-flex-end-mt">
+            <button type="submit" class="ps-btn ps-btn-secondary" id="btnPfGuardarPass">
+              <i class="fa-solid fa-shield-halved"></i> Cambiar Contraseña
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- COLUMNA 2: TARJETA DE IDENTIFICACIÓN ADMINISTRATIVA EN VIVO -->
+    <div class="pf-id-wrap">
+      <div class="pf-id-card">
+        <div class="pf-id-header">
+          <div class="pf-id-brand">
+            <i class="fa-solid fa-fire"></i> SOLGAS SURQUILLO
+          </div>
+          <span class="pf-id-role-badge">ADMINISTRADOR</span>
+        </div>
+
+        <div class="pf-id-body">
+          <img src="https://imgwii.web.app/smile.avif" alt="Avatar" class="pf-id-avatar" id="pfIdAvatar" />
+          <h3 class="pf-id-name" id="pfIdNombre">Wilder Taype</h3>
+          <p class="pf-id-handle" id="pfIdHandle">@wilder</p>
+        </div>
+
+        <div class="pf-id-meta-grid">
+          <div class="pf-id-meta-row">
+            <span class="pf-id-meta-lbl">Correo:</span>
+            <span id="pfIdEmail">wtaypeee@gmail.com</span>
+          </div>
+          <div class="pf-id-meta-row">
+            <span class="pf-id-meta-lbl">WhatsApp:</span>
+            <span id="pfIdCelular">961229280</span>
+          </div>
+          <div class="pf-id-meta-row">
+            <span class="pf-id-meta-lbl">Sede:</span>
+            <span id="pfIdSede">Jr. Dante 260</span>
+          </div>
+          <div class="pf-id-meta-row">
+            <span class="pf-id-meta-lbl">Estado de Sesión:</span>
+            <span class="pf-status-active">🟢 Activo (wiSmile)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloPerfil } from './perfil.js';
+  inicializarModuloPerfil();
+  document.addEventListener('astro:page-load', inicializarModuloPerfil);
+</script>

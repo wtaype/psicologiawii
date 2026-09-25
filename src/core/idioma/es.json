@@ -1,0 +1,47 @@
+{
+  "topbar": {
+    "sede_label": "Sedes Miraflores y Villa El Salvador",
+    "despacho_label": "Atención Presencial y Online",
+    "dias_ano": "días de atención",
+    "llamar_movil": "Llamar",
+    "llamar_titulo": "Llamar a Consultorio"
+  },
+  "nav": {
+    "slogan_brand": "Atención Psicológica y Psicoterapia Integral",
+    "servicios": "Especialidades",
+    "productos": "Especialidades",
+    "balanza": "Enfoques",
+    "seguridad": "Metodología",
+    "calculadora": "Paquetes",
+    "ubicacion": "Sedes",
+    "nosotros": "Nosotros",
+    "login": "Acceso",
+    "pedir": "Agendar Cita",
+    "sticky_llamar": "Llamar",
+    "sticky_pedir": "Agendar por WhatsApp",
+    "ir_tienda_publica": "Ir al Inicio",
+    "inicio_titulo": "Consultorio Psicológico América"
+  },
+  "footer": {
+    "bio": "Consultorio Psicológico América. Atención clínica profesional con rigor científico y calidez humana. Especialistas en psicoterapia individual, pareja, familia, descarte TDAH/TEA y talleres de desarrollo integral.",
+    "cobertura_titulo": "Nuestras Sedes de Atención",
+    "pagos_titulo": "Medios de Pago y Horarios",
+    "pagos_desc": "Aceptamos los siguientes medios de pago para tus consultas y paquetes:",
+    "horario_etiqueta": "Horario de Atención:",
+    "pago_yape": "YAPE",
+    "pago_plin": "PLIN",
+    "pago_transferencia": "TRANSFERENCIA",
+    "pago_efectivo": "EFECTIVO",
+    "reclamos_titulo": "Libro de Reclamaciones",
+    "reclamos_desc": "Conforme a lo establecido por el Código de Protección y Defensa del Consumidor de INDECOPI.",
+    "derechos": "Todos los derechos reservados.",
+    "desarrollo": "Desarrollado con alta velocidad por",
+    "delivery_central": "Central de Citas:",
+    "volver_arriba": "Volver arriba"
+  },
+  "sistema": {
+    "cargando": "Cargando...",
+    "error_general": "Ocurrió un error inesperado. Inténtalo nuevamente.",
+    "copiado": "¡Copiado al portapapeles!"
+  }
+}

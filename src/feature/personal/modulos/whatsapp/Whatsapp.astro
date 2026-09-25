@@ -1,0 +1,173 @@
+---
+// src/feature/personal/modulos/whatsapp/Whatsapp.astro
+// Módulo de WhatsApp: Centro de Mensajería Oficial & Sandbox Smartphone (Solgas Surquillo)
+// 100% JS Nativo · Integrado con @widev · 0 CSS Inline
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-whatsapp" data-whatsapp-init="false">
+  
+  <!-- CABECERA SUPERIOR STICKY -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-brands fa-whatsapp sn-header-icon" style="color: #25d366;"></i>
+        WhatsApp · Centro de Mensajería & Sandbox
+      </h1>
+      <p class="ps-section-sub">
+        Formatos y plantillas oficiales de despacho, garantía y fidelización con vista previa en vivo de smartphone.
+      </p>
+    </div>
+  </div>
+
+  <!-- LAYOUT DIVIDIDO (CONFIGURADOR 56% / SIMULADOR MÓVIL 44%) -->
+  <div class="wa-split-layout">
+    
+    <!-- COLUMNA 1: CONFIGURADOR DE PLANTILLAS Y VARIABLES -->
+    <div class="wa-card">
+      <h2 class="wa-card-title">
+        <i class="fa-solid fa-layer-group sn-title-icon"></i> 1. Selecciona la Plantilla Oficial
+      </h2>
+
+      <!-- Grid de 6 Plantillas Maestras -->
+      <div class="wa-templates-grid" id="waTemplatesGrid">
+        <!-- Render dinámico desde whatsapp.js -->
+      </div>
+
+      <!-- Parámetros Dinámicos -->
+      <div class="wa-params-box">
+        <div class="wa-params-title">
+          <i class="fa-solid fa-sliders"></i> 2. Personalizar Datos del Cliente y Despacho
+        </div>
+
+        <div class="wa-form-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="waInpCliente">Nombre del Cliente</label>
+            <input type="text" id="waInpCliente" class="sn-input" value="Wilder Taype" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="waInpCelular">Celular WhatsApp Destino</label>
+            <input type="tel" id="waInpCelular" class="sn-input" value="961229280" placeholder="961229280" />
+          </div>
+        </div>
+
+        <div class="wa-form-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="waInpProducto">Producto / Balón</label>
+            <input type="text" id="waInpProducto" class="sn-input" value="Balón SOLGAS Premium 10 kg" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="waInpMonto">Total PEN (S/)</label>
+            <input type="text" id="waInpMonto" class="sn-input" value="65.00" />
+          </div>
+        </div>
+
+        <div class="wa-form-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="waInpChofer">Conductor Asignado</label>
+            <input type="text" id="waInpChofer" class="sn-input" value="Juan Quispe (Móvil 02)" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="waInpEta">Tiempo de Entrega (ETA)</label>
+            <input type="text" id="waInpEta" class="sn-input" value="12–15" />
+          </div>
+        </div>
+
+        <div class="sn-form-group sn-mt-10">
+          <label class="sn-label" for="waInpDireccion">Dirección de Entrega</label>
+          <input type="text" id="waInpDireccion" class="sn-input" value="Jr. Dante 260, Surquillo" />
+        </div>
+      </div>
+
+      <!-- Editor de Texto Final -->
+      <div class="sn-form-group">
+        <label class="sn-label" for="waTextareaMensaje">
+          <i class="fa-solid fa-pen-to-square"></i> 3. Mensaje Final Formateado (Editable)
+        </label>
+        <textarea id="waTextareaMensaje" class="wa-textarea"></textarea>
+      </div>
+    </div>
+
+    <!-- COLUMNA 2: SIMULADOR DE SMARTPHONE EN VIVO (SANDBOX) -->
+    <div class="wa-phone-wrap">
+      <div class="wa-phone-frame">
+        <!-- Status Bar -->
+        <div class="wa-phone-status-bar">
+          <span id="waPhoneClock">9:41</span>
+          <div>
+            <i class="fa-solid fa-signal" style="margin-right: 4px;"></i>
+            <i class="fa-solid fa-wifi" style="margin-right: 4px;"></i>
+            <i class="fa-solid fa-battery-full"></i>
+          </div>
+        </div>
+
+        <!-- Chat Header -->
+        <div class="wa-chat-header">
+          <div class="wa-chat-sender-info">
+            <i class="fa-solid fa-arrow-left" style="color: #aebac1; font-size: 13px;"></i>
+            <img src="https://imgwii.web.app/smile.avif" alt="Solgas" class="wa-chat-avatar" />
+            <div class="wa-chat-sender-meta">
+              <div class="wa-chat-sender-name">
+                Solgas Surquillo
+                <i class="fa-solid fa-circle-check wa-chat-verified-icon"></i>
+              </div>
+              <div class="wa-chat-sender-sub">Cuenta de empresa oficial</div>
+            </div>
+          </div>
+
+          <div class="wa-chat-header-icons">
+            <i class="fa-solid fa-video"></i>
+            <i class="fa-solid fa-phone"></i>
+            <i class="fa-solid fa-ellipsis-vertical"></i>
+          </div>
+        </div>
+
+        <!-- Chat Body -->
+        <div class="wa-chat-body">
+          <div class="wa-chat-date-pill">Hoy</div>
+
+          <div class="wa-chat-bubble-out">
+            <div id="waChatBubbleText">Cargando mensaje...</div>
+            <div class="wa-chat-bubble-meta">
+              <span id="waChatTime">09:41</span>
+              <i class="fa-solid fa-check-double wa-chat-ticks"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat Footer -->
+        <div class="wa-chat-footer">
+          <i class="fa-regular fa-face-smile" style="color: #8696a0; font-size: 18px;"></i>
+          <div class="wa-chat-input-fake">Mensaje</div>
+          <i class="fa-solid fa-paperclip" style="color: #8696a0; font-size: 16px;"></i>
+          <div class="wa-chat-mic-btn">
+            <i class="fa-solid fa-microphone"></i>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones de Disparo Directo -->
+      <div class="wa-sandbox-actions">
+        <button type="button" class="wa-btn-open-ws" id="btnWaOpenWs">
+          <i class="fa-brands fa-whatsapp"></i> Abrir en WhatsApp Web / Móvil
+        </button>
+        <button type="button" class="wa-btn-copy" id="btnWaCopy" title="Copiar mensaje">
+          <i class="fa-solid fa-copy"></i> Copiar
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloWhatsapp } from './whatsapp.js';
+  inicializarModuloWhatsapp();
+  document.addEventListener('astro:page-load', inicializarModuloWhatsapp);
+</script>

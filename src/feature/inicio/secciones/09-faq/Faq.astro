@@ -1,0 +1,114 @@
+---
+// src/feature/inicio/secciones/09-faq/Faq.astro
+// 9. SECCIÓN PREGUNTAS FRECUENTES CRO CLÍNICA
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import faqCss from './faq.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const telefonoLimpio = datosNegocio.telefonoLimpio;
+const telefonoMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
+const direccionSede = datosNegocio.direccionSede;
+const horarioDespacho = datosNegocio.horario;
+const registroColegio = datosNegocio.registroColegio;
+
+const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(t.ws_msg)}`;
+---
+
+<style is:global set:html={faqCss}></style>
+
+<section id="faq" class="seccion-faq section-py-body">
+  <div class="pagewii">
+    
+    <!-- Encabezado de Sección -->
+    <header class="faq-header-box">
+      <span class="badge-serenidad faq-top-badge">
+        <i class="fa-solid fa-circle-question"></i> 
+        <span>{t.top_badge.toUpperCase()}</span>
+      </span>
+      <h2 class="faq-main-title">{t.titulo}</h2>
+      <p class="faq-main-desc">{t.subtitulo}</p>
+    </header>
+
+    <div class="faq-grid-layout">
+      
+      <!-- Columna 1: Acordeón Interactivo de FAQ -->
+      <div class="faq-stack">
+        {t.faqs.map((f: any, idx: number) => (
+          <details class="clean-card faq-details-card" open={idx === 0}>
+            <summary class="faq-summary">
+              <span>
+                <i class="fa-solid fa-circle-check" style="color: var(--brand-primary);"></i>
+                <span>{f.pregunta}</span>
+              </span>
+              <i class="fa-solid fa-chevron-down faq-icon-arrow"></i>
+            </summary>
+            <div class="faq-answer-content">
+              {f.respuesta.replace('{telefono}', telefonoMostrado)}
+            </div>
+          </details>
+        ))}
+      </div>
+
+      <!-- Columna 2: Tarjeta Visual de Asistencia y Confianza -->
+      <div class="clean-card faq-side-card">
+        
+        <div class="faq-media-box">
+          <img 
+            src="/imgwii/Sofia2.jpg" 
+            alt="Consultorio Psicológico América - Lic. Sofía Reynaga" 
+            loading="lazy"
+            decoding="async" 
+            class="faq-media-img"
+          />
+          <div class="faq-media-overlay">
+            <span class="badge-serenidad">
+              <i class="fa-solid fa-shield-heart"></i> 
+              <span>{t.side_foto_badge_1}</span>
+            </span>
+            <span class="badge-oro">
+              <i class="fa-solid fa-award"></i> 
+              <span>{registroColegio}</span>
+            </span>
+          </div>
+        </div>
+
+        <h3 class="faq-side-title">{t.side_titulo}</h3>
+        <p class="faq-side-desc">{t.side_desc}</p>
+
+        <div class="faq-meta-list">
+          <div class="faq-meta-item">
+            <i class="fa-solid fa-clock" style="color: var(--brand-primary);"></i> 
+            <span>{horarioDespacho}</span>
+          </div>
+          <div class="faq-meta-item">
+            <i class="fa-solid fa-location-dot" style="color: var(--brand-blue);"></i> 
+            <span>{direccionSede}</span>
+          </div>
+        </div>
+
+        <a 
+          href={wsLink} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          class="btn-whatsapp btn-faq-side"
+          title={t.btn_ws}
+        >
+          <i class="fa-brands fa-whatsapp"></i> 
+          <span>{t.btn_ws}</span>
+        </a>
+
+      </div>
+
+    </div>
+
+  </div>
+</section>

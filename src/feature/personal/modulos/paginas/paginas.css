@@ -1,0 +1,204 @@
+/* src/feature/personal/modulos/paginas/paginas.css */
+/* Estilos del Módulo Páginas: Editor Institucional & Google SERP (Solgas Surquillo) */
+/* 100% Adaptado a witema.css y @widev · 0 CSS inline */
+
+/* ── LAYOUT DIVIDIDO (SELECTOR & EDITOR 55% / SIMULADOR SERP 45%) ── */
+.pg-split-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.95fr);
+  gap: 22px;
+  align-items: start;
+}
+
+/* ── SELECTOR DE PÁGINAS ── */
+.pg-nav-list {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  margin-bottom: 18px;
+}
+
+.pg-nav-btn {
+  background: var(--surface, #0e192c);
+  border: 1px solid var(--brd, #21314b);
+  color: var(--tx2, #90a4c3);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.pg-nav-btn:hover {
+  border-color: var(--brand-orange, #ff6600);
+  color: var(--brand-orange, #ff6600);
+}
+
+.pg-nav-btn.active {
+  background: var(--brand-orange, #ff6600);
+  border-color: var(--brand-orange, #ff6600);
+  color: #ffffff;
+  box-shadow: 0 4px 12px rgba(255, 102, 0, 0.25);
+}
+
+/* ── FORMULARIO DE EDICIÓN DE PÁGINA ── */
+.pg-card {
+  background: var(--surface, #0e192c);
+  border: 1px solid var(--brd, #21314b);
+  border-radius: var(--br_m, 12px);
+  padding: 22px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.pg-card-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--tx, #f3f6fc);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pg-route-badge {
+  font-size: 11.5px;
+  font-family: 'Courier New', Courier, monospace;
+  background: var(--inp, #14223a);
+  border: 1px solid var(--brd, #21314b);
+  color: var(--brand-orange, #ff6600);
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+/* ── COLUMNA DERECHA: SIMULADOR GOOGLE SERP SNIPPET ── */
+.pg-serp-wrap {
+  position: sticky;
+  top: calc(var(--topbar-h, 60px) + 70px);
+}
+
+.pg-serp-card {
+  background: var(--surface, #0e192c);
+  border: 1px solid var(--brd, #21314b);
+  border-radius: var(--br_m, 12px);
+  padding: 22px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+.pg-serp-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--tx, #f3f6fc);
+  margin: 0 0 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Caja de previsualización estilo Google */
+.pg-google-box {
+  background: #ffffff;
+  color: #202124;
+  border: 1px solid #dadce0;
+  border-radius: 8px;
+  padding: 16px;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 1px 6px rgba(32, 33, 36, 0.1);
+  margin-bottom: 16px;
+}
+
+.pg-google-url-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #202124;
+  margin-bottom: 4px;
+}
+
+.pg-google-favicon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.pg-google-site-name {
+  font-weight: 600;
+  color: #202124;
+}
+
+.pg-google-url-path {
+  color: #5f6368;
+  font-size: 11px;
+}
+
+.pg-google-headline {
+  font-size: 18px;
+  color: #1a0dab;
+  font-weight: 400;
+  line-height: 1.3;
+  margin: 4px 0 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: block;
+}
+
+.pg-google-headline:hover {
+  text-decoration: underline;
+}
+
+.pg-google-desc {
+  font-size: 13px;
+  color: #4d5156;
+  line-height: 1.45;
+}
+
+.pg-serp-chars-counter {
+  font-size: 11.5px;
+  color: var(--tx2, #90a4c3);
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+
+.pg-chars-pill {
+  font-weight: 700;
+  color: var(--brand-orange, #ff6600);
+}
+
+.pg-meta-desc-textarea {
+  min-height: 80px;
+  padding: 8px 12px;
+  height: auto;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.pg-google-icon {
+  color: #4285f4;
+}
+
+.pg-serp-hint {
+  font-size: 11.5px;
+  color: var(--tx2, #90a4c3);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+  .pg-split-layout {
+    grid-template-columns: 1fr;
+  }
+  .pg-serp-wrap {
+    position: static;
+  }
+}

@@ -1,0 +1,406 @@
+---
+// src/feature/cliente/modulos/03-cuenta/Cuenta.astro
+// Módulo de Ficha de Cliente, Perfil, Facturación SUNAT, Seguridad y Preferencias
+// Diseño 100% consistente con 02-direccion · Split Layout 2 Columnas · Tokens witema.css
+interface Props {
+  cliente?: any;
+}
+const { cliente = {} } = Astro.props;
+---
+
+<div class="cl-cuenta-module" id="moduloCuenta">
+  <!-- 1. ENCABEZADO DEL MÓDULO CON IDENTIDAD DEL CLIENTE -->
+  <div class="ct-panel-head">
+    <div class="ct-head-left">
+      <div class="ct-panel-title">
+        <i class="fa-solid fa-user-gear"></i>
+        <span>Mi Perfil y Cuenta de Cliente</span>
+      </div>
+      <span class="ct-panel-subtitle">
+        Administra tus datos personales, facturación SUNAT, clave de acceso y preferencias de entrega en Surquillo.
+      </span>
+    </div>
+
+    <!-- CHIP COMPACTO DE IDENTIDAD (0ms Local-First) -->
+    <div class="ct-head-identity">
+      <div class="ct-avatar-pill" id="ctAvatarLetter">
+        <i class="fa-solid fa-user"></i>
+      </div>
+      <div class="ct-identity-meta">
+        <span class="ct-identity-name" id="ctHeroNombre">Vecino Gaswii</span>
+        <span class="ct-handle-chip" id="ctHeroUsuario">@cargando</span>
+      </div>
+      <div class="ct-puntos-badge">
+        <i class="fa-solid fa-coins" style="font-size:0.7rem;"></i>
+        <span id="ctPuntosNum">0</span> pts
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. LAYOUT SPLIT: 2 COLUMNAS (50% / 50%) APROVECHANDO 100% DEL ESPACIO -->
+  <div class="ct-layout-split">
+    <!-- ========================================================
+         COLUMNA IZQUIERDA: DATOS PERSONALES & FACTURACIÓN SUNAT
+         ======================================================== -->
+    <div class="ct-card-editor">
+      <div class="ct-card-header">
+        <div class="ct-card-title">
+          <i class="fa-solid fa-id-card"></i>
+          <span>Datos Personales & Facturación SUNAT</span>
+        </div>
+      </div>
+
+      <form id="formCuentaPerfil" autocomplete="off">
+        <!-- Fila 1: Usuario de acceso permanente & Correo -->
+        <div class="ct-form-row">
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputUsuario">
+              <i class="fa-solid fa-at"></i> Usuario de Acceso (Permanente):
+            </label>
+            <input 
+              type="text" 
+              class="ct-input" 
+              id="ctInputUsuario" 
+              readonly 
+              disabled 
+              title="Tu identificador único de usuario no es modificable"
+            />
+          </div>
+
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputEmail">
+              <i class="fa-solid fa-envelope"></i> Correo Electrónico:
+            </label>
+            <input 
+              type="email" 
+              class="ct-input" 
+              id="ctInputEmail" 
+              readonly 
+              disabled 
+            />
+          </div>
+        </div>
+
+        <!-- Fila 2: Nombres y Apellidos -->
+        <div class="ct-form-row">
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputNombre">
+              <i class="fa-solid fa-user"></i> Nombres:
+            </label>
+            <input 
+              type="text" 
+              class="ct-input" 
+              id="ctInputNombre" 
+              placeholder="Tu nombre" 
+              required 
+            />
+          </div>
+
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputApellidos">
+              <i class="fa-regular fa-user"></i> Apellidos:
+            </label>
+            <input 
+              type="text" 
+              class="ct-input" 
+              id="ctInputApellidos" 
+              placeholder="Tus apellidos" 
+            />
+          </div>
+        </div>
+
+        <!-- Fila 3: Avatar e Iniciales de Identidad (Personalizables) -->
+        <div class="ct-form-row">
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputAvatar">
+              <i class="fa-solid fa-image"></i> Avatar (URL de Imagen):
+            </label>
+            <input 
+              type="text" 
+              class="ct-input" 
+              id="ctInputAvatar" 
+              placeholder="https://imgwii.web.app/smile.avif" 
+            />
+            <div class="ct-sug-row">
+              <button type="button" class="ct-sug-chip" data-avatar-sug="https://imgwii.web.app/smile.avif">
+                <i class="fa-solid fa-circle-check" style="color:var(--cl-orange);"></i> Solgas (/smile.avif)
+              </button>
+              <button type="button" class="ct-sug-chip" data-avatar-sug="https://api.dicebear.com/7.x/bottts/svg?seed=Solgas">
+                <i class="fa-solid fa-robot"></i> Bot Solgas
+              </button>
+            </div>
+          </div>
+
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputIniciales">
+              <i class="fa-solid fa-font"></i> Iniciales de Identidad:
+            </label>
+            <input 
+              type="text" 
+              class="ct-input" 
+              id="ctInputIniciales" 
+              placeholder="Ej: WT" 
+              maxlength="3" 
+              style="text-transform: uppercase; font-weight: 700;"
+            />
+            <div class="ct-sug-row">
+              <button type="button" class="ct-sug-chip" id="btnAutoIniciales">
+                <i class="fa-solid fa-arrows-rotate"></i> Auto-generar con Nombres
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Fila 4: Celular / WhatsApp de Coordinación -->
+        <div class="ct-form-group">
+          <label class="ct-form-label" for="ctInputCelular">
+            <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Teléfono Móvil / WhatsApp de Coordinación:
+          </label>
+          <input 
+            type="tel" 
+            class="ct-input" 
+            id="ctInputCelular" 
+            placeholder="Ej: 961 229 280" 
+          />
+        </div>
+
+        <!-- SECCIÓN SUNAT: COMPROBANTES ELECTRÓNICOS -->
+        <div class="ct-sunat-divider">
+          <i class="fa-solid fa-file-invoice"></i>
+          <span>Comprobantes de Pago Electrónicos (SUNAT)</span>
+        </div>
+
+        <div class="ct-form-row">
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctSelectDocTipo">
+              <i class="fa-solid fa-passport"></i> Tipo de Documento:
+            </label>
+            <select class="ct-select" id="ctSelectDocTipo">
+              <option value="DNI">DNI (Boleta Electrónica)</option>
+              <option value="RUC">RUC (Factura Comercial)</option>
+              <option value="CE">Carnet de Extranjería</option>
+              <option value="PASAPORTE">Pasaporte</option>
+            </select>
+          </div>
+
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputDocumento">
+              <i class="fa-solid fa-hashtag"></i> Número de Documento:
+            </label>
+            <input 
+              type="text" 
+              class="ct-input" 
+              id="ctInputDocumento" 
+              placeholder="Ingresa el número" 
+              maxlength="15" 
+            />
+          </div>
+        </div>
+
+        <!-- Campos condicionales para RUC -->
+        <div class="ct-form-row" id="ctRucCampos" style="display:none;">
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputRazonSocial">
+              <i class="fa-solid fa-building"></i> Razón Social:
+            </label>
+            <input 
+              type="text" 
+              class="ct-input" 
+              id="ctInputRazonSocial" 
+              placeholder="Ej: Mi Empresa S.A.C." 
+            />
+          </div>
+
+          <div class="ct-form-group">
+            <label class="ct-form-label" for="ctInputDireccionFiscal">
+              <i class="fa-solid fa-location-dot"></i> Dirección Fiscal:
+            </label>
+            <input 
+              type="text" 
+              class="ct-input" 
+              id="ctInputDireccionFiscal" 
+              placeholder="Dirección fiscal SUNAT" 
+            />
+          </div>
+        </div>
+
+        <!-- Botón de Guardar Datos Naranja Solgas -->
+        <div class="ct-form-actions">
+          <button type="submit" class="ct-btn-save" id="btnGuardarPerfil">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Guardar Mis Datos</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- ========================================================
+         COLUMNA DERECHA: SEGURIDAD (ARRIBA) + PREFERENCIAS (ABAJO)
+         ======================================================== -->
+    <div class="ct-right-col">
+      <!-- TARJETA 1 (ARRIBA): SEGURIDAD & CLAVE DE ACCESO -->
+      <div class="ct-card-section">
+        <div class="ct-card-header">
+          <div class="ct-card-title">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>Seguridad & Clave de Acceso</span>
+          </div>
+        </div>
+
+        <form id="formCuentaPassword" autocomplete="off">
+          <div class="ct-form-row">
+            <div class="ct-form-group">
+              <label class="ct-form-label" for="ctInputNuevaPass">
+                <i class="fa-solid fa-key"></i> Nueva Contraseña:
+              </label>
+              <input 
+                type="password" 
+                class="ct-input" 
+                id="ctInputNuevaPass" 
+                placeholder="Mínimo 6 caracteres" 
+                minlength="6" 
+                required 
+              />
+            </div>
+
+            <div class="ct-form-group">
+              <label class="ct-form-label" for="ctInputConfirmarPass">
+                <i class="fa-solid fa-check-double"></i> Confirmar Contraseña:
+              </label>
+              <input 
+                type="password" 
+                class="ct-input" 
+                id="ctInputConfirmarPass" 
+                placeholder="Repite la contraseña" 
+                minlength="6" 
+                required 
+              />
+            </div>
+          </div>
+
+          <div class="ct-form-actions">
+            <button type="submit" class="ct-btn-save" id="btnCambiarPass">
+              <i class="fa-solid fa-key"></i>
+              <span>Actualizar Clave</span>
+            </button>
+            <button type="button" class="ct-btn-secondary" id="btnEnviarResetMail">
+              <i class="fa-solid fa-envelope"></i>
+              <span>Restablecer por Correo</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- TARJETA 2 (ABAJO): PREFERENCIAS DE ENTREGA EN SURQUILLO -->
+      <div class="ct-card-section">
+        <div class="ct-card-header">
+          <div class="ct-card-title">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Preferencias de Entrega en Surquillo</span>
+          </div>
+        </div>
+
+        <form id="formCuentaPreferencias">
+          <!-- Fila 1: Válvula habitual & Horario habitual en 2 columnas con wiSelect -->
+          <div class="ct-form-row">
+            <div class="ct-form-group">
+              <label class="ct-form-label" for="ctSelectValvula">
+                <i class="fa-solid fa-gear"></i> Tipo de Válvula de tu Balón:
+              </label>
+              <select class="ct-select" id="ctSelectValvula">
+                <option value="premium">Solgas Premium (Clip-On)</option>
+                <option value="rosca">Válvula Rosca Tradicional</option>
+              </select>
+            </div>
+
+            <div class="ct-form-group">
+              <label class="ct-form-label" for="ctSelectHorario">
+                <i class="fa-solid fa-clock"></i> Horario Habitual en Casa:
+              </label>
+              <select class="ct-select" id="ctSelectHorario">
+                <option value="mañana">Mañana (8am - 1pm)</option>
+                <option value="tarde">Tarde (1pm - 6pm)</option>
+                <option value="noche">Noche (6pm - 9pm)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Fila 2: Método de pago & Detalle de Piso/Acceso en 2 columnas -->
+          <div class="ct-form-row">
+            <div class="ct-form-group">
+              <label class="ct-form-label" for="ctSelectMetodoPago">
+                <i class="fa-solid fa-wallet"></i> Método de Pago Favorito:
+              </label>
+              <select class="ct-select" id="ctSelectMetodoPago">
+                <option value="yape">Yape / Plin</option>
+                <option value="pos">Tarjeta POS al Entregar</option>
+                <option value="efectivo">Efectivo Exacto</option>
+              </select>
+            </div>
+
+            <div class="ct-form-group">
+              <label class="ct-form-label" for="ctInputPisoAscensor">
+                <i class="fa-solid fa-stairs"></i> Piso / Ascensor / Acceso:
+              </label>
+              <input 
+                type="text" 
+                class="ct-input" 
+                id="ctInputPisoAscensor" 
+                placeholder="Ej: Piso 4 con ascensor" 
+              />
+            </div>
+          </div>
+
+          <!-- Fila 3: Switches estilo Apple con verde esmeralda -->
+          <div class="ct-apple-row">
+            <label class="ct-apple-card" for="ctSwitchTimbre">
+              <div class="ct-apple-card-info">
+                <span class="ct-apple-title">
+                  <i class="fa-solid fa-bell-slash ct-bell-icon"></i> Timbre malogrado
+                </span>
+                <span class="ct-apple-desc">Tocar la puerta con fuerza</span>
+              </div>
+              <div class="ct-apple-switch">
+                <input type="checkbox" id="ctSwitchTimbre" />
+                <span class="ct-slider"></span>
+              </div>
+            </label>
+
+            <label class="ct-apple-card" for="ctSwitchLlamar">
+              <div class="ct-apple-card-info">
+                <span class="ct-apple-title">
+                  <i class="fa-solid fa-phone-volume ct-phone-icon"></i> Llamar al llegar
+                </span>
+                <span class="ct-apple-desc">Confirmar 2 min antes</span>
+              </div>
+              <div class="ct-apple-switch">
+                <input type="checkbox" id="ctSwitchLlamar" checked />
+                <span class="ct-slider"></span>
+              </div>
+            </label>
+          </div>
+
+          <label class="ct-apple-card" for="ctSwitchComprobante" style="margin-block: 0.6vh;">
+            <div class="ct-apple-card-info">
+              <span class="ct-apple-title">
+                <i class="fa-solid fa-receipt ct-receipt-icon"></i> Copia de Boleta / Factura por correo
+              </span>
+              <span class="ct-apple-desc">Recibe automáticamente el PDF y XML de tu comprobante en tu email</span>
+            </div>
+            <div class="ct-apple-switch">
+              <input type="checkbox" id="ctSwitchComprobante" checked />
+              <span class="ct-slider"></span>
+            </div>
+          </label>
+
+          <div class="ct-form-actions">
+            <button type="submit" class="ct-btn-save" id="btnGuardarPreferencias">
+              <i class="fa-solid fa-sliders"></i>
+              <span>Guardar Preferencias</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

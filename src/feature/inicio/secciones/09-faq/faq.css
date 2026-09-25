@@ -1,0 +1,292 @@
+/* ==========================================================================
+   09-FAQ SECTION STYLES - SOLGAS SURQUILLO (GASWII)
+   Acordeón Interactivo y Tarjeta de Contacto sobre .pagewii (85vw)
+   ========================================================================== */
+
+#faq, .seccion-faq {
+  padding: 8vh 0;
+  background: var(--bg-body, #060913);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.faq-header-box {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 5vh auto;
+}
+
+.faq-top-badge {
+  color: #38bdf8;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(2, 132, 199, 0.18);
+  border: 1px solid rgba(2, 132, 199, 0.4);
+  border-radius: 999px;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.5vh;
+  padding: 0.4vh 1.1vw;
+  font-weight: 700;
+  display: inline-flex;
+}
+
+.faq-main-title {
+  color: var(--text-bright, #fff);
+  letter-spacing: -0.02em;
+  margin: 0 0 1.2vh;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.faq-main-desc {
+  font-size: clamp(0.92rem, 1vw, 1.05rem);
+  color: var(--text-muted, #94a3b8);
+  margin: 0 auto;
+  max-width: 680px;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  line-height: 1.6;
+}
+
+/* Grilla 2 Columnas */
+.faq-grid-layout {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  align-items: start;
+  gap: 3vw;
+}
+
+@media (max-width: 900px) {
+  .faq-grid-layout {
+    grid-template-columns: 1fr !important;
+    gap: 4vh !important;
+  }
+}
+
+/* Columna 1: Acordeón */
+.faq-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+}
+
+.faq-details-card {
+  background: var(--bg-card, #0b1329);
+  border: 1px solid var(--border-card, rgba(255, 255, 255, 0.08));
+  border-radius: 1vh;
+  padding: 1.8vh 1.8vw;
+  transition: all 0.25s ease;
+  box-sizing: border-box;
+}
+
+.faq-details-card[open] {
+  border-color: rgba(255, 102, 0, 0.4);
+}
+
+.faq-summary {
+  color: var(--text-bright, #fff);
+  user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: clamp(0.92rem, 1vw, 1.05rem);
+  font-weight: 700;
+  list-style: none;
+  cursor: pointer;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  gap: 0.8rem;
+}
+
+.faq-summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-summary i.fa-circle-check {
+  color: var(--primary, #ff6600);
+  margin-right: 0.5rem;
+  font-size: 0.95rem;
+}
+
+.faq-icon-arrow {
+  color: var(--text-muted, #94a3b8);
+  font-size: 0.8rem;
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+
+.faq-details-card[open] .faq-icon-arrow {
+  transform: rotate(180deg);
+  color: var(--primary, #ff6600);
+}
+
+.faq-answer-content {
+  color: var(--text-muted, #94a3b8);
+  border-top: 1px solid var(--border-card, rgba(255, 255, 255, 0.08));
+  margin-top: 1.5vh;
+  padding-top: 1.5vh;
+  font-size: clamp(0.85rem, 0.9vw, 0.95rem);
+  line-height: 1.6;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+}
+
+/* Columna 2: Tarjeta Lateral Ejecutiva */
+.faq-side-card {
+  background: var(--bg-surface-elevated, #101935);
+  border: 2px solid var(--border-accent, rgba(224, 86, 0, 0.4));
+  border-radius: 1.5vh;
+  padding: 2vh 1.8vw;
+  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+.faq-media-box {
+  border-radius: 1vh;
+  height: 28vh;
+  min-height: 220px;
+  margin-bottom: 2vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.faq-media-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.faq-media-overlay {
+  position: absolute;
+  bottom: 0;
+  inset-inline: 0;
+  padding: 1.2vh 1.2vw;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.faq-badge-fire {
+  color: #ff7a1a;
+  background: rgba(255, 102, 0, 0.2);
+  border: 1px solid rgba(255, 102, 0, 0.4);
+  font-size: 0.72rem;
+  padding: 0.3vh 0.7vw;
+  border-radius: 999px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.faq-badge-blue {
+  color: #38bdf8;
+  background: rgba(2, 132, 199, 0.2);
+  border: 1px solid rgba(2, 132, 199, 0.4);
+  font-size: 0.72rem;
+  padding: 0.3vh 0.7vw;
+  border-radius: 999px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.faq-side-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.1rem, 1.2vw, 1.3rem);
+  font-weight: 700;
+  color: var(--text-bright, #fff);
+  margin: 0 0 1vh 0;
+}
+
+.faq-side-desc {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.86rem;
+  color: var(--text-muted, #94a3b8);
+  line-height: 1.5;
+  margin: 0 0 2vh 0;
+}
+
+.faq-meta-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+  margin-bottom: 2.2vh;
+}
+
+.faq-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.86rem;
+  color: var(--text-bright, #fff);
+  font-weight: 700;
+}
+
+.faq-meta-item i {
+  color: var(--primary, #ff6600);
+}
+
+.faq-side-actions {
+  display: flex;
+  gap: 0.8vw;
+  flex-wrap: wrap;
+}
+
+.faq-btn-call {
+  flex: 1;
+  background: var(--accent-cyan, #0284c7);
+  color: #fff;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 0.8vh;
+  padding: 1.2vh 1vw;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0 0.4vh 1.2vh rgba(2, 132, 199, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.faq-btn-call:hover {
+  background: #0369a1;
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.6vh 1.6vh rgba(2, 132, 199, 0.45);
+}
+
+.faq-btn-wa {
+  flex: 1;
+  background: var(--accent-emerald, #10b981);
+  color: #fff;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 0.8vh;
+  padding: 1.2vh 1vw;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0 0.4vh 1.2vh rgba(16, 185, 129, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.faq-btn-wa:hover {
+  background: #059669;
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.6vh 1.6vh rgba(16, 185, 129, 0.45);
+}

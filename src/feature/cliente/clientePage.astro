@@ -1,0 +1,52 @@
+---
+// src/feature/cliente/clientePage.astro
+// Orquestador de la Vista Cliente · Solgas Surquillo
+// Inyección modular de CSS inlined y ensamblaje de paneles de módulos
+import Sonrisas from './layout/Sonrisas.astro';
+import Pedidos from './modulos/01-pedidos/Pedidos.astro';
+import Direccion from './modulos/02-direccion/Direccion.astro';
+import Cuenta from './modulos/03-cuenta/Cuenta.astro';
+import Soporte from './modulos/04-soporte/Soporte.astro';
+
+import pedidosCss from './modulos/01-pedidos/pedidos.css?inline';
+import direccionCss from './modulos/02-direccion/direccion.css?inline';
+import cuentaCss from './modulos/03-cuenta/cuenta.css?inline';
+import soporteCss from './modulos/04-soporte/soporte.css?inline';
+
+interface Props {
+  titulo?: string;
+  moduloActivo?: string;
+  cliente?: any;
+}
+
+const {
+  titulo = 'Solgas Surquillo · Pedidos Express y Despacho',
+  moduloActivo = 'pedidos',
+  cliente
+} = Astro.props;
+---
+
+<Sonrisas titulo={titulo} moduloActivo={moduloActivo} cliente={cliente}>
+  <!-- Inyección inlined de CSS específico de módulos -->
+  <style is:global slot="modulo-css" set:html={`${pedidosCss}\n${direccionCss}\n${cuentaCss}\n${soporteCss}`}></style>
+
+  <!-- MÓDULO 01: REALIZAR PEDIDOS -->
+  <section class={`cl-panel ${moduloActivo === 'pedidos' ? 'active' : ''}`} id="panel-pedidos" aria-label="Módulo Pedidos">
+    <Pedidos cliente={cliente} />
+  </section>
+
+  <!-- MÓDULO 02: MIS DIRECCIONES (FASE 2) -->
+  <section class={`cl-panel ${moduloActivo === 'direccion' ? 'active' : ''}`} id="panel-direccion" aria-label="Módulo Direcciones">
+    <Direccion cliente={cliente} />
+  </section>
+
+  <!-- MÓDULO 03: MI CUENTA / FICHA (FASE 3) -->
+  <section class={`cl-panel ${moduloActivo === 'cuenta' ? 'active' : ''}`} id="panel-cuenta" aria-label="Módulo Cuenta">
+    <Cuenta cliente={cliente} />
+  </section>
+
+  <!-- MÓDULO 04: SOPORTE Y BOLETAS (FASE 4) -->
+  <section class={`cl-panel ${moduloActivo === 'soporte' ? 'active' : ''}`} id="panel-soporte" aria-label="Módulo Soporte">
+    <Soporte cliente={cliente} />
+  </section>
+</Sonrisas>

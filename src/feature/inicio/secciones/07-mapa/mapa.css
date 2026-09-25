@@ -1,0 +1,191 @@
+/* ==========================================================================
+   07-MAPA SECTION STYLES - SOLGAS SURQUILLO (GASWII)
+   Central de Operaciones y Mapa Embebido sobre .pagewii (85vw)
+   ========================================================================== */
+
+#mapa-sede, .seccion-mapa {
+  padding: 8vh 0;
+  background: var(--bg-body, #060913);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.mapa-header-box {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 5vh auto;
+}
+
+.mapa-top-badge {
+  color: #38bdf8;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(2, 132, 199, 0.18);
+  border: 1px solid rgba(2, 132, 199, 0.4);
+  border-radius: 999px;
+  align-items: center;
+  gap: 0.45rem;
+  margin-bottom: 1.5vh;
+  padding: 0.4vh 1.1vw;
+  font-weight: 700;
+  display: inline-flex;
+}
+
+.mapa-main-title {
+  color: var(--text-bright, #fff);
+  letter-spacing: -0.02em;
+  margin: 0 0 1.2vh;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.8rem, 2.5vw, 2.8rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+.mapa-main-desc {
+  font-size: clamp(0.92rem, 1vw, 1.05rem);
+  color: var(--text-muted, #94a3b8);
+  margin: 0 auto;
+  max-width: 680px;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  line-height: 1.6;
+}
+
+/* Tarjeta Contenedora de Mapa */
+.mapa-box-wrapper {
+  background: var(--bg-card, #0b1329);
+  border: 2px solid var(--border-accent, rgba(224, 86, 0, 0.4));
+  box-shadow: var(--shadow-card, 0 1vh 3vh rgba(0, 0, 0, 0.5));
+  border-radius: 1.5vh;
+  padding: 1.8vh 1.4vw;
+  box-sizing: border-box;
+}
+
+.mapa-info-grid {
+  background: var(--bg-surface-elevated, #101935);
+  border: 1px solid var(--border-card, rgba(255, 255, 255, 0.08));
+  border-radius: 1vh;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  align-items: center;
+  gap: 1.5vw;
+  margin-bottom: 2vh;
+  padding: 1.5vh 1.5vw;
+}
+
+.mapa-info-col {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
+.mapa-icon-box {
+  width: 44px;
+  min-width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.mapa-icon-box.icon-orange {
+  color: var(--primary, #ff6600);
+  background: rgba(255, 102, 0, 0.15);
+}
+
+.mapa-icon-box.icon-blue {
+  color: #38bdf8;
+  background: rgba(2, 132, 199, 0.15);
+}
+
+.mapa-icon-box.icon-green {
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+.mapa-info-label {
+  color: var(--text-muted, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.74rem;
+  font-weight: 700;
+  margin-bottom: 0.2vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+}
+
+.mapa-info-val {
+  color: var(--text-bright, #fff);
+  font-size: 0.92rem;
+  font-weight: 700;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+}
+
+.mapa-btn-col {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.mapa-btn-action {
+  background: linear-gradient(135deg, var(--brand-orange, #ff6600) 0%, #e05600 100%);
+  color: #fff;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  border-radius: 0.8vh;
+  padding: 1.1vh 1.4vw;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  text-decoration: none;
+  box-shadow: 0 0.5vh 1.5vh rgba(255, 102, 0, 0.3);
+  transition: transform 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mapa-btn-action:hover {
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.8vh 2vh rgba(255, 102, 0, 0.45);
+}
+
+/* Marco del Iframe */
+.mapa-frame-box {
+  border: 1px solid var(--border-card, rgba(255, 255, 255, 0.1));
+  background: #e5e3df;
+  border-radius: 1vh;
+  width: 100%;
+  height: 460px;
+  overflow: hidden;
+  box-shadow: 0 0.8vh 2vh rgba(0, 0, 0, 0.35);
+  box-sizing: border-box;
+}
+
+.mapa-iframe-embed {
+  border: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 450px;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .mapa-box-wrapper {
+    padding: 1.5vh 2.5vw;
+  }
+  .mapa-info-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5vh;
+  }
+  .mapa-frame-box {
+    height: 340px;
+  }
+  .mapa-iframe-embed {
+    min-height: 340px;
+  }
+}

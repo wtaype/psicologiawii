@@ -1,0 +1,146 @@
+---
+// src/feature/acercas/secciones/07-redes/Redes.astro
+// Sección 07: Redes Sociales y Canales Oficiales Solgas Surquillo
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdiomaSeccion } from '../../idioma/idioma';
+import AcercasHeader from '../../componentes/AcercasHeader.astro';
+import AcercasNav from '../../componentes/AcercasNav.astro';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+
+import acercasMadreCss from '../../acercas.css?inline';
+import redesHijoCss from './redes.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdiomaSeccion({ es, en }, idioma);
+
+const redes = datosNegocio.redes || {};
+const fbUrl = redes.facebook || 'https://facebook.com';
+const igUrl = redes.instagram || 'https://instagram.com';
+const tkUrl = redes.tiktok || 'https://tiktok.com';
+const wsUrl = `https://wa.me/${datosNegocio.whatsapp}?text=${encodeURIComponent(
+  idioma === 'en'
+    ? `Hello ${datosNegocio.nombre}, I would like to join the neighborhood community channel.`
+    : `Hola ${datosNegocio.nombre}, deseo unirme al canal comunitario de vecinos.`
+)}`;
+---
+
+<style is:global set:html={acercasMadreCss}></style>
+<style is:global set:html={redesHijoCss}></style>
+
+<div class="acercas-page-wrapper">
+  <div class="pagewii">
+
+    <AcercasHeader 
+      badge={t.redes_badge}
+      badgeIcon="fa-solid fa-share-nodes"
+      titulo={t.redes_titulo}
+      desc={t.redes_desc}
+      idioma={idioma}
+    />
+
+    <AcercasNav seccionActiva="redes" idioma={idioma} />
+
+    <div class="redes-container">
+
+      <!-- Alerta Oficial Anti-Cuentas Falsas -->
+      <div class="redes-security-box">
+        <div class="redes-security-icon">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div class="redes-security-content">
+          <h4>{t.alerta_seguridad_tit}</h4>
+          <p>{t.alerta_seguridad_desc}</p>
+        </div>
+      </div>
+
+      <!-- Grid de Redes Sociales Oficiales -->
+      <div class="redes-grid">
+        
+        <!-- Facebook -->
+        <article class="redes-card facebook">
+          <div>
+            <div class="redes-card-icon">
+              <i class="fa-brands fa-facebook-f"></i>
+            </div>
+            <h2 class="redes-card-title">{t.fb_tit}</h2>
+            <p class="redes-card-desc">{t.fb_desc}</p>
+          </div>
+          <div>
+            <a href={fbUrl} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary" style="background: #1877f2;">
+              <i class="fa-brands fa-facebook"></i> {t.btn_fb}
+            </a>
+          </div>
+        </article>
+
+        <!-- Instagram -->
+        <article class="redes-card instagram">
+          <div>
+            <div class="redes-card-icon">
+              <i class="fa-brands fa-instagram"></i>
+            </div>
+            <h2 class="redes-card-title">{t.ig_tit}</h2>
+            <p class="redes-card-desc">{t.ig_desc}</p>
+          </div>
+          <div>
+            <a href={igUrl} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary" style="background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);">
+              <i class="fa-brands fa-instagram"></i> {t.btn_ig}
+            </a>
+          </div>
+        </article>
+
+        <!-- TikTok -->
+        <article class="redes-card tiktok">
+          <div>
+            <div class="redes-card-icon">
+              <i class="fa-brands fa-tiktok"></i>
+            </div>
+            <h2 class="redes-card-title">{t.tk_tit}</h2>
+            <p class="redes-card-desc">{t.tk_desc}</p>
+          </div>
+          <div>
+            <a href={tkUrl} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary" style="background: #000000;">
+              <i class="fa-brands fa-tiktok"></i> {t.btn_tk}
+            </a>
+          </div>
+        </article>
+
+        <!-- WhatsApp Comunitario -->
+        <article class="redes-card whatsapp">
+          <div>
+            <div class="redes-card-icon">
+              <i class="fa-brands fa-whatsapp"></i>
+            </div>
+            <h2 class="redes-card-title">{t.ws_com_tit}</h2>
+            <p class="redes-card-desc">{t.ws_com_desc}</p>
+          </div>
+          <div>
+            <a href={wsUrl} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary" style="background: #25d366;">
+              <i class="fa-brands fa-whatsapp"></i> {t.btn_ws_com}
+            </a>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Banner de Asistencia Directa Padre -->
+      <div class="acercas-help-banner">
+        <div class="acercas-help-info">
+          <h4>{t.comun.ayuda_titulo}</h4>
+          <p>{t.comun.ayuda_desc}</p>
+        </div>
+        <div class="acercas-help-actions">
+          <a href={`tel:${datosNegocio.telefonoLimpio}`} class="btn-acercas-action secondary">
+            <i class="fa-solid fa-phone"></i> {datosNegocio.telefonoMostrado}
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

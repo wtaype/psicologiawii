@@ -1,0 +1,16 @@
+---
+// src/pages/en/feedback.astro
+// Public Page: Service Feedback & Reviews (English)
+import Principal from '../../core/layouts/Principal.astro';
+import Feedback from '../../feature/acercas/secciones/08-feedback/Feedback.astro';
+import { buildRuta } from '../../core/idioma/idioma';
+import { datosNegocio } from '../../negocio.js';
+
+const idioma = 'en';
+const ruta = buildRuta('/feedback', idioma);
+const title = `Service Feedback · ${datosNegocio.nombre} | Customer Experience Reviews`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Feedback idioma={idioma} />
+</Principal>

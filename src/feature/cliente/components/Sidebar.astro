@@ -1,0 +1,41 @@
+---
+// src/feature/cliente/components/Sidebar.astro
+// Menú lateral reactivo del cliente conectado con modulos.js y botón Colapsar
+import { getModulosActivos } from '../modulos.js';
+
+interface Props {
+  moduloActivo?: string;
+}
+
+const { moduloActivo = 'pedidos' } = Astro.props;
+const listaModulos = getModulosActivos();
+---
+
+<aside class="cl-sidebar" id="sidebarMenu">
+  <nav class="cl-nav" aria-label="Navegación del Cliente">
+    {listaModulos.map((m) => {
+      const isActive = m.id === moduloActivo;
+      return (
+        <button 
+          type="button"
+          class={`cl-nav-item ${isActive ? 'active' : ''}`} 
+          data-panel-target={m.id}
+          id={`navItem-${m.id}`}
+          title={m.nombre}
+        >
+          <i class={m.icono}></i>
+          <span class="cl-nav-text">{m.nombre}</span>
+          {m.badge && <span class="cl-nav-badge">{m.badge}</span>}
+        </button>
+      );
+    })}
+  </nav>
+
+  <!-- Pie con Botón Colapsar -->
+  <div class="cl-sidebar-footer">
+    <button type="button" class="cl-btn-collapse" id="btnCollapseSidebar" title="Colapsar menú lateral">
+      <i class="fa-solid fa-arrow-left-long" id="iconCollapse"></i>
+      <span id="labelCollapse">Colapsar</span>
+    </button>
+  </div>
+</aside>

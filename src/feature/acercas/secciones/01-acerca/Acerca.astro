@@ -1,0 +1,201 @@
+---
+// src/feature/acercas/secciones/01-acerca/Acerca.astro
+// Sección 01: Acerca de Nosotros · Autoridad Histórica de 26 Años en Surquillo
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdiomaSeccion } from '../../idioma/idioma';
+import AcercasHeader from '../../componentes/AcercasHeader.astro';
+import AcercasNav from '../../componentes/AcercasNav.astro';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+
+import acercasMadreCss from '../../acercas.css?inline';
+import acercaHijoCss from './acerca.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdiomaSeccion({ es, en }, idioma);
+
+const anos = String(datosNegocio.experienciaAnos || 26);
+const distritosNum = String(datosNegocio.distritos.length || 7);
+const telLimpio = datosNegocio.telefonoLimpio;
+const telMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
+const wsNumero = datosNegocio.whatsapp;
+const wsMsg = encodeURIComponent(
+  idioma === 'en'
+    ? `Hello ${datosNegocio.nombre}, I would like to learn more about your official distribution service.`
+    : `Hola ${datosNegocio.nombre}, deseo conocer más sobre su garantía y servicio de distribución oficial.`
+);
+const wsLink = `https://wa.me/${wsNumero}?text=${wsMsg}`;
+---
+
+<!-- Inyección segura de CSS Madre e Hijo -->
+<style is:global set:html={acercasMadreCss}></style>
+<style is:global set:html={acercaHijoCss}></style>
+
+<div class="acercas-page-wrapper">
+  <div class="pagewii">
+    
+    <!-- Cabecera Institucional Transversal -->
+    <AcercasHeader 
+      badge={t.acerca_badge}
+      badgeIcon="fa-solid fa-medal"
+      titulo={t.acerca_titulo}
+      desc={t.acerca_desc}
+      idioma={idioma}
+    />
+
+    <!-- Navegación Institucional por Tabs -->
+    <AcercasNav seccionActiva="acerca" idioma={idioma} />
+
+    <!-- 1. Historia y Grid Fotográfico Oficial -->
+    <section class="acerca-story-grid">
+      <div class="acerca-story-content">
+        <h2>{t.historia_titulo}</h2>
+        <p>{t.historia_parrafo_1}</p>
+        <p>{t.historia_parrafo_2}</p>
+
+        <!-- Métricas Rápidas -->
+        <div class="acerca-stats-row">
+          <div class="acerca-stat-card">
+            <div class="acerca-stat-num">+{anos}</div>
+            <div class="acerca-stat-label">{idioma === 'en' ? 'Years of Experience' : 'Años de Experiencia'}</div>
+          </div>
+          <div class="acerca-stat-card">
+            <div class="acerca-stat-num">{distritosNum}</div>
+            <div class="acerca-stat-label">{idioma === 'en' ? 'Covered Districts' : 'Distritos Atendidos'}</div>
+          </div>
+          <div class="acerca-stat-card">
+            <div class="acerca-stat-num">100%</div>
+            <div class="acerca-stat-label">{idioma === 'en' ? 'Exact Weight Balance' : 'Balanza Digital'}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjetas Fotográficas de Sede y Calidad -->
+      <div class="acerca-photos-container">
+        <div class="acerca-photo-item">
+          <img 
+            src="/imgwii/01-solgas-surquillo.webp" 
+            alt="Distribuidora y flota oficial Solgas Surquillo" 
+            width="400" 
+            height="260"
+            loading="lazy"
+          />
+          <div class="acerca-photo-caption">
+            <i class="fa-solid fa-truck-fast color-primary"></i>
+            <span>{datosNegocio.nombreCorto || 'Solgas'} · Flota Oficial</span>
+          </div>
+        </div>
+
+        <div class="acerca-photo-item">
+          <img 
+            src="/imgwii/07-solgas-surquillo-rendidor.webp" 
+            alt="Balón más rendidor del Perú - Solgas" 
+            width="400" 
+            height="260"
+            loading="lazy"
+          />
+          <div class="acerca-photo-caption">
+            <i class="fa-solid fa-award color-primary"></i>
+            <span>{idioma === 'en' ? 'Longest Lasting Gas' : 'El Balón Más Rendidor'}</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Los 4 Pilares Innegociables -->
+    <section class="acerca-pilares-section">
+      <h2 class="acerca-section-subtitle">{t.pilares_titulo}</h2>
+      <div class="acerca-pilares-grid">
+        
+        <div class="acerca-pilar-card">
+          <div class="acerca-pilar-icon">
+            <i class="fa-solid fa-scale-balanced"></i>
+          </div>
+          <div>
+            <h3 class="acerca-pilar-title">{t.pilar_1_titulo}</h3>
+            <p class="acerca-pilar-desc">{t.pilar_1_desc}</p>
+          </div>
+        </div>
+
+        <div class="acerca-pilar-card">
+          <div class="acerca-pilar-icon">
+            <i class="fa-solid fa-certificate"></i>
+          </div>
+          <div>
+            <h3 class="acerca-pilar-title">{t.pilar_2_titulo}</h3>
+            <p class="acerca-pilar-desc">{t.pilar_2_desc}</p>
+          </div>
+        </div>
+
+        <div class="acerca-pilar-card">
+          <div class="acerca-pilar-icon">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <div>
+            <h3 class="acerca-pilar-title">{t.pilar_3_titulo}</h3>
+            <p class="acerca-pilar-desc">{t.pilar_3_desc}</p>
+          </div>
+        </div>
+
+        <div class="acerca-pilar-card">
+          <div class="acerca-pilar-icon">
+            <i class="fa-solid fa-building-circle-check"></i>
+          </div>
+          <div>
+            <h3 class="acerca-pilar-title">{t.pilar_4_titulo}</h3>
+            <p class="acerca-pilar-desc">{t.pilar_4_desc}</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. Misión, Visión y Valores -->
+    <section class="acerca-mv-grid">
+      <div class="acerca-mv-card">
+        <h3><i class="fa-solid fa-bullseye color-primary"></i> {t.mision_titulo}</h3>
+        <p>{t.mision_desc}</p>
+      </div>
+
+      <div class="acerca-mv-card">
+        <h3><i class="fa-solid fa-eye color-primary"></i> {t.vision_titulo}</h3>
+        <p>{t.vision_desc}</p>
+      </div>
+    </section>
+
+    <div class="acerca-valores-box">
+      <div>
+        <h4 style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 700; margin: 0; color: var(--text-bright);">
+          <i class="fa-solid fa-heart color-primary" style="margin-right: 0.4rem;"></i> {t.valores_titulo}
+        </h4>
+      </div>
+      <div class="acerca-valores-list">
+        <span class="acerca-valor-chip"><i class="fa-solid fa-shield-halved"></i> {t.valor_1}</span>
+        <span class="acerca-valor-chip"><i class="fa-solid fa-hand-holding-dollar"></i> {t.valor_2}</span>
+        <span class="acerca-valor-chip"><i class="fa-solid fa-stopwatch"></i> {t.valor_3}</span>
+        <span class="acerca-valor-chip"><i class="fa-solid fa-people-carry-box"></i> {t.valor_4}</span>
+      </div>
+    </div>
+
+    <!-- 4. Banner de Asistencia Directa (Común Padre) -->
+    <div class="acercas-help-banner">
+      <div class="acercas-help-info">
+        <h4>{t.comun.ayuda_titulo}</h4>
+        <p>{t.comun.ayuda_desc}</p>
+      </div>
+      <div class="acercas-help-actions">
+        <a href={wsLink} target="_blank" rel="noopener noreferrer" class="btn-acercas-action primary">
+          <i class="fa-brands fa-whatsapp"></i> {t.comun.btn_whatsapp}
+        </a>
+        <a href={`tel:${telLimpio}`} class="btn-acercas-action secondary">
+          <i class="fa-solid fa-phone"></i> {telMostrado}
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>

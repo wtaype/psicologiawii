@@ -1,0 +1,198 @@
+---
+// src/feature/inicio/secciones/01-hero/Hero.astro
+// 1. HERO CRO AUTÓNOMO: CONSULTORIO PSICOLÓGICO AMÉRICA (LIC. SOFÍA REYNAGA)
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import heroCss from './hero.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const sedes = datosNegocio.sedes || [];
+const primeraSede = sedes[0] || { id: 'miraflores', nombre: 'Sede Miraflores', atencion: 'Sábados' };
+const primerServicio = datosNegocio.servicios[0];
+const precioBase = primerServicio ? primerServicio.precioPEN.toFixed(2) : '85.00';
+const direccionSede = datosNegocio.direccionSede;
+const mapsUrl = datosNegocio.mapsUrl || '#';
+const whatsappLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`;
+---
+
+<style is:global set:html={heroCss}></style>
+
+<section id="hero" class="hero-section">
+  <div class="pagewii hero-page-container">
+    <div class="hero-layout">
+      
+      <!-- Columna Izquierda: Necesidad Emocional ➔ Solución Profesional -->
+      <div class="hero-txt">
+        
+        <!-- Grupo Superior: Badge Oficial y Ubicación Google Maps -->
+        <div class="hero-meta-group">
+          <!-- Item 1: Insignia Oficial C.Ps.P. -->
+          <div class="hero-saludo">
+            <span class="badge-serenidad hero-badge">
+              <i class="fa-solid fa-certificate"></i> 
+              <span data-negocio-badge>{datosNegocio.registroColegio}</span>
+            </span>
+          </div>
+
+          <!-- Item 2: Ubicación Sede Miraflores Google Maps -->
+          <a 
+            href={mapsUrl} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            class="hero-maps-line"
+            data-negocio-maps
+            title={`${t.maps_cta} - ${direccionSede}`}
+          >
+            <span class="hero-maps-icon"><i class="fa-solid fa-location-dot"></i></span>
+            <span class="hero-maps-text">
+              <span>{t.maps_sede_prefijo}</span> <span>{direccionSede}</span>
+            </span>
+            <i class="fa-solid fa-arrow-up-right-from-square hero-maps-arrow"></i>
+          </a>
+        </div>
+
+        <!-- Línea 3: Pregunta Titular -->
+        <h1 class="hero-main-heading">
+          <span>{t.titulo_1}</span><br />
+          <span class="hero-title-highlight">
+            {t.titulo_resaltado}
+          </span>
+        </h1>
+
+        <!-- Línea 4: Subtítulo Explicativo -->
+        <p class="hero-main-sub">
+          {t.subtitulo}
+        </p>
+
+        <!-- Selector Dinámico de Sedes / Modalidades -->
+        <div class="hero-district-card">
+          <div class="hero-district-title">
+            <i class="fa-solid fa-hospital-user"></i> <span>{t.selector_titulo}</span>
+          </div>
+          
+          <div class="hero-district-grid" id="districtSelector">
+            {sedes.map((sede: any, idx: number) => (
+              <button 
+                type="button"
+                class={`hero-district-btn ${idx === 0 ? 'active' : ''}`}
+                data-district={sede.nombre}
+                data-time={sede.atencion}
+              >
+                <div class="hero-district-name">{sede.nombre}</div>
+                <div class="hero-district-time"><i class="fa-solid fa-calendar-check"></i> {sede.atencion}</div>
+              </button>
+            ))}
+          </div>
+
+          <div class="hero-district-footer">
+            <span>
+              <i class="fa-solid fa-shield-heart color-primary"></i> 
+              <span id="distritoActualInfo">
+                <span class="eta-prefix">{t.selector_eta_prefijo}</span> <span>{primeraSede.nombre}</span>: <strong class="eta-time">{primeraSede.atencion}</strong>
+              </span>
+            </span>
+            <span class="color-emerald font-bold">
+              <i class="fa-solid fa-lock"></i> <span>{t.envio_gratis}</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Botones Principales CTAs -->
+        <div class="hero-ctas-group">
+          <a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="btn-fire hero-btn-cta">
+            <i class="fa-brands fa-whatsapp text-2xl"></i>
+            <div class="hero-btn-text">
+              <span class="hero-btn-sub">{t.btn_modal_sub}</span>
+              <span class="hero-btn-main">{t.btn_modal_main}</span>
+            </div>
+          </a>
+
+          <a href={`tel:${datosNegocio.telefonoLimpio}`} class="btn-call hero-btn-cta" data-negocio-tel-link>
+            <i class="fa-solid fa-phone-volume text-xl"></i>
+            <div class="hero-btn-text">
+              <span class="hero-btn-sub">{t.btn_call_sub}</span>
+              <span class="hero-btn-main" data-negocio-tel-text>{datosNegocio.telefonoMostrado}</span>
+            </div>
+          </a>
+        </div>
+
+        <!-- Métricas de Trayectoria Clínica -->
+        <div class="stats-grid hero-stats-box">
+          <div>
+            <div class="hero-stat-val color-primary">+450</div>
+            <div class="hero-stat-label">{t.stat_clientes}</div>
+          </div>
+          <div>
+            <div class="hero-stat-val color-emerald">C.Ps.P. 34892</div>
+            <div class="hero-stat-label">{t.stat_balanza}</div>
+          </div>
+          <div>
+            <div class="hero-stat-val color-brand-blue">+6 Años</div>
+            <div class="hero-stat-label">{t.stat_anos}</div>
+          </div>
+          <div>
+            <div class="hero-stat-val color-gold">100%</div>
+            <div class="hero-stat-label">Confidencial</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Columna Derecha: Fotografía Profesional de la Terapeuta -->
+      <div class="hero-visual">
+        <div class="hero-right-card">
+          
+          <div class="hero-img-box">
+            <img 
+              src={datosNegocio.fotoEspecialista} 
+              alt={datosNegocio.especialista} 
+              width="600"
+              height="600"
+              loading="eager"
+              fetchpriority="high"
+              class="hero-img"
+            />
+            <div class="hero-specialist-overlay">
+              <span class="hero-specialist-badge">
+                <i class="fa-solid fa-user-doctor"></i> {datosNegocio.especialista}
+              </span>
+              <span class="hero-specialist-sub">Directora Terapéutica</span>
+            </div>
+          </div>
+
+          <div class="hero-guarantee-box">
+            <div class="hero-guarantee-left">
+              <div class="hero-guarantee-icon">
+                <i class="fa-solid fa-heart-pulse"></i>
+              </div>
+              <div>
+                <div class="hero-guarantee-title">
+                  {t.driver_card_titulo}
+                </div>
+                <div class="hero-guarantee-sub">
+                  {t.driver_card_desc}
+                </div>
+              </div>
+            </div>
+            <div class="hero-guarantee-price">
+              <div class="hero-price-sub">{t.precio_desde}</div>
+              <div class="hero-price-val">
+                S/ {precioBase}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>

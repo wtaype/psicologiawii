@@ -1,0 +1,298 @@
+/* ==========================================================================
+   SECCIÓN 05-LIBRO DE RECLAMACIONES (CSS HIJO) - GASWII
+   Formulario oficial normativo INDECOPI y comprobante descargable/imprimible
+   ========================================================================== */
+
+.reclamos-container {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* Ficha del Proveedor */
+.reclamos-proveedor-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-left: 5px solid var(--cl-orange, #ea580c);
+  border-radius: 1.15rem;
+  padding: 1.6rem 2rem;
+  margin-bottom: 3.5vh;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+}
+
+.reclamos-proveedor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem 2rem;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 640px) {
+  .reclamos-proveedor-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reclamos-proveedor-item {
+  color: var(--text-muted, #64748b);
+}
+
+.reclamos-proveedor-item strong {
+  color: var(--text-bright, #0f172a);
+  margin-right: 0.3rem;
+}
+
+/* Secciones del Formulario */
+.reclamos-form-card {
+  background: var(--bg-surface, #ffffff);
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-radius: 1.25rem;
+  padding: 2.2rem;
+  margin-bottom: 2.5rem;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
+}
+
+.reclamos-form-header {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.6rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+}
+
+.reclamos-form-header i {
+  color: var(--cl-orange, #ea580c);
+  font-size: 1.3rem;
+}
+
+.reclamos-form-header h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-bright, #0f172a);
+  margin: 0;
+}
+
+.reclamos-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.4rem;
+}
+
+@media (max-width: 768px) {
+  .reclamos-inputs-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reclamos-input-full {
+  grid-column: 1 / -1;
+}
+
+.reclamos-field-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reclamos-field-box label {
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-bright, #0f172a);
+}
+
+.reclamos-input,
+.reclamos-select,
+.reclamos-textarea {
+  width: 100%;
+  padding: 0.85rem 1.1rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.15));
+  background: var(--bg-surface, #ffffff);
+  color: var(--text-bright, #0f172a);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.92rem;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.reclamos-input:focus,
+.reclamos-select:focus,
+.reclamos-textarea:focus {
+  outline: none;
+  border-color: var(--cl-orange, #ea580c);
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.15);
+}
+
+.reclamos-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Radio Tiles Especiales */
+.reclamos-radio-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+@media (max-width: 600px) {
+  .reclamos-radio-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+.reclamos-radio-tile {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1.1rem;
+  border-radius: 0.85rem;
+  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.12));
+  background: var(--bg-surface, #ffffff);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reclamos-radio-tile:hover {
+  border-color: var(--cl-orange, #ea580c);
+}
+
+.reclamos-radio-tile input[type="radio"] {
+  accent-color: var(--cl-orange, #ea580c);
+  margin-top: 0.2rem;
+}
+
+.reclamos-radio-content strong {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  color: var(--text-bright, #0f172a);
+  margin-bottom: 0.2rem;
+}
+
+.reclamos-radio-content span {
+  font-size: 0.8rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.4;
+  display: block;
+}
+
+/* Checkbox Declaración */
+.reclamos-checkbox-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.8rem;
+  padding: 1.2rem;
+  border-radius: 0.85rem;
+  background: rgba(2, 43, 73, 0.04);
+  border: 1px solid rgba(2, 43, 73, 0.1);
+  margin: 1.5rem 0;
+  font-size: 0.85rem;
+  color: var(--text-muted, #64748b);
+  line-height: 1.6;
+}
+
+.reclamos-checkbox-box input[type="checkbox"] {
+  accent-color: var(--cl-orange, #ea580c);
+  margin-top: 0.25rem;
+}
+
+/* Botón Submit */
+.btn-reclamos-submit {
+  width: 100%;
+  padding: 1.1rem 2rem;
+  border-radius: 999px;
+  background: var(--cl-orange, #ea580c);
+  color: #ffffff;
+  font-family: 'Outfit', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-reclamos-submit:hover {
+  background: #c2410c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.45);
+}
+
+.btn-reclamos-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Ficha de Confirmación Exitosa */
+.reclamos-success-box {
+  display: none;
+  background: var(--bg-surface, #ffffff);
+  border: 2px solid var(--cl-emerald, #059669);
+  border-radius: 1.5rem;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 10px 30px -5px rgba(5, 150, 105, 0.15);
+  margin-bottom: 5vh;
+}
+
+.reclamos-success-box.visible {
+  display: block;
+}
+
+.reclamos-success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(5, 150, 105, 0.1);
+  color: var(--cl-emerald, #059669);
+  font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+}
+
+.reclamos-codigo-badge {
+  display: inline-block;
+  font-family: monospace;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--cl-orange, #ea580c);
+  background: rgba(234, 88, 12, 0.08);
+  border: 2px dashed var(--cl-orange, #ea580c);
+  padding: 0.6rem 1.6rem;
+  border-radius: 0.85rem;
+  margin: 1.2rem 0;
+  letter-spacing: 0.05em;
+}
+
+/* Opciones de Impresión */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .reclamos-success-box,
+  .reclamos-success-box * {
+    visibility: visible;
+  }
+  .reclamos-success-box {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border: none;
+    box-shadow: none;
+  }
+  .btn-print-hide {
+    display: none !important;
+  }
+}

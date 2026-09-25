@@ -1,0 +1,19 @@
+---
+// src/feature/personal/components/Busqueda.astro
+// Barra de búsqueda global con autocompletado estrictamente deshabilitado
+---
+
+<div class="ps-search-box">
+  <i class="fa-solid fa-magnifying-glass ps-search-icon"></i>
+  <input 
+    type="search" 
+    id="globalSearchInput" 
+    name="q_dashboard_search_box" 
+    placeholder="Buscar pedidos, facturas, clientes, notas…" 
+    autocomplete="off" 
+    autocorrect="off" 
+    autocapitalize="off" 
+    spellcheck="false" 
+    role="searchbox"
+  />
+</div>

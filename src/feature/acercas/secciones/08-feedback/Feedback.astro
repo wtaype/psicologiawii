@@ -1,0 +1,272 @@
+---
+// src/feature/acercas/secciones/08-feedback/Feedback.astro
+// Sección 08: Calificación de Experiencia y Feedback (Guardado en Firestore 'feedbacks')
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdiomaSeccion } from '../../idioma/idioma';
+import AcercasHeader from '../../componentes/AcercasHeader.astro';
+import AcercasNav from '../../componentes/AcercasNav.astro';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+
+import acercasMadreCss from '../../acercas.css?inline';
+import feedbackHijoCss from './feedback.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdiomaSeccion({ es, en }, idioma);
+
+const motivos = [
+  { id: 'puntualidad', label: t.motivo_1, icon: 'fa-solid fa-stopwatch' },
+  { id: 'balanza', label: t.motivo_2, icon: 'fa-solid fa-scale-balanced' },
+  { id: 'trato', label: t.motivo_3, icon: 'fa-solid fa-handshake' },
+  { id: 'balon', label: t.motivo_4, icon: 'fa-solid fa-certificate' },
+  { id: 'pagos', label: t.motivo_5, icon: 'fa-solid fa-mobile-screen-button' },
+  { id: 'instalacion', label: t.motivo_6, icon: 'fa-solid fa-shield-halved' }
+];
+---
+
+<style is:global set:html={acercasMadreCss}></style>
+<style is:global set:html={feedbackHijoCss}></style>
+
+<div class="acercas-page-wrapper">
+  <div class="pagewii">
+
+    <AcercasHeader 
+      badge={t.feedback_badge}
+      badgeIcon="fa-solid fa-star"
+      titulo={t.feedback_titulo}
+      desc={t.feedback_desc}
+      idioma={idioma}
+    />
+
+    <AcercasNav seccionActiva="feedback" idioma={idioma} />
+
+    <div class="feedback-container">
+
+      <!-- Caja de Éxito -->
+      <div id="feedbackSuccessCard" class="feedback-success-card">
+        <div class="feedback-success-icon">
+          <i class="fa-solid fa-heart"></i>
+        </div>
+        <h2 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--text-bright); margin-bottom: 0.8rem;">
+          {t.exito_tit}
+        </h2>
+        <p style="color: var(--text-muted); font-size: 1rem; max-width: 600px; margin: 0 auto 2rem;">
+          {t.exito_desc}
+        </p>
+        <button type="button" id="btnNuevoFeedback" class="btn-acercas-action primary" style="margin: 0 auto;">
+          <i class="fa-solid fa-rotate-right"></i> {t.btn_otro}
+        </button>
+      </div>
+
+      <!-- Formulario de Feedback -->
+      <div id="feedbackFormCard" class="feedback-box">
+        <form id="formFeedback" novalidate>
+          
+          <!-- 1. Calificación con Estrellas (1-5) -->
+          <div class="feedback-stars-wrapper">
+            <h3 class="feedback-stars-title">{t.estrellas_tit}</h3>
+            <div class="feedback-stars-row" id="starsContainer">
+              <button type="button" class="feedback-star-btn active" data-rating="1" aria-label="1 estrella">★</button>
+              <button type="button" class="feedback-star-btn active" data-rating="2" aria-label="2 estrellas">★</button>
+              <button type="button" class="feedback-star-btn active" data-rating="3" aria-label="3 estrellas">★</button>
+              <button type="button" class="feedback-star-btn active" data-rating="4" aria-label="4 estrellas">★</button>
+              <button type="button" class="feedback-star-btn active" data-rating="5" aria-label="5 estrellas">★</button>
+            </div>
+            <div id="starLabelDisplay" class="feedback-star-label">{t.star_5}</div>
+            <input type="hidden" id="inputRatingValue" name="rating" value="5" />
+          </div>
+
+          <!-- 2. Motivos Destacados -->
+          <div class="feedback-motivos-section">
+            <h4 class="feedback-motivos-title">{t.motivos_tit}</h4>
+            <div class="feedback-motivos-grid" id="motivosContainer">
+              {motivos.map((m) => (
+                <div class="feedback-motivo-chip" data-motivo-id={m.id}>
+                  <i class={m.icon}></i>
+                  <span>{m.label}</span>
+                </div>
+              ))}
+            </div>
+            <input type="hidden" id="inputMotivosValue" name="motivos" value="" />
+          </div>
+
+          <!-- 3. Comentarios y Datos -->
+          <div class="feedback-fields-grid">
+            <div class="reclamos-field-box feedback-field-full">
+              <label for="feedbackComentario">{t.lbl_comentario}</label>
+              <textarea id="feedbackComentario" name="comentario" required placeholder="Escribe aquí tu experiencia..." class="reclamos-textarea" style="min-height: 100px;"></textarea>
+            </div>
+
+            <div class="reclamos-field-box">
+              <label for="feedbackNombre">{t.lbl_nombre}</label>
+              <input type="text" id="feedbackNombre" name="nombre" placeholder="Ej. Ana María" class="reclamos-input" />
+            </div>
+
+            <div class="reclamos-field-box">
+              <label for="feedbackContacto">{t.lbl_contacto}</label>
+              <input type="text" id="feedbackContacto" name="contacto" placeholder="Teléfono o correo" class="reclamos-input" />
+            </div>
+          </div>
+
+          <div style="margin-top: 2rem;">
+            <button type="submit" id="btnSubmitFeedback" class="btn-reclamos-submit">
+              <i class="fa-solid fa-paper-plane"></i>
+              <span>{t.btn_enviar}</span>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
+      <!-- Banner de Asistencia Directa Padre -->
+      <div class="acercas-help-banner">
+        <div class="acercas-help-info">
+          <h4>{t.comun.ayuda_titulo}</h4>
+          <p>{t.comun.ayuda_desc}</p>
+        </div>
+        <div class="acercas-help-actions">
+          <a href={`tel:${datosNegocio.telefonoLimpio}`} class="btn-acercas-action secondary">
+            <i class="fa-solid fa-phone"></i> {datosNegocio.telefonoMostrado}
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+<script define:vars={{ starLabels: [t.star_1, t.star_2, t.star_3, t.star_4, t.star_5] }}>
+  // 1. Manejo Interactivo de Estrellas
+  const starButtons = document.querySelectorAll('.feedback-star-btn');
+  const labelDisplay = document.getElementById('starLabelDisplay');
+  const inputRating = document.getElementById('inputRatingValue');
+
+  function setRating(rating) {
+    if (inputRating) inputRating.value = String(rating);
+    if (labelDisplay && starLabels[rating - 1]) {
+      labelDisplay.textContent = starLabels[rating - 1];
+    }
+    starButtons.forEach((btn, index) => {
+      if (index < rating) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
+  starButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const r = parseInt(btn.getAttribute('data-rating') || '5', 10);
+      setRating(r);
+    });
+  });
+
+  // 2. Selección de Chips de Motivos
+  const chips = document.querySelectorAll('.feedback-motivo-chip');
+  const inputMotivos = document.getElementById('inputMotivosValue');
+  const selectedMotivos = new Set();
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const id = chip.getAttribute('data-motivo-id');
+      if (!id) return;
+      if (selectedMotivos.has(id)) {
+        selectedMotivos.delete(id);
+        chip.classList.remove('selected');
+      } else {
+        selectedMotivos.add(id);
+        chip.classList.add('selected');
+      }
+      if (inputMotivos) inputMotivos.value = Array.from(selectedMotivos).join(',');
+    });
+  });
+
+  // 3. Autocompletado Local-First con wiSmile
+  try {
+    const raw = localStorage.getItem('wiSmile');
+    if (raw) {
+      const u = JSON.parse(raw);
+      if (u) {
+        const inpNombre = document.getElementById('feedbackNombre');
+        const inpContacto = document.getElementById('feedbackContacto');
+        if (inpNombre && u.nombre) inpNombre.value = `${u.nombre} ${u.apellidos || ''}`.trim();
+        if (inpContacto && (u.celular || u.email)) inpContacto.value = u.celular || u.email;
+      }
+    }
+  } catch (e) {}
+
+  // 4. Envío del Formulario a Firestore 'feedbacks'
+  const form = document.getElementById('formFeedback');
+  const formCard = document.getElementById('feedbackFormCard');
+  const successCard = document.getElementById('feedbackSuccessCard');
+  const btnSubmit = document.getElementById('btnSubmitFeedback');
+  const btnNuevo = document.getElementById('btnNuevoFeedback');
+
+  if (form && formCard && successCard && btnSubmit) {
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Guardando opinión...';
+
+      const formData = new FormData(form);
+      const payload = {
+        rating: formData.get('rating') || '5',
+        motivos: Array.from(selectedMotivos),
+        comentario: formData.get('comentario') || '',
+        nombre: formData.get('nombre') || 'Vecino Anónimo',
+        contacto: formData.get('contacto') || '',
+        fecha: new Date().toISOString()
+      };
+
+      try {
+        // Guardado en Firestore REST
+        const fields = {
+          rating: { integerValue: String(payload.rating) },
+          comentario: { stringValue: payload.comentario },
+          nombre: { stringValue: payload.nombre },
+          contacto: { stringValue: payload.contacto },
+          motivos: { arrayValue: { values: payload.motivos.map(m => ({ stringValue: m })) } },
+          fecha: { stringValue: payload.fecha }
+        };
+
+        await fetch('https://firestore.googleapis.com/v1/projects/gaswii/databases/(default)/documents/feedbacks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ fields })
+        });
+      } catch (err) {
+        console.warn('[Feedback] Fallback local:', err);
+      }
+
+      formCard.style.display = 'none';
+      successCard.classList.add('visible');
+      successCard.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    if (btnNuevo) {
+      btnNuevo.addEventListener('click', () => {
+        form.reset();
+        selectedMotivos.clear();
+        chips.forEach(c => c.classList.remove('selected'));
+        setRating(5);
+        formCard.style.display = 'block';
+        successCard.classList.remove('visible');
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Enviar Mi Opinión</span>';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    }
+  }
+</script>

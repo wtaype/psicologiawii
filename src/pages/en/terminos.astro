@@ -1,0 +1,16 @@
+---
+// src/pages/en/terminos.astro
+// Public Page: Terms and Conditions of Service (English)
+import Principal from '../../core/layouts/Principal.astro';
+import Terminos from '../../feature/acercas/secciones/02-terminos/Terminos.astro';
+import { buildRuta } from '../../core/idioma/idioma';
+import { datosNegocio } from '../../negocio.js';
+
+const idioma = 'en';
+const ruta = buildRuta('/terminos', idioma);
+const title = `Terms of Service · ${datosNegocio.nombre} | Delivery & Safety Standards`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Terminos idioma={idioma} />
+</Principal>

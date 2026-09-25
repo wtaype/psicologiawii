@@ -1,0 +1,16 @@
+---
+// src/pages/contacto.astro
+// Página Pública: Contacto y Sede Surquillo (Español)
+import Principal from '../core/layouts/Principal.astro';
+import Contacto from '../feature/acercas/secciones/06-contacto/Contacto.astro';
+import { buildRuta } from '../core/idioma/idioma';
+import { datosNegocio } from '../negocio.js';
+
+const idioma = 'es';
+const ruta = buildRuta('/contacto', idioma);
+const title = `Contacto y Sede · ${datosNegocio.nombre} | Teléfonos, WhatsApp y Ubicación`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Contacto idioma={idioma} />
+</Principal>

@@ -1,0 +1,424 @@
+/* src/feature/personal/modulos/negocio/negocio.css */
+/* Estilos Profesionales del Módulo Mi Negocio (Solgas Surquillo) */
+/* Cero CSS Inline · 100% Variables de Tema witema · Padding 1vh y Radios 1vh */
+
+.ng-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding-block: 0;
+  padding-inline: 1vh;
+  box-sizing: border-box;
+}
+
+/* 1. Barra de Pestañas de Navegación */
+.ng-tabs-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8vh;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  padding: 0.8vh 1vh;
+  border-radius: 1vh;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.ng-tabs-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.ng-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8vh;
+  padding: 0.8vh 1.4vh;
+  border-radius: 1vh;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-family: inherit;
+  font-size: var(--fz_s4, 13px);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.ng-tab-btn i {
+  font-size: 14px;
+}
+
+.ng-tab-btn:hover {
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.ng-tab-btn.active {
+  background: var(--brand-orange);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.25);
+}
+
+/* 2. Paneles de Pestañas */
+.ng-tab-content {
+  display: none;
+  animation: ngFadeIn 0.2s ease-out;
+}
+
+.ng-tab-content.active {
+  display: block;
+}
+
+@keyframes ngFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 3. Tarjetas de Formulario */
+.ng-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 1vh;
+  padding: 1vh;
+  box-sizing: border-box;
+}
+
+.ng-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1vh;
+  padding-bottom: 0.8vh;
+  border-bottom: 1px solid var(--border);
+}
+
+.ng-card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.8vh;
+  font-size: var(--fz_s6, 16px);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ng-card-title i {
+  color: var(--brand-orange);
+}
+
+.ng-card-desc {
+  font-size: var(--fz_s3, 12px);
+  color: var(--muted);
+  margin: 0.4vh 0 0 0;
+}
+
+/* 4. Grillas de Formulario */
+.ng-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1vh;
+}
+
+.ng-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1vh;
+}
+
+@media (max-width: 768px) {
+  .ng-grid-2,
+  .ng-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ng-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+}
+
+.ng-field.span-2 {
+  grid-column: span 2;
+}
+
+@media (max-width: 768px) {
+  .ng-field.span-2 {
+    grid-column: span 1;
+  }
+}
+
+.ng-label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: var(--fz_s3, 12px);
+  font-weight: 500;
+  color: var(--ink);
+}
+
+.ng-label-hint {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.ng-input {
+  width: 100%;
+  padding: 1.8vh 2vh;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--border);
+  border-radius: 1vh;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: var(--fz_s4, 13px);
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.ng-input:focus {
+  outline: none;
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.15);
+}
+
+.ng-textarea {
+  min-height: 70px;
+  resize: vertical;
+}
+
+/* 5. Previews de Imágenes (Logo y Sede) */
+.ng-media-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  padding: 1vh;
+  background: rgba(0, 0, 0, 0.15);
+  border: 1px dashed var(--border);
+  border-radius: 1vh;
+  margin-top: 0.5vh;
+}
+
+.ng-logo-preview {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  background: #ffffff;
+  border-radius: 1vh;
+  padding: 0.4vh;
+}
+
+.ng-hero-preview {
+  width: 80px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: 1vh;
+  border: 1px solid var(--border);
+}
+
+/* 6. Tabla / Lista Interactiva de Zonas de Cobertura */
+.ng-zonas-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1vh;
+}
+
+.ng-zonas-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+}
+
+.ng-zona-row {
+  display: grid;
+  grid-template-columns: 1fr 90px 90px 80px 1.2fr 60px 40px;
+  align-items: center;
+  gap: 0.8vh;
+  padding: 0.8vh 1vh;
+  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--border);
+  border-radius: 1vh;
+  transition: all 0.2s ease;
+}
+
+.ng-zona-row:hover {
+  border-color: rgba(255, 102, 0, 0.3);
+}
+
+@media (max-width: 900px) {
+  .ng-zona-row {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8vh;
+  }
+}
+
+.ng-zona-row.inactive {
+  opacity: 0.55;
+}
+
+.ng-btn-icon-del {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 1vh;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ng-btn-icon-del:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* 7. Switch Toggle Minimalista */
+.ng-switch {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 20px;
+}
+
+.ng-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ng-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: var(--border);
+  transition: .2s;
+  border-radius: 20px;
+}
+
+.ng-slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .2s;
+  border-radius: 50%;
+}
+
+.ng-switch input:checked + .ng-slider {
+  background-color: #10b981;
+}
+
+.ng-switch input:checked + .ng-slider:before {
+  transform: translateX(18px);
+}
+
+/* 8. Badge de Años de Trayectoria Dinámico */
+.ng-years-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6vh;
+  background: rgba(255, 102, 0, 0.12);
+  color: var(--brand-orange);
+  border: 1px solid rgba(255, 102, 0, 0.25);
+  padding: 0.4vh 1vh;
+  border-radius: 1vh;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* 9. Barra de Acciones y Ayudante de Google Maps */
+.ng-input-group-maps {
+  display: flex;
+  align-items: center;
+  gap: 0.8vh;
+  width: 100%;
+}
+
+.ng-input-group-maps .ng-input {
+  flex: 1;
+}
+
+.ng-btn-maps-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6vh;
+  padding: 0.8vh 1.2vh;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  border-radius: 1vh;
+  color: var(--ink);
+  font-family: inherit;
+  font-size: var(--fz_s3, 12px);
+  font-weight: 500;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.ng-btn-maps-action:hover {
+  background: rgba(255, 102, 0, 0.15);
+  border-color: var(--brand-orange);
+  color: var(--brand-orange);
+}
+
+.ng-btn-maps-test {
+  color: #10b981;
+}
+
+.ng-btn-maps-test:hover {
+  background: rgba(16, 185, 129, 0.12);
+  border-color: #10b981;
+  color: #10b981;
+}
+
+.ng-maps-helper-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.8vh;
+  margin-top: 0.4vh;
+}
+
+.ng-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5vh;
+  background: none;
+  border: none;
+  color: var(--brand-orange);
+  font-size: var(--fz_s3, 12px);
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 0.3vh 0.6vh;
+  border-radius: 1vh;
+  transition: all 0.2s ease;
+}
+
+.ng-link-btn:hover {
+  background: rgba(255, 102, 0, 0.1);
+  text-decoration: underline;
+}
+
+@media (max-width: 680px) {
+  .ng-input-group-maps {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+

@@ -1,0 +1,113 @@
+---
+// src/feature/acercas/secciones/04-cookies/Cookies.astro
+// Sección 04: Política de Cookies y Almacenamiento Local-First
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdiomaSeccion } from '../../idioma/idioma';
+import AcercasHeader from '../../componentes/AcercasHeader.astro';
+import AcercasNav from '../../componentes/AcercasNav.astro';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+
+import acercasMadreCss from '../../acercas.css?inline';
+import cookiesHijoCss from './cookies.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdiomaSeccion({ es, en }, idioma);
+
+const itemsStorage = [
+  { clave: t.clave_1_nombre, desc: t.clave_1_desc, tipo: 'UI / Theme', duracion: t.duracion_permanente },
+  { clave: t.clave_2_nombre, desc: t.clave_2_desc, tipo: 'Auth / VIP', duracion: t.duracion_permanente },
+  { clave: t.clave_3_nombre, desc: t.clave_3_desc, tipo: 'Delivery / GPS', duracion: t.duracion_permanente },
+  { clave: t.clave_4_nombre, desc: t.clave_4_desc, tipo: 'Cache / Speed', duracion: t.duracion_sesion },
+  { clave: t.clave_5_nombre, desc: t.clave_5_desc, tipo: 'Helpdesk', duracion: t.duracion_sesion }
+];
+---
+
+<style is:global set:html={acercasMadreCss}></style>
+<style is:global set:html={cookiesHijoCss}></style>
+
+<div class="acercas-page-wrapper">
+  <div class="pagewii">
+
+    <AcercasHeader 
+      badge={t.cookies_badge}
+      badgeIcon="fa-solid fa-cookie-bite"
+      titulo={t.cookies_titulo}
+      desc={t.cookies_desc}
+      idioma={idioma}
+    />
+
+    <AcercasNav seccionActiva="cookies" idioma={idioma} />
+
+    <div class="cookies-container">
+
+      <!-- 1. Que son y Nuestro Enfoque -->
+      <div class="cookies-intro-grid">
+        <div class="cookies-intro-card">
+          <h3><i class="fa-solid fa-circle-question color-primary"></i> {t.que_son_titulo}</h3>
+          <p>{t.que_son_desc}</p>
+        </div>
+
+        <div class="cookies-intro-card">
+          <h3><i class="fa-solid fa-shield-halved color-emerald"></i> {t.nuestro_enfoque_titulo}</h3>
+          <p>{t.nuestro_enfoque_desc}</p>
+        </div>
+      </div>
+
+      <!-- 2. Tabla de Inventario de Almacenamiento Local -->
+      <div class="cookies-table-box">
+        <h3><i class="fa-solid fa-table-list color-primary"></i> {t.tabla_titulo}</h3>
+        <table class="cookies-table">
+          <thead>
+            <tr>
+              <th>{t.col_clave}</th>
+              <th>{t.col_tipo}</th>
+              <th>{t.col_proposito}</th>
+              <th>{t.col_duracion}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {itemsStorage.map((item) => (
+              <tr>
+                <td><span class="cookie-key-badge">{item.clave}</span></td>
+                <td><span class="cookie-type-pill">{item.tipo}</span></td>
+                <td>{item.desc}</td>
+                <td>{item.duracion}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- 3. Cómo controlar o borrar -->
+      <article class="acercas-card" style="margin-bottom: 3.5vh;">
+        <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--text-bright); margin-bottom: 0.6rem;">
+          <i class="fa-solid fa-sliders color-primary" style="margin-right: 0.4rem;"></i>
+          {t.como_controlar_titulo}
+        </h3>
+        <p style="font-family: 'Poppins', sans-serif; font-size: 0.94rem; color: var(--text-muted); line-height: 1.7; margin: 0;">
+          {t.como_controlar_desc}
+        </p>
+      </article>
+
+      <!-- Banner de Asistencia Directa Padre -->
+      <div class="acercas-help-banner">
+        <div class="acercas-help-info">
+          <h4>{t.comun.ayuda_titulo}</h4>
+          <p>{t.comun.ayuda_desc}</p>
+        </div>
+        <div class="acercas-help-actions">
+          <a href={`tel:${datosNegocio.telefonoLimpio}`} class="btn-acercas-action secondary">
+            <i class="fa-solid fa-phone"></i> {datosNegocio.telefonoMostrado}
+          </a>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</div>

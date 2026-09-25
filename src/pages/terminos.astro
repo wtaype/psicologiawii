@@ -1,0 +1,16 @@
+---
+// src/pages/terminos.astro
+// Página Pública: Términos y Condiciones del Servicio (Español)
+import Principal from '../core/layouts/Principal.astro';
+import Terminos from '../feature/acercas/secciones/02-terminos/Terminos.astro';
+import { buildRuta } from '../core/idioma/idioma';
+import { datosNegocio } from '../negocio.js';
+
+const idioma = 'es';
+const ruta = buildRuta('/terminos', idioma);
+const title = `Términos del Servicio · ${datosNegocio.nombre} | Normativa y Seguridad GLP`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <Terminos idioma={idioma} />
+</Principal>
