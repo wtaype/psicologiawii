@@ -1,54 +1,36 @@
 // src/core/widev/tema.js
-// 🎨 Gestor Universal de Temas (wiTema) - Detección Smart OS & Cero FOUC
-const STORAGE_KEY = 'wiTema';
+// 🎨 Gestor Universal de Temas (wiTema) - Detección Smart & Cero FOUC
+const KEY = 'wiTema';
 
 export const witemas = {
-  futuro: '#05080c',
-  luz: '#f4f7fb'
+  futuro: '#07131b',
+  luz: '#f4f8fb'
 };
 
 export const wiTema = {
-  // Detección Smart: blanco (luz) si el dispositivo prefiere light, sino noche (futuro)
-  detectarSistema: () => (typeof window !== 'undefined' && window.matchMedia?.('(prefers-color-scheme: light)').matches) ? 'luz' : 'futuro',
-
   get: () => {
     try {
-      return localStorage.getItem(STORAGE_KEY) || wiTema.detectarSistema();
+      return localStorage.getItem(KEY) || (window.matchMedia?.('(prefers-color-scheme: light)').matches ? 'luz' : 'futuro');
     } catch {
-      return wiTema.detectarSistema();
+      return 'luz';
     }
   },
 
-  set: (nombre, persistir = true) => {
-    const tema = (nombre === 'luz' || nombre === 'futuro') ? nombre : 'futuro';
+  set: (t, persist = true) => {
+    const tema = t === 'futuro' ? 'futuro' : 'luz';
     if (typeof document !== 'undefined' && document.documentElement) {
       document.documentElement.dataset.theme = tema;
-
-      // Actualizar icono de tema en cabeceras o barras de herramientas
-      const icons = document.querySelectorAll('#themeIcon, #icon_theme');
-      icons.forEach(icon => {
-        icon.className = tema === 'futuro' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
+      document.querySelectorAll('#themeIcon, #icon_theme, #btnThemeToggle i').forEach((i) => {
+        i.className = tema === 'futuro' ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
       });
-
-      // Actualizar meta theme-color para la barra del navegador móvil
       let meta = document.querySelector('meta[name="theme-color"]');
-      if (!meta) {
-        meta = document.createElement('meta');
-        meta.name = 'theme-color';
-        document.head.appendChild(meta);
-      }
-      meta.content = witemas[tema] || (tema === 'futuro' ? '#05080c' : '#ffffff');
-
-      // Botones activos con clase .tema
-      document.querySelectorAll('.tema').forEach(x => {
-        x.classList.toggle('mtha', x.dataset?.ths === tema);
-      });
+      if (meta) meta.content = tema === 'futuro' ? '#07131b' : '#f4f8fb';
     }
-
-    if (persistir) {
-      try {
-        localStorage.setItem(STORAGE_KEY, tema);
-      } catch {}
+    if (persist) {
+      try { localStorage.setItem(KEY, tema); } catch {}
+    }
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('witema:cambiado', { detail: { tema } }));
     }
   },
 
@@ -57,12 +39,11 @@ export const wiTema = {
     wiTema.set(actual === 'futuro' ? 'luz' : 'futuro', true);
   },
 
-  // Escucha reactiva si el usuario cambia el tema en su dispositivo en tiempo real
   listen: () => {
     if (typeof window === 'undefined' || !window.matchMedia) return;
     window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
       try {
-        if (!localStorage.getItem(STORAGE_KEY)) {
+        if (!localStorage.getItem(KEY)) {
           wiTema.set(e.matches ? 'luz' : 'futuro', false);
         }
       } catch {}
@@ -75,7 +56,10 @@ export const wiTema = {
   }
 };
 
-// Aliases para compatibilidad total con código existente
+if (typeof window !== 'undefined') {
+  (window).toggleTema = wiTema.toggle;
+}
+
 export const setTema = (name) => wiTema.set(name, true);
 export const getTemaActual = wiTema.get;
 export const witema = wiTema.init;

@@ -1,6 +1,7 @@
 /* ==========================================================================
-   SECCIÓN 01-ACERCA (CSS HIJO) - GASWII
+   SECCIÓN 01-ACERCA (CSS HIJO) - CONSULTORIO PSICOLÓGICO AMÉRICA
    Historia, 4 Pilares, Misión/Visión y Grid Fotográfico Institucional
+   100% Dependiente de Variables de witema.css
    ========================================================================== */
 
 .acerca-story-grid {
@@ -19,18 +20,18 @@
 }
 
 .acerca-story-content h2 {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--ff_O);
   font-size: clamp(1.8rem, 2.4vw, 2.5rem);
   font-weight: 800;
-  color: var(--text-bright, #0f172a);
+  color: var(--tx);
   line-height: 1.2;
   margin-bottom: 1.2rem;
 }
 
 .acerca-story-content p {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--ff_P);
   font-size: 1rem;
-  color: var(--text-muted, #64748b);
+  color: var(--tx2);
   line-height: 1.7;
   margin-bottom: 1.2rem;
 }
@@ -41,7 +42,7 @@
   gap: 1rem;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
+  border-top: 1px solid var(--brd);
 }
 
 @media (max-width: 600px) {
@@ -52,18 +53,18 @@
 }
 
 .acerca-stat-card {
-  background: rgba(234, 88, 12, 0.05);
-  border: 1px solid rgba(234, 88, 12, 0.15);
-  border-radius: 1rem;
+  background: var(--mbg);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--r_m, 1vh);
   padding: 1.1rem 1rem;
   text-align: center;
 }
 
 .acerca-stat-num {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--ff_O);
   font-size: 1.8rem;
   font-weight: 800;
-  color: var(--cl-orange, #ea580c);
+  color: var(--mco);
   line-height: 1;
   margin-bottom: 0.3rem;
 }
@@ -72,7 +73,7 @@
   font-size: 0.78rem;
   font-weight: 600;
   text-transform: uppercase;
-  color: var(--text-muted, #64748b);
+  color: var(--tx2);
   letter-spacing: 0.04em;
 }
 
@@ -85,46 +86,54 @@
 }
 
 .acerca-photo-item {
-  border-radius: 1.2rem;
+  border-radius: var(--r_l, 1.5vh);
   overflow: hidden;
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.12);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.1));
-  background: var(--bg-surface, #ffffff);
-  transition: transform 0.3s ease;
+  box-shadow: var(--shadow-card);
+  border: 1px solid var(--border-card);
+  background: var(--wb);
+  transition: transform 0.3s ease, border-color 0.3s ease;
 }
 
 .acerca-photo-item:hover {
   transform: translateY(-4px);
+  border-color: var(--mco);
 }
 
 .acerca-photo-item img {
   width: 100%;
-  height: 240px;
+  height: 220px;
   object-fit: cover;
   display: block;
 }
 
 .acerca-photo-caption {
-  padding: 0.8rem 1rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: var(--text-bright, #0f172a);
+  padding: 0.85rem 1rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.6rem;
+  font-size: var(--fz_s3);
+  font-weight: 600;
+  color: var(--tx);
+  background: var(--wb);
+  border-top: 1px solid var(--brd);
 }
 
-/* 4 Pilares */
+.acerca-photo-caption i {
+  color: var(--mco);
+  font-size: 1rem;
+}
+
+/* 2. Sección Pilares */
 .acerca-pilares-section {
   margin-bottom: 5vh;
 }
 
 .acerca-section-subtitle {
   text-align: center;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--ff_O);
   font-size: clamp(1.6rem, 2.2vw, 2.2rem);
   font-weight: 800;
-  color: var(--text-bright, #0f172a);
+  color: var(--tx);
   margin-bottom: 3vh;
 }
 
@@ -141,9 +150,9 @@
 }
 
 .acerca-pilar-card {
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
-  border-radius: 1.25rem;
+  background: var(--wb);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l, 1.5vh);
   padding: 1.8rem;
   display: flex;
   gap: 1.3rem;
@@ -152,17 +161,17 @@
 }
 
 .acerca-pilar-card:hover {
-  border-color: rgba(234, 88, 12, 0.4);
-  box-shadow: 0 10px 30px -5px rgba(234, 88, 12, 0.1);
+  border-color: var(--mco);
+  box-shadow: var(--shadow-hover);
   transform: translateY(-2px);
 }
 
 .acerca-pilar-icon {
   width: 52px;
   height: 52px;
-  border-radius: 1rem;
-  background: rgba(234, 88, 12, 0.1);
-  color: var(--cl-orange, #ea580c);
+  border-radius: var(--r_m, 1vh);
+  background: var(--mbg);
+  color: var(--mco);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -171,21 +180,21 @@
 }
 
 .acerca-pilar-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--ff_O);
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--text-bright, #0f172a);
+  color: var(--tx);
   margin-bottom: 0.4rem;
 }
 
 .acerca-pilar-desc {
   font-size: 0.92rem;
-  color: var(--text-muted, #64748b);
+  color: var(--tx2);
   line-height: 1.6;
   margin: 0;
 }
 
-/* Misión, Visión y Valores */
+/* 3. Misión, Visión y Valores */
 .acerca-mv-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -200,9 +209,9 @@
 }
 
 .acerca-mv-card {
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
-  border-radius: 1.25rem;
+  background: var(--wb);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l, 1.5vh);
   padding: 2rem;
   position: relative;
   overflow: hidden;
@@ -215,14 +224,14 @@
   left: 0;
   width: 4px;
   height: 100%;
-  background: var(--cl-orange, #ea580c);
+  background: var(--mco);
 }
 
 .acerca-mv-card h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--ff_O);
   font-size: 1.3rem;
   font-weight: 700;
-  color: var(--text-bright, #0f172a);
+  color: var(--tx);
   margin-bottom: 0.6rem;
   display: flex;
   align-items: center;
@@ -230,16 +239,16 @@
 }
 
 .acerca-mv-card p {
-  color: var(--text-muted, #64748b);
+  color: var(--tx2);
   line-height: 1.6;
   font-size: 0.94rem;
   margin: 0;
 }
 
 .acerca-valores-box {
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
-  border-radius: 1.25rem;
+  background: var(--wb);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l, 1.5vh);
   padding: 1.8rem 2.2rem;
   display: flex;
   align-items: center;
@@ -259,10 +268,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 1.1rem;
-  background: rgba(5, 150, 105, 0.08);
-  border: 1px solid rgba(5, 150, 105, 0.2);
-  border-radius: 999px;
+  background: var(--mbg);
+  border: 1px solid var(--border-accent);
+  border-radius: var(--r_full);
   font-size: 0.88rem;
   font-weight: 600;
-  color: var(--cl-emerald, #059669);
+  color: var(--mco);
 }

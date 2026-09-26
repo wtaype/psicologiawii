@@ -13,7 +13,7 @@ interface Props {
 }
 
 const {
-  badge = datosNegocio.razonSocial || 'Distribuidor Autorizado Solgas',
+  badge = datosNegocio.registroColegio || 'C.Ps.P. N° 49425 · Colegiada y Habilitada',
   badgeIcon = 'fa-solid fa-shield-halved',
   titulo,
   desc,
@@ -22,7 +22,7 @@ const {
 } = Astro.props;
 
 const labelActualizado = idioma === 'en' ? 'Last updated:' : 'Vigencia oficial:';
-const sedeDistrito = (datosNegocio.distritoSede || 'Surquillo').toUpperCase();
+const sedeDistrito = (datosNegocio.distritoSede || 'Miraflores').toUpperCase();
 ---
 
 <header class="acercas-header">
@@ -42,12 +42,12 @@ const sedeDistrito = (datosNegocio.distritoSede || 'Surquillo').toUpperCase();
 
     <div class="acercas-header-meta">
       <div class="acercas-meta-item">
-        <i class="fa-solid fa-building color-primary"></i>
-        <span>{datosNegocio.nombreCorto || 'Solgas'} · {sedeDistrito}</span>
+        <i class="fa-solid fa-location-dot color-primary"></i>
+        <span>{datosNegocio.nombreCorto || 'Psicología América'} · {sedeDistrito}</span>
       </div>
       <div class="acercas-meta-item">
-        <i class="fa-solid fa-id-card color-primary"></i>
-        <span>RUC {datosNegocio.ruc}</span>
+        <i class="fa-solid fa-certificate color-primary"></i>
+        <span>{datosNegocio.colegiatura || 'C.Ps.P. N° 49425'}</span>
       </div>
       <div class="acercas-meta-item">
         <i class="fa-solid fa-calendar-check color-primary"></i>
@@ -56,3 +56,4 @@ const sedeDistrito = (datosNegocio.distritoSede || 'Surquillo').toUpperCase();
     </div>
   </div>
 </header>
+

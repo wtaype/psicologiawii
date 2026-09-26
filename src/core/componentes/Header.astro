@@ -36,7 +36,7 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
   <div class="page-container header-container">
     
     <!-- Logo y Título -->
-    <a href={urlInicio} title={esPersonal || esCliente ? (t.ir_tienda_publica || 'Ir a la Tienda Pública GasWii') : (t.inicio_titulo || 'GasWii Inicio')} class="header-brand-link">
+    <a href={urlInicio} title={esPersonal || esCliente ? (t.ir_tienda_publica || 'Ir al Sitio Web') : (t.inicio_titulo || 'Consultorio Psicológico América')} class="header-brand-link">
       <img 
         src={datosNegocio.logo} 
         alt={datosNegocio.nombre} 
@@ -50,9 +50,9 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
         </span>
         <span class="desktop-only header-brand-sub">
           {esPersonal ? (
-            <span class="inline-flex items-center gap-1"><i class="fa-solid fa-building"></i> Consola Staff & Despachos</span>
+            <span class="inline-flex items-center gap-1"><i class="fa-solid fa-user-doctor"></i> Consola de Consultas</span>
           ) : esCliente ? (
-            <span class="inline-flex items-center gap-1"><i class="fa-solid fa-star"></i> Portal Cliente VIP</span>
+            <span class="inline-flex items-center gap-1"><i class="fa-solid fa-user-check"></i> Portal de Pacientes</span>
           ) : (
             <span>{t.slogan_brand}</span>
           )}
@@ -64,19 +64,19 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
     {esPersonal ? (
       <div class="desktop-only header-group-desktop">
         <span class="header-badge-status personal">
-          <i class="fa-solid fa-tower-broadcast"></i> Consola Operativa Base <span data-negocio-direccion>{datosNegocio.direccionSede}</span>
+          <i class="fa-solid fa-hospital-user"></i> Sede <span data-negocio-direccion>{datosNegocio.direccionSede}</span>
         </span>
-        <a href="/" class="btn-outline btn-compact" title="Ver Tienda Pública">
-          <i class="fa-solid fa-store icon-brand-orange"></i> <span>Ver Tienda Pública</span>
+        <a href="/" class="btn-outline btn-compact" title="Ver Web Pública">
+          <i class="fa-solid fa-globe icon-brand-orange"></i> <span>Ver Web</span>
         </a>
       </div>
     ) : esCliente ? (
       <div class="desktop-only header-group-desktop">
         <span class="header-badge-status cliente">
-          <i class="fa-solid fa-gem"></i> Área Exclusiva Cliente VIP
+          <i class="fa-solid fa-heart-pulse"></i> Área de Pacientes
         </span>
-        <a href="/" class="btn-outline btn-compact" title="Ver Catálogo Completo">
-          <i class="fa-solid fa-fire icon-brand-orange"></i> <span>Catálogo y Precios</span>
+        <a href="/" class="btn-outline btn-compact" title="Ver Terapias y Talleres">
+          <i class="fa-solid fa-brain icon-brand-orange"></i> <span>Terapias y Talleres</span>
         </a>
       </div>
     ) : (
@@ -116,6 +116,7 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
       >
         <i class="fa-solid fa-moon" id="themeIcon"></i>
       </button>
+      <script is:inline>try{const t=document.documentElement.dataset.theme,i=document.getElementById('themeIcon');if(i&&t)i.className=t==='futuro'?'fa-solid fa-moon':'fa-solid fa-sun';}catch(e){}</script>
 
       <!-- Contenedor Auth Desktop -->
       <div id="headerAuthContainer" class="desktop-only header-auth-box">
