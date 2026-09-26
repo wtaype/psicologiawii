@@ -1,10 +1,8 @@
 ---
 // src/feature/inicio/secciones/02-productos/Productos.astro
-// 2. SECCIÓN ESPECIALIDADES Y SERVICIOS CLÍNICOS CRO AUTÓNOMA
+// 2. SECCIÓN ESPECIALIDADES Y TALLERES CLÍNICOS
 // Consultorio Psicológico América - Lic. Sofía Reynaga
 import { datosNegocio, consultarProductosFirestoreFresco } from '../../../../negocio.js';
-import { crearEnlaceWhatsApp } from '../../lib/whatsapp.js';
-import { imgwii } from '@widev';
 import { resolverIdioma } from '../../idioma/idioma.js';
 import es from './idioma/es.json';
 import en from './idioma/en.json';
@@ -17,9 +15,8 @@ interface Props {
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
 const t = resolverIdioma({ es, en }, idioma);
 
-// Consulta fresca directa de servicios (Firestore o Fallback Canónico)
-const serviciosActivos = await consultarProductosFirestoreFresco();
-const telefonoLimpio = datosNegocio.telefonoLimpio;
+// Consulta fresca directa de servicios y talleres (Firestore o Fallback Canónico)
+const programasActivos = await consultarProductosFirestoreFresco();
 const whatsappNumero = datosNegocio.whatsappLimpio;
 ---
 
@@ -31,23 +28,36 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
     <!-- Encabezado de la Sección -->
     <header class="sec-prods-header">
       <span class="badge-serenidad sec-prods-badge">
-        <i class="fa-solid fa-brain"></i> <span>{t.badge.toUpperCase()}</span>
+        <i class="fa-solid fa-shapes"></i> <span>{t.badge.toUpperCase()}</span>
       </span>
       <h2 class="sec-prods-title">{t.titulo}</h2>
       <p class="sec-prods-sub">{t.subtitulo}</p>
     </header>
 
-    <!-- Grid de Especialidades Clínicas (Cards sobre .pagewii 85vw) -->
-    {serviciosActivos.length > 0 ? (
+    <!-- Selector de Pestañas: Todos, Terapias Clínicas y Talleres -->
+    <div class="prods-tabs-wrapper" id="prodsTabsWrapper">
+      <button type="button" class="prods-tab-btn active" data-tab="todos">
+        <i class="fa-solid fa-shapes"></i>
+        <span>{t.tab_todos}</span>
+      </button>
+      <button type="button" class="prods-tab-btn" data-tab="servicio">
+        <i class="fa-solid fa-stethoscope"></i>
+        <span>{t.tab_servicios}</span>
+      </button>
+      <button type="button" class="prods-tab-btn" data-tab="taller">
+        <i class="fa-solid fa-people-group"></i>
+        <span>{t.tab_talleres}</span>
+      </button>
+    </div>
+
+    <!-- Grid de Programas (Terapias Clínicas + Talleres) -->
+    {programasActivos.length > 0 ? (
       <div 
         class="catalog-grid sec-prods-grid" 
         id="publicProdsGrid"
         data-idioma={idioma}
-        data-ws-num={whatsappNumero}
-        data-tel-limpio={telefonoLimpio}
-        data-labels={JSON.stringify(t)}
       >
-        {serviciosActivos.map((p: any) => {
+        {programasActivos.map((p: any) => {
           const langSuffix = idioma.charAt(0).toUpperCase() + idioma.slice(1);
           const nombre = (idioma !== 'es' && p[`nombre${langSuffix}`]) || (typeof p.nombre === 'object' ? (p.nombre[idioma] || p.nombre.es) : p.nombre) || '';
           const duracion = (idioma !== 'es' && p[`duracion${langSuffix}`]) || (typeof p.duracion === 'object' ? (p.duracion[idioma] || p.duracion.es) : p.duracion) || '45 - 60 min';
@@ -64,12 +74,15 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
             }
           }
 
+          const esTaller = p.categoria === 'taller' || p.categoria === 'talleres';
+          const categoriaFiltro = esTaller ? 'taller' : 'servicio';
+
           const esDiagnostico = p.id.includes('diagnostico') || p.id.includes('tdah');
           const esPaquete = p.id.includes('paquete') || p.id.includes('10');
 
-          let pillHighlightTexto = p.badge || t.pill_popular;
+          let pillHighlightTexto = p.badge || (esTaller ? t.pill_vivencial : t.pill_popular);
           let pillHighlightClase = p.tagClase || 'badge-serenidad';
-          let pillHighlightIcon = 'fa-solid fa-star';
+          let pillHighlightIcon = esTaller ? 'fa-solid fa-users' : 'fa-solid fa-star';
           let pillContexto = p.publico || 'Adultos y Familias';
 
           if (esDiagnostico) {
@@ -83,11 +96,17 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
           const guaranteeHeader = t.garantia_titulo.toUpperCase();
           const precioActual = p.precioPEN || p.precio || 85;
 
-          const wsText = t.ws_msg.replace('{producto}', nombre);
+          const btnTexto = esTaller ? t.btn_ws_taller : t.btn_ws_servicio;
+          const templateMsg = esTaller ? t.ws_msg_taller : t.ws_msg_servicio;
+          const wsText = templateMsg.replace('{producto}', nombre);
           const wsLink = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(wsText)}`;
 
           return (
-            <article class="clean-card producto-card-box card-balon" data-prod-id={p.id}>
+            <article 
+              class="clean-card producto-card-box card-balon" 
+              data-prod-id={p.id}
+              data-cat={categoriaFiltro}
+            >
               <!-- Contenido Superior de la Tarjeta -->
               <div class="card-main-content">
                 <!-- Cabecera: Badges Superior Izquierdo y Derecho -->
@@ -107,8 +126,8 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                     class="producto-img-tag card-img" 
                     loading="lazy" 
                     decoding="async" 
-                    width="320"
-                    height="220"
+                    width="320" 
+                    height="180" 
                   />
                   <div class="producto-capacidad-tag card-weight-pill">
                     <i class="fa-solid fa-clock"></i>
@@ -116,40 +135,36 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                   </div>
                 </div>
 
-                <!-- Título Oficial de la Especialidad -->
+                <!-- Título Oficial de la Especialidad o Taller -->
                 <h3 class="card-title">{nombre}</h3>
 
-                <!-- Descripción breve -->
+                <!-- Descripción Breve y Amigable -->
                 {descripcion && (
-                  <p class="card-desc-snippet" style="font-size: 0.85rem; color: var(--tx2); line-height: 1.4; margin-bottom: 1vh;">
+                  <p class="card-desc-snippet">
                     {descripcion}
                   </p>
                 )}
 
-                <!-- 3 Filas de Especificaciones Clave con Iconos Clínicos -->
+                <!-- Filas de Especificaciones Clave con Iconos Clínicos -->
                 <ul class="card-specs-list">
                   <li class="card-spec-row">
-                    <i class="fa-solid fa-brain card-spec-icon valve" style="color: var(--brand-primary);"></i>
+                    <i class={esTaller ? "fa-solid fa-people-arrows card-spec-icon" : "fa-solid fa-brain card-spec-icon"} style="color: var(--brand-primary, #104356);"></i>
                     <span><strong class="card-spec-label">{t.enfoque_label} </strong>{enfoque}</span>
                   </li>
                   <li class="card-spec-row">
-                    <i class="fa-solid fa-hospital-user card-spec-icon weight" style="color: var(--brand-blue);"></i>
+                    <i class="fa-solid fa-location-dot card-spec-icon" style="color: var(--brand-sky, #0284c7);"></i>
                     <span><strong class="card-spec-label">{t.modalidad_label} </strong>{modalidad}</span>
-                  </li>
-                  <li class="card-spec-row">
-                    <i class="fa-solid fa-shield-halved card-spec-icon safety" style="color: var(--brand-primary);"></i>
-                    <span><strong class="card-spec-label">Ética: </strong>Secreto Profesional</span>
                   </li>
                 </ul>
 
-                <!-- Checklist de Beneficios Terapéuticos -->
+                <!-- Beneficios Terapéuticos -->
                 {garantias.length > 0 && (
                   <div class="card-guarantee-box">
                     <span class="card-guarantee-heading">{guaranteeHeader}</span>
                     <ul class="card-guarantee-list">
                       {garantias.slice(0, 3).map((g: string) => (
                         <li class="card-guarantee-item">
-                          <i class="fa-solid fa-circle-check" style="color: var(--brand-primary);"></i>
+                          <i class="fa-solid fa-circle-check"></i>
                           <span>{g}</span>
                         </li>
                       ))}
@@ -158,12 +173,12 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                 )}
               </div>
 
-              <!-- Contenido Inferior de la Tarjeta (Alineado Abajo) -->
+              <!-- Contenido Inferior de la Tarjeta (Precio + CTA WhatsApp) -->
               <div class="card-footer-content">
-                <!-- Bloque de Precio -->
+                <!-- Bloque de Inversión / Precio -->
                 <div class="card-price-row">
                   <div class="card-price-col-left">
-                    <span class="card-price-caption">{esPaquete ? 'Tarifa Especial' : 'Honorario por Sesión'}</span>
+                    <span class="card-price-caption">{esTaller ? 'Inversión Taller' : (esPaquete ? 'Tarifa Especial' : 'Por Sesión')}</span>
                     <div class="producto-price-val card-price-value">
                       <span class="card-price-curr">S/</span>
                       <span data-price-id={p.id}>{Number(precioActual).toFixed(2)}</span>
@@ -172,29 +187,21 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
 
                   <div class="card-price-col-right">
                     <span class="card-delivery-caption">{t.delivery_label}</span>
-                    <span class="card-delivery-badge">{modalidad.includes('Online') ? 'Presencial / Online' : 'Presencial'}</span>
+                    <span class="card-delivery-badge">{modalidad.includes('Online') || modalidad.includes('Virtual') ? 'Presencial / Online' : 'Presencial'}</span>
                   </div>
                 </div>
 
-                <!-- Botones de Acción Dual: WhatsApp (80%) + Teléfono (20%) -->
+                <!-- Botón de Acción Directo y Humano por WhatsApp -->
                 <div class="card-actions">
                   <a 
                     href={wsLink} 
                     target="_blank" 
                     rel="noopener noreferrer" 
                     class="btn-whatsapp btn-card-ws"
-                    title={t.btn_ws}
+                    title={btnTexto}
                   >
                     <i class="fa-brands fa-whatsapp"></i>
-                    <span>{t.btn_ws}</span>
-                  </a>
-
-                  <a 
-                    href={`tel:${telefonoLimpio}`} 
-                    class="btn-call btn-card-call"
-                    title={t.btn_llamar}
-                  >
-                    <i class="fa-solid fa-phone"></i>
+                    <span>{btnTexto}</span>
                   </a>
                 </div>
               </div>
@@ -204,10 +211,39 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
         })}
       </div>
     ) : (
-      <div style="text-align: center; padding: 40px; color: var(--muted, #94a3b8);">
+      <div style="text-align: center; padding: 40px; color: var(--text-muted, #486576);">
         <p>{t.sin_productos}</p>
       </div>
     )}
 
   </div>
 </section>
+
+<!-- Script Interactivo de Filtrado de Pestañas (Servicios vs Talleres) -->
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabsWrapper = document.getElementById('prodsTabsWrapper');
+    if (!tabsWrapper) return;
+
+    const tabBtns = tabsWrapper.querySelectorAll('.prods-tab-btn');
+    const cards = document.querySelectorAll('.sec-prods-grid article[data-cat]');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filter = btn.getAttribute('data-tab');
+
+        cards.forEach(card => {
+          const cat = card.getAttribute('data-cat');
+          if (filter === 'todos' || filter === cat) {
+            card.style.display = 'flex';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>

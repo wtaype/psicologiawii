@@ -1,13 +1,14 @@
 // src/feature/personal/modulos/negocio/negocio.js
-// Controlador Frontend Autónomo del Módulo Mi Negocio (Solgas Surquillo)
-// 100% JS Nativo · Cero TypeScript · Local-First · Integración con @widev
+// Controlador Frontend Autónomo del Módulo Ficha de Negocio & Especialista
+// 100% JS Nativo · Cero TypeScript · Local-First · Integración con @widev y Firestore
 
 import { Notificacion, wiSpin, wiAtajo, wiConfirmar, adrm, savels, getls, removels, Saludar } from '@widev';
 import {
   obtenerDatosNegocio,
   guardarDatosNegocio,
   calcularAnosTrayectoria,
-  sincronizarDesdeFirestore
+  sincronizarDesdeFirestore,
+  obtenerSemillaLocal
 } from './dataNegocio.js';
 import { solicitarActualizacionWeb } from '../../../../actualizar.js';
 
@@ -20,21 +21,22 @@ export function inicializarNegocio() {
   let isSaving = false;
   let draftTimer = null;
 
-  // Elementos de la UI
+  // Elementos principales de la cabecera
   const btnGuardarNegocio = document.getElementById('btnGuardarNegocio');
+  const btnCargarSemilla = document.getElementById('btnCargarSemilla');
   const ngTabsBar = document.getElementById('ngTabsBar');
-  const ngZonasContainer = document.getElementById('ngZonasContainer');
-  const btnAgregarZona = document.getElementById('btnAgregarZona');
   const ngBadgeTrayectoria = document.getElementById('ngBadgeTrayectoria');
   const ngYearsText = document.getElementById('ngYearsText');
 
   // Inputs de Identidad
   const inputNombre = document.getElementById('ngInputNombre');
   const inputNombreCorto = document.getElementById('ngInputNombreCorto');
-  const inputRazonSocial = document.getElementById('ngInputRazonSocial');
-  const inputRuc = document.getElementById('ngInputRuc');
-  const inputOsinergmin = document.getElementById('ngInputOsinergmin');
-  const inputMarcaRespaldo = document.getElementById('ngInputMarcaRespaldo');
+  const inputEspecialista = document.getElementById('ngInputEspecialista');
+  const inputColegiatura = document.getElementById('ngInputColegiatura');
+  const inputTitulo = document.getElementById('ngInputTitulo');
+  const inputGrado = document.getElementById('ngInputGrado');
+  const inputEnfoques = document.getElementById('ngInputEnfoques');
+  const inputBio = document.getElementById('ngInputBio');
   const inputLanzamiento = document.getElementById('ngInputLanzamiento');
   const inputLogo = document.getElementById('ngInputLogo');
   const inputImagenSede = document.getElementById('ngInputImagenSede');
@@ -43,7 +45,6 @@ export function inicializarNegocio() {
 
   // Inputs de Contacto
   const inputTelefono = document.getElementById('ngInputTelefono');
-  const inputTelefonoFijo = document.getElementById('ngInputTelefonoFijo');
   const inputWhatsapp = document.getElementById('ngInputWhatsapp');
   const inputEmail = document.getElementById('ngInputEmail');
   const inputWhatsappMensaje = document.getElementById('ngInputWhatsappMensaje');
@@ -53,7 +54,7 @@ export function inicializarNegocio() {
   const hintWhatsappFormato = document.getElementById('hintWhatsappFormato');
   const btnRestaurarMensajeWs = document.getElementById('btnRestaurarMensajeWs');
 
-  // Inputs de Ubicación
+  // Inputs de Ubicación y Sedes
   const inputDireccion = document.getElementById('ngInputDireccion');
   const inputDistrito = document.getElementById('ngInputDistrito');
   const inputCiudad = document.getElementById('ngInputCiudad');
@@ -63,14 +64,18 @@ export function inicializarNegocio() {
   const btnBuscarGoogleMaps = document.getElementById('btnBuscarGoogleMaps');
   const btnProbarMapsUrl = document.getElementById('btnProbarMapsUrl');
   const btnAutogenerarMapsUrl = document.getElementById('btnAutogenerarMapsUrl');
+  const ngSedesContainer = document.getElementById('ngSedesContainer');
+  const btnAgregarSede = document.getElementById('btnAgregarSede');
 
   // Inputs de Métricas y Redes
-  const inputMetricaClientes = document.getElementById('ngInputMetricaClientes');
-  const inputMetricaBalanza = document.getElementById('ngInputMetricaBalanza');
-  const inputMetricaDias = document.getElementById('ngInputMetricaDias');
+  const inputMetricaPacientes = document.getElementById('ngInputMetricaPacientes');
+  const inputMetricaColegiatura = document.getElementById('ngInputMetricaColegiatura');
+  const inputMetricaConfidencialidad = document.getElementById('ngInputMetricaConfidencialidad');
+  const inputMetricaSatisfaccion = document.getElementById('ngInputMetricaSatisfaccion');
   const inputRedFacebook = document.getElementById('ngInputRedFacebook');
   const inputRedInstagram = document.getElementById('ngInputRedInstagram');
   const inputRedTiktok = document.getElementById('ngInputRedTiktok');
+  const inputRedLinkedin = document.getElementById('ngInputRedLinkedin');
 
   // Inputs de SEO Dinámico
   const inputSeoTituloEs = document.getElementById('ngInputSeoTituloEs');
@@ -80,7 +85,7 @@ export function inicializarNegocio() {
   const inputSeoDescEn = document.getElementById('ngInputSeoDescEn');
   const inputSeoKeywordsEn = document.getElementById('ngInputSeoKeywordsEn');
 
-  let currentZonas = [];
+  let currentSedes = [];
 
   // 1. Conmutación de Pestañas con adrm() de widev
   ngTabsBar?.addEventListener('click', (e) => {
@@ -103,22 +108,21 @@ export function inicializarNegocio() {
     autoGuardarBorrador();
   });
 
-  // 3. Previsualizaciones en vivo de Logo y Sede
+  // 3. Previsualizaciones en vivo de Logo y Portada
   inputLogo?.addEventListener('input', () => {
     if (imgLogoPreview) imgLogoPreview.src = inputLogo.value || '/imgwii/logo.webp';
     autoGuardarBorrador();
   });
 
   inputImagenSede?.addEventListener('input', () => {
-    if (imgHeroPreview) imgHeroPreview.src = inputImagenSede.value || '/imgwii/hero.webp';
+    if (imgHeroPreview) imgHeroPreview.src = inputImagenSede.value || '/imgwii/hero/psicologa-sofia-reynaga.webp';
     autoGuardarBorrador();
   });
 
-  // 3.0. Normalizador Inteligente de Celular y WhatsApp Perú (9 dígitos)
+  // 4. Normalizador de Celular y WhatsApp Perú (9 dígitos)
   function normalizarTelefonoPeru(val) {
     const digitos = String(val || '').replace(/\D/g, '');
     
-    // Si tiene 9 dígitos y empieza con 9 (ej. 936369384)
     if (digitos.length === 9 && digitos.startsWith('9')) {
       return {
         esCelular9: true,
@@ -128,7 +132,6 @@ export function inicializarNegocio() {
       };
     }
 
-    // Si tiene 11 dígitos y empieza con 519 (ej. 51936369384)
     if (digitos.length === 11 && digitos.startsWith('519')) {
       const cel9 = digitos.slice(2);
       return {
@@ -142,45 +145,40 @@ export function inicializarNegocio() {
     return {
       esCelular9: false,
       celular9: digitos,
-      whatsappLimpio: digitos ? (digitos.startsWith('51') ? digitos : `51${digitos}`) : '',
-      visible: String(val || '').trim()
+      whatsappLimpio: digitos,
+      visible: val
     };
   }
 
   function actualizarHintTelefono() {
-    const val = inputTelefono?.value?.trim() || '';
-    if (!hintTelefonoFormato) return;
+    if (!hintTelefonoFormato || !inputTelefono) return;
+    const val = inputTelefono.value.trim();
     if (!val) {
-      hintTelefonoFormato.textContent = 'Ingresa 9 dígitos de celular o con prefijo +51';
+      hintTelefonoFormato.textContent = 'Ingresa el número celular de atención directa';
       hintTelefonoFormato.style.color = 'var(--muted)';
       return;
     }
     const info = normalizarTelefonoPeru(val);
     if (info.esCelular9) {
-      hintTelefonoFormato.textContent = `✓ Formato oficial: ${info.visible} (Celular Perú)`;
+      hintTelefonoFormato.textContent = `✓ Formato oficial: ${info.visible}`;
       hintTelefonoFormato.style.color = '#10b981';
     } else {
-      hintTelefonoFormato.textContent = `✓ Número registrado: ${info.visible}`;
-      hintTelefonoFormato.style.color = 'var(--muted)';
+      hintTelefonoFormato.textContent = 'Recomendado: 9 dígitos peruanos que comiencen con 9';
+      hintTelefonoFormato.style.color = '#f59e0b';
     }
   }
 
   function actualizarHintWhatsapp() {
-    const val = inputWhatsapp?.value?.trim() || '';
-    if (!hintWhatsappFormato) return;
+    if (!hintWhatsappFormato || !inputWhatsapp) return;
+    const val = inputWhatsapp.value.trim();
     if (!val) {
-      hintWhatsappFormato.textContent = 'Ingresa 9 dígitos de WhatsApp';
+      hintWhatsappFormato.textContent = 'Número que abrirá la conversación de WhatsApp';
       hintWhatsappFormato.style.color = 'var(--muted)';
       return;
     }
     const info = normalizarTelefonoPeru(val);
-    if (info.esCelular9) {
-      hintWhatsappFormato.textContent = `✓ Enlace directo: wa.me/${info.whatsappLimpio}`;
-      hintWhatsappFormato.style.color = '#10b981';
-    } else {
-      hintWhatsappFormato.textContent = `✓ Enlace directo: wa.me/${info.whatsappLimpio || val}`;
-      hintWhatsappFormato.style.color = '#10b981';
-    }
+    hintWhatsappFormato.textContent = `✓ Enlace directo: wa.me/${info.whatsappLimpio}`;
+    hintWhatsappFormato.style.color = '#10b981';
   }
 
   inputTelefono?.addEventListener('input', () => {
@@ -188,209 +186,176 @@ export function inicializarNegocio() {
     autoGuardarBorrador();
   });
 
-  inputTelefono?.addEventListener('blur', () => {
-    const val = inputTelefono.value.trim();
-    const info = normalizarTelefonoPeru(val);
-    if (info.esCelular9) {
-      inputTelefono.value = info.visible;
-      actualizarHintTelefono();
-      autoGuardarBorrador();
-    }
-  });
-
   inputWhatsapp?.addEventListener('input', () => {
     actualizarHintWhatsapp();
     autoGuardarBorrador();
   });
 
-  inputWhatsapp?.addEventListener('blur', () => {
-    const val = inputWhatsapp.value.trim();
-    const info = normalizarTelefonoPeru(val);
-    if (info.esCelular9) {
-      inputWhatsapp.value = info.whatsappLimpio;
-      actualizarHintWhatsapp();
-      autoGuardarBorrador();
-    }
-  });
-
-  // Generador de Saludo Dinámico para WhatsApp
+  // 5. Saludo Dinámico para WhatsApp
   btnRestaurarMensajeWs?.addEventListener('click', () => {
-    const saludo = Saludar().replace(/,/g, '').trim();
-    const nombreNegocio = inputNombre?.value?.trim() || '';
-    const msg = `¡${saludo}${nombreNegocio ? ' ' + nombreNegocio : ''}! He visto en su página que tienen el *producto* y deseo consultar precio y pedir un balón de gas para entrega a domicilio.`;
+    const saludoHora = Saludar ? Saludar() : 'Hola';
+    const nombreEsp = inputEspecialista?.value?.trim() || 'Lic. Sofia Reynaga';
+    const msg = `¡${saludoHora} ${nombreEsp}! Deseo agendar una consulta psicológica.`;
     if (inputWhatsappMensaje) {
       inputWhatsappMensaje.value = msg;
       autoGuardarBorrador();
-      Notificacion(`Mensaje generado con "${saludo}"`, 'success', 2500);
+      Notificacion('Mensaje inicial actualizado con saludo dinámico', 'info', 2000);
     }
   });
 
-  // 3.1. Acciones y Utilidades de Google Maps
+  // 6. Asistentes de Google Maps
   btnBuscarGoogleMaps?.addEventListener('click', () => {
-    const dir = inputDireccion?.value?.trim() || '';
-    const dist = inputDistrito?.value?.trim() || '';
-    const nom = inputNombre?.value?.trim() || '';
-    const partes = [nom, dir, dist].filter(Boolean);
-    const query = partes.length > 0 ? partes.join(', ') : 'Lima, Peru';
-    const mapsSearchUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
-    window.open(mapsSearchUrl, '_blank', 'noopener,noreferrer');
-    Notificacion('Google Maps abierto en nueva pestaña. Copia el vínculo de compartir y pégalo aquí.', 'info', 4000);
+    const dir = inputDireccion?.value?.trim() || inputDistrito?.value?.trim() || 'Miraflores Lima';
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`, '_blank');
   });
 
   btnProbarMapsUrl?.addEventListener('click', () => {
-    let url = inputMapsUrl?.value?.trim();
+    const url = inputMapsUrl?.value?.trim();
     if (!url) {
-      Notificacion('Ingresa o genera un enlace de Google Maps primero', 'warning', 3000);
-      inputMapsUrl?.focus();
+      Notificacion('Ingresa primero un enlace de Google Maps', 'warning', 2500);
       return;
     }
-    if (!/^https?:\/\//i.test(url)) {
-      url = 'https://' + url;
-      inputMapsUrl.value = url;
-    }
-    window.open(url, '_blank', 'noopener,noreferrer');
+    window.open(url, '_blank');
   });
 
   btnAutogenerarMapsUrl?.addEventListener('click', () => {
-    const lat = parseFloat(inputLat?.value);
-    const lng = parseFloat(inputLng?.value);
+    const lat = inputLat?.value?.trim();
+    const lng = inputLng?.value?.trim();
     let autoUrl = '';
 
-    if (!isNaN(lat) && !isNaN(lng) && lat !== 0 && lng !== 0) {
+    if (lat && lng && !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lng))) {
       autoUrl = `https://www.google.com/maps?q=${lat},${lng}`;
     } else {
-      const dir = inputDireccion?.value?.trim() || inputDistrito?.value?.trim() || 'Lima';
+      const dir = inputDireccion?.value?.trim() || inputDistrito?.value?.trim() || 'Miraflores Lima';
       autoUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(dir)}`;
     }
 
     if (inputMapsUrl) {
       inputMapsUrl.value = autoUrl;
       autoGuardarBorrador();
-      Notificacion('Enlace de Google Maps generado automáticamente', 'success', 2500);
+      Notificacion('Enlace de Google Maps generado', 'success', 2500);
     }
   });
 
-  // 4. Renderizado de la lista de Zonas de Cobertura
-  function renderZonas() {
-    if (!ngZonasContainer) return;
-    if (currentZonas.length === 0) {
-      ngZonasContainer.innerHTML = `
+  // 7. Renderizado de Sedes y Modalidades
+  function renderSedes() {
+    if (!ngSedesContainer) return;
+    if (currentSedes.length === 0) {
+      ngSedesContainer.innerHTML = `
         <div style="text-align:center; padding: 24px; color: var(--muted); font-size: var(--fz_s4);">
-          No hay zonas registradas. Presiona <strong>Agregar Zona</strong> para añadir cobertura.
+          No hay sedes registradas. Pulsa <strong>Agregar Sede</strong> para añadir una sede presencial o modalidad virtual.
         </div>
       `;
       return;
     }
 
-    ngZonasContainer.innerHTML = currentZonas.map((z, idx) => `
-      <div class="ng-zona-row ${z.activo ? '' : 'inactive'}" data-index="${idx}">
-        <input type="text" class="ng-input input-zona-distrito" placeholder="Distrito (ej: Surquillo)" value="${z.distrito || ''}" />
-        <input type="number" class="ng-input input-zona-min" placeholder="Min (12)" value="${z.tiempoMin || 10}" title="Tiempo mínimo" />
-        <input type="number" class="ng-input input-zona-max" placeholder="Max (18)" value="${z.tiempoMax || 20}" title="Tiempo máximo" />
-        <select class="ng-input input-zona-unidad">
-          <option value="min" ${z.unidad === 'min' ? 'selected' : ''}>min</option>
-          <option value="h" ${z.unidad === 'h' ? 'selected' : ''}>h</option>
-        </select>
-        <input type="text" class="ng-input input-zona-tag" placeholder="Tag (Sede Express / Ruta Directa)" value="${z.tag || ''}" />
-        <label class="ng-switch" title="${z.activo ? 'Desactivar zona' : 'Activar zona'}">
-          <input type="checkbox" class="input-zona-activo" ${z.activo ? 'checked' : ''} />
-          <span class="ng-slider"></span>
-        </label>
-        <button type="button" class="ng-btn-icon-del btn-del-zona" title="Eliminar zona">
-          <i class="fa-solid fa-trash"></i>
-        </button>
+    ngSedesContainer.innerHTML = currentSedes.map((s, idx) => `
+      <div class="ng-sede-card ${s.activo ? '' : 'inactive'}" data-index="${idx}">
+        <div class="ng-sede-row-header">
+          <input type="text" class="ng-input input-sede-nombre" placeholder="Nombre (ej: Sede Miraflores)" value="${s.nombre || ''}" />
+          <select class="ng-input input-sede-modalidad">
+            <option value="Presencial" ${s.modalidad === 'Presencial' ? 'selected' : ''}>Presencial</option>
+            <option value="Virtual" ${s.modalidad === 'Virtual' ? 'selected' : ''}>Virtual / Online</option>
+            <option value="Domicilio" ${s.modalidad === 'Domicilio' ? 'selected' : ''}>A Domicilio</option>
+          </select>
+          <label class="ng-switch" title="${s.activo ? 'Desactivar sede' : 'Activar sede'}">
+            <input type="checkbox" class="input-sede-activo" ${s.activo ? 'checked' : ''} />
+            <span class="ng-slider"></span>
+          </label>
+          <button type="button" class="ng-btn-icon-del btn-del-sede" title="Eliminar sede">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </div>
+        <div class="ng-sede-row-body">
+          <input type="text" class="ng-input input-sede-direccion" placeholder="Dirección física o plataforma (ej: Av. Benavides 620)" value="${s.direccion || ''}" />
+          <input type="text" class="ng-input input-sede-referencia" placeholder="Referencia / Detalle (ej: A pocas cuadras de Parque Kennedy)" value="${s.referencia || ''}" />
+          <input type="url" class="ng-input input-sede-maps" placeholder="Enlace Maps (opcional)" value="${s.mapsUrl || ''}" />
+        </div>
       </div>
     `).join('');
   }
 
-  // 5. Delegación de eventos en la lista de Zonas (0 memory leaks)
-  ngZonasContainer?.addEventListener('input', (e) => {
-    const row = e.target.closest('.ng-zona-row');
-    if (!row) return;
-    const idx = parseInt(row.getAttribute('data-index') || '0', 10);
-    const z = currentZonas[idx];
-    if (!z) return;
+  // Delegación de eventos en Sedes
+  ngSedesContainer?.addEventListener('input', (e) => {
+    const card = e.target.closest('.ng-sede-card');
+    if (!card) return;
+    const idx = parseInt(card.getAttribute('data-index') || '0', 10);
+    const s = currentSedes[idx];
+    if (!s) return;
 
-    if (e.target.classList.contains('input-zona-distrito')) z.distrito = e.target.value.trim();
-    if (e.target.classList.contains('input-zona-min')) z.tiempoMin = parseInt(e.target.value, 10) || 0;
-    if (e.target.classList.contains('input-zona-max')) z.tiempoMax = parseInt(e.target.value, 10) || 0;
-    if (e.target.classList.contains('input-zona-tag')) z.tag = e.target.value.trim();
+    if (e.target.classList.contains('input-sede-nombre')) s.nombre = e.target.value.trim();
+    if (e.target.classList.contains('input-sede-direccion')) s.direccion = e.target.value.trim();
+    if (e.target.classList.contains('input-sede-referencia')) s.referencia = e.target.value.trim();
+    if (e.target.classList.contains('input-sede-maps')) s.mapsUrl = e.target.value.trim();
 
     autoGuardarBorrador();
   });
 
-  ngZonasContainer?.addEventListener('change', (e) => {
-    const row = e.target.closest('.ng-zona-row');
-    if (!row) return;
-    const idx = parseInt(row.getAttribute('data-index') || '0', 10);
-    const z = currentZonas[idx];
-    if (!z) return;
+  ngSedesContainer?.addEventListener('change', (e) => {
+    const card = e.target.closest('.ng-sede-card');
+    if (!card) return;
+    const idx = parseInt(card.getAttribute('data-index') || '0', 10);
+    const s = currentSedes[idx];
+    if (!s) return;
 
-    if (e.target.classList.contains('input-zona-unidad')) z.unidad = e.target.value;
-    if (e.target.classList.contains('input-zona-activo')) {
-      z.activo = e.target.checked;
-      row.classList.toggle('inactive', !z.activo);
+    if (e.target.classList.contains('input-sede-modalidad')) s.modalidad = e.target.value;
+    if (e.target.classList.contains('input-sede-activo')) {
+      s.activo = e.target.checked;
+      card.classList.toggle('inactive', !s.activo);
     }
 
     autoGuardarBorrador();
   });
 
-  ngZonasContainer?.addEventListener('click', async (e) => {
-    const btnDel = e.target.closest('.btn-del-zona');
+  ngSedesContainer?.addEventListener('click', async (e) => {
+    const btnDel = e.target.closest('.btn-del-sede');
     if (!btnDel) return;
-    const row = btnDel.closest('.ng-zona-row');
-    const idx = parseInt(row?.getAttribute('data-index') || '0', 10);
-    const z = currentZonas[idx];
+    const card = btnDel.closest('.ng-sede-card');
+    const idx = parseInt(card?.getAttribute('data-index') || '0', 10);
+    const s = currentSedes[idx];
 
-    const conf = await wiConfirmar(`¿Deseas remover la zona de cobertura "${z?.distrito || 'Seleccionada'}"?`, {
-      titulo: 'Eliminar Zona',
+    const conf = await wiConfirmar(`¿Deseas eliminar la sede "${s?.nombre || 'Seleccionada'}"?`, {
+      titulo: 'Eliminar Sede',
       tipo: 'danger',
       siTexto: 'Sí, Eliminar'
     });
 
     if (conf) {
-      currentZonas.splice(idx, 1);
-      renderZonas();
+      currentSedes.splice(idx, 1);
+      renderSedes();
       autoGuardarBorrador();
-      Notificacion('Zona de cobertura eliminada', 'info', 2000);
+      Notificacion('Sede eliminada', 'info', 2000);
     }
   });
 
-  // Botón para agregar una nueva zona
-  btnAgregarZona?.addEventListener('click', () => {
-    const nuevaZona = {
-      id: `zona_${Date.now()}`,
-      distrito: "Nuevo Distrito",
-      tiempoMin: 15,
-      tiempoMax: 25,
-      unidad: "min",
-      tag: "Ruta Directa",
+  btnAgregarSede?.addEventListener('click', () => {
+    const nuevaSede = {
+      id: `sede_${Date.now()}`,
+      nombre: "Nueva Sede / Modalidad",
+      modalidad: "Presencial",
+      direccion: "",
+      referencia: "",
+      mapsUrl: "",
       activo: true
     };
-    currentZonas.push(nuevaZona);
-    renderZonas();
+    currentSedes.push(nuevaSede);
+    renderSedes();
     autoGuardarBorrador();
-
-    // Enfocar el input de la nueva zona
-    setTimeout(() => {
-      const inputs = ngZonasContainer?.querySelectorAll('.input-zona-distrito');
-      if (inputs && inputs.length > 0) {
-        inputs[inputs.length - 1].focus();
-        inputs[inputs.length - 1].select();
-      }
-    }, 50);
   });
 
-  // 6. Carga de Datos en el Formulario
+  // 8. Carga de Datos en los Inputs
   function cargarFormulario(cfg) {
     if (!cfg) return;
 
+    // Identidad
     if (inputNombre) inputNombre.value = cfg.identidad?.nombre || '';
     if (inputNombreCorto) inputNombreCorto.value = cfg.identidad?.nombreCorto || '';
-    if (inputRazonSocial) inputRazonSocial.value = cfg.identidad?.razonSocial || '';
-    if (inputRuc) inputRuc.value = cfg.identidad?.ruc || '';
-    if (inputOsinergmin) inputOsinergmin.value = cfg.identidad?.registroOsinergmin || '';
-    if (inputMarcaRespaldo) inputMarcaRespaldo.value = cfg.identidad?.marcaRespaldo || '';
+    if (inputEspecialista) inputEspecialista.value = cfg.identidad?.especialista || '';
+    if (inputColegiatura) inputColegiatura.value = cfg.identidad?.colegiatura || '';
+    if (inputTitulo) inputTitulo.value = cfg.identidad?.titulo || '';
+    if (inputGrado) inputGrado.value = cfg.identidad?.grado || '';
+    if (inputEnfoques) inputEnfoques.value = cfg.identidad?.enfoques || '';
+    if (inputBio) inputBio.value = cfg.identidad?.bio || '';
 
     const fechaLanz = cfg.identidad?.lanzamientoFecha || '';
     if (inputLanzamiento) inputLanzamiento.value = fechaLanz;
@@ -399,41 +364,42 @@ export function inicializarNegocio() {
 
     if (inputLogo) inputLogo.value = cfg.identidad?.logo || '';
     if (inputImagenSede) inputImagenSede.value = cfg.identidad?.imagenSede || '';
-    if (imgLogoPreview) imgLogoPreview.src = cfg.identidad?.logo || '';
-    if (imgHeroPreview) imgHeroPreview.src = cfg.identidad?.imagenSede || '';
+    if (imgLogoPreview) imgLogoPreview.src = cfg.identidad?.logo || '/imgwii/logo.webp';
+    if (imgHeroPreview) imgHeroPreview.src = cfg.identidad?.imagenSede || '/imgwii/hero/psicologa-sofia-reynaga.webp';
 
     // Contacto
     if (inputTelefono) inputTelefono.value = cfg.contacto?.telefono || '';
-    if (inputTelefonoFijo) inputTelefonoFijo.value = cfg.contacto?.telefonoFijo || '';
     if (inputWhatsapp) inputWhatsapp.value = cfg.contacto?.whatsapp || '';
     if (inputEmail) inputEmail.value = cfg.contacto?.email || '';
-
-    // Mensaje de WhatsApp
-    if (inputWhatsappMensaje) {
-      inputWhatsappMensaje.value = cfg.contacto?.whatsappMensaje || '';
-    }
-
+    if (inputWhatsappMensaje) inputWhatsappMensaje.value = cfg.contacto?.whatsappMensaje || '';
     if (inputHorario) inputHorario.value = cfg.contacto?.horario || '';
     if (inputHorarioEn) inputHorarioEn.value = cfg.contacto?.horarioEn || '';
 
     actualizarHintTelefono();
     actualizarHintWhatsapp();
 
-    // Ubicación
+    // Ubicación Principal
     if (inputDireccion) inputDireccion.value = cfg.ubicacion?.direccion || '';
     if (inputDistrito) inputDistrito.value = cfg.ubicacion?.distrito || '';
     if (inputCiudad) inputCiudad.value = cfg.ubicacion?.ciudad || '';
     if (inputMapsUrl) inputMapsUrl.value = cfg.ubicacion?.mapsUrl || '';
-    if (inputLat) inputLat.value = cfg.ubicacion?.coordenadas?.lat || '';
-    if (inputLng) inputLng.value = cfg.ubicacion?.coordenadas?.lng || '';
+    if (inputLat) inputLat.value = cfg.ubicacion?.coordenadas?.lat ?? '';
+    if (inputLng) inputLng.value = cfg.ubicacion?.coordenadas?.lng ?? '';
+
+    // Sedes
+    currentSedes = Array.isArray(cfg.sedes) ? JSON.parse(JSON.stringify(cfg.sedes)) : [];
+    renderSedes();
 
     // Métricas y Redes
-    if (inputMetricaClientes) inputMetricaClientes.value = cfg.metricas?.clientes || '';
-    if (inputMetricaBalanza) inputMetricaBalanza.value = cfg.metricas?.balanza || '';
-    if (inputMetricaDias) inputMetricaDias.value = cfg.metricas?.dias || '';
+    if (inputMetricaPacientes) inputMetricaPacientes.value = cfg.metricas?.pacientes || '';
+    if (inputMetricaColegiatura) inputMetricaColegiatura.value = cfg.metricas?.colegiaturaNumero || '';
+    if (inputMetricaConfidencialidad) inputMetricaConfidencialidad.value = cfg.metricas?.confidencialidad || '';
+    if (inputMetricaSatisfaccion) inputMetricaSatisfaccion.value = cfg.metricas?.satisfaccion || '';
+
     if (inputRedFacebook) inputRedFacebook.value = cfg.redes?.facebook || '';
     if (inputRedInstagram) inputRedInstagram.value = cfg.redes?.instagram || '';
     if (inputRedTiktok) inputRedTiktok.value = cfg.redes?.tiktok || '';
+    if (inputRedLinkedin) inputRedLinkedin.value = cfg.redes?.linkedin || '';
 
     // SEO Dinámico
     if (inputSeoTituloEs) inputSeoTituloEs.value = cfg.seo?.titulo?.es || '';
@@ -448,21 +414,20 @@ export function inicializarNegocio() {
       const kw = cfg.seo?.keywords?.en;
       inputSeoKeywordsEn.value = Array.isArray(kw) ? kw.join(', ') : (kw || '');
     }
-
-    currentZonas = Array.isArray(cfg.zonas) ? JSON.parse(JSON.stringify(cfg.zonas)) : [];
-    renderZonas();
   }
 
-  // 7. Extraer Datos del Formulario
+  // 9. Extraer Datos del Formulario
   function recolectarDatosFormulario() {
     return {
       identidad: {
         nombre: inputNombre?.value?.trim() || "",
         nombreCorto: inputNombreCorto?.value?.trim() || "",
-        razonSocial: inputRazonSocial?.value?.trim() || "",
-        ruc: inputRuc?.value?.trim() || "",
-        registroOsinergmin: inputOsinergmin?.value?.trim() || "",
-        marcaRespaldo: inputMarcaRespaldo?.value?.trim() || "",
+        especialista: inputEspecialista?.value?.trim() || "",
+        colegiatura: inputColegiatura?.value?.trim() || "",
+        titulo: inputTitulo?.value?.trim() || "",
+        grado: inputGrado?.value?.trim() || "",
+        enfoques: inputEnfoques?.value?.trim() || "",
+        bio: inputBio?.value?.trim() || "",
         lanzamientoFecha: inputLanzamiento?.value || "",
         logo: inputLogo?.value?.trim() || "",
         imagenSede: inputImagenSede?.value?.trim() || ""
@@ -474,7 +439,6 @@ export function inicializarNegocio() {
           const info = normalizarTelefonoPeru(raw);
           return info.esCelular9 ? info.visible : raw;
         })(),
-        telefonoFijo: inputTelefonoFijo?.value?.trim() || "",
         telefonoLimpio: (() => {
           const raw = inputTelefono?.value?.trim() || "";
           if (!raw) return "";
@@ -496,23 +460,26 @@ export function inicializarNegocio() {
         direccion: inputDireccion?.value?.trim() || "",
         distrito: inputDistrito?.value?.trim() || "",
         ciudad: inputCiudad?.value?.trim() || "",
+        pais: "PE",
         mapsUrl: inputMapsUrl?.value?.trim() || "",
         coordenadas: {
-          lat: parseFloat(inputLat?.value) || 0,
-          lng: parseFloat(inputLng?.value) || 0
+          lat: parseFloat(inputLat?.value) || -12.1245,
+          lng: parseFloat(inputLng?.value) || -77.0289
         }
       },
-      zonas: currentZonas,
+      sedes: currentSedes,
       metricas: {
-        clientes: inputMetricaClientes?.value?.trim() || "",
-        balanza: inputMetricaBalanza?.value?.trim() || "",
-        years: calcularAnosTrayectoria(inputLanzamiento?.value),
-        dias: inputMetricaDias?.value?.trim() || ""
+        pacientes: inputMetricaPacientes?.value?.trim() || "450+",
+        colegiaturaNumero: inputMetricaColegiatura?.value?.trim() || "49425",
+        confidencialidad: inputMetricaConfidencialidad?.value?.trim() || "100%",
+        satisfaccion: inputMetricaSatisfaccion?.value?.trim() || "98%",
+        years: calcularAnosTrayectoria(inputLanzamiento?.value)
       },
       redes: {
         facebook: inputRedFacebook?.value?.trim() || "",
         instagram: inputRedInstagram?.value?.trim() || "",
-        tiktok: inputRedTiktok?.value?.trim() || ""
+        tiktok: inputRedTiktok?.value?.trim() || "",
+        linkedin: inputRedLinkedin?.value?.trim() || ""
       },
       seo: {
         titulo: {
@@ -531,7 +498,7 @@ export function inicializarNegocio() {
     };
   }
 
-  // 8. Auto-Guardado de Borrador Reactivo (Debounce 500ms)
+  // 10. Auto-Guardado de Borrador Reactivo (Debounce 500ms)
   function autoGuardarBorrador() {
     clearTimeout(draftTimer);
     draftTimer = setTimeout(() => {
@@ -540,12 +507,32 @@ export function inicializarNegocio() {
     }, 500);
   }
 
-  // Escuchar cambios en todos los inputs del panel para auto-borrador
   panelNegocio?.querySelectorAll('input, select, textarea').forEach(el => {
     el.addEventListener('input', autoGuardarBorrador);
   });
 
-  // 9. Guardar Cambios Centralizado con wiSpin y Notificacion
+  // 11. Botón "Cargar Semilla": Puente portable frontend -> base de datos
+  btnCargarSemilla?.addEventListener('click', async () => {
+    const semilla = obtenerSemillaLocal();
+    if (!semilla) {
+      Notificacion('No se encontró archivo semilla.json en este proyecto', 'warning', 3000);
+      return;
+    }
+
+    const conf = await wiConfirmar('¿Deseas poblar el formulario con la semilla local (semilla.json)? Luego podrás revisar los campos y hacer clic en "Guardar Cambios" para registrarlos en Firestore.', {
+      titulo: 'Cargar Semilla Inicial',
+      tipo: 'primary',
+      siTexto: 'Cargar Semilla'
+    });
+
+    if (conf) {
+      cargarFormulario(semilla);
+      autoGuardarBorrador();
+      Notificacion('✓ Semilla cargada con éxito. Revisa y pulsa "Guardar Cambios" para sincronizar a Firestore.', 'success', 4500);
+    }
+  });
+
+  // 12. Guardar Cambios Centralizado con wiSpin y Notificacion
   function guardarCambiosNegocio() {
     if (isSaving) return;
     isSaving = true;
@@ -558,17 +545,17 @@ export function inicializarNegocio() {
 
     setTimeout(() => {
       if (btnGuardarNegocio) wiSpin(btnGuardarNegocio, false);
-      Notificacion('Ficha guardada con éxito', 'success', 2500);
+      Notificacion('Ficha guardada y sincronizada con Firestore', 'success', 2500);
       isSaving = false;
 
-      // Disparar re-cocinado en Cloudflare con debounce inteligente
+      // Disparar re-cocinado en Cloudflare si aplica
       solicitarActualizacionWeb({ motivo: 'negocio' });
     }, 400);
   }
 
   btnGuardarNegocio?.addEventListener('click', guardarCambiosNegocio);
 
-  // 10. Atajo de teclado Ctrl + S en todo el módulo
+  // 13. Atajo de teclado Ctrl + S en todo el módulo
   panelNegocio?.addEventListener('keydown', (e) => {
     if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
       e.preventDefault();
@@ -581,7 +568,7 @@ export function inicializarNegocio() {
     if (panelNegocio?.classList.contains('active')) guardarCambiosNegocio();
   });
 
-  // 11. Inicialización y Recuperación de Borrador
+  // 14. Inicialización
   const datosIniciales = obtenerDatosNegocio();
   const borrador = getls(DRAFT_KEY);
 
@@ -592,7 +579,7 @@ export function inicializarNegocio() {
     cargarFormulario(datosIniciales);
   }
 
-  // Intentar sincronizar datos frescos en background desde Firestore si existe conexión
+  // Sincronización fresca en background desde Firestore si existe conexión
   sincronizarDesdeFirestore().then(remoto => {
     if (remoto && !borrador) {
       cargarFormulario(remoto);

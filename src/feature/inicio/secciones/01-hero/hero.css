@@ -1,14 +1,14 @@
 /* ==========================================================================
-   01-HERO COMPONENT STYLES - SOLGAS SURQUILLO (GASWII)
-   Arquitectura Modular: 100% Cero CSS Inline - Estilo Workwii Ultra-Clean
+   01-HERO COMPONENT STYLES - CONSULTORIO PSICOLÓGICO AMÉRICA
+   Arquitectura Modular: 100% Cero CSS Inline - Estilo Sereno, Cálido y Humano
    ========================================================================== */
 
 #hero, .hero-section {
-  min-height: 90vh;
+  min-height: 88vh;
   display: flex;
   align-items: center;
-  padding: 4vh 0;
-  background: var(--bg-surface);
+  padding: 5vh 0;
+  background: var(--bg-surface, #ffffff);
   position: relative;
   box-sizing: border-box;
 }
@@ -20,7 +20,7 @@
 .hero-layout {
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 3.5vw;
+  gap: 4vw;
   align-items: center;
 }
 
@@ -31,19 +31,17 @@
   text-align: left;
 }
 
-/* 1. Grupo Superior: Insignia Oficial y Ubicación Google Maps */
+/* 1. Badge Oficial de Colegiatura */
 .hero-meta-group {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.8vh;
-  margin-bottom: 1.4vh;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2vh;
 }
 
 .hero-saludo {
   display: inline-flex;
   align-items: center;
-  margin-bottom: 0;
   animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -51,211 +49,118 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.4rem 0.95rem;
+  padding: 0.5rem 1.1rem;
   border-radius: 999px;
-  font-size: clamp(0.72rem, 0.78vw, 0.84rem);
+  background: var(--brand-soft, #e5f4fa);
+  color: var(--brand-primary, #104356);
+  border: 1.5px solid rgba(16, 67, 86, 0.2);
+  font-size: clamp(0.74rem, 0.8vw, 0.86rem);
   font-weight: 700;
-  letter-spacing: 0.04em;
-  margin-bottom: 0;
+  letter-spacing: 0.03em;
 }
 
-/* 2. Línea Maps Sede Central */
-.hero-maps-line {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(17px, 1.45vw, 24px);
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  color: var(--brand-primary);
-  text-decoration: none;
-  margin-bottom: 0;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.15s backwards;
-}
-
-.hero-maps-line:hover {
-  color: var(--brand-primary-hover);
-  transform: translateX(5px);
-}
-
-.hero-maps-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.95em;
-}
-
-.hero-maps-text {
-  border-bottom: 2px solid transparent;
-  transition: border-color 0.25s ease;
-}
-
-.hero-maps-line:hover .hero-maps-text {
-  border-bottom-color: var(--brand-orange);
-}
-
-.hero-maps-arrow {
-  font-size: 0.62em;
-  opacity: 0.7;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-}
-
-.hero-maps-line:hover .hero-maps-arrow {
-  opacity: 1;
-  transform: translate(3px, -3px);
-}
-
-/* 3. Pregunta Titular Principal */
+/* 2. Titular Principal Cálido y Humano */
 .hero-main-heading {
-  font-size: clamp(23px, 2.3vw, 36px);
+  font-size: clamp(26px, 2.7vw, 42px);
   font-family: 'Outfit', sans-serif;
   font-weight: 850;
-  line-height: 1.16;
+  line-height: 1.18;
   letter-spacing: -0.025em;
-  margin-bottom: 14px;
-  color: var(--text-bright);
-  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.3s backwards;
+  margin-bottom: 18px;
+  color: var(--text-bright, #071923);
+  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
 }
 
 .hero-title-highlight {
-  background: linear-gradient(135deg, var(--brand-orange) 0%, #ff9900 100%);
+  background: linear-gradient(135deg, #104356 0%, #0284c7 50%, #38bdf8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: inline-block;
+}
+
+:root[data-theme="futuro"] .hero-title-highlight,
+:root[data-theme="dark"] .hero-title-highlight {
+  background: linear-gradient(135deg, #7dd3fc 0%, #38bdf8 55%, #ffffff 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* 4. Subtítulo Explicativo */
+/* 3. Subtítulo Explicativo */
 .hero-main-sub {
-  font-size: clamp(0.9rem, 0.98vw, 1.08rem);
-  color: var(--text-muted);
-  line-height: 1.62;
-  margin-bottom: 2.6vh;
-  max-width: 550px;
-  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.45s backwards;
-}
-
-/* Selector Dinámico de Distrito */
-.hero-district-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-card);
-  border-left: 4px solid var(--brand-orange);
-  border-radius: 1.2vh;
-  padding: 1.8vh 1.6vw;
+  font-size: clamp(0.95rem, 1.05vw, 1.15rem);
+  color: var(--text-muted, #486576);
+  line-height: 1.65;
   margin-bottom: 2.8vh;
-  box-shadow: var(--shadow-card);
-  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.6s backwards;
+  max-width: 580px;
+  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.35s backwards;
 }
 
-.hero-district-title {
-  font-size: clamp(0.78rem, 0.85vw, 0.95rem);
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--brand-orange);
-  margin-bottom: 1.2vh;
+/* 4. Pills de Pilares de Confianza Clínica */
+.hero-features-pills {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.hero-district-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.8vw;
-}
-
-.hero-district-btn {
-  background: var(--bg-surface-elevated);
-  border: 1px solid var(--border-card);
-  border-radius: 0.8vh;
-  padding: 1vh 0.6vw;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.2rem;
-}
-
-.hero-district-btn:hover, .hero-district-btn.active {
-  background: var(--bg-card);
-  border-color: var(--brand-orange);
-  box-shadow: 0 0.5vh 1.5vh var(--brand-glow-orange);
-  transform: translateY(-0.2vh);
-}
-
-.hero-district-btn.active {
-  border-width: 2px;
-}
-
-.hero-district-name {
-  font-weight: 700;
-  font-size: clamp(0.8rem, 0.85vw, 0.95rem);
-  color: var(--text-bright);
-}
-
-.hero-district-time {
-  font-size: clamp(0.68rem, 0.72vw, 0.8rem);
-  color: var(--brand-orange);
-  font-weight: 600;
-}
-
-.hero-district-footer {
-  margin-top: 1.4vh;
-  font-size: clamp(0.75rem, 0.82vw, 0.9rem);
-  color: var(--text-muted);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   flex-wrap: wrap;
   gap: 0.8vw;
+  margin-bottom: 3.2vh;
+  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.5s backwards;
 }
 
-/* CTAs Principales */
+.hero-pill-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 0.95rem;
+  border-radius: 999px;
+  background: var(--bg-surface-elevated, #eaf3f8);
+  border: 1px solid var(--border-card, #dceaf2);
+  color: var(--text-main, #0f2735);
+  font-size: clamp(0.76rem, 0.82vw, 0.88rem);
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(16, 67, 86, 0.04);
+}
+
+.hero-pill-item i {
+  color: var(--brand-sky, #0284c7);
+  font-size: 0.9em;
+}
+
+/* 5. CTAs Principales (Mismo tamaño, concisos y equilibrados) */
 .hero-ctas-group {
   display: flex;
-  gap: 1.2vw;
+  gap: 1.2rem;
   flex-wrap: wrap;
-  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.75s backwards;
+  width: 100%;
+  max-width: 520px;
+  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.65s backwards;
 }
 
 .hero-btn-cta {
-  flex: 1 1 230px;
-  padding: 1.3vh 1.8vw;
+  flex: 1 1 210px;
+  min-height: 52px;
+  padding: 0.85rem 1.4rem;
   display: inline-flex;
   align-items: center;
-  gap: 0.9rem;
+  justify-content: center;
+  gap: 0.7rem;
   border-radius: 1vh;
   cursor: pointer;
   text-decoration: none;
-  border: none;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(0.92rem, 0.98vw, 1.05rem);
+  font-weight: 700;
+  box-sizing: border-box;
+  text-align: center;
+  white-space: nowrap;
+  transition: all 0.25s ease;
 }
 
-.hero-btn-text {
-  text-align: left;
-  line-height: 1.25;
+.hero-btn-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
 }
 
-.hero-btn-sub {
-  display: block;
-  font-size: clamp(0.68rem, 0.72vw, 0.78rem);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.03em;
-  opacity: 0.92;
-}
-
-.hero-btn-main {
-  display: block;
-  font-size: clamp(0.95rem, 1.05vw, 1.18rem);
-  font-weight: 800;
-  font-family: 'Outfit', sans-serif;
-}
-
-/* Grilla de Métricas de Trayectoria */
+/* 6. Grilla de Métricas de Trayectoria Clínica */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -263,57 +168,99 @@
 }
 
 .hero-stats-box {
+  width: 100%;
+  max-width: 560px;
   margin-top: 3.5vh;
   padding-top: 2.5vh;
-  border-top: 1px solid var(--border-card);
-  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.9s backwards;
+  border-top: 1px solid var(--border-card, #dceaf2);
+  animation: heroSlideIn 1.1s cubic-bezier(0.16, 1, 0.3, 1) 0.8s backwards;
 }
 
 .hero-stat-val {
-  font-size: clamp(1.4rem, 1.8vw, 2.2rem);
+  font-size: clamp(1.3rem, 1.7vw, 2rem);
   font-weight: 800;
   font-family: 'Outfit', sans-serif;
   line-height: 1.1;
+  color: var(--brand-primary, #104356);
+}
+
+:root[data-theme="futuro"] .hero-stat-val,
+:root[data-theme="dark"] .hero-stat-val {
+  color: var(--brand-sky, #38bdf8);
 }
 
 .hero-stat-label {
   font-size: clamp(0.7rem, 0.76vw, 0.82rem);
-  color: var(--text-muted);
+  color: var(--text-muted, #486576);
   font-weight: 600;
   margin-top: 0.3vh;
 }
 
-/* Columna Derecha Hero (Fotografía y Garantía) */
+/* 7. Columna Derecha Hero (Fotografía y Garantía) */
 .hero-visual {
   position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
-  animation: heroSlideInRight 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.95s backwards, heroFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.95s backwards;
+  animation: heroSlideInRight 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.85s backwards, heroFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.85s backwards;
 }
 
 .hero-right-card {
-  background: var(--bg-card);
-  border: 2px solid var(--border-accent);
-  border-radius: 1.5vh;
+  background: var(--bg-card, #ffffff);
+  border: 2px solid var(--border-accent, rgba(16, 67, 86, 0.25));
+  border-radius: 1.8vh;
   padding: 1.8vh 1.4vw;
-  box-shadow: var(--shadow-card);
+  box-shadow: 0 15px 40px rgba(16, 67, 86, 0.12);
   width: 100%;
 }
 
 .hero-img-box {
-  border-radius: 1.2vh;
+  border-radius: 1.4vh;
   overflow: hidden;
   position: relative;
-  background: #080d1a;
+  background: #081620;
 }
 
 .hero-img {
   width: 100%;
   height: auto;
+  aspect-ratio: 1 / 1;
   object-fit: cover;
   display: block;
+  transition: transform 0.4s ease;
+}
+
+.hero-right-card:hover .hero-img {
+  transform: scale(1.02);
+}
+
+.hero-specialist-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 1.6vh 1.4vw;
+  background: linear-gradient(0deg, rgba(7, 25, 35, 0.92) 0%, rgba(7, 25, 35, 0.4) 70%, transparent 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.hero-specialist-badge {
+  color: #ffffff;
+  font-weight: 800;
+  font-size: clamp(0.92rem, 1vw, 1.12rem);
+  font-family: 'Outfit', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.hero-specialist-sub {
+  color: #bae6fd;
+  font-size: clamp(0.72rem, 0.78vw, 0.86rem);
+  font-weight: 600;
 }
 
 .hero-guarantee-box {
@@ -322,9 +269,9 @@
   align-items: center;
   margin-top: 1.8vh;
   padding: 1.2vh 1.2vw;
-  background: var(--bg-surface-elevated);
+  background: var(--bg-surface-elevated, #eaf3f8);
   border-radius: 1vh;
-  border: 1px solid var(--border-card);
+  border: 1px solid var(--border-card, #dceaf2);
 }
 
 .hero-guarantee-left {
@@ -334,61 +281,70 @@
 }
 
 .hero-guarantee-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 8px;
-  background: var(--brand-orange);
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #104356 0%, #1e5e75 50%, #38bdf8 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   color: #ffffff;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
 }
 
 .hero-guarantee-title {
-  font-size: clamp(0.82rem, 0.88vw, 0.95rem);
+  font-size: clamp(0.84rem, 0.9vw, 0.98rem);
   font-weight: 700;
-  color: var(--text-bright);
+  color: var(--text-bright, #071923);
 }
 
 .hero-guarantee-sub {
-  font-size: clamp(0.68rem, 0.72vw, 0.8rem);
-  color: var(--text-muted);
+  font-size: clamp(0.7rem, 0.74vw, 0.82rem);
+  color: var(--text-muted, #486576);
 }
 
 .hero-guarantee-price {
   text-align: right;
+  flex-shrink: 0;
 }
 
 .hero-price-sub {
-  font-size: clamp(0.68rem, 0.72vw, 0.78rem);
-  color: var(--text-muted);
+  font-size: clamp(0.65rem, 0.7vw, 0.76rem);
+  color: var(--text-muted, #486576);
+  font-weight: 600;
 }
 
 .hero-price-val {
-  font-size: clamp(1.2rem, 1.5vw, 1.8rem);
-  font-weight: 900;
-  color: var(--brand-orange);
+  font-size: clamp(1.15rem, 1.35vw, 1.55rem);
+  font-weight: 850;
+  color: var(--brand-primary, #104356);
   font-family: 'Outfit', sans-serif;
+  line-height: 1.1;
 }
 
-/* Keyframes Nativos */
+:root[data-theme="futuro"] .hero-price-val,
+:root[data-theme="dark"] .hero-price-val {
+  color: var(--brand-sky, #38bdf8);
+}
+
+/* Animaciones */
 @keyframes heroSlideIn {
   from {
     opacity: 0;
-    transform: translateX(-30px);
+    transform: translateY(18px);
   }
   to {
     opacity: 1;
-    transform: translateX(0);
+    transform: translateY(0);
   }
 }
 
 @keyframes heroSlideInRight {
   from {
     opacity: 0;
-    transform: translateX(30px);
+    transform: translateX(25px);
   }
   to {
     opacity: 1;
@@ -397,132 +353,57 @@
 }
 
 @keyframes heroFadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* ==========================================================================
-   RESPONSIVE MEDIA QUERIES
-   ========================================================================== */
-@media (min-width: 1025px) {
+/* Responsividad para Smartphones y Tablets */
+@media (max-width: 960px) {
   .hero-layout {
-    grid-template-columns: 1.15fr 0.85fr !important;
-    gap: 3.5vw !important;
+    grid-template-columns: 1fr;
+    gap: 4vh;
   }
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 1.5vw !important;
-  }
-}
 
-@media (min-width: 768px) and (max-width: 1024px) {
-  .hero-layout {
-    grid-template-columns: 1fr !important;
-    gap: 4vh !important;
+  .hero-visual {
+    order: -1;
+    max-width: 480px;
+    margin: 0 auto;
   }
-  .stats-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
-  }
-}
 
-@media (max-width: 767px) {
-  .hero-layout {
-    grid-template-columns: 1fr !important;
-    gap: 4vh !important;
-    width: 100% !important;
-    box-sizing: border-box !important;
+  .hero-txt {
+    align-items: center;
+    text-align: center;
   }
-  .hero-district-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1vh 1.5vw !important;
+
+  .hero-meta-group {
+    align-self: center;
   }
+
+  .hero-features-pills {
+    justify-content: center;
+  }
+
   .hero-ctas-group {
-    flex-direction: column !important;
-    width: 100% !important;
-    gap: 1.5vh !important;
+    justify-content: center;
   }
+
+  .hero-stats-box {
+    margin: 3vh auto 0 auto;
+  }
+}
+
+@media (max-width: 540px) {
+  .hero-ctas-group {
+    flex-direction: column;
+  }
+
   .hero-btn-cta {
-    width: 100% !important;
-    flex: 1 1 100% !important;
+    width: 100%;
+    justify-content: center;
   }
+
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 2vh !important;
-    width: 100% !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2vh 3vw;
   }
-}
-
-@media (max-width: 480px) {
-  .hero-district-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.8vh 1vw !important;
-  }
-  .hero-district-btn {
-    padding: 1vh 0.8vw !important;
-  }
-  .hero-district-name {
-    font-size: 0.78rem !important;
-  }
-  .hero-district-time {
-    font-size: 0.68rem !important;
-  }
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1.4vh 2vw !important;
-  }
-  .hero-stat-val {
-    font-size: 1.4rem !important;
-  }
-  .hero-stat-label {
-    font-size: 0.7rem !important;
-  }
-  .hero-guarantee-box {
-    flex-direction: column !important;
-    align-items: flex-start !important;
-  }
-  .hero-guarantee-price {
-    text-align: left !important;
-    width: 100% !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: baseline !important;
-    border-top: 1px solid var(--border-card) !important;
-    padding-top: 0.8vh !important;
-  }
-}
-
-.hero-specialist-overlay {
-  position: absolute;
-  bottom: 1.2vh;
-  left: 1.2vw;
-  right: 1.2vw;
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  padding: 0.8vh 1.2vw;
-  border-radius: 1vh;
-  border: 1px solid var(--glass-brd);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-}
-
-.hero-specialist-badge {
-  font-weight: 700;
-  font-size: clamp(0.78rem, 0.85vw, 0.95rem);
-  color: var(--brand-primary);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.hero-specialist-sub {
-  font-size: clamp(0.68rem, 0.75vw, 0.82rem);
-  color: var(--tx3);
-  font-weight: 600;
 }

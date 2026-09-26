@@ -7,82 +7,86 @@
 /* 1. VARIABLES DE TEMA DUAL: FUTURO (DARK) / LUZ (LIGHT) */
 /* 1. VARIABLES DE TEMA DUAL: FUTURO (DARK) / LUZ (LIGHT) - SERENE EMPATHY */
 :root, :root[data-theme="futuro"] {
-  --bg-body: #0a1310;
-  --bg-surface: #101c18;
-  --bg-surface-elevated: #172722;
-  --bg-card: rgba(16, 28, 24, 0.94);
-  --bg-card-hover: rgba(23, 39, 34, 0.98);
-  --bg-subtle: rgba(255, 255, 255, 0.04);
+  --bg-body: #07131b;
+  --bg-surface: #0b1c26;
+  --bg-surface-elevated: #112836;
+  --bg-card: rgba(11, 28, 38, 0.94);
+  --bg-card-hover: rgba(17, 40, 54, 0.98);
+  --bg-subtle: rgba(56, 189, 248, 0.05);
   --border-card: rgba(255, 255, 255, 0.08);
-  --border-accent: rgba(78, 130, 110, 0.5);
-  --text-main: #f0f6f3;
-  --text-muted: #8ea89e;
+  --border-accent: rgba(56, 189, 248, 0.45);
+  --text-main: #f0f7fb;
+  --text-muted: #8caec1;
   --text-bright: #ffffff;
   
-  --brand-primary: #4e826e;
-  --brand-primary-hover: #5fa088;
-  --brand-soft: rgba(78, 130, 110, 0.16);
-  --brand-accent: #c46850;
+  --brand-primary: #38bdf8;
+  --brand-primary-hover: #7dd3fc;
+  --brand-soft: rgba(56, 189, 248, 0.16);
+  --brand-accent: #f97316;
   --brand-orange: var(--brand-primary);
   --brand-orange-hover: var(--brand-primary-hover);
-  --brand-blue: #327591;
-  --brand-blue-hover: #408cae;
-  --brand-glow-primary: rgba(78, 130, 110, 0.35);
+  --brand-blue: #0284c7;
+  --brand-blue-hover: #38bdf8;
+  --brand-glow-primary: rgba(56, 189, 248, 0.35);
   --brand-glow-orange: var(--brand-glow-primary);
-  --brand-glow-blue: rgba(50, 117, 145, 0.35);
+  --brand-glow-blue: rgba(2, 132, 199, 0.35);
   
   --primary: var(--brand-primary);
-  --accent-cyan: #3cd7bf;
-  --accent-gold: #e6b800;
-  --accent-emerald: #20c396;
+  --accent-cyan: #38bdf8;
+  --accent-gold: #fbbf24;
+  --accent-emerald: #22c55e;
   --wa-green: #25d366;
   --wa-hover: #1ebd5b;
   
-  --header-bg: rgba(10, 19, 16, 0.96);
-  --topbar-bg: linear-gradient(90deg, #101c18, #1f332c, #101c18);
+  --gradiente-cielo-marino: linear-gradient(135deg, #0b1c26 0%, #112836 50%, #38bdf8 100%);
+  --header-bg: rgba(7, 19, 27, 0.96);
+  --topbar-bg: linear-gradient(90deg, #0b1c26, #112836, #0b1c26);
   --shadow-card: 0 1vh 3vh rgba(0, 0, 0, 0.45);
   --shadow-hover: 0 1.8vh 4.5vh rgba(0, 0, 0, 0.65);
-  --modal-bg: #101c18;
+  --modal-bg: #0b1c26;
 }
 
 :root[data-theme="luz"],
 :root[data-theme="light"],
 :root[data-theme="serenidad"] {
-  --bg-body: #f8faf9;
+  --bg-body: #f4f8fb;
   --bg-surface: #ffffff;
-  --bg-surface-elevated: #f0f5f2;
+  --bg-surface-elevated: #eaf3f8;
   --bg-card: #ffffff;
-  --bg-card-hover: #f8fcf9;
-  --bg-subtle: rgba(50, 83, 70, 0.04);
-  --border-card: rgba(50, 83, 70, 0.09);
-  --border-accent: rgba(50, 83, 70, 0.4);
-  --text-main: #121c18;
-  --text-muted: #52665e;
-  --text-bright: #0c1511;
+  --bg-card-hover: #f7fbfe;
+  --bg-subtle: rgba(16, 67, 86, 0.04);
+  --border-card: rgba(16, 67, 86, 0.10);
+  --border-accent: rgba(16, 67, 86, 0.35);
+  --text-main: #0f2735;
+  --text-muted: #486576;
+  --text-bright: #071923;
   
-  --brand-primary: #325346;
-  --brand-primary-hover: #243e34;
-  --brand-soft: #edf5f1;
-  --brand-accent: #8c422e;
+  --brand-primary: #104356;
+  --brand-primary-hover: #0a2d3a;
+  --brand-soft: #e5f4fa;
+  --brand-accent: #c46850;
   --brand-orange: var(--brand-primary);
   --brand-orange-hover: var(--brand-primary-hover);
-  --brand-blue: #23657d;
-  --brand-blue-hover: #184c5f;
-  --brand-glow-primary: rgba(50, 83, 70, 0.20);
+  --brand-blue: #1e5e75;
+  --brand-blue-hover: #154556;
+  --brand-sky: #38bdf8;
+  --brand-sky-hover: #0284c7;
+  --brand-glow-primary: rgba(16, 67, 86, 0.18);
   --brand-glow-orange: var(--brand-glow-primary);
-  --brand-glow-blue: rgba(35, 101, 125, 0.20);
+  --brand-glow-blue: rgba(30, 94, 117, 0.18);
   
   --primary: var(--brand-primary);
-  --accent-cyan: #23657d;
-  --accent-gold: #b87a00;
-  --accent-emerald: #267a57;
+  --accent-cyan: #1e5e75;
+  --accent-gold: #b45309;
+  --accent-emerald: #15803d;
   --wa-green: #16a34a;
   --wa-hover: #15803d;
   
+  --gradiente-cielo-marino: linear-gradient(135deg, #104356 0%, #1e5e75 50%, #38bdf8 100%);
   --header-bg: rgba(255, 255, 255, 0.97);
-  --topbar-bg: linear-gradient(90deg, #325346 0%, #4a6b5d 50%, #325346 100%);
-  --shadow-card: 0 0.8vh 2.5vh rgba(50, 83, 70, 0.06);
-  --shadow-hover: 0 1.5vh 4vh rgba(50, 83, 70, 0.12);
+  --topbar-bg: linear-gradient(90deg, #104356 0%, #1e5e75 50%, #104356 100%);
+  --shadow-card: 0 0.8vh 2.5vh rgba(16, 67, 86, 0.06);
+  --shadow-hover: 0 1.5vh 4vh rgba(16, 67, 86, 0.12);
   --modal-bg: #ffffff;
 }
 
@@ -258,6 +262,48 @@ img {
   background: linear-gradient(135deg, var(--wa-hover) 0%, #166534 100%);
   transform: translateY(-0.25vh);
   box-shadow: 0 1.2vh 3vh rgba(37, 211, 102, 0.45);
+}
+
+.btn-test,
+.btn-orientacion {
+  background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+  color: #0369a1 !important;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+  border-radius: 1vh;
+  padding: 0.85rem 1.4rem;
+  font-size: var(--fz_m2, clamp(0.88rem, 0.95vw, 1.05rem));
+  border: 1.5px solid #7dd3fc;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6vw;
+  box-shadow: 0 0.8vh 2.2vh rgba(56, 189, 248, 0.22);
+  transition: all var(--tr_m, 0.25s ease);
+  text-align: center;
+}
+
+.btn-test:hover,
+.btn-orientacion:hover {
+  background: linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%);
+  color: #0c4a6e !important;
+  border-color: #38bdf8;
+  transform: translateY(-0.25vh);
+  box-shadow: 0 1.2vh 3vh rgba(56, 189, 248, 0.35);
+}
+
+:root[data-theme="futuro"] .btn-test,
+:root[data-theme="dark"] .btn-test {
+  background: linear-gradient(135deg, #112836 0%, #193648 100%);
+  color: #38bdf8 !important;
+  border: 1.5px solid #38bdf8;
+}
+
+:root[data-theme="futuro"] .btn-test:hover,
+:root[data-theme="dark"] .btn-test:hover {
+  background: #193648;
+  color: #7dd3fc !important;
 }
 
 .btn-outline {
@@ -1034,7 +1080,8 @@ img {
   gap: 2.5vw;
 }
 
-.sticky-btn-call {
+.sticky-btn-call,
+.sticky-btn-test {
   flex: 1;
   padding: 1.25vh 1.5vw;
   font-family: var(--ff_P, 'Poppins', sans-serif);
@@ -1043,7 +1090,6 @@ img {
   border-radius: 1vh;
   justify-content: center;
   gap: 0.5rem;
-  box-shadow: 0 0.5vh 1.5vh rgba(2, 132, 199, 0.35);
   letter-spacing: 0.01em;
 }
 

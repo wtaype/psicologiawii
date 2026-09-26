@@ -21,33 +21,34 @@ const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURICom
 
 <style is:global set:html={separadorCss}></style>
 
-<section class="sos-banner-wrapper" style="background: linear-gradient(135deg, var(--brand-primary) 0%, #20352c 100%);">
+<section class="sos-banner-wrapper" style="background: linear-gradient(135deg, #104356 0%, #1e5e75 60%, #0284c7 100%);">
   <div class="pagewii sos-banner-content">
     
     <!-- Bloque Informativo Izquierdo -->
     <div class="sos-info-block">
-      <div class="sos-icon-box" style="background: rgba(255,255,255,0.15); color: #fff;">
-        <i class="fa-solid fa-comments"></i>
+      <div class="sos-icon-box" style="background: rgba(255,255,255,0.18); color: #fff;">
+        <i class="fa-solid fa-heart-pulse"></i>
       </div>
       <div class="sos-text-box">
         <h2 class="sos-title" style="color: #fff;">{t.titulo}</h2>
-        <p class="sos-sub" style="color: rgba(255,255,255,0.9);">
+        <p class="sos-sub" style="color: rgba(255,255,255,0.92);">
           {t.sub_1} <strong>{t.sub_destacado}</strong> {t.sub_2} <span>{telefonoMostrado}</span> {t.sub_3}
         </p>
       </div>
     </div>
 
-    <!-- Bloque de Botones Dual -->
+    <!-- Bloque de Botones Dual: Test y WhatsApp -->
     <div class="sos-actions-block">
-      <a 
-        href={`tel:${telefonoLimpio}`} 
+      <button 
+        type="button" 
+        onclick="window.abrirModalTest && window.abrirModalTest()" 
         class="btn-sos-call"
-        title={t.btn_llamada}
-        style="background: #ffffff; color: var(--brand-primary); font-weight: 700; border-radius: 1vh;"
+        title="Realizar Test de Orientación"
+        style="background: #ffffff; color: #104356; font-weight: 700; border-radius: 1vh; cursor: pointer; border: none;"
       >
-        <i class="fa-solid fa-phone"></i>
-        <span>{t.btn_llamada}</span>
-      </a>
+        <i class="fa-solid fa-clipboard-question"></i>
+        <span>Hacer Test</span>
+      </button>
 
       <a 
         href={wsLink} 

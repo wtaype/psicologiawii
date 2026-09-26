@@ -60,7 +60,7 @@ const { cliente = {} } = Astro.props;
     <!-- Dropdown de Usuario / Cliente Autenticado -->
     <div class="cl-user-dropdown-container">
       <button type="button" class="cl-user-chip-btn" id="btnUserChip" aria-expanded="false" aria-haspopup="true">
-        <div class="cl-avatar-sm" id="topbarAvatarLetter">{cliente.nombre ? cliente.nombre.charAt(0).toUpperCase() : 'G'}</div>
+        <div class="cl-avatar-sm" id="topbarAvatarLetter">{cliente.avatar ? cliente.nombre.charAt(0).toUpperCase() : 'G'}</div>
         <div class="cl-user-meta">
           <span class="cl-user-name" id="topbarUserName">{cliente.nombre || 'Cargando...'}</span>
           <span class="cl-user-badge" id="topbarUserPlan">Cliente VIP</span>

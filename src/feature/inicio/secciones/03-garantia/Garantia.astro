@@ -98,14 +98,15 @@ const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURICom
             <span>{t.btn_ws}</span>
           </a>
 
-          <a 
-            href={`tel:${telefonoLimpio}`} 
-            class="btn-call btn-pesaje-call"
-            title={`${t.btn_llamar_prefijo} ${telefonoMostrado}`}
+          <button 
+            type="button" 
+            onclick="window.abrirModalTest && window.abrirModalTest()" 
+            class="btn-test btn-pesaje-call"
+            title="Realizar Test de Orientación Psicológica"
           >
-            <i class="fa-solid fa-phone"></i> 
-            <span>{t.btn_llamar_prefijo} <span>{telefonoMostrado}</span></span>
-          </a>
+            <i class="fa-solid fa-clipboard-question"></i> 
+            <span>Hacer Test de Orientación</span>
+          </button>
         </div>
 
       </div>

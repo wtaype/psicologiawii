@@ -67,5 +67,7 @@ wiscripts/traducir.mjs
 
 
 src/pages/gaswii*.astro
-
 src/pages/view*.astro
+src/feature/personal/modulos/negocio/semilla*.json
+src/feature/personal/modulos/servicios/semilla*.json
+src/feature/personal/modulos/talleres/semilla*.json

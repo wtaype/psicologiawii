@@ -37,7 +37,7 @@ export const tplLogin = () => {
   const txt = t();
   return `
   <div class="wilg_head">
-    <img src="/imgwii/logo.webp" alt="Solgas Surquillo" class="wilg_brand_logo" onerror="this.src='/favicon.ico'">
+    <img src="/imgwii/logo_full.webp" alt="Solgas Surquillo" class="wilg_brand_logo" onerror="this.src='/favicon.ico'">
     <h2>${txt.bienvenido_de_vuelta}</h2>
     <p>${txt.bienvenido_sub}</p>
   </div>

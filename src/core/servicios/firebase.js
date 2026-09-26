@@ -1,5 +1,5 @@
 // src/core/servicios/firebase.js
-// Instancia Base Singleton de Firebase para Gaswii con App Check Enterprise (JavaScript Puro)
+// Instancia Base Singleton de Firebase para Psicologiawii con App Check Enterprise (JavaScript Puro)
 
 import { initializeApp, getApps } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';

@@ -1,6 +1,6 @@
 /* src/feature/personal/modulos/negocio/negocio.css */
-/* Estilos Profesionales del Módulo Mi Negocio (Solgas Surquillo) */
-/* Cero CSS Inline · 100% Variables de Tema witema · Padding 1vh y Radios 1vh */
+/* Estilos Profesionales del Módulo Ficha de Negocio & Especialista (Psicología América) */
+/* Cero CSS Inline · 100% Variables de Tema witema · Radios 1vh y Fuente Poppins */
 
 .ng-container {
   display: flex;
@@ -58,10 +58,10 @@
 }
 
 .ng-tab-btn.active {
-  background: var(--brand-orange);
+  background: var(--p_v1, #1e5e75);
   color: #ffffff;
   font-weight: 600;
-  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(30, 94, 117, 0.25);
 }
 
 /* 2. Paneles de Pestañas */
@@ -108,7 +108,7 @@
 }
 
 .ng-card-title i {
-  color: var(--brand-orange);
+  color: var(--p_v1, #1e5e75);
 }
 
 .ng-card-desc {
@@ -169,8 +169,8 @@
 
 .ng-input {
   width: 100%;
-  padding: 1.8vh 2vh;
-  background: rgba(0, 0, 0, 0.2);
+  padding: 1.4vh 1.8vh;
+  background: rgba(0, 0, 0, 0.15);
   border: 1px solid var(--border);
   border-radius: 1vh;
   color: var(--ink);
@@ -182,8 +182,8 @@
 
 .ng-input:focus {
   outline: none;
-  border-color: var(--brand-orange);
-  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.15);
+  border-color: var(--p_v1, #1e5e75);
+  box-shadow: 0 0 0 2px rgba(30, 94, 117, 0.2);
 }
 
 .ng-textarea {
@@ -191,13 +191,13 @@
   resize: vertical;
 }
 
-/* 5. Previews de Imágenes (Logo y Sede) */
+/* 5. Previews de Imágenes */
 .ng-media-preview-box {
   display: flex;
   align-items: center;
   gap: 1vh;
   padding: 1vh;
-  background: rgba(0, 0, 0, 0.15);
+  background: rgba(0, 0, 0, 0.1);
   border: 1px dashed var(--border);
   border-radius: 1vh;
   margin-top: 0.5vh;
@@ -213,60 +213,68 @@
 }
 
 .ng-hero-preview {
-  width: 80px;
-  height: 48px;
+  width: 70px;
+  height: 70px;
   object-fit: cover;
   border-radius: 1vh;
   border: 1px solid var(--border);
 }
 
-/* 6. Tabla / Lista Interactiva de Zonas de Cobertura */
-.ng-zonas-header {
+/* 6. Sedes y Modalidades Clínicas */
+.ng-sedes-list {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 1vh;
+  flex-direction: column;
+  gap: 1vh;
 }
 
-.ng-zonas-list {
+.ng-sede-card {
   display: flex;
   flex-direction: column;
   gap: 0.8vh;
-}
-
-.ng-zona-row {
-  display: grid;
-  grid-template-columns: 1fr 90px 90px 80px 1.2fr 60px 40px;
-  align-items: center;
-  gap: 0.8vh;
-  padding: 0.8vh 1vh;
-  background: rgba(0, 0, 0, 0.18);
+  padding: 1vh;
+  background: rgba(0, 0, 0, 0.12);
   border: 1px solid var(--border);
   border-radius: 1vh;
   transition: all 0.2s ease;
 }
 
-.ng-zona-row:hover {
-  border-color: rgba(255, 102, 0, 0.3);
+.ng-sede-card:hover {
+  border-color: var(--p_v1, #1e5e75);
 }
 
-@media (max-width: 900px) {
-  .ng-zona-row {
-    grid-template-columns: 1fr 1fr;
-    gap: 0.8vh;
-  }
-}
-
-.ng-zona-row.inactive {
+.ng-sede-card.inactive {
   opacity: 0.55;
+}
+
+.ng-sede-row-header {
+  display: grid;
+  grid-template-columns: 1fr 140px 50px 36px;
+  align-items: center;
+  gap: 0.8vh;
+}
+
+.ng-sede-row-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  gap: 0.8vh;
+}
+
+@media (max-width: 768px) {
+  .ng-sede-row-header {
+    grid-template-columns: 1fr 100px 40px 32px;
+  }
+  .ng-sede-row-body {
+    grid-template-columns: 1fr;
+  }
 }
 
 .ng-btn-icon-del {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 32px;
+  height: 32px;
   border-radius: 1vh;
   border: none;
   background: transparent;
@@ -328,9 +336,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.6vh;
-  background: rgba(255, 102, 0, 0.12);
-  color: var(--brand-orange);
-  border: 1px solid rgba(255, 102, 0, 0.25);
+  background: rgba(30, 94, 117, 0.15);
+  color: var(--p_v1, #1e5e75);
+  border: 1px solid rgba(30, 94, 117, 0.3);
   padding: 0.4vh 1vh;
   border-radius: 1vh;
   font-size: 11px;
@@ -369,9 +377,9 @@
 }
 
 .ng-btn-maps-action:hover {
-  background: rgba(255, 102, 0, 0.15);
-  border-color: var(--brand-orange);
-  color: var(--brand-orange);
+  background: rgba(30, 94, 117, 0.15);
+  border-color: var(--p_v1, #1e5e75);
+  color: var(--p_v1, #1e5e75);
 }
 
 .ng-btn-maps-test {
@@ -399,7 +407,7 @@
   gap: 0.5vh;
   background: none;
   border: none;
-  color: var(--brand-orange);
+  color: var(--p_v1, #1e5e75);
   font-size: var(--fz_s3, 12px);
   font-family: inherit;
   font-weight: 500;
@@ -410,7 +418,7 @@
 }
 
 .ng-link-btn:hover {
-  background: rgba(255, 102, 0, 0.1);
+  background: rgba(30, 94, 117, 0.1);
   text-decoration: underline;
 }
 
@@ -420,5 +428,3 @@
     align-items: stretch;
   }
 }
-
-

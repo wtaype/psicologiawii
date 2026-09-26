@@ -14,12 +14,8 @@ interface Props {
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
 const t = resolverIdioma({ es, en }, idioma);
 
-const sedes = datosNegocio.sedes || [];
-const primeraSede = sedes[0] || { id: 'miraflores', nombre: 'Sede Miraflores', atencion: 'Sábados' };
 const primerServicio = datosNegocio.servicios[0];
 const precioBase = primerServicio ? primerServicio.precioPEN.toFixed(2) : '85.00';
-const direccionSede = datosNegocio.direccionSede;
-const mapsUrl = datosNegocio.mapsUrl || '#';
 const whatsappLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`;
 ---
 
@@ -29,37 +25,20 @@ const whatsappLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encode
   <div class="pagewii hero-page-container">
     <div class="hero-layout">
       
-      <!-- Columna Izquierda: Necesidad Emocional ➔ Solución Profesional -->
+      <!-- Columna Izquierda: Acompañamiento Emocional Humano ➔ Solución Profesional -->
       <div class="hero-txt">
         
-        <!-- Grupo Superior: Badge Oficial y Ubicación Google Maps -->
+        <!-- Badge Oficial de Registro Profesional -->
         <div class="hero-meta-group">
-          <!-- Item 1: Insignia Oficial C.Ps.P. -->
           <div class="hero-saludo">
             <span class="badge-serenidad hero-badge">
               <i class="fa-solid fa-certificate"></i> 
               <span data-negocio-badge>{datosNegocio.registroColegio}</span>
             </span>
           </div>
-
-          <!-- Item 2: Ubicación Sede Miraflores Google Maps -->
-          <a 
-            href={mapsUrl} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            class="hero-maps-line"
-            data-negocio-maps
-            title={`${t.maps_cta} - ${direccionSede}`}
-          >
-            <span class="hero-maps-icon"><i class="fa-solid fa-location-dot"></i></span>
-            <span class="hero-maps-text">
-              <span>{t.maps_sede_prefijo}</span> <span>{direccionSede}</span>
-            </span>
-            <i class="fa-solid fa-arrow-up-right-from-square hero-maps-arrow"></i>
-          </a>
         </div>
 
-        <!-- Línea 3: Pregunta Titular -->
+        <!-- Titular Principal Empático -->
         <h1 class="hero-main-heading">
           <span>{t.titulo_1}</span><br />
           <span class="hero-title-highlight">
@@ -67,86 +46,68 @@ const whatsappLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encode
           </span>
         </h1>
 
-        <!-- Línea 4: Subtítulo Explicativo -->
+        <!-- Subtítulo Explicativo y Cálido -->
         <p class="hero-main-sub">
           {t.subtitulo}
         </p>
 
-        <!-- Selector Dinámico de Sedes / Modalidades -->
-        <div class="hero-district-card">
-          <div class="hero-district-title">
-            <i class="fa-solid fa-hospital-user"></i> <span>{t.selector_titulo}</span>
-          </div>
-          
-          <div class="hero-district-grid" id="districtSelector">
-            {sedes.map((sede: any, idx: number) => (
-              <button 
-                type="button"
-                class={`hero-district-btn ${idx === 0 ? 'active' : ''}`}
-                data-district={sede.nombre}
-                data-time={sede.atencion}
-              >
-                <div class="hero-district-name">{sede.nombre}</div>
-                <div class="hero-district-time"><i class="fa-solid fa-calendar-check"></i> {sede.atencion}</div>
-              </button>
-            ))}
-          </div>
-
-          <div class="hero-district-footer">
-            <span>
-              <i class="fa-solid fa-shield-heart color-primary"></i> 
-              <span id="distritoActualInfo">
-                <span class="eta-prefix">{t.selector_eta_prefijo}</span> <span>{primeraSede.nombre}</span>: <strong class="eta-time">{primeraSede.atencion}</strong>
-              </span>
-            </span>
-            <span class="color-emerald font-bold">
-              <i class="fa-solid fa-lock"></i> <span>{t.envio_gratis}</span>
-            </span>
-          </div>
+        <!-- Pills de Confianza y Modalidades -->
+        <div class="hero-features-pills">
+          <span class="hero-pill-item">
+            <i class="fa-solid fa-house-medical-circle-check"></i> {idioma === 'en' ? 'In-Person & Online' : 'Presencial & Online'}
+          </span>
+          <span class="hero-pill-item">
+            <i class="fa-solid fa-brain"></i> {idioma === 'en' ? 'Evidence-Based Therapy' : 'Enfoque Basado en Evidencia'}
+          </span>
+          <span class="hero-pill-item">
+            <i class="fa-solid fa-user-shield"></i> {idioma === 'en' ? '100% Confidential' : '100% Confidencial'}
+          </span>
         </div>
 
-        <!-- Botones Principales CTAs -->
+        <!-- Botones Principales CTAs: Agendar y ¿Cómo te sientes? -->
         <div class="hero-ctas-group">
-          <a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="btn-fire hero-btn-cta">
-            <i class="fa-brands fa-whatsapp text-2xl"></i>
-            <div class="hero-btn-text">
-              <span class="hero-btn-sub">{t.btn_modal_sub}</span>
-              <span class="hero-btn-main">{t.btn_modal_main}</span>
-            </div>
+          <!-- CTA 1: Agendar por WhatsApp -->
+          <a href={whatsappLink} target="_blank" rel="noopener noreferrer" class="btn-whatsapp hero-btn-cta">
+            <i class="fa-brands fa-whatsapp hero-btn-icon"></i>
+            <span>{t.btn_wsp_main}</span>
           </a>
 
-          <a href={`tel:${datosNegocio.telefonoLimpio}`} class="btn-call hero-btn-cta" data-negocio-tel-link>
-            <i class="fa-solid fa-phone-volume text-xl"></i>
-            <div class="hero-btn-text">
-              <span class="hero-btn-sub">{t.btn_call_sub}</span>
-              <span class="hero-btn-main" data-negocio-tel-text>{datosNegocio.telefonoMostrado}</span>
-            </div>
-          </a>
+          <!-- CTA 2: ¿Cómo te sientes? -->
+          <button 
+            type="button" 
+            onclick="window.abrirModalTest && window.abrirModalTest()" 
+            class="btn-test hero-btn-cta"
+            id="btnHeroTest"
+            title="¿Cómo te sientes? - Test de Orientación Psicológica Gratuito"
+          >
+            <i class="fa-solid fa-heart-pulse hero-btn-icon"></i>
+            <span>{t.btn_test_main}</span>
+          </button>
         </div>
 
         <!-- Métricas de Trayectoria Clínica -->
         <div class="stats-grid hero-stats-box">
           <div>
-            <div class="hero-stat-val color-primary">+450</div>
+            <div class="hero-stat-val">+450</div>
             <div class="hero-stat-label">{t.stat_clientes}</div>
           </div>
           <div>
-            <div class="hero-stat-val color-emerald">C.Ps.P. 34892</div>
+            <div class="hero-stat-val">34892</div>
             <div class="hero-stat-label">{t.stat_balanza}</div>
           </div>
           <div>
-            <div class="hero-stat-val color-brand-blue">+6 Años</div>
+            <div class="hero-stat-val">+6 Años</div>
             <div class="hero-stat-label">{t.stat_anos}</div>
           </div>
           <div>
-            <div class="hero-stat-val color-gold">100%</div>
-            <div class="hero-stat-label">Confidencial</div>
+            <div class="hero-stat-val">100%</div>
+            <div class="hero-stat-label">{t.stat_confidencial}</div>
           </div>
         </div>
 
       </div>
 
-      <!-- Columna Derecha: Fotografía Profesional de la Terapeuta -->
+      <!-- Columna Derecha: Fotografía Oficial de la Especialista -->
       <div class="hero-visual">
         <div class="hero-right-card">
           

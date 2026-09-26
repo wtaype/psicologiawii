@@ -130,7 +130,7 @@ const jsonLd = getJsonLd(ruta, idioma);
       }
     };
 
-    // Modal Pedido On-Demand (0 KiB en carga inicial)
+    // Modal Pedido / Agendamiento On-Demand (0 KiB en carga inicial)
     (window as any).abrirModalPedido = (producto?: string) => {
       import('../../feature/inicio/lib/modalPedido.js').then((m) => {
         m.abrirModalPedido(producto);
@@ -139,6 +139,18 @@ const jsonLd = getJsonLd(ruta, idioma);
     (window as any).cerrarModalPedido = () => {
       import('../../feature/inicio/lib/modalPedido.js').then((m) => {
         m.cerrarModalPedido();
+      });
+    };
+
+    // Test de Orientación Psicológica On-Demand (0 KiB en carga inicial)
+    (window as any).abrirModalTest = () => {
+      import('../../feature/inicio/lib/modalTest.js').then((m) => {
+        m.abrirModalTest();
+      });
+    };
+    (window as any).cerrarModalTest = () => {
+      import('../../feature/inicio/lib/modalTest.js').then((m) => {
+        m.cerrarModalTest();
       });
     };
 

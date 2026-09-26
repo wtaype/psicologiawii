@@ -47,36 +47,36 @@
 
 :root[data-theme="futuro"],
 :root[data-theme="dark"] {
-  /* Lienzo y elevaciones cromáticas Modo Noche Sereno */
-  --bg1: #0a1310;
-  --bg2: #101c18;
-  --bg3: #172722;
-  --bg4: #1f332c;
-  --bg5: #284239;
+  /* Lienzo y elevaciones cromáticas Modo Noche Azul Marino */
+  --bg1: #07131b;
+  --bg2: #0b1c26;
+  --bg3: #112836;
+  --bg4: #193648;
+  --bg5: #214459;
 
   --bg: var(--bg1);
   --bg-body: var(--bg1);
   --surface: var(--bg2);
   --raised: var(--bg3);
-  --line: #22382f;
-  --ink: #f0f6f3;
-  --muted: #8ea89e;
+  --line: #1c3647;
+  --ink: #f0f7fb;
+  --muted: #8caec1;
 
-  --bg-card: rgba(16, 28, 24, 0.94);
-  --bg-card-hover: rgba(23, 39, 34, 0.98);
-  --bg-subtle: rgba(255, 255, 255, 0.04);
+  --bg-card: rgba(11, 28, 38, 0.94);
+  --bg-card-hover: rgba(17, 40, 54, 0.98);
+  --bg-subtle: rgba(56, 189, 248, 0.05);
   --border-card: var(--line);
-  --border-accent: rgba(78, 130, 110, 0.6);
+  --border-accent: rgba(56, 189, 248, 0.45);
 
-  /* Paleta Clínica Serene Empathy - Consultorio Psicológico América */
-  --brand-primary: #4e826e;
-  --brand-primary-hover: #5fa088;
-  --brand-soft: rgba(78, 130, 110, 0.16);
-  --brand-accent: #c46850;
-  --brand-accent-soft: rgba(196, 104, 80, 0.16);
-  --brand-teal: #227088;
-  --brand-blue: #327591;
-  --brand-blue-hover: #408cae;
+  /* Paleta Clínica Serene Empathy - Azul Marino y Celeste Cielo */
+  --brand-primary: #38bdf8;
+  --brand-primary-hover: #7dd3fc;
+  --brand-soft: rgba(56, 189, 248, 0.16);
+  --brand-accent: #f97316;
+  --brand-accent-soft: rgba(249, 115, 22, 0.16);
+  --brand-teal: #104356;
+  --brand-blue: #0284c7;
+  --brand-blue-hover: #38bdf8;
 
   /* Aliases de Compatibilidad Directa con WiDev */
   --brand-orange: var(--brand-primary);
@@ -84,18 +84,18 @@
   --primary: var(--brand-primary);
   --orange: var(--brand-primary);
   --orange-soft: var(--brand-soft);
-  --green: #20c396;
-  --blue: #327591;
-  --red: #fb7c85;
+  --green: #22c55e;
+  --blue: #38bdf8;
+  --red: #f43f5e;
 
-  --neon-yellow: #e6b800;
+  --neon-yellow: #fbbf24;
   --fire-orange: var(--brand-primary);
-  --glow-cyan: #3cd7bf;
+  --glow-cyan: #38bdf8;
   --wa-green: #25d366;
-  --text-main: #f0f6f3;
-  --text-muted: #8ea89e;
-  --header-bg: rgba(10, 19, 16, 0.96);
-  --topbar-bg: linear-gradient(90deg, #101c18, #1f332c, #101c18);
+  --text-main: #f0f7fb;
+  --text-muted: #8caec1;
+  --header-bg: rgba(7, 19, 27, 0.96);
+  --topbar-bg: linear-gradient(90deg, #0b1c26, #112836, #0b1c26);
   --topbar-text: #ffffff;
   --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.6);
   --input-bg: var(--bg3);
@@ -104,8 +104,8 @@
   --tx: var(--ink);
   --tx1: var(--ink);
   --tx2: var(--muted);
-  --tx3: #6b847a;
-  --txa: #0a1310;
+  --tx3: #7093a8;
+  --txa: #07131b;
   --txe: var(--brand-primary);
   --hv: var(--brand-primary-hover);
   --hva: var(--brand-primary-hover);
@@ -114,7 +114,7 @@
   --brd: var(--line);
   --inp: var(--raised);
   --bt: var(--brand-primary);
-  --glass-bg: rgba(16, 28, 24, 0.92);
+  --glass-bg: rgba(11, 28, 38, 0.92);
   --glass-brd: var(--line);
   --glass-shd: 0 20px 40px rgba(0, 0, 0, 0.6);
   --glass-blur: 24px;
@@ -123,36 +123,38 @@
 :root[data-theme="luz"],
 :root[data-theme="light"],
 :root[data-theme="serenidad"] {
-  /* Lienzo y elevaciones cromáticas Modo Luz Clínico Cálido */
-  --bg1: #f8faf9;
+  /* Lienzo y elevaciones cromáticas Modo Luz Clínico Cálido Sereno */
+  --bg1: #f4f8fb;
   --bg2: #ffffff;
-  --bg3: #f0f5f2;
-  --bg4: #e2ece7;
-  --bg5: #d3e2db;
+  --bg3: #eaf3f8;
+  --bg4: #d8eaf4;
+  --bg5: #c3deed;
 
   --bg: var(--bg1);
   --bg-body: var(--bg1);
   --surface: var(--bg2);
   --raised: var(--bg3);
-  --line: #e0eae5;
-  --ink: #121c18;
-  --muted: #52665e;
+  --line: #dceaf2;
+  --ink: #0f2735;
+  --muted: #486576;
 
   --bg-card: rgba(255, 255, 255, 0.98);
   --bg-card-hover: rgba(255, 255, 255, 1);
-  --bg-subtle: rgba(50, 83, 70, 0.04);
+  --bg-subtle: rgba(16, 67, 86, 0.04);
   --border-card: var(--line);
-  --border-accent: rgba(50, 83, 70, 0.4);
+  --border-accent: rgba(16, 67, 86, 0.35);
 
-  /* Paleta Clínica Serene Empathy - Consultorio Psicológico América */
-  --brand-primary: #325346;
-  --brand-primary-hover: #243e34;
-  --brand-soft: #edf5f1;
-  --brand-accent: #8c422e;
-  --brand-accent-soft: #fdf2ee;
+  /* Paleta Clínica Serene Empathy - Azul Marino y Celeste Cielo */
+  --brand-primary: #104356;
+  --brand-primary-hover: #0a2d3a;
+  --brand-soft: #e5f4fa;
+  --brand-accent: #c46850;
+  --brand-accent-soft: #fbf1ee;
   --brand-teal: #104356;
-  --brand-blue: #23657d;
-  --brand-blue-hover: #184c5f;
+  --brand-blue: #1e5e75;
+  --brand-blue-hover: #154556;
+  --brand-sky: #38bdf8;
+  --brand-sky-hover: #0284c7;
 
   /* Aliases de Compatibilidad Directa con WiDev */
   --brand-orange: var(--brand-primary);
@@ -160,20 +162,20 @@
   --primary: var(--brand-primary);
   --orange: var(--brand-primary);
   --orange-soft: var(--brand-soft);
-  --green: #267a57;
-  --blue: #23657d;
-  --red: #c14557;
+  --green: #15803d;
+  --blue: #1e5e75;
+  --red: #be123c;
 
-  --neon-yellow: #b87a00;
+  --neon-yellow: #b45309;
   --fire-orange: var(--brand-primary);
-  --glow-cyan: #104356;
+  --glow-cyan: #38bdf8;
   --wa-green: #16a34a;
-  --text-main: #121c18;
-  --text-muted: #52665e;
+  --text-main: #0f2735;
+  --text-muted: #486576;
   --header-bg: rgba(255, 255, 255, 0.97);
-  --topbar-bg: linear-gradient(90deg, #325346, #4a6b5d, #325346);
+  --topbar-bg: linear-gradient(90deg, #104356 0%, #1e5e75 50%, #104356 100%);
   --topbar-text: #ffffff;
-  --shadow-xl: 0 15px 35px rgba(50, 83, 70, 0.08);
+  --shadow-xl: 0 15px 35px rgba(16, 67, 86, 0.08);
   --input-bg: var(--bg3);
 
   --wb: var(--surface);
