@@ -270,21 +270,6 @@ a {
   transition: var(--tr_m);
 }
 
-/* ── Liquid Glass (Clase Utilitaria Global) ──────────────── */
-.wii_glass {
-  background: var(--glass-bg);
-  border: 1px solid var(--glass-brd);
-  backdrop-filter: blur(var(--glass-blur));
-  -webkit-backdrop-filter: blur(var(--glass-blur));
-  box-shadow: 0 8px 32px 0 var(--glass-shd), inset 0 1px 0 rgba(255, 255, 255, 0.28);
-  transition: box-shadow var(--tr_m), transform var(--tr_m), background var(--tr_m);
-}
-
-.wii_glass:hover {
-  box-shadow: 0 12px 40px 0 var(--glass-shd), inset 0 1px 0 rgba(255, 255, 255, 0.35);
-  transform: translateY(-1px);
-}
-
 /* ============================================================ */
 /* ⚙️ ESTILOS REUTILIZABLES PARA COMPONENTES WIDEV             */
 /*    (src/core/widev/*)                                        */
@@ -298,10 +283,9 @@ a {
   transform: translate(-50%, -2vh);
   padding: 1.6vh 2.5vh;
   border-radius: 1vh;
-  background: var(--bg3, #14223a);
-  border: 1px solid var(--brd, #21314b);
-  color: var(--tx1, #f3f6fc);
-  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.35), 0 8px 10px -6px rgba(0,0,0,0.25);
+  background: var(--bg3, #ffffff);
+  color: var(--tx1, #212529);
+  box-shadow: 0 20px 25px -5px rgba(0,0,0,0.15), 0 8px 10px -6px rgba(0,0,0,0.15);
   z-index: 999999;
   display: flex;
   align-items: center;
@@ -333,19 +317,18 @@ a {
 }
 
 .notification {
-  background: var(--bg3, #14223a);
-  border: 1px solid var(--brd, #21314b);
-  color: var(--tx1, #f3f6fc);
-  box-shadow: 0 12px 28px -4px rgba(0,0,0,0.45);
+  background: var(--bg3, #ffffff);
+  color: var(--tx1, #212529);
+  box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
   border-radius: 1vh;
-  padding: 1.8vh 2.4vh;
+  padding: 2vh 2.5vh;
   display: flex;
   align-items: center;
   gap: 1.5vh;
   opacity: 0;
   transform: translateX(4vh);
   transition: all 0.35s cubic-bezier(0.16,1,0.3,1);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(8px);
   pointer-events: auto;
 }
 
@@ -370,7 +353,7 @@ a {
   flex: 1;
   font-size: var(--fz_m);
   font-weight: 500;
-  color: var(--tx1, #f3f6fc);
+  color: var(--tx1);
 }
 
 .notification button {
@@ -378,14 +361,14 @@ a {
   border: none;
   font-size: 1.5rem;
   cursor: pointer;
-  color: var(--tx2, #90a4c3);
+  color: var(--tx2, #6c757d);
   transition: color 0.2s;
   line-height: 1;
   padding: 0;
   margin-left: 1vh;
 }
 
-.notification button:hover { color: var(--tx1, #f3f6fc); }
+.notification button:hover { color: var(--tx1, #212529); }
 
 /* ── 2. TOOLTIPS DINÁMICOS WITIP() (widev/witip.js) ────────── */
 .wiTip {
@@ -1883,4 +1866,19 @@ img[data-src] {
 
 .wicode_copy_success {
   color: var(--success);
+}
+
+/* ── Liquid Glass (Clase Utilitaria Global) ──────────────── */
+.wii_glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-brd);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  box-shadow: 0 8px 32px 0 var(--glass-shd), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transition: box-shadow var(--tr_m), transform var(--tr_m), background var(--tr_m);
+}
+
+.wii_glass:hover {
+  box-shadow: 0 12px 40px 0 var(--glass-shd), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
 }
