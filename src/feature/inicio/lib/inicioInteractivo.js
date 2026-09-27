@@ -129,11 +129,12 @@ function hidratarHeroDesdeNegocio(datos) {
 }
 
 /**
- * Selector de distritos en Hero
+ * Selector interactivo de temas clínicos en Hero (Psicología América)
  */
-function initSelectorDistritos() {
-  const grid = document.getElementById('districtSelector');
-  const info = document.getElementById('distritoActualInfo');
+function initSelectorTemas() {
+  const grid = document.getElementById('temaSelector') || document.getElementById('districtSelector');
+  const info = document.getElementById('temaActualInfo') || document.getElementById('distritoActualInfo');
+  const btnWsp = document.getElementById('btnHeroWsp');
   if (!grid) return;
 
   const botones = grid.querySelectorAll('.hero-district-btn');
@@ -141,32 +142,25 @@ function initSelectorDistritos() {
     btn.addEventListener('click', () => {
       botones.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
-      const time = btn.getAttribute('data-time') || '';
+
+      const infoText = btn.getAttribute('data-info') || '';
+      const labelText = btn.getAttribute('data-label') || btn.querySelector('.hero-district-name')?.textContent?.trim() || '';
+      const tema = btn.getAttribute('data-tema') || '';
+
       if (info) {
-        const timeEl = info.querySelector('.eta-time');
-        if (timeEl) {
-          timeEl.textContent = time;
-        } else {
-          const origenEl = info.querySelector('[data-negocio-direccion-origen]');
-          const dir = origenEl ? origenEl.textContent : '';
-          const prefijo = info.getAttribute('data-prefijo') || 'Despachando desde';
-          info.innerHTML = `<span class="eta-prefix">${prefijo}</span> <span data-negocio-direccion-origen>${dir}</span>: <strong class="eta-time">${time}</strong>`;
-        }
+        info.textContent = infoText;
       }
+
+      if (btnWsp) {
+        const mensaje = `Hola Lic. Sofia Reynaga, deseo agendar una consulta por ${labelText}.`;
+        const baseUrl = btnWsp.href.split('?')[0];
+        btnWsp.href = `${baseUrl}?text=${encodeURIComponent(mensaje)}`;
+      }
+
+      try {
+        localStorage.setItem('psicologia_motivo_activo', tema);
+      } catch (e) {}
     });
-  });
-
-  // Hidratar con datos guardados de negocio en localStorage
-  try {
-    const raw = localStorage.getItem('minegocio') || localStorage.getItem('gaswii_negocio_config');
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      if (parsed) hidratarHeroDesdeNegocio(parsed);
-    }
-  } catch (e) {}
-
-  window.addEventListener('gaswii:negocio-actualizado', (e) => {
-    if (e.detail) hidratarHeroDesdeNegocio(e.detail);
   });
 }
 
@@ -263,8 +257,8 @@ export function initInicioInteractivo() {
   // 3. Switcher de idiomas
   initLanguageSwitcher();
 
-  // 4. Selector de distritos en Hero
-  initSelectorDistritos();
+  // 4. Selector interactivo de temas clínicos en Hero
+  initSelectorTemas();
 
   // 5. Calculadora de duración de gas
   initCalculadora();
