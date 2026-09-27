@@ -1,143 +1,84 @@
 {
-  "badge": "Confidential Consultation · Lic. Sofía Reynaga",
-  "titulo": "Psychological Guidance Screening",
-  "subtitulo": "Discover the ideal therapeutic support for your wellbeing in 7 quick steps",
-  "cerrar": "Close screening",
-  "paso": "Step",
-  "de": "of",
-  "btnAtras": "Back",
-  "btnContinuar": "Continue",
-  "btnFinalizar": "View My Guidance",
-  "cargandoTitulo": "Preparing Your Clinical Guidance",
-  "cargandoSub": "Lic. Sofía Reynaga is analyzing your responses with empathy and confidentiality...",
-  "resultadoBadge": "Personalized Therapeutic Orientation",
-  "btnWhatsApp": "Book Consultation with this Profile on WhatsApp",
-  "btnFormulario": "Or open booking form",
-  "btnReiniciar": "Retake screening",
-  "p1": {
-    "titulo": "1. What challenge or topic would you like to address today?",
-    "sub": "Select the option that best reflects how you feel right now:",
-    "opciones": [
-      {
-        "id": "ansiedad",
-        "titulo": "Anxiety, Stress and Overthinking",
-        "desc": "Constant tension, panic sensations or a racing mind",
-        "icono": "fa-solid fa-wind",
-        "empathy": "We validate what you are feeling. An overwhelmed mind is not weakness; it has clear causes and proven scientific tools to restore calm."
-      },
-      {
-        "id": "pareja",
-        "titulo": "Couples and Family Therapy",
-        "desc": "Communication breakdowns, crises, jealousy or distance",
-        "icono": "fa-solid fa-heart-crack",
-        "empathy": "Acknowledging relationship struggles is the most mature step toward healing communication and rebuilding mutual trust."
-      },
-      {
-        "id": "apoyo",
-        "titulo": "Sadness, Grief or Emotional Relief",
-        "desc": "Discouragement, feeling alone or simply needing to be heard",
-        "icono": "fa-solid fa-cloud-rain",
-        "empathy": "Your feelings are valid and deserve to be heard in a safe, warm and judgment-free environment."
-      },
-      {
-        "id": "general",
-        "titulo": "Personal Direction and Self-Esteem",
-        "desc": "Decision making, clarifying life goals or self-discovery",
-        "icono": "fa-solid fa-compass",
-        "empathy": "Seeking mental clarity is an act of self-care and commitment to your personal growth and peace of mind."
-      }
-    ]
-  },
-  "p2": {
-    "ansiedad": {
-      "titulo": "2. Which of these sensations do you experience most often?",
-      "sub": "Choose the one that best describes your experience:",
-      "opciones": [
-        { "id": "rumiacion", "titulo": "Looping thoughts and constant worrying", "desc": "Always anticipating worst-case scenarios", "empathy": "Having your mind on high alert is exhausting. CBT helps deactivate these cognitive loops." },
-        { "id": "fisico", "titulo": "Heart palpitations, chest tightness or muscle tension", "desc": "Intense physical sensations of shortness of breath or alertness", "empathy": "Your body is somatizing overload. We will teach you psychophysiological regulation." },
-        { "id": "panico", "titulo": "Sudden fear spikes or panic attacks", "desc": "Feeling like you are losing control or in imminent danger", "empathy": "Panic is scary, but not harmful in itself. We will teach you grounding skills from session one." },
-        { "id": "insomnio", "titulo": "Insomnia and severe difficulty resting", "desc": "Waking up with anxiety or struggling to fall asleep", "empathy": "Restoring restful sleep will be one of our very first clinical priorities." }
-      ]
-    },
-    "pareja": {
-      "titulo": "2. How would you describe the current dynamic in the relationship?",
-      "sub": "Select the pattern that best represents the challenge:",
-      "opciones": [
-        { "id": "discusion", "titulo": "Frequent arguments that escalate quickly", "desc": "Any daily topic turns into disagreement or blame", "empathy": "Breaking the reactive conflict cycle is the core goal of systemic couples therapy." },
-        { "id": "distancia", "titulo": "Emotional disconnection and prolonged silence", "desc": "Feeling like strangers or mere roommates", "empathy": "Distance is often a shield against hurt. Rebuilding the bridge of intimacy is possible." },
-        { "id": "desconfianza", "titulo": "Trust crisis, infidelity or intense jealousy", "desc": "Persistent insecurity following broken agreements", "empathy": "Healing a wound of trust requires patience and structured clinical guidance." },
-        { "id": "dudas", "titulo": "Doubts about staying together or separating peacefully", "desc": "Uncertainty about the future of the bond or children", "empathy": "We will help both of you find clarity with maturity, respect and empathy." }
-      ]
-    },
-    "apoyo": {
-      "titulo": "2. How has your mood been manifesting recently?",
-      "sub": "Allow yourself to express what you are experiencing:",
-      "opciones": [
-        { "id": "llanto", "titulo": "Feeling tearful or discouraged without an obvious reason", "desc": "Feeling like daily energy is completely depleted", "empathy": "Crying is how the body releases emotional pressure. You don't have to pretend everything is fine." },
-        { "id": "vacio", "titulo": "Feeling empty or emotionally numb", "desc": "Things that once brought joy no longer spark interest", "empathy": "This is a common sign of emotional exhaustion. Step by step, we will reconnect with your vitality." },
-        { "id": "duelo", "titulo": "Grief process, bereavement or painful breakup", "desc": "Pain from an absence that feels heavy to process alone", "empathy": "Grief needs to be navigated with tenderness and professional support." },
-        { "id": "soledad", "titulo": "Feeling misunderstood and profoundly lonely", "desc": "Feeling like you have no one to truly open up to", "empathy": "You are not alone here. Lic. Sofía Reynaga provides an empathetic, active listening space." }
-      ]
-    },
-    "general": {
-      "titulo": "2. What is your primary goal when starting therapy?",
-      "sub": "What positive shift would you like to achieve:",
-      "opciones": [
-        { "id": "claridad", "titulo": "Making an important life or career decision with certainty", "desc": "Overcoming indecision and finding your compass", "empathy": "Sorting through values, priorities and fears will give you the confidence you need." },
-        { "id": "limites", "titulo": "Strengthening self-esteem and setting healthy boundaries", "desc": "Stop people-pleasing at the expense of your own wellbeing", "empathy": "Learning to say 'no' without guilt is one of psychotherapy's greatest gifts." },
-        { "id": "gestion", "titulo": "Managing frustration, irritability or anger", "desc": "Better regulating emotional impulses in tense moments", "empathy": "Emotional intelligence is strengthened through practical cognitive techniques." },
-        { "id": "crecimiento", "titulo": "Self-awareness and preventive mental health", "desc": "Investing in my mental wellness before difficulties escalate", "empathy": "Prevention is the wisest way to care for your overall health." }
-      ]
-    }
-  },
-  "p3": {
-    "titulo": "3. How long have you been experiencing this situation?",
-    "sub": "Helps us assess the duration of your distress:",
-    "opciones": [
-      { "id": "reciente", "titulo": "Less than 1 month (recent or acute event)", "desc": "Triggered by a recent change, conflict or news", "empathy": "Addressing this early prevents it from consolidating into a chronic pattern." },
-      { "id": "medio", "titulo": "Between 1 and 6 months", "desc": "It has been recurring consistently over the past several weeks", "empathy": "Your mind and body are signaling that you need professional support." },
-      { "id": "cronico", "titulo": "More than 6 months or several years", "desc": "I feel I have been carrying this on my own for a long time", "empathy": "Carrying this for so long is heavy, but it is never too late to reconfigure your wellbeing." }
-    ]
-  },
-  "p4": {
-    "titulo": "4. In what area of your life do you notice the greatest impact?",
-    "sub": "Where do you feel this takes the highest toll:",
-    "opciones": [
-      { "id": "cuerpo", "titulo": "In my sleep, physical health and daily energy", "desc": "Fatigue, body tension, headaches or low stamina", "empathy": "Taking care of your body begins with attending to what is happening in your mind." },
-      { "id": "trabajo", "titulo": "In my work performance, studies or focus", "desc": "Procrastination, brain fog or productivity drop", "empathy": "Regaining focus is fully achievable once we reduce your underlying stress." },
-      { "id": "relaciones", "titulo": "In my relationships with loved ones or partner", "desc": "Irritability, withdrawing or frequent misunderstandings", "empathy": "When you heal within, the quality of your relationships naturally improves." },
-      { "id": "paz", "titulo": "In my inner tranquility and daily peace of mind", "desc": "Struggling to relax even during downtime", "empathy": "Restoring inner peace is at the very core of psychological therapy." }
-    ]
-  },
-  "p5": {
-    "titulo": "5. Have you had psychological therapy before?",
-    "sub": "To tailor explanations to your previous experience:",
-    "opciones": [
-      { "id": "primera_vez", "titulo": "This is my first time seeking professional support", "desc": "I feel curious or slightly nervous about how it works", "empathy": "Congratulations on taking this step! We will guide you with warmth and complete clarity." },
-      { "id": "retomando", "titulo": "Yes, I have had therapy before and want to resume", "desc": "I am familiar with the process and want to address this topic", "empathy": "Great foundation. We will build upon your past insights to move forward effectively." },
-      { "id": "solo", "titulo": "I have tried managing it on my own with books or videos", "desc": "I feel I need expert guidance tailored to my situation", "empathy": "Self-help is valuable, but personalized clinical accompaniment makes all the difference." }
-    ]
-  },
-  "p6": {
-    "titulo": "6. What modality best suits your comfort and schedule?",
-    "sub": "Both formats share identical clinical rigor and confidentiality:",
-    "opciones": [
-      { "id": "online", "titulo": "💻 100% Online Session (Meet / Zoom)", "desc": "From your home or office, anywhere in Peru or internationally", "empathy": "Ideal for saving commute time and speaking from your most private space." },
-      { "id": "llamada", "titulo": "📞 Phone Call or WhatsApp Audio", "desc": "For quick agility or if you prefer audio-only communication", "empathy": "Perfect for immediate emotional containment and focused guidance." },
-      { "id": "presencial", "titulo": "📍 In-person (Villa El Salvador Office)", "desc": "Av. Revolución 1840, South Lima (By appointment)", "empathy": "We welcome you in our clinical office with total warmth and confidentiality." }
-    ]
-  },
-  "p7": {
-    "titulo": "7. What time of day is most convenient for your consultation?",
-    "sub": "Please also share your name to personalize your guidance report:",
-    "lblNombre": "Your Full Name:",
-    "placeholderNombre": "E.g. Ana Morales (or whatever you prefer to be called)",
-    "lblTurno": "Preferred Time Slot:",
-    "turnos": [
-      { "id": "manana", "nombre": "☀️ Morning Slot (09:00 AM - 01:00 PM)" },
-      { "id": "tarde", "nombre": "🌤️ Afternoon / Evening Slot (03:00 PM - 08:00 PM)" },
-      { "id": "flexible", "nombre": "🤝 Flexible / To coordinate" }
-    ],
-    "empathy": "Excellent. We are compiling your clinical analysis to provide accurate, personalized orientation."
-  }
+  "badge": "Therapeutic Orientation · Lic. Sofía Reynaga",
+  "titulo": "Listening and Psychological Orientation Screening",
+  "subtitulo": "A safe space to express what you feel and discover your ideal therapeutic support",
+  "cerrar": "Close window",
+  "etapa1Progreso": "Step 1 of 2 · Your Emotional Experience",
+  "etapa2Progreso": "Step 2 of 2 · Coordination & Contact Details",
+  "lblEmocion": "1. How are you feeling today?",
+  "placeholderEmocion": "Select how you are feeling today...",
+  "opcionesEmocion": [
+    { "id": "triste", "texto": "🌧️ Feeling sad or downhearted" },
+    { "id": "agotado", "texto": "⚡ Mentally exhausted and drained" },
+    { "id": "perdida", "texto": "💔 Lost someone or something important" },
+    { "id": "sobrepensar", "texto": "💭 Can't stop overthinking and worrying" }
+  ],
+  "lblDesahogo": "2. Would you like to share a bit more about what you are going through?",
+  "subDesahogo": "Free, confidential expression space (feel free to write a sentence or more):",
+  "placeholderDesahogo": "Write whatever you wish to express with total freedom... E.g., I have been going through hard times, recently lost my pet, feel very lonely or overwhelmed...",
+  "lblTiempo": "3. How long have you felt this way?",
+  "placeholderTiempo": "Select duration...",
+  "tituloTiempos": "Duration of Feelings",
+  "tiempoReciente": "Recent / Few days",
+  "tiempoProlongado": "Prolonged / Weeks or Months",
+  "tiempos": [
+    "🗓️ Since today or a few days ago",
+    "🗓️ For the past one or two weeks",
+    "🗓️ For more than 1 month",
+    "🗓️ For more than 6 months or several years"
+  ],
+  "btnSiguienteEtapa": "Continue to Book Appointment",
+  "lblNombre": "4. Your Full Name",
+  "placeholderNombre": "E.g. Ana Morales",
+  "lblCorreo": "5. Email Address",
+  "placeholderCorreo": "E.g. ana@gmail.com",
+  "lblCelular": "6. Phone or WhatsApp",
+  "placeholderCelular": "E.g. +1 555 123 4567",
+  "lblModalidad": "7. Modality of Care",
+  "placeholderModalidad": "Select modality...",
+  "modalidades": [
+    "💻 Online (Meet / Zoom)",
+    "📞 Phone Call",
+    "📍 In-person (Villa El Salvador)"
+  ],
+  "lblFecha": "Appointment Date",
+  "lblHora": "Preferred Time",
+  "tituloHorarios": "Available Schedules",
+  "turnoManana": "Morning",
+  "turnoTarde": "Afternoon / Evening",
+  "horaACoordinar": "To coordinate",
+  "turnos": [
+    "09:00 AM",
+    "10:30 AM",
+    "12:00 PM",
+    "03:00 PM",
+    "04:30 PM",
+    "06:00 PM",
+    "07:30 PM",
+    "To coordinate"
+  ],
+  "btnVolverEtapa1": "⬅️ Edit what I shared",
+  "btnConfirmarWa": "Confirm Appointment via WhatsApp with Lic. Sofía",
+  "previewTitulo": "Live Results",
+  "previewInicial": "We hear you with total empathy and respect. As you select how you feel or share what you are going through, we will analyze your experience to give you a personalized reflection.\n\nHere you will see a thoughtful orientation in real time with genuine comprehension, conceptual clarity, and a hopeful message for your well-being.",
+  "etapa2PreviewTitulo": "Therapeutic Referral File",
+  "resumenEspecialista": "Summary prepared for the specialist:",
+  "valEmocion": "Please select how you feel so we can guide you",
+  "valNombre": "Please enter your name",
+  "valCelular": "Please enter your phone or WhatsApp number",
+  "valFecha": "Please select an appointment date",
+  "waSaludo": "Hello Lic. Sofía Reynaga, I just completed the Listening & Orientation Screening on your official website:",
+  "waPaciente": "• Patient:",
+  "waCelular": "• Phone / WhatsApp:",
+  "waCorreo": "• Email:",
+  "waEstado": "• Current state:",
+  "waDesahogo": "• Shared feelings:",
+  "waTiempo": "• Duration:",
+  "waModalidad": "• Desired modality:",
+  "waFecha": "• Requested date:",
+  "waHora": "• Preferred time:",
+  "waOrientacion": "• Clinical orientation:",
+  "waPregunta": "I would like to coordinate a consultation session based on this profile.",
+  "waAtribucion": "*(Message received directly from your official website)*",
+  "waDespedida": "Thank you very much."
 }

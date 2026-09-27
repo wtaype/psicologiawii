@@ -1,21 +1,82 @@
 // src/feature/inicio/lib/modales/test/test.js
-// 🎯 Hijo 2: Controlador del Test de Orientación Psicológica Empático (ChatWii AI)
-// Modal de 820px, 7 pasos ramificados, micro-feedback emocional, bilingüe y 0 KiB de impacto inicial.
+// 🎯 Hijo 2: Controlador del Test de Orientación Empático en 2 Columnas
+// Columna 1: Formulario por etapas (desahogo libre + datos)
+// Columna 2: Preview en vivo fijo/sticky con animación "Escribiendo..." (ChatWii AI / Plantillas)
 
 import { resolverTextos, obtenerIdiomaActivo } from '../idioma/idioma.js';
-import {
-  TOTAL_PASOS,
-  crearEstadoTest,
-  resolverPasoActual,
-  puedeAvanzar
-} from './preguntas.js';
-import { generarOrientacionChatWii } from './chatwii.js';
+import { crearEstadoTest } from './preguntas.js';
+import { solicitarDevolucionChatWii, construirUrlWhatsApp } from './chatwii.js';
+import { wiSelect } from '../../../../../core/widev/wiselect.js';
+import { wiTip } from '../../../../../core/widev/witip.js';
 import testCss from './test.css?inline';
 import es from './idioma/es.json';
 import en from './idioma/en.json';
 
 let modalEl = null;
 let estadoTest = null;
+let wiSelectEmocionInst = null;
+let wiSelectModalidadInst = null;
+let previewDebounceTimer = null;
+let currentPreviewRequestId = 0;
+let typewriterTimer = null;
+
+/**
+ * Escribe el texto en el elemento en dos párrafos palabra por palabra con ritmo pausado y empático
+ * @param {HTMLElement} elemento
+ * @param {string} texto
+ * @param {number} [velocidadMs=65]
+ * @param {Function} [alFinalizar]
+ */
+function escribirPalabraPorPalabra(elemento, texto, velocidadMs = 65, alFinalizar = null) {
+  if (!elemento) return;
+
+  if (typewriterTimer) {
+    clearInterval(typewriterTimer);
+    typewriterTimer = null;
+  }
+
+  // Separar los párrafos usando salto doble
+  const parrafosRaw = (texto || '').trim().split(/\n\s*\n/);
+  const parrafos = parrafosRaw.filter(p => p.trim().length > 0);
+
+  elemento.innerHTML = '';
+  elemento.style.opacity = '1';
+
+  if (parrafos.length === 0) return;
+
+  // Creamos los elementos <p> estilizados dentro del contenedor
+  const pElements = parrafos.map(() => {
+    const p = document.createElement('p');
+    p.className = 'modal-test-preview-p';
+    elemento.appendChild(p);
+    return p;
+  });
+
+  // Lista plana de tareas: { pIdx, word }
+  const tareas = [];
+  parrafos.forEach((parr, pIdx) => {
+    const palabras = parr.trim().split(/\s+/).filter(Boolean);
+    palabras.forEach(word => {
+      tareas.push({ pIdx, word });
+    });
+  });
+
+  let tIdx = 0;
+  typewriterTimer = setInterval(() => {
+    if (tIdx < tareas.length) {
+      const { pIdx, word } = tareas[tIdx];
+      const targetP = pElements[pIdx];
+      targetP.textContent += (targetP.textContent ? ' ' : '') + word;
+      tIdx++;
+    } else {
+      clearInterval(typewriterTimer);
+      typewriterTimer = null;
+      if (typeof alFinalizar === 'function') {
+        alFinalizar();
+      }
+    }
+  }, velocidadMs);
+}
 
 function obtenerTextos() {
   return resolverTextos({ es, en });
@@ -27,6 +88,23 @@ function asegurarEstilosEnDOM() {
   style.id = 'wi_modal_test_styles';
   style.innerHTML = testCss;
   document.head.appendChild(style);
+}
+
+function obtenerFechaPorDefecto() {
+  const hoy = new Date();
+  hoy.setDate(hoy.getDate() + 1);
+  const yyyy = hoy.getFullYear();
+  const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+  const dd = String(hoy.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function obtenerFechaMinima() {
+  const hoy = new Date();
+  const yyyy = hoy.getFullYear();
+  const mm = String(hoy.getMonth() + 1).padStart(2, '0');
+  const dd = String(hoy.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
 }
 
 function asegurarModalEnDOM() {
@@ -46,7 +124,7 @@ function asegurarModalEnDOM() {
         <div class="modal-test-header">
           <div>
             <span class="modal-test-badge">
-              <i class="fa-solid fa-clipboard-question"></i> ${t.badge}
+              <i class="fa-solid fa-stethoscope"></i> ${t.badge}
             </span>
             <h3 id="modalTestTitle" class="modal-test-title">
               ${t.titulo}
@@ -60,31 +138,49 @@ function asegurarModalEnDOM() {
           </button>
         </div>
 
-        <!-- Barra de Progreso -->
-        <div id="testProgressWrap" class="modal-test-progress-wrap">
-          <div class="modal-test-progress-meta">
-            <span id="testStepLabel">${t.paso} 1 ${t.de} ${TOTAL_PASOS}</span>
-            <span id="testPercentLabel">14%</span>
+        <!-- Layout en 2 Columnas -->
+        <div class="modal-test-grid">
+          
+          <!-- COLUMNA 1: Formulario por Etapas -->
+          <div id="testColForm" class="modal-test-col-form">
+            <!-- Renderizado dinámicamente por renderizarEtapa() -->
           </div>
-          <div class="modal-test-progress-bar-bg">
-            <div id="testProgressBarFill" class="modal-test-progress-bar-fill"></div>
+
+          <!-- COLUMNA 2 (Fija / Sticky): Preview Empático en Vivo -->
+          <div class="modal-test-col-preview">
+            
+            <!-- Barra de Progreso Superior -->
+            <div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.76rem; font-weight: 700; color: var(--tx2, #64748b); margin-bottom: 0.35rem;">
+                <span id="testProgressMetaLabel">${t.etapa1Progreso}</span>
+                <span id="testProgressPercentLabel">50%</span>
+              </div>
+              <div class="modal-test-progress-bar-bg">
+                <div id="testProgressBarFill" class="modal-test-progress-bar-fill"></div>
+              </div>
+            </div>
+
+            <!-- Card del Resultado en Vivo -->
+            <div class="modal-test-card-preview">
+              <div class="modal-test-preview-header">
+                <span class="modal-test-preview-title" id="testPreviewTitle">
+                  <i class="fa-solid fa-chart-line"></i> ${t.previewTitulo}
+                </span>
+              </div>
+
+              <!-- Texto Empático en Vivo (Dos Párrafos) -->
+              <div id="testPreviewBody" class="modal-test-preview-body">
+                ${(t.previewInicial || '').split('\n\n').map(p => `<p class="modal-test-preview-p">${p.trim()}</p>`).join('')}
+              </div>
+
+              <div id="testPreviewBadge" class="modal-test-preview-profile-badge" style="display: none;">
+                <i class="fa-solid fa-shield-heart"></i>
+                <span id="testPreviewBadgeText">Escucha Activa</span>
+              </div>
+            </div>
+
           </div>
-        </div>
 
-        <!-- Contenedor Dinámico de Preguntas y Respuestas -->
-        <div id="testDynamicBody">
-          <!-- Inyectado por renderizarPaso() -->
-        </div>
-
-        <!-- Navegación Inferior -->
-        <div id="testNavWrap" class="modal-test-nav">
-          <button type="button" id="btnTestAtras" class="modal-test-btn-back" style="display: none;">
-            <i class="fa-solid fa-arrow-left"></i> <span>${t.btnAtras}</span>
-          </button>
-          <div style="flex: 1;"></div>
-          <button type="button" id="btnTestContinuar" class="modal-test-btn-next">
-            <span>${t.btnContinuar}</span> <i class="fa-solid fa-arrow-right"></i>
-          </button>
         </div>
 
       </div>
@@ -100,338 +196,549 @@ function asegurarModalEnDOM() {
     if (e.target === modalEl) cerrarModalTest();
   });
 
-  // Listeners de Navegación
-  document.getElementById('btnTestAtras')?.addEventListener('click', retrocederPaso);
-  document.getElementById('btnTestContinuar')?.addEventListener('click', avanzarPaso);
-
   return modalEl;
 }
 
 /**
- * Renderiza el paso actual dentro de #testDynamicBody
+ * Renderiza la Etapa 1 o Etapa 2 dentro de la Columna 1
  */
-function renderizarPaso() {
-  const container = document.getElementById('testDynamicBody');
-  if (!container || !estadoTest) return;
+function renderizarEtapa() {
+  const colForm = document.getElementById('testColForm');
+  if (!colForm || !estadoTest) return;
 
   const t = obtenerTextos();
-  const pasoConfig = resolverPasoActual(t, estadoTest);
-  if (!pasoConfig) return;
+  const progressBarFill = document.getElementById('testProgressBarFill');
+  const progressMeta = document.getElementById('testProgressMetaLabel');
+  const progressPercent = document.getElementById('testProgressPercentLabel');
+  const previewBadge = document.getElementById('testPreviewBadge');
 
-  const paso = estadoTest.pasoActual;
-  const pct = Math.round((paso / TOTAL_PASOS) * 100);
+  if (estadoTest.etapa === 1) {
+    // ── ETAPA 1: Tu Vivencia Emocional y Desahogo ────────────────
+    if (progressBarFill) progressBarFill.style.width = '50%';
+    if (progressMeta) progressMeta.textContent = t.etapa1Progreso;
+    if (progressPercent) progressPercent.textContent = '50%';
+    if (previewBadge) previewBadge.style.display = 'none';
 
-  // Actualizar barra de progreso
-  const stepLabel = document.getElementById('testStepLabel');
-  const pctLabel = document.getElementById('testPercentLabel');
-  const barFill = document.getElementById('testProgressBarFill');
-  if (stepLabel) stepLabel.textContent = `${t.paso} ${paso} ${t.de} ${TOTAL_PASOS}`;
-  if (pctLabel) pctLabel.textContent = `${pct}%`;
-  if (barFill) barFill.style.width = `${pct}%`;
-
-  // Control de visibilidad del botón Atrás
-  const btnAtras = document.getElementById('btnTestAtras');
-  if (btnAtras) {
-    btnAtras.style.display = paso > 1 ? 'inline-flex' : 'none';
-  }
-
-  // Texto del botón Continuar / Finalizar
-  const btnContinuar = document.getElementById('btnTestContinuar');
-  if (btnContinuar) {
-    btnContinuar.innerHTML = paso === TOTAL_PASOS
-      ? `<span>${t.btnFinalizar}</span> <i class="fa-solid fa-sparkles"></i>`
-      : `<span>${t.btnContinuar}</span> <i class="fa-solid fa-arrow-right"></i>`;
-  }
-
-  // Si es el paso 7 (Nombre y Turno)
-  if (pasoConfig.tipo === 'formulario_final') {
-    container.innerHTML = `
-      <div class="modal-test-question-box">
-        <h4 class="modal-test-question-title">${pasoConfig.titulo}</h4>
-        <p class="modal-test-question-sub">${pasoConfig.sub}</p>
-      </div>
-
-      <div class="modal-test-empathy-pill">
-        <i class="fa-solid fa-heart-circle-check modal-test-empathy-icon"></i>
-        <span class="modal-test-empathy-text">${pasoConfig.empathy}</span>
-      </div>
-
-      <div style="margin-bottom: 1.2rem;">
-        <label for="testInputNombre" class="modal-agendar-label" style="margin-bottom: 0.45rem;">
-          <i class="fa-regular fa-user"></i> ${pasoConfig.lblNombre}
+    colForm.innerHTML = `
+      <!-- 1. ¿Cómo te sientes hoy? (wiSelect 4 opciones) -->
+      <div class="modal-test-field">
+        <label for="testSelectEmocion" class="modal-test-label">
+          <i class="fa-solid fa-heart-pulse"></i> ${t.lblEmocion}
         </label>
-        <input 
-          type="text" 
-          id="testInputNombre" 
-          class="modal-test-input" 
-          placeholder="${pasoConfig.placeholderNombre}" 
-          value="${pasoConfig.nombreActual || ''}"
-        />
-      </div>
-
-      <div style="margin-bottom: 1.2rem;">
-        <label class="modal-agendar-label" style="margin-bottom: 0.5rem;">
-          <i class="fa-regular fa-clock"></i> ${pasoConfig.lblTurno}
-        </label>
-        <div class="modal-test-options-grid">
-          ${pasoConfig.turnos.map(turno => {
-            const isActive = estadoTest.respuestas.turnoId === turno.id;
-            return `
-              <button type="button" class="modal-test-option-btn ${isActive ? 'active' : ''}" data-turno-id="${turno.id}" data-turno-nombre="${turno.nombre}">
-                <i class="fa-regular fa-circle-check modal-test-option-icon"></i>
-                <div>
-                  <span class="modal-test-option-title">${turno.nombre}</span>
-                </div>
-              </button>
-            `;
+        <select id="testSelectEmocion" class="modal-test-input">
+          <option value="" disabled ${!estadoTest.emocionId ? 'selected' : ''}>${t.placeholderEmocion}</option>
+          ${(t.opcionesEmocion || []).map(opt => {
+            const isSel = estadoTest.emocionId === opt.id;
+            return `<option value="${opt.id}" ${isSel ? 'selected' : ''}>${opt.texto}</option>`;
           }).join('')}
+        </select>
+      </div>
+
+      <!-- 2. Textarea de Desahogo Libre -->
+      <div class="modal-test-field">
+        <label for="testInputDesahogo" class="modal-test-label">
+          <i class="fa-solid fa-feather-pointed"></i> ${t.lblDesahogo}
+        </label>
+        <p style="font-size: 0.78rem; color: var(--tx2, #64748b); margin: 0 0 0.4rem 0;">
+          ${t.subDesahogo}
+        </p>
+        <textarea 
+          id="testInputDesahogo" 
+          class="modal-test-textarea" 
+          placeholder="${t.placeholderDesahogo}"
+        >${estadoTest.desahogo || ''}</textarea>
+      </div>
+
+      <!-- 3. ¿Desde cuándo sientes esto? (Selector Popover Especializado organizado como Agendar) -->
+      <div class="modal-test-field">
+        <label for="testTiempoTrigger" class="modal-test-label">
+          <i class="fa-regular fa-clock"></i> ${t.lblTiempo}
+        </label>
+        <div class="modal-test-tiempo-col" id="testTiempoCol">
+          <button type="button" id="testTiempoTrigger" class="modal-test-tiempo-trigger" aria-haspopup="dialog" aria-expanded="false">
+            <span class="modal-test-tiempo-val">
+              <i class="fa-regular fa-clock"></i>
+              <span id="testTiempoValLabel">${estadoTest.tiempo || t.tiempos[0]}</span>
+            </span>
+            <i class="fa-solid fa-chevron-down tiempo-arrow"></i>
+          </button>
+
+          <div id="testTiempoPopover" class="modal-test-tiempo-popover" role="dialog" aria-label="${t.tituloTiempos}">
+            <div class="tiempo-popover-header">
+              <span><i class="fa-regular fa-clock"></i> ${t.tituloTiempos}</span>
+              <span style="font-size: 0.72rem; opacity: 0.75;">${t.tiempos.length} opciones</span>
+            </div>
+
+            <!-- Sección 1: Reciente / Pocos días -->
+            <div class="tiempo-popover-section">
+              <div class="tiempo-popover-tag">
+                <i class="fa-solid fa-bolt"></i> ${t.tiempoReciente}
+              </div>
+              <div class="tiempo-popover-list">
+                ${(t.tiempos || []).slice(0, 2).map((tmp, idx) => {
+                  const isSel = (estadoTest.tiempo === tmp) || (!estadoTest.tiempo && idx === 0);
+                  return `
+                    <button type="button" class="tiempo-pill ${isSel ? 'tiempo-pill-active' : ''}" data-tiempo="${tmp}">
+                      ${tmp}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+
+            <!-- Sección 2: Prolongado / Continuo -->
+            <div class="tiempo-popover-section">
+              <div class="tiempo-popover-tag">
+                <i class="fa-regular fa-calendar-check"></i> ${t.tiempoProlongado}
+              </div>
+              <div class="tiempo-popover-list">
+                ${(t.tiempos || []).slice(2).map(tmp => {
+                  const isSel = (estadoTest.tiempo === tmp);
+                  return `
+                    <button type="button" class="tiempo-pill ${isSel ? 'tiempo-pill-active' : ''}" data-tiempo="${tmp}">
+                      ${tmp}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Botón Continuar -->
+      <button type="button" id="btnTestContinuarEtapa2" class="modal-test-btn-next">
+        <span>${t.btnSiguienteEtapa}</span> <i class="fa-solid fa-arrow-right"></i>
+      </button>
     `;
 
-    // Listeners del paso 7
-    const inputNombre = document.getElementById('testInputNombre');
-    inputNombre?.addEventListener('input', (e) => {
-      estadoTest.respuestas.nombrePaciente = e.target.value.trim();
+    // Destruir instancia previa de wiSelect si existía
+    if (wiSelectEmocionInst) {
+      try { wiSelectEmocionInst.destroy(); } catch (e) {}
+      wiSelectEmocionInst = null;
+    }
+
+    // Inicializar wiSelect en el selector de emoción con debounce de 500ms
+    try {
+      wiSelectEmocionInst = wiSelect('#testSelectEmocion', {
+        placeholder: t.placeholderEmocion,
+        searchPlaceholder: 'Buscar cómo te sientes...',
+        onChange: (val) => {
+          estadoTest.emocionId = val;
+          const found = (t.opcionesEmocion || []).find(o => o.id === val);
+          estadoTest.emocionTexto = found ? found.texto : val;
+          programarActualizacionPreview(500);
+        }
+      });
+    } catch (e) {}
+
+    // Establecer tiempo inicial por defecto si aún no está asignado
+    if (!estadoTest.tiempo && t.tiempos && t.tiempos.length > 0) {
+      estadoTest.tiempo = t.tiempos[0];
+    }
+
+    // Control del Popover Especializado de Tiempo
+    const tiempoTrigger = document.getElementById('testTiempoTrigger');
+    const tiempoPopover = document.getElementById('testTiempoPopover');
+    const tiempoValLabel = document.getElementById('testTiempoValLabel');
+    const tiempoCol = document.getElementById('testTiempoCol');
+
+    const toggleTiempoPopover = (forzarEstado) => {
+      const abrir = forzarEstado !== undefined ? forzarEstado : !tiempoPopover?.classList.contains('tiempo-popover-open');
+      tiempoPopover?.classList.toggle('tiempo-popover-open', abrir);
+      tiempoTrigger?.classList.toggle('tiempo-trigger-open', abrir);
+      tiempoTrigger?.setAttribute('aria-expanded', String(abrir));
+    };
+
+    tiempoTrigger?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleTiempoPopover();
     });
 
-    container.querySelectorAll('[data-turno-id]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        container.querySelectorAll('[data-turno-id]').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        estadoTest.respuestas.turnoId = btn.dataset.turnoId;
-        estadoTest.respuestas.turnoTexto = btn.dataset.turnoNombre;
+    const onDocClickTiempo = (e) => {
+      if (tiempoCol && !tiempoCol.contains(e.target)) {
+        toggleTiempoPopover(false);
+      }
+    };
+    document.addEventListener('click', onDocClickTiempo);
+
+    // Selección de pills de duración con debounce y preview reactivo
+    tiempoPopover?.querySelectorAll('.tiempo-pill').forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const nuevoTiempo = pill.getAttribute('data-tiempo');
+        if (nuevoTiempo) {
+          estadoTest.tiempo = nuevoTiempo;
+          if (tiempoValLabel) tiempoValLabel.textContent = nuevoTiempo;
+
+          tiempoPopover.querySelectorAll('.tiempo-pill').forEach(p => p.classList.remove('tiempo-pill-active'));
+          pill.classList.add('tiempo-pill-active');
+
+          toggleTiempoPopover(false);
+          programarActualizacionPreview(500);
+        }
       });
     });
 
-    return;
-  }
+    // Listeners del Textarea con Debounce de 500ms tras dejar de escribir (input, keyup, blur)
+    const textarea = document.getElementById('testInputDesahogo');
+    const onDesahogoActivity = (e) => {
+      estadoTest.desahogo = e.target.value;
+      programarActualizacionPreview(500);
+    };
 
-  // Pasos 1 a 6 (Selección con Micro-Feedback Empático)
-  let microEmpathyHtml = '';
-  const respuestaPrevia = estadoTest.respuestas[`${pasoConfig.claveRespuesta}Empathy`];
-  if (respuestaPrevia) {
-    microEmpathyHtml = `
-      <div class="modal-test-empathy-pill" id="testEmpathyBox">
-        <i class="fa-solid fa-heart-circle-check modal-test-empathy-icon"></i>
-        <span class="modal-test-empathy-text">${respuestaPrevia}</span>
+    textarea?.addEventListener('input', onDesahogoActivity);
+    textarea?.addEventListener('keyup', onDesahogoActivity);
+    textarea?.addEventListener('blur', onDesahogoActivity);
+
+    // Listener del Botón Continuar a Etapa 2
+    document.getElementById('btnTestContinuarEtapa2')?.addEventListener('click', () => {
+      if (!estadoTest.emocionId) {
+        const triggerEl = document.querySelector('#testSelectEmocion + .wi-select-trigger') || document.getElementById('testSelectEmocion');
+        wiTip(triggerEl, t.valEmocion, 'error', 2600);
+        return;
+      }
+      estadoTest.etapa = 2;
+      renderizarEtapa();
+    });
+
+  } else {
+    // ── ETAPA 2: Coordinación de Cita y Datos de Contacto ────────
+    if (progressBarFill) progressBarFill.style.width = '100%';
+    if (progressMeta) progressMeta.textContent = t.etapa2Progreso;
+    if (progressPercent) progressPercent.textContent = '100%';
+
+    const fechaDefault = estadoTest.fecha || obtenerFechaPorDefecto();
+    const fechaMin = obtenerFechaMinima();
+
+    colForm.innerHTML = `
+      <!-- Fila 1: 4. Tu Nombre Completo + 5. Correo Electrónico -->
+      <div class="modal-test-grid-2">
+        <div class="modal-test-field">
+          <label for="testInputNombre" class="modal-test-label">
+            <i class="fa-regular fa-user"></i> ${t.lblNombre}
+          </label>
+          <input 
+            type="text" 
+            id="testInputNombre" 
+            class="modal-test-input" 
+            placeholder="${t.placeholderNombre}" 
+            value="${estadoTest.nombre || ''}"
+          />
+        </div>
+
+        <div class="modal-test-field">
+          <label for="testInputCorreo" class="modal-test-label">
+            <i class="fa-regular fa-envelope"></i> ${t.lblCorreo}
+          </label>
+          <input 
+            type="email" 
+            id="testInputCorreo" 
+            class="modal-test-input" 
+            placeholder="${t.placeholderCorreo}" 
+            value="${estadoTest.correo || ''}"
+          />
+        </div>
       </div>
-    `;
-  }
 
-  container.innerHTML = `
-    <div class="modal-test-question-box">
-      <h4 class="modal-test-question-title">${pasoConfig.titulo}</h4>
-      <p class="modal-test-question-sub">${pasoConfig.sub}</p>
-    </div>
+      <!-- Fila 2: 6. Celular o WhatsApp + 7. Modalidad de Atención -->
+      <div class="modal-test-grid-2">
+        <div class="modal-test-field">
+          <label for="testInputCelular" class="modal-test-label">
+            <i class="fa-brands fa-whatsapp"></i> ${t.lblCelular}
+          </label>
+          <input 
+            type="tel" 
+            id="testInputCelular" 
+            class="modal-test-input" 
+            placeholder="${t.placeholderCelular}" 
+            value="${estadoTest.celular || ''}"
+          />
+        </div>
 
-    <div id="testEmpathyContainer">
-      ${microEmpathyHtml}
-    </div>
+        <div class="modal-test-field">
+          <label for="testSelectModalidad" class="modal-test-label">
+            <i class="fa-solid fa-globe"></i> ${t.lblModalidad}
+          </label>
+          <select id="testSelectModalidad" class="modal-test-input modal-test-clean-select">
+            ${t.modalidades.map((m, idx) => {
+              const isSel = (estadoTest.modalidad === m) || (idx === 0 && !estadoTest.modalidad);
+              return `<option value="${m}" ${isSel ? 'selected' : ''}>${m}</option>`;
+            }).join('')}
+          </select>
+        </div>
+      </div>
 
-    <div class="modal-test-options-grid">
-      ${pasoConfig.opciones.map(opt => {
-        const isActive = estadoTest.respuestas[`${pasoConfig.claveRespuesta}Id`] === opt.id;
-        return `
-          <button type="button" class="modal-test-option-btn ${isActive ? 'active' : ''}" 
-                  data-opt-id="${opt.id}" 
-                  data-opt-titulo="${opt.titulo}"
-                  data-opt-empathy="${opt.empathy || ''}">
-            <i class="${opt.icono || 'fa-solid fa-circle-check'} modal-test-option-icon"></i>
-            <div>
-              <span class="modal-test-option-title">${opt.titulo}</span>
-              ${opt.desc ? `<span class="modal-test-option-desc">${opt.desc}</span>` : ''}
-            </div>
-          </button>
-        `;
-      }).join('')}
-    </div>
-  `;
+      <!-- Fila 3: 8. Fecha y Selector Especializado de Horarios -->
+      <div class="modal-test-grid-2">
+        <div class="modal-test-field">
+          <label for="testInputFecha" class="modal-test-label">
+            <i class="fa-regular fa-calendar-days"></i> ${t.lblFecha}
+          </label>
+          <input 
+            type="date" 
+            id="testInputFecha" 
+            class="modal-test-input" 
+            value="${fechaDefault}" 
+            min="${fechaMin}" 
+          />
+        </div>
 
-  // Listeners de Opciones (Al hacer clic, muestra el micro-feedback empático y marca activo)
-  container.querySelectorAll('[data-opt-id]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      container.querySelectorAll('[data-opt-id]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const optId = btn.dataset.optId;
-      const optTitulo = btn.dataset.optTitulo;
-      const empathy = btn.dataset.optEmpathy;
-
-      // Registrar respuesta
-      estadoTest.respuestas[`${pasoConfig.claveRespuesta}Id`] = optId;
-      estadoTest.respuestas[`${pasoConfig.claveRespuesta}Texto`] = optTitulo;
-      estadoTest.respuestas[`${pasoConfig.claveRespuesta}Empathy`] = empathy;
-
-      // Desplegar micro-feedback empático
-      const empathyContainer = document.getElementById('testEmpathyContainer');
-      if (empathyContainer && empathy) {
-        empathyContainer.innerHTML = `
-          <div class="modal-test-empathy-pill">
-            <i class="fa-solid fa-heart-circle-check modal-test-empathy-icon"></i>
-            <span class="modal-test-empathy-text">${empathy}</span>
+        <!-- Selector Especializado de Horarios con Slots / Pills idéntico a Modal Agendar -->
+        <div class="modal-test-hora-col" id="testHoraCol">
+          <label class="modal-test-label">
+            <i class="fa-regular fa-clock"></i> ${t.lblHora}
+          </label>
+          <div id="testSelectHoraTrigger" class="modal-test-hora-trigger" tabindex="0" role="button" aria-haspopup="true" aria-expanded="false">
+            <span id="testHoraValDisplay" class="modal-test-hora-val">
+              <i class="fa-regular fa-clock"></i> ${estadoTest.hora || '04:30 PM'}
+            </span>
+            <i class="fa-solid fa-chevron-up hora-arrow"></i>
           </div>
-        `;
+          <input type="hidden" id="testSelectHora" value="${estadoTest.hora || '04:30 PM'}" />
+
+          <!-- Popover de Horarios con Slots / Pills que abre hacia ARRIBA -->
+          <div id="testHoraPopover" class="modal-test-hora-popover">
+            <div class="hora-popover-header">
+              <span>${t.tituloHorarios || 'Horarios Disponibles'}</span>
+              <i class="fa-solid fa-business-time" style="color: var(--mco, #0284c7);"></i>
+            </div>
+
+            <div class="hora-popover-section">
+              <div class="hora-popover-tag"><i class="fa-solid fa-sun"></i> ${t.turnoManana || 'Mañana'}</div>
+              <div class="hora-popover-grid">
+                <button type="button" class="hora-pill ${(estadoTest.hora === '09:00 AM') ? 'hora-pill-active' : ''}" data-hora="09:00 AM">09:00 AM</button>
+                <button type="button" class="hora-pill ${(estadoTest.hora === '10:30 AM') ? 'hora-pill-active' : ''}" data-hora="10:30 AM">10:30 AM</button>
+                <button type="button" class="hora-pill ${(estadoTest.hora === '12:00 PM') ? 'hora-pill-active' : ''}" data-hora="12:00 PM">12:00 PM</button>
+              </div>
+            </div>
+
+            <div class="hora-popover-section">
+              <div class="hora-popover-tag"><i class="fa-solid fa-cloud-sun"></i> ${t.turnoTarde || 'Tarde / Noche'}</div>
+              <div class="hora-popover-grid">
+                <button type="button" class="hora-pill ${(estadoTest.hora === '03:00 PM') ? 'hora-pill-active' : ''}" data-hora="03:00 PM">03:00 PM</button>
+                <button type="button" class="hora-pill ${(estadoTest.hora === '04:30 PM' || !estadoTest.hora) ? 'hora-pill-active' : ''}" data-hora="04:30 PM">04:30 PM</button>
+                <button type="button" class="hora-pill ${(estadoTest.hora === '06:00 PM') ? 'hora-pill-active' : ''}" data-hora="06:00 PM">06:00 PM</button>
+              </div>
+              <div class="hora-popover-grid" style="margin-top: 0.45rem;">
+                <button type="button" class="hora-pill ${(estadoTest.hora === '07:30 PM') ? 'hora-pill-active' : ''}" data-hora="07:30 PM">07:30 PM</button>
+                <button type="button" class="hora-pill hora-pill-wide ${(estadoTest.hora === (t.horaACoordinar || 'A coordinar')) ? 'hora-pill-active' : ''}" style="grid-column: span 2;" data-hora="${t.horaACoordinar || 'A coordinar'}">
+                  <i class="fa-solid fa-handshake"></i> ${t.horaACoordinar || 'A coordinar'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acciones de Etapa 2 -->
+      <button type="button" id="btnTestSubmitWa" class="modal-test-btn-submit-wa">
+        <i class="fa-brands fa-whatsapp" style="font-size: 1.3rem;"></i>
+        <span>${t.btnConfirmarWa}</span>
+      </button>
+
+      <button type="button" id="btnTestVolverEtapa1" class="modal-test-btn-back">
+        ${t.btnVolverEtapa1}
+      </button>
+    `;
+
+    // Inicializar wiSelect en modalidad limpia (sin buscador)
+    if (wiSelectModalidadInst) {
+      try { wiSelectModalidadInst.destroy(); } catch (e) {}
+      wiSelectModalidadInst = null;
+    }
+    try {
+      wiSelectModalidadInst = wiSelect('#testSelectModalidad', {
+        placeholder: t.placeholderModalidad,
+        searchPlaceholder: '',
+        onChange: (val) => {
+          estadoTest.modalidad = val;
+        }
+      });
+      if (!estadoTest.modalidad && t.modalidades.length > 0) {
+        estadoTest.modalidad = t.modalidades[0];
+      }
+    } catch (e) {}
+
+    // Control del Popover Especializado de Horarios (Etapa 2)
+    const horaTrigger = document.getElementById('testSelectHoraTrigger');
+    const horaPopover = document.getElementById('testHoraPopover');
+    const horaDisplay = document.getElementById('testHoraValDisplay');
+    const horaHiddenInput = document.getElementById('testSelectHora');
+    const horaCol = document.getElementById('testHoraCol');
+
+    const cerrarHoraPopover = () => {
+      horaPopover?.classList.remove('hora-popover-open');
+      horaTrigger?.classList.remove('hora-trigger-open');
+      horaTrigger?.setAttribute('aria-expanded', 'false');
+    };
+
+    const abrirHoraPopover = () => {
+      horaPopover?.classList.add('hora-popover-open');
+      horaTrigger?.classList.add('hora-trigger-open');
+      horaTrigger?.setAttribute('aria-expanded', 'true');
+    };
+
+    horaTrigger?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (horaPopover?.classList.contains('hora-popover-open')) {
+        cerrarHoraPopover();
+      } else {
+        abrirHoraPopover();
       }
     });
-  });
-}
 
-/**
- * Avanza al siguiente paso o finaliza el test
- */
-async function avanzarPaso() {
-  if (!estadoTest) return;
-
-  if (estadoTest.pasoActual < TOTAL_PASOS) {
-    if (!puedeAvanzar(estadoTest)) {
-      // Si no ha elegido nada, seleccionar la primera opción por defecto
-      const container = document.getElementById('testDynamicBody');
-      const firstBtn = container?.querySelector('[data-opt-id]');
-      if (firstBtn) firstBtn.click();
-    }
-    estadoTest.pasoActual++;
-    renderizarPaso();
-    document.querySelector('.modal-test-dialog')?.scrollTo({ top: 0, behavior: 'smooth' });
-  } else {
-    // Finalizar: Ejecutar análisis de ChatWii (Gemini AI / Fallback)
-    await ejecutarFinalizacion();
-  }
-}
-
-/**
- * Retrocede al paso anterior
- */
-function retrocederPaso() {
-  if (!estadoTest || estadoTest.pasoActual <= 1) return;
-  estadoTest.pasoActual--;
-  renderizarPaso();
-  document.querySelector('.modal-test-dialog')?.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-/**
- * Pantalla de carga y resolución con ChatWii
- */
-async function ejecutarFinalizacion() {
-  const container = document.getElementById('testDynamicBody');
-  const progressWrap = document.getElementById('testProgressWrap');
-  const navWrap = document.getElementById('testNavWrap');
-  if (!container) return;
-
-  const t = obtenerTextos();
-  const lang = obtenerIdiomaActivo();
-
-  // Ocultar barra de progreso y navegación durante el análisis
-  if (progressWrap) progressWrap.style.display = 'none';
-  if (navWrap) navWrap.style.display = 'none';
-
-  // Mostrar pantalla de carga empática
-  container.innerHTML = `
-    <div class="modal-test-loading">
-      <div class="modal-test-loading-spinner"></div>
-      <h4 class="modal-test-loading-title">${t.cargandoTitulo}</h4>
-      <p class="modal-test-loading-sub">${t.cargandoSub}</p>
-    </div>
-  `;
-
-  // Llamada a ChatWii con fallback transparente garantizado
-  const orientacion = await generarOrientacionChatWii(estadoTest, lang);
-
-  // Renderizar Ficha Final de Orientación Terapéutica
-  container.innerHTML = `
-    <div class="modal-test-result">
-      
-      <div class="modal-test-result-card">
-        <span class="modal-test-result-badge">
-          <i class="fa-solid fa-certificate"></i> ${t.resultadoBadge}
-        </span>
-        
-        <h4 class="modal-test-result-profile">${orientacion.tituloPerfil}</h4>
-        
-        <p class="modal-test-result-desc">${orientacion.resumenEmpatico}</p>
-        
-        <div style="margin-bottom: 0.85rem; font-size: 0.8rem; font-weight: 750; color: var(--mco, #0284c7); text-transform: uppercase;">
-          <i class="fa-solid fa-stethoscope"></i> ${orientacion.enfoqueRecomendado}
-        </div>
-
-        <ul class="modal-test-result-points">
-          ${orientacion.puntosClave.map(p => `
-            <li class="modal-test-result-point">
-              <i class="fa-solid fa-circle-check"></i>
-              <span>${p}</span>
-            </li>
-          `).join('')}
-        </ul>
-
-        <div style="font-size: 0.82rem; color: var(--tx2, #64748b); font-style: italic; border-top: 1px solid rgba(2, 132, 199, 0.2); padding-top: 0.75rem;">
-          ${orientacion.mensajeEspecialista}
-        </div>
-      </div>
-
-      <div class="modal-test-result-actions">
-        <a href="${orientacion.waUrl}" target="_blank" rel="noopener noreferrer" class="modal-test-btn-whatsapp" id="btnTestEnviarWhatsApp">
-          <i class="fa-brands fa-whatsapp" style="font-size: 1.35rem;"></i>
-          <span>${t.btnWhatsApp}</span>
-        </a>
-
-        <button type="button" id="btnTestAbrirFormulario" class="modal-test-btn-form">
-          <i class="fa-regular fa-calendar-check"></i>
-          <span>${t.btnFormulario}</span>
-        </button>
-
-        <button type="button" id="btnTestReiniciar" style="background: none; border: none; font-size: 0.78rem; color: var(--tx2, #64748b); cursor: pointer; text-decoration: underline; margin-top: 0.4rem;">
-          ${t.btnReiniciar}
-        </button>
-      </div>
-
-    </div>
-  `;
-
-  // Listeners de la Ficha Final
-  document.getElementById('btnTestEnviarWhatsApp')?.addEventListener('click', () => {
-    cerrarModalTest();
-  });
-
-  document.getElementById('btnTestAbrirFormulario')?.addEventListener('click', async () => {
-    const { transferirTestAAgendar } = await import('../modalHero.js');
-    transferirTestAAgendar({
-      motivoId: estadoTest.respuestas.motivoId,
-      nombre: estadoTest.respuestas.nombrePaciente
+    horaTrigger?.addEventListener('keydown', (e) => {
+      if (['Enter', ' '].includes(e.key)) {
+        e.preventDefault();
+        horaTrigger.click();
+      } else if (e.key === 'Escape') {
+        cerrarHoraPopover();
+      }
     });
-  });
 
-  document.getElementById('btnTestReiniciar')?.addEventListener('click', () => {
-    iniciarTest();
-  });
+    horaPopover?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const btn = e.target.closest('.hora-pill');
+      if (!btn) return;
+      const horaVal = btn.getAttribute('data-hora') || '04:30 PM';
+      estadoTest.hora = horaVal;
+      if (horaHiddenInput) horaHiddenInput.value = horaVal;
+      if (horaDisplay) {
+        horaDisplay.innerHTML = `<i class="fa-regular fa-clock"></i> ${horaVal}`;
+      }
+      horaPopover.querySelectorAll('.hora-pill').forEach(p => p.classList.remove('hora-pill-active'));
+      btn.classList.add('hora-pill-active');
+      cerrarHoraPopover();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (horaCol && !horaCol.contains(e.target)) {
+        cerrarHoraPopover();
+      }
+    });
+
+    // Inputs de Etapa 2
+    document.getElementById('testInputNombre')?.addEventListener('input', (e) => {
+      estadoTest.nombre = e.target.value;
+    });
+    document.getElementById('testInputCorreo')?.addEventListener('input', (e) => {
+      estadoTest.correo = e.target.value;
+    });
+    document.getElementById('testInputCelular')?.addEventListener('input', (e) => {
+      estadoTest.celular = e.target.value;
+    });
+    document.getElementById('testInputFecha')?.addEventListener('change', (e) => {
+      estadoTest.fecha = e.target.value;
+    });
+    document.getElementById('testSelectHora')?.addEventListener('change', (e) => {
+      estadoTest.hora = e.target.value;
+    });
+
+    // Botón Volver a Etapa 1
+    document.getElementById('btnTestVolverEtapa1')?.addEventListener('click', () => {
+      estadoTest.etapa = 1;
+      renderizarEtapa();
+    });
+
+    // Envío a WhatsApp con Validación
+    document.getElementById('btnTestSubmitWa')?.addEventListener('click', () => {
+      const inputNombre = document.getElementById('testInputNombre');
+      const inputCelular = document.getElementById('testInputCelular');
+      const inputFecha = document.getElementById('testInputFecha');
+
+      const nombre = inputNombre?.value?.trim();
+      if (!nombre) {
+        wiTip(inputNombre, t.valNombre, 'error', 2600);
+        inputNombre?.focus();
+        return;
+      }
+
+      const celular = inputCelular?.value?.trim();
+      if (!celular) {
+        wiTip(inputCelular, t.valCelular, 'error', 2600);
+        inputCelular?.focus();
+        return;
+      }
+
+      const fecha = inputFecha?.value;
+      if (!fecha) {
+        wiTip(inputFecha, t.valFecha, 'error', 2600);
+        inputFecha?.focus();
+        return;
+      }
+
+      estadoTest.nombre = nombre;
+      estadoTest.celular = celular;
+      estadoTest.fecha = fecha;
+      estadoTest.modalidad = document.getElementById('testSelectModalidad')?.value || t.modalidades[0];
+      estadoTest.hora = document.getElementById('testSelectHora')?.value || '04:30 PM';
+
+      const urlWa = construirUrlWhatsApp(estadoTest, t);
+      window.open(urlWa, '_blank', 'noopener,noreferrer');
+      cerrarModalTest();
+    });
+  }
 }
 
 /**
- * Reinicia e inicializa el test con el motivo opcional
+ * Programa la actualización del preview con debounce de 500ms y control de concurrencia
+ * para evitar colisiones ante selecciones rápidas o escritura continua en el textarea.
+ * @param {number} [delayMs=500]
  */
-function iniciarTest(motivoOId = null) {
-  estadoTest = crearEstadoTest();
-
-  // Si viene con un motivo preseleccionado desde el Hero
-  if (motivoOId) {
-    const term = motivoOId.toLowerCase();
-    if (term.includes('ansiedad') || term.includes('estres')) {
-      estadoTest.respuestas.motivoId = 'ansiedad';
-    } else if (term.includes('pareja') || term.includes('familiar')) {
-      estadoTest.respuestas.motivoId = 'pareja';
-    } else if (term.includes('apoyo') || term.includes('triste') || term.includes('desahogo')) {
-      estadoTest.respuestas.motivoId = 'apoyo';
-    } else if (term.includes('general') || term.includes('otro')) {
-      estadoTest.respuestas.motivoId = 'general';
-    }
+function programarActualizacionPreview(delayMs = 500) {
+  // Cancelar temporizador de debounce previo si existía
+  if (previewDebounceTimer) {
+    clearTimeout(previewDebounceTimer);
+    previewDebounceTimer = null;
   }
 
-  // Restaurar visibilidad de navegación y progreso
-  const progressWrap = document.getElementById('testProgressWrap');
-  const navWrap = document.getElementById('testNavWrap');
-  if (progressWrap) progressWrap.style.display = 'block';
-  if (navWrap) navWrap.style.display = 'flex';
+  // Cancelar animación de escritura previa
+  if (typewriterTimer) {
+    clearInterval(typewriterTimer);
+    typewriterTimer = null;
+  }
 
-  renderizarPaso();
+  // Generar ID único de petición para anular respuestas desfasadas
+  const requestId = ++currentPreviewRequestId;
+
+  previewDebounceTimer = setTimeout(async () => {
+    const previewBody = document.getElementById('testPreviewBody');
+    const previewBadge = document.getElementById('testPreviewBadge');
+    const previewBadgeText = document.getElementById('testPreviewBadgeText');
+    const lang = obtenerIdiomaActivo();
+
+    // Feedback visual sutil durante el procesamiento en segundo plano
+    if (previewBody) previewBody.style.opacity = '0.55';
+
+    try {
+      const devolucion = await solicitarDevolucionChatWii(estadoTest, lang);
+
+      // Si el usuario realizó otra acción mientras la respuesta estaba en vuelo, descartarla
+      if (requestId !== currentPreviewRequestId) {
+        return;
+      }
+
+      estadoTest.devolucionEmpatica = devolucion;
+
+      if (previewBody) {
+        escribirPalabraPorPalabra(previewBody, devolucion, 65, () => {
+          if (requestId !== currentPreviewRequestId) return;
+          if (previewBadge && previewBadgeText) {
+            previewBadge.style.display = 'inline-flex';
+            previewBadgeText.textContent = estadoTest.emocionTexto || 'Escucha Activa';
+          }
+        });
+      }
+
+      if (previewBadge && previewBadgeText) {
+        previewBadge.style.display = 'inline-flex';
+        previewBadgeText.textContent = estadoTest.emocionTexto || 'Escucha Activa';
+      }
+    } catch (e) {
+      if (previewBody) previewBody.style.opacity = '1';
+    }
+  }, delayMs);
 }
 
 /**
@@ -442,8 +749,30 @@ export function abrirModalTest(motivoOId = null) {
   const modal = asegurarModalEnDOM();
   if (!modal) return;
 
+  estadoTest = crearEstadoTest();
+
+  // Si viene con un motivo preseleccionado desde el Hero
   const motivoGuardado = motivoOId || (typeof localStorage !== 'undefined' ? localStorage.getItem('psicologia_motivo_activo') : '');
-  iniciarTest(motivoGuardado);
+  if (motivoGuardado) {
+    const t = obtenerTextos();
+    const term = motivoGuardado.toLowerCase();
+    const match = (t.opcionesEmocion || []).find(c => {
+      const cId = c.id.toLowerCase();
+      const cTxt = c.texto.toLowerCase();
+      return cId.includes(term) || cTxt.includes(term) || (term.includes('triste') && cId === 'triste') || (term.includes('ansiedad') && cId === 'sobrepensar') || (term.includes('agotad') && cId === 'agotado');
+    });
+    if (match) {
+      estadoTest.emocionId = match.id;
+      estadoTest.emocionTexto = match.texto;
+    }
+  }
+
+  renderizarEtapa();
+
+  // Si había una emoción inicial, generar preview inmediato (sin delay)
+  if (estadoTest.emocionId) {
+    programarActualizacionPreview(0);
+  }
 
   modal.style.display = 'flex';
   modal.classList.add('active', 'open');
@@ -458,6 +787,22 @@ export function cerrarModalTest() {
   if (modal) {
     modal.style.display = 'none';
     modal.classList.remove('active', 'open');
+  }
+  if (previewDebounceTimer) {
+    clearTimeout(previewDebounceTimer);
+    previewDebounceTimer = null;
+  }
+  if (typewriterTimer) {
+    clearInterval(typewriterTimer);
+    typewriterTimer = null;
+  }
+  if (wiSelectEmocionInst) {
+    try { wiSelectEmocionInst.destroy(); } catch (e) {}
+    wiSelectEmocionInst = null;
+  }
+  if (wiSelectModalidadInst) {
+    try { wiSelectModalidadInst.destroy(); } catch (e) {}
+    wiSelectModalidadInst = null;
   }
   document.body.classList.remove('modal-open');
 }
