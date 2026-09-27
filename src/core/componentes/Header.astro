@@ -145,18 +145,17 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
       <!-- Anti-Flash Inmediato (0ms) para Perfil de Usuario -->
       <script is:inline>try{const u=JSON.parse(localStorage.getItem('wiSmile')||'{}');if(u.uid||u.nombre){const d=(u.rol==='personal'||u.rol==='gestor'||u.rol==='admin')?'/personal':'/cliente';const p=location.pathname.startsWith('/en')?`/en${d}`:d;const a=document.getElementById('headerPerfilLink'),b=document.getElementById('drawerPerfilLink');if(a)a.href=p;if(b)b.href=p;}}catch(e){}</script>
 
-      <!-- Botón AGENDAR CITA -->
+      <!-- Botón AGENDAR CITA (Abre Modal Agendar) -->
       {!esPersonal && (
-        <a 
-          href={`https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`} 
-          target="_blank" 
-          rel="noopener noreferrer" 
+        <button 
+          type="button" 
+          onclick="window.abrirModalAgendar && window.abrirModalAgendar()" 
           class="header-btn-order desktop-only" 
           title="Agendar Consulta por WhatsApp"
-          style="display: inline-flex; text-decoration: none;"
+          style="display: inline-flex; cursor: pointer; border: none;"
         >
           <i class="fa-brands fa-whatsapp"></i> <span>{t.pedir}</span>
-        </a>
+        </button>
       )}
 
       <!-- Botón Hamburguesa Móvil -->

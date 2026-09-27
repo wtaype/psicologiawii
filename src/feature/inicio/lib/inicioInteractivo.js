@@ -152,9 +152,7 @@ function initSelectorTemas() {
       }
 
       if (btnWsp) {
-        const mensaje = `Hola Lic. Sofia Reynaga, deseo agendar una consulta por ${labelText}.`;
-        const baseUrl = btnWsp.href.split('?')[0];
-        btnWsp.href = `${baseUrl}?text=${encodeURIComponent(mensaje)}`;
+        btnWsp.setAttribute('data-tema', tema);
       }
 
       try {

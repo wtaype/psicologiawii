@@ -130,17 +130,19 @@ const jsonLd = getJsonLd(ruta, idioma);
       }
     };
 
-    // Modal Pedido / Agendamiento On-Demand (0 KiB en carga inicial)
-    (window as any).abrirModalPedido = (producto?: string) => {
-      import('../../feature/inicio/lib/modalPedido.js').then((m) => {
-        m.abrirModalPedido(producto);
+    // Modal Interactivo Agendar Cita por WhatsApp On-Demand (0 KiB en carga inicial - Estilo Gaswii)
+    (window as any).abrirModalAgendar = (servicioId?: string) => {
+      import('../../feature/inicio/lib/modalAgendar.js').then((m) => {
+        m.abrirModalAgendar(servicioId);
       });
     };
-    (window as any).cerrarModalPedido = () => {
-      import('../../feature/inicio/lib/modalPedido.js').then((m) => {
-        m.cerrarModalPedido();
+    (window as any).cerrarModalAgendar = () => {
+      import('../../feature/inicio/lib/modalAgendar.js').then((m) => {
+        m.cerrarModalAgendar();
       });
     };
+    (window as any).abrirModalPedido = (window as any).abrirModalAgendar;
+    (window as any).cerrarModalPedido = (window as any).cerrarModalAgendar;
 
     // Test de Orientación Psicológica On-Demand (0 KiB en carga inicial)
     (window as any).abrirModalTest = () => {

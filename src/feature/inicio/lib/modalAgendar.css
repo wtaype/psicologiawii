@@ -1,0 +1,512 @@
+/* src/feature/inicio/lib/modalAgendar.css
+   Estilos del Modal Interactivo de Agendamiento - Consultorio Psicológico América
+   Con wiSelect, witip, calendario, horario y soporte para sede única Villa El Salvador + Online / Llamadas.
+   100% tokens fluidos de witema.css
+*/
+
+.modal-agendar-dialog {
+  width: 100%;
+  max-width: 820px;
+  background: var(--wb, #ffffff);
+  border: 1px solid var(--brd, #e2e8f0);
+  border-radius: var(--r_l, 1.5vh);
+  padding: 2.2rem 2.4rem;
+  box-shadow: 0 25px 65px rgba(7, 25, 35, 0.5);
+  box-sizing: border-box;
+  animation: modalAgendarPop 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 94vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+@keyframes modalAgendarPop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* 1. Encabezado */
+.modal-agendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.1rem;
+  border-bottom: 1px solid var(--brd, #e2e8f0);
+}
+
+.modal-agendar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: var(--fz_s3, 0.78rem);
+  font-weight: 700;
+  padding: 0.3rem 0.85rem;
+  border-radius: var(--r_full, 999px);
+  background: rgba(2, 132, 199, 0.12);
+  color: var(--mco, #0284c7);
+  margin-bottom: 0.45rem;
+  cursor: default;
+}
+
+.modal-agendar-title {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(1.25rem, 1.6vw, 1.5rem);
+  font-weight: 850;
+  color: var(--tx, #071923);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.modal-agendar-subtitle {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s3, 0.82rem);
+  color: var(--tx2, #64748b);
+  margin: 0.35rem 0 0 0;
+  font-weight: 500;
+}
+
+.modal-agendar-close {
+  background: none;
+  border: none;
+  font-size: 1.45rem;
+  color: var(--tx2, #64748b);
+  cursor: pointer;
+  padding: 0.35rem;
+  line-height: 1;
+  border-radius: var(--r_s, 0.5vh);
+  transition: all 0.2s ease;
+}
+
+.modal-agendar-close:hover {
+  color: var(--mco, #0284c7);
+  transform: rotate(90deg);
+}
+
+/* 2. Distribución en 2 Columnas */
+.modal-agendar-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem 1.8rem;
+  margin-bottom: 1.4rem;
+}
+
+.modal-agendar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.modal-agendar-field {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.modal-agendar-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s3, 0.82rem);
+  font-weight: 700;
+  color: var(--tx, #0f2735);
+  margin-bottom: 0.45rem;
+}
+
+.modal-agendar-label i {
+  color: var(--mco, #0284c7);
+}
+
+/* Inputs de Texto y Calendario */
+.modal-agendar-input {
+  width: 100%;
+  height: 48px;
+  padding: 0 0.95rem;
+  border-radius: var(--r_m, 1vh);
+  border: 1.5px solid var(--brd, #cbd5e1);
+  background: var(--mbg, #f8fafc);
+  color: var(--tx, #0f2735);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_m, 0.92rem);
+  font-weight: 600;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  line-height: 48px;
+}
+
+.modal-agendar-input:focus {
+  outline: none;
+  border-color: var(--mco, #0284c7);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
+  background: var(--wb, #ffffff);
+}
+
+/* Integración y Overrides de wiSelect dentro del Modal */
+.modal-agendar-dialog .wi-select-trigger {
+  width: 100%;
+  height: 48px !important;
+  min-height: 48px !important;
+  border-radius: var(--r_m, 1vh) !important;
+  border: 1.5px solid var(--brd, #cbd5e1) !important;
+  background: var(--mbg, #f8fafc) !important;
+  padding: 0 0.95rem !important;
+  font-family: var(--ff_P, 'Poppins', sans-serif) !important;
+  box-sizing: border-box !important;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease !important;
+}
+
+.modal-agendar-dialog .wi-select-trigger:hover,
+.modal-agendar-dialog .wi-select-trigger:focus-visible,
+.modal-agendar-dialog .wi-select-trigger.wi-select-open {
+  border-color: var(--mco, #0284c7) !important;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18) !important;
+  background: var(--wb, #ffffff) !important;
+}
+
+.modal-agendar-dialog .wi-select-label {
+  font-family: var(--ff_P, 'Poppins', sans-serif) !important;
+  font-size: var(--fz_m, 0.92rem) !important;
+  font-weight: 600 !important;
+  color: var(--tx, #0f2735) !important;
+}
+
+.modal-agendar-dialog .wi-select-arrow {
+  color: var(--mco, #0284c7) !important;
+}
+
+.modal-agendar-dialog .wi-select-panel {
+  z-index: 10005 !important;
+  background: var(--wb, #ffffff) !important;
+  border: 1.5px solid var(--brd, #cbd5e1) !important;
+  border-radius: var(--r_m, 1vh) !important;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25) !important;
+}
+
+:root[data-theme="futuro"] .modal-agendar-dialog .wi-select-panel,
+:root[data-theme="dark"] .modal-agendar-dialog .wi-select-panel {
+  background: #0d2330 !important;
+  border-color: #1e4558 !important;
+}
+
+.modal-agendar-dialog .wi-select-option {
+  font-family: var(--ff_P, 'Poppins', sans-serif) !important;
+  font-size: 0.85rem !important;
+  font-weight: 600 !important;
+  padding: 0.75rem 1rem !important;
+  color: var(--tx, #0f2735) !important;
+}
+
+.modal-agendar-dialog .wi-select-option:hover,
+.modal-agendar-dialog .wi-select-option.wi-select-cursor {
+  background: rgba(2, 132, 199, 0.12) !important;
+  color: var(--mco, #0284c7) !important;
+}
+
+/* Soporte Nativo para Calendario de Fechas */
+input[type="date"].modal-agendar-input {
+  cursor: pointer;
+}
+
+:root[data-theme="futuro"] input[type="date"].modal-agendar-input,
+:root[data-theme="dark"] input[type="date"].modal-agendar-input {
+  color-scheme: dark;
+}
+
+:root[data-theme="luz"] input[type="date"].modal-agendar-input {
+  color-scheme: light;
+}
+
+/* Grilla de Fecha y Hora */
+.modal-agendar-grid-2 {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 0.75rem;
+  position: relative;
+}
+
+/* Selector Especializado de Horarios */
+.modal-agendar-hora-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-agendar-hora-trigger {
+  width: 100%;
+  height: 48px;
+  min-height: 48px;
+  border-radius: var(--r_m, 1vh);
+  border: 1.5px solid var(--brd, #cbd5e1);
+  background: var(--mbg, #f8fafc);
+  padding: 0 0.95rem;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.modal-agendar-hora-trigger:hover,
+.modal-agendar-hora-trigger:focus-visible,
+.modal-agendar-hora-trigger.hora-trigger-open {
+  border-color: var(--mco, #0284c7);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.18);
+  background: var(--wb, #ffffff);
+  outline: none;
+}
+
+:root[data-theme="futuro"] .modal-agendar-hora-trigger:hover,
+:root[data-theme="dark"] .modal-agendar-hora-trigger:hover,
+:root[data-theme="futuro"] .modal-agendar-hora-trigger.hora-trigger-open,
+:root[data-theme="dark"] .modal-agendar-hora-trigger.hora-trigger-open {
+  background: #0d2330;
+}
+
+.modal-agendar-hora-val {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: var(--fz_m, 0.92rem);
+  font-weight: 600;
+  color: var(--tx, #0f2735);
+}
+
+.modal-agendar-hora-val i {
+  color: var(--mco, #0284c7);
+}
+
+.modal-agendar-hora-trigger .hora-arrow {
+  color: var(--mco, #0284c7);
+  font-size: 0.8rem;
+  transition: transform 0.25s ease;
+}
+
+.modal-agendar-hora-trigger.hora-trigger-open .hora-arrow {
+  transform: rotate(180deg);
+}
+
+/* Popover de Horarios con Slots / Pills */
+.modal-agendar-hora-popover {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  width: 320px;
+  background: var(--wb, #ffffff);
+  border: 1.5px solid var(--brd, #cbd5e1);
+  border-radius: var(--r_m, 1vh);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.35);
+  padding: 0.9rem;
+  box-sizing: border-box;
+  z-index: 10010;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(0.97);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
+  pointer-events: none;
+}
+
+:root[data-theme="futuro"] .modal-agendar-hora-popover,
+:root[data-theme="dark"] .modal-agendar-hora-popover {
+  background: #0d2330;
+  border-color: #1e4558;
+}
+
+.modal-agendar-hora-popover.hora-popover-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.hora-popover-header {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s3, 0.78rem);
+  font-weight: 700;
+  color: var(--tx2, #64748b);
+  margin-bottom: 0.65rem;
+  padding-bottom: 0.45rem;
+  border-bottom: 1px solid var(--brd, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.hora-popover-section {
+  margin-bottom: 0.65rem;
+}
+
+.hora-popover-section:last-child {
+  margin-bottom: 0;
+}
+
+.hora-popover-tag {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--mco, #0284c7);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.hora-popover-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.45rem;
+}
+
+.hora-pill {
+  height: 35px;
+  background: var(--mbg, #f8fafc);
+  border: 1.5px solid var(--brd, #cbd5e1);
+  border-radius: var(--r_s, 0.6vh);
+  color: var(--tx, #0f2735);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.18s ease;
+  user-select: none;
+  padding: 0;
+}
+
+.hora-pill:hover {
+  border-color: var(--mco, #0284c7);
+  background: rgba(2, 132, 199, 0.12);
+  color: var(--mco, #0284c7);
+}
+
+.hora-pill.hora-pill-active {
+  background: var(--mco, #0284c7);
+  color: #ffffff !important;
+  border-color: var(--mco, #0284c7);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(2, 132, 199, 0.4);
+}
+
+.hora-pill-wide {
+  width: 100%;
+  height: 35px;
+  gap: 0.45rem;
+}
+
+/* 3. Footer / Resumen y Botón */
+.modal-agendar-footer {
+  border-top: 1px solid var(--brd, #e2e8f0);
+  padding-top: 1.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-agendar-summary {
+  background: rgba(2, 132, 199, 0.08);
+  border: 1px solid rgba(2, 132, 199, 0.22);
+  border-radius: var(--r_m, 1vh);
+  padding: 0.9rem 1.3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-agendar-summary-sub {
+  font-size: var(--fz_s3, 0.78rem);
+  color: var(--tx2, #64748b);
+  display: block;
+  font-weight: 600;
+}
+
+.modal-agendar-info-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s3, 0.82rem);
+  font-weight: 600;
+  color: var(--tx, #0f2735);
+}
+
+.modal-agendar-info-text i {
+  color: var(--mco, #0284c7);
+}
+
+.modal-agendar-summary-val {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(1.25rem, 1.5vw, 1.45rem);
+  font-weight: 850;
+  color: var(--mco, #0284c7);
+}
+
+.modal-agendar-badge-confidencial {
+  font-size: var(--fz_s3, 0.78rem);
+  color: #10b981;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: default;
+}
+
+.modal-agendar-submit {
+  width: 100%;
+  height: 52px;
+  background: #25d366;
+  color: #ffffff !important;
+  border: none;
+  border-radius: var(--r_m, 1vh);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_m2, 0.98rem);
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  transition: all 0.25s ease;
+}
+
+.modal-agendar-submit:hover {
+  background: #1ebd5b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
+}
+
+/* 4. Adaptación Responsiva para Tablets y Móviles */
+@media (max-width: 768px) {
+  .modal-agendar-dialog {
+    padding: 1.4rem 1.2rem;
+    max-width: 95%;
+    max-height: 94vh;
+  }
+
+  .modal-agendar-columns {
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+
+  .modal-agendar-grid-2 {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  .modal-agendar-submit {
+    height: 48px;
+    font-size: 0.92rem;
+  }
+}

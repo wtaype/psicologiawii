@@ -109,17 +109,17 @@ const imagenHero = '/imgwii/Psychologist_listening_in_therapy.jpeg';
 
         <!-- Botones Principales CTAs: Agendar y Me siento triste -->
         <div class="hero-ctas-group">
-          <!-- CTA 1: Agendar por WhatsApp -->
-          <a 
-            href={`https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent('Hola Lic. Sofia Reynaga, deseo agendar una consulta por Ansiedad o Estrés.')}`} 
-            target="_blank" 
-            rel="noopener noreferrer" 
+          <!-- CTA 1: Agendar por WhatsApp (Abre Modal Agendar) -->
+          <button 
+            type="button" 
+            onclick="window.abrirModalAgendar && window.abrirModalAgendar()" 
             class="btn-whatsapp hero-btn-cta"
             id="btnHeroWsp"
+            title="Agendar Consulta por WhatsApp"
           >
             <i class="fa-brands fa-whatsapp hero-btn-icon"></i>
             <span>{t.btn_wsp_main}</span>
-          </a>
+          </button>
 
           <!-- CTA 2: Me siento triste -->
           <button 
@@ -232,9 +232,7 @@ const imagenHero = '/imgwii/Psychologist_listening_in_therapy.jpeg';
         info.textContent = infoText;
 
         if (btnWsp) {
-          const mensaje = `Hola Lic. Sofia Reynaga, deseo agendar una consulta por ${labelText}.`;
-          const baseUrl = btnWsp.href.split('?')[0];
-          btnWsp.href = `${baseUrl}?text=${encodeURIComponent(mensaje)}`;
+          btnWsp.setAttribute('data-tema', tema);
         }
 
         try {

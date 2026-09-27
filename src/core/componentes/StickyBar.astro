@@ -21,13 +21,13 @@ const t = getI18n(idioma).nav;
   >
     <i class="fa-solid fa-heart-pulse"></i> <span>{t.sticky_test}</span>
   </button>
-  <a 
-    href={`https://wa.me/${datosNegocio.whatsappNumero}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`} 
-    target="_blank" 
-    rel="noopener noreferrer" 
+  <button 
+    type="button" 
+    onclick="window.abrirModalAgendar && window.abrirModalAgendar()" 
     class="btn-whatsapp sticky-btn-order" 
     title="Agendar por WhatsApp"
+    style="cursor: pointer; border: none;"
   >
     <i class="fa-brands fa-whatsapp"></i> <span>{t.sticky_pedir}</span>
-  </a>
+  </button>
 </div>
