@@ -130,28 +130,28 @@ const jsonLd = getJsonLd(ruta, idioma);
       }
     };
 
-    // Modal Interactivo Agendar Cita por WhatsApp On-Demand (0 KiB en carga inicial - Estilo Gaswii)
+    // Modales Interactivos del Hero On-Demand (0 KiB en carga inicial)
     (window as any).abrirModalAgendar = (servicioId?: string) => {
-      import('../../feature/inicio/lib/modalAgendar.js').then((m) => {
+      import('../../feature/inicio/lib/modales/modalHero.js').then((m) => {
         m.abrirModalAgendar(servicioId);
       });
     };
     (window as any).cerrarModalAgendar = () => {
-      import('../../feature/inicio/lib/modalAgendar.js').then((m) => {
+      import('../../feature/inicio/lib/modales/modalHero.js').then((m) => {
         m.cerrarModalAgendar();
       });
     };
     (window as any).abrirModalPedido = (window as any).abrirModalAgendar;
     (window as any).cerrarModalPedido = (window as any).cerrarModalAgendar;
 
-    // Test de Orientación Psicológica On-Demand (0 KiB en carga inicial)
-    (window as any).abrirModalTest = () => {
-      import('../../feature/inicio/lib/modalTest.js').then((m) => {
-        m.abrirModalTest();
+    // Test de Orientación Psicológica Empático (ChatWii AI) On-Demand (0 KiB en carga inicial)
+    (window as any).abrirModalTest = (motivoId?: string) => {
+      import('../../feature/inicio/lib/modales/modalHero.js').then((m) => {
+        m.abrirModalTest(motivoId);
       });
     };
     (window as any).cerrarModalTest = () => {
-      import('../../feature/inicio/lib/modalTest.js').then((m) => {
+      import('../../feature/inicio/lib/modales/modalHero.js').then((m) => {
         m.cerrarModalTest();
       });
     };

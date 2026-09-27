@@ -1,0 +1,143 @@
+{
+  "badge": "Orientación Confidencial · Lic. Sofía Reynaga",
+  "titulo": "Test de Orientación Psicológica",
+  "subtitulo": "Descubre el acompañamiento ideal para tu bienestar en 7 breves pasos",
+  "cerrar": "Cerrar test",
+  "paso": "Paso",
+  "de": "de",
+  "btnAtras": "Atrás",
+  "btnContinuar": "Continuar",
+  "btnFinalizar": "Ver Mi Orientación",
+  "cargandoTitulo": "Preparando tu Orientación Clínica",
+  "cargandoSub": "La Lic. Sofía Reynaga analiza tus respuestas con empatía y confidencialidad...",
+  "resultadoBadge": "Orientación Terapéutica Personalizada",
+  "btnWhatsApp": "Agendar Consulta con este Perfil en WhatsApp",
+  "btnFormulario": "O abrir formulario de reserva",
+  "btnReiniciar": "Volver a realizar el test",
+  "p1": {
+    "titulo": "1. ¿Qué motivo o desafío te gustaría atender hoy?",
+    "sub": "Selecciona la opción con la que más te identifiques en este momento:",
+    "opciones": [
+      {
+        "id": "ansiedad",
+        "titulo": "Ansiedad, Estrés y Sobrepensamiento",
+        "desc": "Tensión constante, ataques de pánico o mente acelerada",
+        "icono": "fa-solid fa-wind",
+        "empathy": "Validamos lo que sientes. La mente sobrecargada no es debilidad; tiene causas concretas y herramientas científicas para recuperar la calma."
+      },
+      {
+        "id": "pareja",
+        "titulo": "Terapia de Pareja y Familia",
+        "desc": "Problemas de comunicación, crisis, celos o distanciamiento",
+        "icono": "fa-solid fa-heart-crack",
+        "empathy": "Reconocer las dificultades en el vínculo es el paso más maduro para sanar la comunicación y reconstruir la confianza mutua."
+      },
+      {
+        "id": "apoyo",
+        "titulo": "Tristeza, Duelo o Desahogo Emocional",
+        "desc": "Desánimo, sensación de soledad o necesidad de ser escuchado/a",
+        "icono": "fa-solid fa-cloud-rain",
+        "empathy": "Tus sentimientos tienen valor y merecen ser escuchados en un espacio cálido, seguro y 100% libre de juicios."
+      },
+      {
+        "id": "general",
+        "titulo": "Orientación Personal y Autoestima",
+        "desc": "Toma de decisiones, ordenar metas o autoconocimiento",
+        "icono": "fa-solid fa-compass",
+        "empathy": "Buscar claridad es un acto de amor propio y compromiso con tu evolución y tranquilidad personal."
+      }
+    ]
+  },
+  "p2": {
+    "ansiedad": {
+      "titulo": "2. ¿Cuáles de estas sensaciones notas con mayor frecuencia?",
+      "sub": "Elige la que más describa lo que experimentas:",
+      "opciones": [
+        { "id": "rumiacion", "titulo": "Pensamientos en bucle y preocupación constante", "desc": "Anticipar siempre el peor escenario posible", "empathy": "Es agotador tener la mente en alerta constante. El enfoque TCC ayuda a desactivar esos bucles." },
+        { "id": "fisico", "titulo": "Palpitaciones, opresión en el pecho o tensión", "desc": "Sensaciones físicas intensas de alerta o falta de aire", "empathy": "Tu cuerpo está somatizando la sobrecarga. Aprenderemos regulación psicofisiológica." },
+        { "id": "panico", "titulo": "Crisis repentinas de miedo o ataques de pánico", "desc": "Sensación de perder el control o peligro inminente", "empathy": "El pánico asusta, pero no es peligroso en sí mismo. Te enseñaremos a controlarlo desde la primera sesión." },
+        { "id": "insomnio", "titulo": "Insomnio y dificultad severa para descansar", "desc": "Despertar con angustia o no poder conciliar el sueño", "empathy": "Recuperar el descanso reparador será una de nuestras primeras prioridades." }
+      ]
+    },
+    "pareja": {
+      "titulo": "2. ¿Cómo describirías la situación actual en la relación?",
+      "sub": "Elige la dinámica que mejor represente el conflicto:",
+      "opciones": [
+        { "id": "discusion", "titulo": "Discusiones constantes que escalan rápido", "desc": "Cualquier tema cotidiano termina en desacuerdo o reclamo", "empathy": "Romper el ciclo reactivo de reclamos es el primer objetivo de la terapia relacional." },
+        { "id": "distancia", "titulo": "Distanciamiento afectivo y silencio prolongado", "desc": "Sensación de vivir como desconocidos o compañeros de piso", "empathy": "La distancia suele ser un escudo ante el dolor. Reconstruir el puente de intimidad es posible." },
+        { "id": "desconfianza", "titulo": "Crisis de confianza, infidelidad o celos", "desc": "Inseguridad constante tras una ruptura de acuerdos", "empathy": "Sanar una herida de confianza toma tiempo y acompañamiento estructurado." },
+        { "id": "dudas", "titulo": "Dudas sobre continuar o cómo separarse en paz", "desc": "Incertidumbre sobre el futuro del vínculo o hijos", "empathy": "Te ayudaremos a clarificar lo que realmente deseas con empatía y madurez." }
+      ]
+    },
+    "apoyo": {
+      "titulo": "2. ¿Cómo se ha manifestado tu estado de ánimo?",
+      "sub": "Permítete expresar lo que estás viviendo:",
+      "opciones": [
+        { "id": "llanto", "titulo": "Ganas de llorar o desánimo sin causa aparente", "desc": "Sentir que las fuerzas no alcanzan para el día a día", "empathy": "El llanto es la forma en que el alma descomprime la presión. No tienes que fingir estar bien." },
+        { "id": "vacio", "titulo": "Sensación de vacío o desconexión emocional", "desc": "Sentir que nada entusiasma ni motiva como antes", "empathy": "Es un síntoma común de agotamiento emocional. Poco a poco reconectaremos con tu vitalidad." },
+        { "id": "duelo", "titulo": "Proceso de duelo, pérdida o ruptura amorosa", "desc": "Dolor por una ausencia que cuesta procesar a solas", "empathy": "El duelo necesita ser transitado con ternura y acompañamiento profesional." },
+        { "id": "soledad", "titulo": "Sensación de incomprensión y profunda soledad", "desc": "Sentir que no hay con quién desahogarse de verdad", "empathy": "Aquí no estás solo/a. La Lic. Sofía Reynaga te brindará un espacio de escucha activa." }
+      ]
+    },
+    "general": {
+      "titulo": "2. ¿Cuál es tu objetivo prioritario al iniciar?",
+      "sub": "Qué cambio te gustaría lograr en tu vida:",
+      "opciones": [
+        { "id": "claridad", "titulo": "Tomar una decisión importante con seguridad", "desc": "Salir de la indecisión laboral, académica o personal", "empathy": "Ordenar pros, contras y valores esenciales te dará la certeza que necesitas." },
+        { "id": "limites", "titulo": "Fortalecer mi autoestima y aprender a poner límites", "desc": "Dejar de complacer a todos a costa de mi bienestar", "empathy": "Aprender a decir 'no' sin culpa es uno de los mayores regalos de la psicoterapia." },
+        { "id": "gestion", "titulo": "Aprender a regular la frustración o la ira", "desc": "Manejar mejor las reacciones impulsivas", "empathy": "La inteligencia emocional se entrena con técnicas prácticas y cognitivas." },
+        { "id": "crecimiento", "titulo": "Autoconocimiento y salud mental preventiva", "desc": "Invertir en mi bienestar antes de que los problemas escalen", "empathy": "La prevención es la forma más sabia de cuidar tu salud integral." }
+      ]
+    }
+  },
+  "p3": {
+    "titulo": "3. ¿Cuánto tiempo llevas experimentando esta situación?",
+    "sub": "Nos ayuda a dimensionar la cronicidad del malestar:",
+    "opciones": [
+      { "id": "reciente", "titulo": "Menos de 1 mes (evento reciente o puntual)", "desc": "Surgió a raíz de un cambio, conflicto o noticia reciente", "empathy": "Atenderlo tempranamente evita que se consolide como un patrón crónico." },
+      { "id": "medio", "titulo": "Entre 1 y 6 meses", "desc": "Se ha venido repitiendo de manera constante en las últimas semanas", "empathy": "Tu cuerpo y mente ya están enviando señales de que requieren apoyo profesional." },
+      { "id": "cronico", "titulo": "Más de 6 meses o varios años", "desc": "Siento que llevo mucho tiempo cargando con esto a solas", "empathy": "Llevar tanto tiempo es muy pesado, pero nunca es tarde para reconfigurar tu bienestar." }
+    ]
+  },
+  "p4": {
+    "titulo": "4. ¿En qué área de tu vida notas un mayor impacto?",
+    "sub": "Dónde sientes que esto te pasa mayor factura:",
+    "opciones": [
+      { "id": "cuerpo", "titulo": "En mi descanso, salud física y niveles de energía", "desc": "Cansancio crónico, dolor muscular, cefaleas o desgano", "empathy": "Cuidar de tu cuerpo comienza por atender lo que ocurre en tu mente." },
+      { "id": "trabajo", "titulo": "En mi concentración, trabajo o estudios", "desc": "Dificultad para rendir, procrastinación o bloqueo mental", "empathy": "Recuperar el foco es totalmente posible cuando bajamos la carga de estrés." },
+      { "id": "relaciones", "titulo": "En mis relaciones con seres queridos o pareja", "desc": "Irritabilidad, aislamiento o malentendidos frecuentes", "empathy": "Al sanar por dentro, la calidad de tus vínculos mejora de forma natural." },
+      { "id": "paz", "titulo": "En mi tranquilidad interior y paz mental diaria", "desc": "Me cuesta desconectar incluso en momentos de ocio", "empathy": "Recuperar la serenidad mental es el núcleo de todo tratamiento psicológico." }
+    ]
+  },
+  "p5": {
+    "titulo": "5. ¿Has llevado terapia psicológica anteriormente?",
+    "sub": "Para adecuar las explicaciones a tu experiencia previa:",
+    "opciones": [
+      { "id": "primera_vez", "titulo": "Es mi primera vez buscando ayuda profesional", "desc": "Tengo cierta curiosidad o nervios de cómo funciona", "empathy": "¡Felicitaciones por este paso! Te guiaremos con mucha calidez y transparencia." },
+      { "id": "retomando", "titulo": "Sí, llevé terapia antes y deseo retomar", "desc": "Ya conozco la dinámica y quiero profundizar en este tema", "empathy": "Excelente base. Aprovecharemos tus aprendizajes previos para avanzar con solidez." },
+      { "id": "solo", "titulo": "He intentado manejarlo solo/a con lecturas o videos", "desc": "Siento que me faltan herramientas guiadas por una experta", "empathy": "La autogestión es valiosa, pero el acompañamiento clínico personalizado marca la diferencia." }
+    ]
+  },
+  "p6": {
+    "titulo": "6. ¿Qué modalidad se adapta mejor a tu comodidad?",
+    "sub": "Ambas modalidades cuentan con la misma rigurosidad clínica:",
+    "opciones": [
+      { "id": "online", "titulo": "💻 Sesión 100% Online (Meet / Zoom)", "desc": "Desde tu hogar u oficina, en cualquier ciudad del Perú o el extranjero", "empathy": "Ideal para ahorrar tiempo en traslados y conversar en tu espacio de máxima privacidad." },
+      { "id": "llamada", "titulo": "📞 Llamada Telefónica o WhatsApp", "desc": "Para mayor agilidad o si prefieres comunicarte solo por voz", "empathy": "Perfecto para sesiones de contención y orientación ágil." },
+      { "id": "presencial", "titulo": "📍 Presencial (Sede Villa El Salvador)", "desc": "Av. Revolución 1840, Lima Sur (Previa cita coordinada)", "empathy": "Te recibiremos en nuestro consultorio con total calidez y reserva profesional." }
+    ]
+  },
+  "p7": {
+    "titulo": "7. ¿En qué horario te resulta más cómodo conversar?",
+    "sub": "Ingresa también tu nombre para personalizar tu reporte:",
+    "lblNombre": "Tu Nombre Completo:",
+    "placeholderNombre": "Ej. Ana Morales (o como prefieras que te llamen)",
+    "lblTurno": "Turno Preferido:",
+    "turnos": [
+      { "id": "manana", "nombre": "☀️ Turno Mañana (09:00 AM - 01:00 PM)" },
+      { "id": "tarde", "nombre": "🌤️ Turno Tarde / Noche (03:00 PM - 08:00 PM)" },
+      { "id": "flexible", "nombre": "🤝 Horario flexible a coordinar" }
+    ],
+    "empathy": "Excelente. Estamos compilando tu análisis clínico para orientarte con la máxima precisión."
+  }
+}
