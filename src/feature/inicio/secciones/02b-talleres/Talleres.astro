@@ -1,0 +1,194 @@
+---
+// src/feature/inicio/secciones/02b-talleres/Talleres.astro
+// 2B. SECCIÓN TALLERES VIVENCIALES Y DESARROLLO (6 TALLERES EN GRILLA 3x2)
+// Consultorio Psicológico América - Lic. Sofía Reynaga
+import { datosNegocio, consultarProductosFirestoreFresco } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import talleresCss from './talleres.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+// Consulta fresca directa de servicios y talleres (Firestore o Fallback Canónico infoServicios.json)
+const todos = await consultarProductosFirestoreFresco();
+const talleresActivos = todos.filter((p: any) => p.tipo === 'taller' && p.activo !== false);
+const whatsappNumero = datosNegocio.whatsappLimpio;
+---
+
+<style is:global set:html={talleresCss}></style>
+
+<section id="talleres" class="sec-talleres section-py-body">
+  <div class="pagewii sec-talleres-container">
+    
+    <!-- Encabezado de la Sección -->
+    <header class="sec-talleres-header">
+      <span class="sec-talleres-badge">
+        <i class="fa-solid fa-people-group"></i> <span>{t.badge.toUpperCase()}</span>
+      </span>
+      <h2 class="sec-talleres-title">{t.titulo}</h2>
+      <p class="sec-talleres-sub">{t.subtitulo}</p>
+    </header>
+
+    <!-- Grid de Talleres Vivenciales (Grilla 3x2 Fija en Desktop) -->
+    {talleresActivos.length > 0 ? (
+      <div 
+        class="sec-talleres-grid" 
+        id="publicTalleresGrid"
+        data-idioma={idioma}
+      >
+        {talleresActivos.map((p: any) => {
+          const langSuffix = idioma.charAt(0).toUpperCase() + idioma.slice(1);
+          const nombre = (idioma !== 'es' && p[`nombre${langSuffix}`]) || (typeof p.nombre === 'object' ? (p.nombre[idioma] || p.nombre.es) : p.nombre) || '';
+          const duracion = (idioma !== 'es' && p[`duracion${langSuffix}`]) || (typeof p.duracion === 'object' ? (p.duracion[idioma] || p.duracion.es) : p.duracion) || '4 Sesiones';
+          const enfoque = p.enfoque || 'Vivencial & Participativo';
+          const modalidad = (idioma !== 'es' && p[`modalidad${langSuffix}`]) || (typeof p.modalidad === 'object' ? (p.modalidad[idioma] || p.modalidad.es) : p.modalidad) || 'Grupal Presencial';
+          const descripcion = (idioma !== 'es' && p[`descripcion${langSuffix}`]) || (typeof p.descripcion === 'object' ? (p.descripcion[idioma] || p.descripcion.es) : p.descripcion) || '';
+          const publico = (idioma !== 'es' && p[`publico${langSuffix}`]) || (typeof p.publico === 'object' ? (p.publico[idioma] || p.publico.es) : p.publico) || 'Jóvenes';
+          
+          let garantias: string[] = [];
+          if (p.garantias) {
+            if (typeof p.garantias === 'object' && !Array.isArray(p.garantias)) {
+              garantias = p.garantias[idioma] || p.garantias['es'] || [];
+            } else if (Array.isArray(p.garantias)) {
+              garantias = p.garantias;
+            }
+          }
+
+          const esVocacional = p.id.includes('vocacional');
+
+          const badgeTexto = (idioma !== 'es' && p[`badge${langSuffix}`]) || (typeof p.badge === 'object' ? (p.badge[idioma] || p.badge.es) : p.badge) || (esVocacional ? 'Evaluación Integral' : 'Taller Vivencial');
+          const pillHighlightClase = p.tagClase || (esVocacional ? 'badge-oro' : 'badge-serenidad');
+          const pillHighlightIcon = esVocacional ? 'fa-solid fa-graduation-cap' : 'fa-solid fa-users';
+
+          const guaranteeHeader = t.garantia_titulo.toUpperCase();
+          const precioActual = p.precioPEN || p.precio || 50;
+
+          const btnTexto = t.btn_ws_taller;
+          const templateMsg = t.ws_msg_taller;
+          const wsText = templateMsg.replace('{taller}', nombre);
+          const wsLink = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(wsText)}`;
+
+          const captionPrecio = esVocacional ? t.inversion_completa : t.inversion_caption;
+
+          return (
+            <article 
+              class="clean-card taller-card-box card-balon" 
+              data-taller-id={p.id}
+            >
+              <!-- Contenido Superior de la Tarjeta -->
+              <div class="taller-main-content">
+                <!-- Cabecera: Badges Superior Izquierdo y Derecho -->
+                <div class="taller-header-pills">
+                  <span class={`taller-badge ${pillHighlightClase}`}>
+                    <i class={pillHighlightIcon}></i>
+                    <span>{badgeTexto}</span>
+                  </span>
+                  <span class="taller-tipo-badge">{publico}</span>
+                </div>
+
+                <!-- Imagen Fotográfica del Taller con Pastilla de Duración -->
+                <div class="taller-img-box">
+                  <img 
+                    src={p.imagen || '/imgwii/talleres/taller-habilidades-sociales.jpg'} 
+                    alt={nombre} 
+                    class="taller-img" 
+                    loading="lazy" 
+                    decoding="async" 
+                    width="360" 
+                    height="190" 
+                  />
+                  <div class="taller-duracion-pill">
+                    <i class="fa-solid fa-clock"></i>
+                    <span>{duracion}</span>
+                  </div>
+                </div>
+
+                <!-- Título Oficial del Taller -->
+                <h3 class="taller-title">{nombre}</h3>
+
+                <!-- Descripción Pedagógica y Vivencial -->
+                {descripcion && (
+                  <p class="taller-desc-snippet">
+                    {descripcion}
+                  </p>
+                )}
+
+                <!-- Filas de Especificaciones Clave con Iconos -->
+                <ul class="taller-specs-list">
+                  <li class="taller-spec-row">
+                    <i class="fa-solid fa-lightbulb taller-spec-icon" style="color: var(--brand-sky, #0284c7);"></i>
+                    <span><strong class="taller-spec-label">{t.enfoque_label} </strong>{enfoque}</span>
+                  </li>
+                  <li class="taller-spec-row">
+                    <i class="fa-solid fa-location-dot taller-spec-icon" style="color: var(--brand-primary, #104356);"></i>
+                    <span><strong class="taller-spec-label">{t.modalidad_label} </strong>{modalidad}</span>
+                  </li>
+                </ul>
+
+                <!-- Beneficios y Aprendizajes Clave -->
+                {garantias.length > 0 && (
+                  <div class="taller-guarantee-box">
+                    <span class="taller-guarantee-heading">{guaranteeHeader}</span>
+                    <ul class="taller-guarantee-list">
+                      {garantias.slice(0, 3).map((g: string) => (
+                        <li class="taller-guarantee-item">
+                          <i class="fa-solid fa-circle-check"></i>
+                          <span>{g}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+
+              <!-- Contenido Inferior de la Tarjeta (Precio + CTA WhatsApp) -->
+              <div class="taller-footer-content">
+                <!-- Bloque de Inversión / Precio -->
+                <div class="taller-price-row">
+                  <div class="taller-price-col-left">
+                    <span class="taller-price-caption">{captionPrecio}</span>
+                    <div class="taller-price-value">
+                      <span class="taller-price-curr">S/</span>
+                      <span data-price-id={p.id}>{Number(precioActual).toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  <div class="taller-price-col-right">
+                    <span class="taller-delivery-caption">{t.delivery_label}</span>
+                    <span class="taller-delivery-badge">{modalidad.includes('Online') || modalidad.includes('Virtual') ? 'Presencial / Online' : 'Presencial'}</span>
+                  </div>
+                </div>
+
+                <!-- Botón de Acción Directo por WhatsApp -->
+                <div class="taller-actions">
+                  <a 
+                    href={wsLink} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    class="btn-taller-ws"
+                    title={btnTexto}
+                  >
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>{btnTexto}</span>
+                  </a>
+                </div>
+              </div>
+
+            </article>
+          );
+        })}
+      </div>
+    ) : (
+      <div style="text-align: center; padding: 40px; color: var(--text-muted, #486576);">
+        <p>{t.sin_talleres}</p>
+      </div>
+    )}
+
+  </div>
+</section>

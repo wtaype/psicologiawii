@@ -1,0 +1,15 @@
+{
+  "badge": "Talleres y Desarrollo Vivencial",
+  "titulo": "Espacios Grupales para Crecer, Conectar y Aprender",
+  "subtitulo": "Programas vivenciales diseñados para niños, púberes y jóvenes orientados a fortalecer la inteligencia emocional, la seguridad personal y las habilidades para la vida.",
+  "duracion_label": "Duración:",
+  "enfoque_label": "Metodología:",
+  "modalidad_label": "Modalidad:",
+  "garantia_titulo": "Aprendizajes Clave",
+  "delivery_label": "Formato",
+  "btn_ws_taller": "Inscribirme por WhatsApp",
+  "sin_talleres": "No hay talleres programados por el momento.",
+  "ws_msg_taller": "Hola Lic. Sofía, deseo inscribirme al taller: {taller}",
+  "inversion_caption": "Inversión por Sesión",
+  "inversion_completa": "Módulo Intensivo"
+}

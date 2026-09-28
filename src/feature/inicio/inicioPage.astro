@@ -6,6 +6,7 @@ import type { Idioma } from '../../core/idioma/idioma';
 import { buildRuta } from '../../core/idioma/idioma';
 import Hero from './secciones/01-hero/Hero.astro';
 import Productos from './secciones/02-productos/Productos.astro';
+import Talleres from './secciones/02b-talleres/Talleres.astro';
 import Garantia from './secciones/03-garantia/Garantia.astro';
 import Tecnico from './secciones/04-tecnico/Tecnico.astro';
 import Separador from './secciones/05-separador/Separador.astro';
@@ -31,6 +32,9 @@ const ruta = buildRuta('/', idioma);
 
   <!-- 2. Catálogo Oficial de Especialidades Clínicas y Evaluaciones -->
   <Productos idioma={idioma} />
+
+  <!-- 2B. Espacios Vivenciales y Talleres Psicoeducativos -->
+  <Talleres idioma={idioma} />
 
   <!-- 3. Rigor Científico, Terapias con Evidencia y Ética Profesional -->
   <Garantia idioma={idioma} />

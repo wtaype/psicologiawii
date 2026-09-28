@@ -1,0 +1,15 @@
+{
+  "badge": "Workshops & Experiential Growth",
+  "titulo": "Group Spaces to Grow, Connect, and Learn",
+  "subtitulo": "Experiential programs designed for children, pre-teens, and youth focused on building emotional intelligence, self-confidence, and life skills.",
+  "duracion_label": "Duration:",
+  "enfoque_label": "Methodology:",
+  "modalidad_label": "Format:",
+  "garantia_titulo": "Key Takeaways",
+  "delivery_label": "Setting",
+  "btn_ws_taller": "Register via WhatsApp",
+  "sin_talleres": "No workshops scheduled at this time.",
+  "ws_msg_taller": "Hello Lic. Sofia, I would like to register for the workshop: {taller}",
+  "inversion_caption": "Fee per Session",
+  "inversion_completa": "Intensive Module"
+}
