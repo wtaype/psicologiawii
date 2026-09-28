@@ -16,8 +16,9 @@ const t = resolverIdioma({ es, en }, idioma);
 
 const primerServicio = datosNegocio.servicios[0];
 const precioBase = primerServicio ? primerServicio.precioPEN.toFixed(2) : '85.00';
-const whatsappLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`;
-const colegiaturaNum = datosNegocio.metricas?.colegiaturaNumero || '49425';
+const whatsappTexto = datosNegocio.getWhatsappMensaje(idioma) || datosNegocio.whatsappMensaje;
+const whatsappLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(whatsappTexto)}`;
+const colegiaturaNum = datosNegocio.colegiaturaNumero;
 const imagenHero = '/imgwii/Psychologist_listening_in_therapy.jpeg';
 ---
 

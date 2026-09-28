@@ -105,6 +105,8 @@ export const datosNegocio = {
   get telefonoMostrado() { return this.telefono; },
   get telefonoLimpio() { return (this.telefono || '').replace(/\D/g, ''); },
   get whatsapp() { return this.raw.contacto?.whatsapp || (this.telefono || '').replace(/\D/g, ''); },
+  get whatsappLimpio() { return (this.whatsapp || '').replace(/\D/g, ''); },
+  get colegiaturaNumero() { return (this.colegiatura || '').replace(/\D/g, '') || '49425'; },
   get whatsappMensaje() {
     const m = this.raw.contacto?.whatsappMensaje;
     return typeof m === 'object' && m !== null ? (m.es || '') : (m || '');
