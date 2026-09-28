@@ -1,22 +1,16 @@
 {
-  "badge": "Especialidades y Talleres de Desarrollo",
-  "titulo": "Programas y Terapias para tu Bienestar Integral",
-  "subtitulo": "Abordajes clínicos fundamentados en Terapias Basadas en Evidencia (TCC, Contextual, Sistémica y Humanista) y programas vivenciales adaptados a cada etapa de la vida.",
-  "tab_todos": "Todos los Programas",
-  "tab_servicios": "Terapias Clínicas",
-  "tab_talleres": "Talleres y Charlas",
+  "badge": "Especialidades Clínicas",
+  "titulo": "Terapias Psicológicas Especializadas",
+  "subtitulo": "Abordajes clínicos fundamentados en Terapias Basadas en Evidencia (TCC, Contextual, Sistémica y Humanista) adaptados a cada etapa de la vida.",
   "duracion_label": "Duración:",
   "enfoque_label": "Enfoque:",
   "modalidad_label": "Modalidad:",
   "garantia_titulo": "Compromiso Terapéutico",
   "delivery_label": "Atención",
   "btn_ws_servicio": "Agendar por WhatsApp",
-  "btn_ws_taller": "Inscribirme por WhatsApp",
-  "sin_productos": "No hay programas disponibles por el momento.",
+  "sin_productos": "No hay servicios disponibles por el momento.",
   "pill_popular": "Más Solicitado",
   "pill_recomendado": "Recomendado",
   "pill_especializado": "Especializado",
-  "pill_vivencial": "Taller Vivencial",
-  "ws_msg_servicio": "Hola Lic. Sofía, deseo agendar una consulta para: {producto}",
-  "ws_msg_taller": "Hola Lic. Sofía, deseo información para inscribirme a: {producto}"
+  "ws_msg_servicio": "Hola Lic. Sofía, deseo agendar una consulta para: {producto}"
 }

@@ -1,44 +1,46 @@
 // src/negocio.js
 // 🎯 Fachada Canónica y Reactiva de Negocio y Servicios (Consultorio Psicológico América)
 // Fuente Primaria: Base de Datos Firestore ('negocio/principal' y 'servicios')
-// Único Fallback: src/infoNegocio.json y src/infoProductos.json (fuera de Git)
+// Único Fallback: src/infoNegocio.json y src/infoServicios.json (fuera de Git)
 
-import infoProductos from './infoProductos.json';
+import infoServicios from './infoServicios.json';
 import { obtenerDatosNegocio, parseFirestoreDoc } from './feature/personal/modulos/negocio/dataNegocio.js';
 
 /**
- * Normaliza cualquier documento de Firestore para servicios/productos
+ * Normaliza cualquier documento de Firestore para servicios/talleres
  */
 export function normalizarProductoFirestore(docRaw = {}) {
   const item = parseFirestoreDoc(docRaw.fields || {});
   const id = item.id || (docRaw.name ? docRaw.name.split('/').pop() : '');
-  const precio = Number(item.precio ?? item.price ?? item.precioPEN ?? 85);
+  const precio = Number(item.precioPEN ?? item.precio ?? item.price ?? 85);
   
   return {
     id,
-    slug: item.slug || id,
+    tipo: item.tipo || 'psicologia',
     nombre: typeof item.nombre === 'object' && item.nombre !== null ? (item.nombre.es || '') : (item.nombre || ''),
     nombreEn: typeof item.nombre === 'object' && item.nombre !== null ? (item.nombre.en || '') : (item.nombreEn || ''),
     descripcion: typeof item.descripcion === 'object' && item.descripcion !== null ? (item.descripcion.es || '') : (item.descripcion || ''),
     descripcionEn: typeof item.descripcion === 'object' && item.descripcion !== null ? (item.descripcion.en || '') : (item.descripcionEn || ''),
     precioPEN: precio,
-    duracion: item.duracion || '',
-    duracionEn: item.duracionEn || '',
-    categoria: item.categoria || '',
+    duracion: typeof item.duracion === 'object' && item.duracion !== null ? (item.duracion.es || '') : (item.duracion || ''),
+    duracionEn: typeof item.duracion === 'object' && item.duracion !== null ? (item.duracion.en || '') : (item.duracionEn || ''),
     enfoque: item.enfoque || '',
-    publico: item.publico || '',
-    modalidad: item.modalidad || '',
+    publico: typeof item.publico === 'object' && item.publico !== null ? (item.publico.es || '') : (item.publico || ''),
+    publicoEn: typeof item.publico === 'object' && item.publico !== null ? (item.publico.en || '') : (item.publicoEn || ''),
+    modalidad: typeof item.modalidad === 'object' && item.modalidad !== null ? (item.modalidad.es || '') : (item.modalidad || ''),
+    modalidadEn: typeof item.modalidad === 'object' && item.modalidad !== null ? (item.modalidad.en || '') : (item.modalidadEn || ''),
     garantias: Array.isArray(item.garantias?.es) ? item.garantias.es : (Array.isArray(item.garantias) ? item.garantias : []),
+    garantiasEn: Array.isArray(item.garantias?.en) ? item.garantias.en : (Array.isArray(item.garantiasEn) ? item.garantiasEn : []),
     imagen: item.imagen || '',
     badge: typeof item.badge === 'object' && item.badge !== null ? (item.badge.es || '') : (item.badge || ''),
     badgeEn: typeof item.badge === 'object' && item.badge !== null ? (item.badge.en || '') : (item.badgeEn || ''),
     tagClase: item.tagClase || 'badge-serenidad',
     orden: Number(item.orden ?? 1),
-    pin: Boolean(item.pin)
+    activo: Boolean(item.activo ?? true)
   };
 }
 
-let _productosBuildFirestore = Array.isArray(infoProductos) ? infoProductos : [];
+let _serviciosBuildFirestore = Array.isArray(infoServicios) ? infoServicios : [];
 
 export async function consultarProductosFirestoreFresco() {
   if (typeof window !== 'undefined') {
@@ -67,15 +69,15 @@ export async function consultarProductosFirestoreFresco() {
         const prods = json.documents
           .map(d => normalizarProductoFirestore(d))
           .sort((a, b) => (a.orden || 999) - (b.orden || 999));
-        _productosBuildFirestore = prods;
+        _serviciosBuildFirestore = prods;
         return prods;
       }
     }
   } catch (err) {
-    // Si la colección aún no existe en Firestore, usamos el fallback directo de infoProductos.json
+    // Si la colección aún no existe en Firestore, usamos el fallback directo de infoServicios.json
   }
 
-  return _productosBuildFirestore;
+  return _serviciosBuildFirestore;
 }
 
 if (typeof window === 'undefined') {
@@ -171,9 +173,17 @@ export const datosNegocio = {
   },
   get metricas() { return this.raw.metricas || {}; },
   get productos() {
-    return _productosBuildFirestore && _productosBuildFirestore.length > 0 ? _productosBuildFirestore : infoProductos;
+    return _serviciosBuildFirestore && _serviciosBuildFirestore.length > 0 ? _serviciosBuildFirestore : infoServicios;
   },
-  get servicios() { return this.productos; },
+  get servicios() {
+    return this.productos.filter(p => !p.tipo || p.tipo === 'psicologia');
+  },
+  get talleres() {
+    return this.productos.filter(p => p.tipo === 'taller');
+  },
+  get todosServicios() {
+    return this.productos;
+  },
   get seo() { return this.raw.seo || null; },
   get mediosPago() {
     return [

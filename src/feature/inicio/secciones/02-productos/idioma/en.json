@@ -1,22 +1,16 @@
 {
-  "badge": "Specialties & Development Workshops",
-  "titulo": "Comprehensive Therapy Programs for Your Well-being",
-  "subtitulo": "Evidence-based clinical treatments (CBT, Contextual, Systemic, Humanistic) and experiential workshops designed for children, teens, couples, and adults.",
-  "tab_todos": "All Programs",
-  "tab_servicios": "Clinical Therapies",
-  "tab_talleres": "Workshops & Talks",
+  "badge": "Clinical Specialties",
+  "titulo": "Specialized Psychological Therapies",
+  "subtitulo": "Evidence-based clinical treatments (CBT, Contextual, Systemic, Humanistic) designed for children, teens, couples, and adults.",
   "duracion_label": "Duration:",
   "enfoque_label": "Approach:",
   "modalidad_label": "Format:",
   "garantia_titulo": "Therapeutic Commitment",
   "delivery_label": "Care Format",
   "btn_ws_servicio": "Book via WhatsApp",
-  "btn_ws_taller": "Join via WhatsApp",
-  "sin_productos": "No programs available at this time.",
+  "sin_productos": "No clinical services available at this time.",
   "pill_popular": "Most Requested",
   "pill_recomendado": "Recommended",
   "pill_especializado": "Specialized",
-  "pill_vivencial": "Experiential Workshop",
-  "ws_msg_servicio": "Hello Lic. Sofia, I would like to book a session for: {producto}",
-  "ws_msg_taller": "Hello Lic. Sofia, I would like information to join: {producto}"
+  "ws_msg_servicio": "Hello Lic. Sofia, I would like to book a session for: {producto}"
 }

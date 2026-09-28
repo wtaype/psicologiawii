@@ -1,6 +1,6 @@
 ---
 // src/feature/inicio/secciones/02-productos/Productos.astro
-// 2. SECCIÓN ESPECIALIDADES Y TALLERES CLÍNICOS
+// 2. SECCIÓN ESPECIALIDADES CLÍNICAS (6 SERVICIOS EN GRILLA 3x2)
 // Consultorio Psicológico América - Lic. Sofía Reynaga
 import { datosNegocio, consultarProductosFirestoreFresco } from '../../../../negocio.js';
 import { resolverIdioma } from '../../idioma/idioma.js';
@@ -15,8 +15,9 @@ interface Props {
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
 const t = resolverIdioma({ es, en }, idioma);
 
-// Consulta fresca directa de servicios y talleres (Firestore o Fallback Canónico)
-const programasActivos = await consultarProductosFirestoreFresco();
+// Consulta fresca directa de servicios (Firestore o Fallback Canónico infoServicios.json)
+const todos = await consultarProductosFirestoreFresco();
+const serviciosActivos = todos.filter((p: any) => (!p.tipo || p.tipo === 'psicologia') && p.activo !== false);
 const whatsappNumero = datosNegocio.whatsappLimpio;
 ---
 
@@ -28,42 +29,27 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
     <!-- Encabezado de la Sección -->
     <header class="sec-prods-header">
       <span class="badge-serenidad sec-prods-badge">
-        <i class="fa-solid fa-shapes"></i> <span>{t.badge.toUpperCase()}</span>
+        <i class="fa-solid fa-brain"></i> <span>{t.badge.toUpperCase()}</span>
       </span>
       <h2 class="sec-prods-title">{t.titulo}</h2>
       <p class="sec-prods-sub">{t.subtitulo}</p>
     </header>
 
-    <!-- Selector de Pestañas: Todos, Terapias Clínicas y Talleres -->
-    <div class="prods-tabs-wrapper" id="prodsTabsWrapper">
-      <button type="button" class="prods-tab-btn active" data-tab="todos">
-        <i class="fa-solid fa-shapes"></i>
-        <span>{t.tab_todos}</span>
-      </button>
-      <button type="button" class="prods-tab-btn" data-tab="servicio">
-        <i class="fa-solid fa-stethoscope"></i>
-        <span>{t.tab_servicios}</span>
-      </button>
-      <button type="button" class="prods-tab-btn" data-tab="taller">
-        <i class="fa-solid fa-people-group"></i>
-        <span>{t.tab_talleres}</span>
-      </button>
-    </div>
-
-    <!-- Grid de Programas (Terapias Clínicas + Talleres) -->
-    {programasActivos.length > 0 ? (
+    <!-- Grid de Especialidades Clínicas (Grilla 3x2 Fija en Desktop) -->
+    {serviciosActivos.length > 0 ? (
       <div 
         class="catalog-grid sec-prods-grid" 
         id="publicProdsGrid"
         data-idioma={idioma}
       >
-        {programasActivos.map((p: any) => {
+        {serviciosActivos.map((p: any) => {
           const langSuffix = idioma.charAt(0).toUpperCase() + idioma.slice(1);
           const nombre = (idioma !== 'es' && p[`nombre${langSuffix}`]) || (typeof p.nombre === 'object' ? (p.nombre[idioma] || p.nombre.es) : p.nombre) || '';
           const duracion = (idioma !== 'es' && p[`duracion${langSuffix}`]) || (typeof p.duracion === 'object' ? (p.duracion[idioma] || p.duracion.es) : p.duracion) || '45 - 60 min';
-          const enfoque = p.enfoque || 'TCC';
-          const modalidad = p.modalidad || 'Presencial y Online';
+          const enfoque = p.enfoque || 'Cognitivo Conductual';
+          const modalidad = (idioma !== 'es' && p[`modalidad${langSuffix}`]) || (typeof p.modalidad === 'object' ? (p.modalidad[idioma] || p.modalidad.es) : p.modalidad) || 'Presencial y Online';
           const descripcion = (idioma !== 'es' && p[`descripcion${langSuffix}`]) || (typeof p.descripcion === 'object' ? (p.descripcion[idioma] || p.descripcion.es) : p.descripcion) || '';
+          const publico = (idioma !== 'es' && p[`publico${langSuffix}`]) || (typeof p.publico === 'object' ? (p.publico[idioma] || p.publico.es) : p.publico) || 'Público General';
           
           let garantias: string[] = [];
           if (p.garantias) {
@@ -74,38 +60,28 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
             }
           }
 
-          const esTaller = p.categoria === 'taller' || p.categoria === 'talleres';
-          const categoriaFiltro = esTaller ? 'taller' : 'servicio';
+          const esDiagnostico = p.id.includes('diagnostico') || p.id.includes('tdah') || p.id.includes('evaluacion');
 
-          const esDiagnostico = p.id.includes('diagnostico') || p.id.includes('tdah');
-          const esPaquete = p.id.includes('paquete') || p.id.includes('10');
-
-          let pillHighlightTexto = p.badge || (esTaller ? t.pill_vivencial : t.pill_popular);
-          let pillHighlightClase = p.tagClase || 'badge-serenidad';
-          let pillHighlightIcon = esTaller ? 'fa-solid fa-users' : 'fa-solid fa-star';
-          let pillContexto = p.publico || 'Adultos y Familias';
-
-          if (esDiagnostico) {
-            pillHighlightClase = 'badge-oro';
-            pillHighlightIcon = 'fa-solid fa-clipboard-check';
-          } else if (esPaquete) {
-            pillHighlightClase = 'badge-oro';
-            pillHighlightIcon = 'fa-solid fa-award';
-          }
+          const badgeTexto = (idioma !== 'es' && p[`badge${langSuffix}`]) || (typeof p.badge === 'object' ? (p.badge[idioma] || p.badge.es) : p.badge) || (esDiagnostico ? 'Informe Oficial' : t.pill_popular);
+          const pillHighlightClase = p.tagClase || (esDiagnostico ? 'badge-oro' : 'badge-serenidad');
+          const pillHighlightIcon = esDiagnostico ? 'fa-solid fa-clipboard-check' : 'fa-solid fa-star';
 
           const guaranteeHeader = t.garantia_titulo.toUpperCase();
           const precioActual = p.precioPEN || p.precio || 85;
 
-          const btnTexto = esTaller ? t.btn_ws_taller : t.btn_ws_servicio;
-          const templateMsg = esTaller ? t.ws_msg_taller : t.ws_msg_servicio;
+          const btnTexto = t.btn_ws_servicio;
+          const templateMsg = t.ws_msg_servicio;
           const wsText = templateMsg.replace('{producto}', nombre);
           const wsLink = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent(wsText)}`;
+
+          const captionPrecio = esDiagnostico 
+            ? (idioma === 'en' ? 'Full Evaluation' : 'Batería Completa')
+            : (idioma === 'en' ? 'Per Session' : 'Por Sesión');
 
           return (
             <article 
               class="clean-card producto-card-box card-balon" 
               data-prod-id={p.id}
-              data-cat={categoriaFiltro}
             >
               <!-- Contenido Superior de la Tarjeta -->
               <div class="card-main-content">
@@ -113,9 +89,9 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                 <div class="producto-top-bar card-header-pills">
                   <span class={`producto-badge ${pillHighlightClase}`}>
                     <i class={pillHighlightIcon}></i>
-                    <span>{pillHighlightTexto}</span>
+                    <span>{badgeTexto}</span>
                   </span>
-                  <span class="producto-tipo-badge">{pillContexto}</span>
+                  <span class="producto-tipo-badge">{publico}</span>
                 </div>
 
                 <!-- Imagen Fotográfica con Pastilla de Duración -->
@@ -126,8 +102,8 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                     class="producto-img-tag card-img" 
                     loading="lazy" 
                     decoding="async" 
-                    width="320" 
-                    height="180" 
+                    width="360" 
+                    height="190" 
                   />
                   <div class="producto-capacidad-tag card-weight-pill">
                     <i class="fa-solid fa-clock"></i>
@@ -135,10 +111,10 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                   </div>
                 </div>
 
-                <!-- Título Oficial de la Especialidad o Taller -->
+                <!-- Título Oficial de la Especialidad Clínica -->
                 <h3 class="card-title">{nombre}</h3>
 
-                <!-- Descripción Breve y Amigable -->
+                <!-- Descripción Breve y Empática -->
                 {descripcion && (
                   <p class="card-desc-snippet">
                     {descripcion}
@@ -148,7 +124,7 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                 <!-- Filas de Especificaciones Clave con Iconos Clínicos -->
                 <ul class="card-specs-list">
                   <li class="card-spec-row">
-                    <i class={esTaller ? "fa-solid fa-people-arrows card-spec-icon" : "fa-solid fa-brain card-spec-icon"} style="color: var(--brand-primary, #104356);"></i>
+                    <i class="fa-solid fa-brain card-spec-icon" style="color: var(--brand-primary, #104356);"></i>
                     <span><strong class="card-spec-label">{t.enfoque_label} </strong>{enfoque}</span>
                   </li>
                   <li class="card-spec-row">
@@ -157,7 +133,7 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                   </li>
                 </ul>
 
-                <!-- Beneficios Terapéuticos -->
+                <!-- Beneficios Terapéuticos y Garantías -->
                 {garantias.length > 0 && (
                   <div class="card-guarantee-box">
                     <span class="card-guarantee-heading">{guaranteeHeader}</span>
@@ -178,7 +154,7 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
                 <!-- Bloque de Inversión / Precio -->
                 <div class="card-price-row">
                   <div class="card-price-col-left">
-                    <span class="card-price-caption">{esTaller ? 'Inversión Taller' : (esPaquete ? 'Tarifa Especial' : 'Por Sesión')}</span>
+                    <span class="card-price-caption">{captionPrecio}</span>
                     <div class="producto-price-val card-price-value">
                       <span class="card-price-curr">S/</span>
                       <span data-price-id={p.id}>{Number(precioActual).toFixed(2)}</span>
@@ -218,32 +194,3 @@ const whatsappNumero = datosNegocio.whatsappLimpio;
 
   </div>
 </section>
-
-<!-- Script Interactivo de Filtrado de Pestañas (Servicios vs Talleres) -->
-<script is:inline>
-  document.addEventListener('DOMContentLoaded', () => {
-    const tabsWrapper = document.getElementById('prodsTabsWrapper');
-    if (!tabsWrapper) return;
-
-    const tabBtns = tabsWrapper.querySelectorAll('.prods-tab-btn');
-    const cards = document.querySelectorAll('.sec-prods-grid article[data-cat]');
-
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const filter = btn.getAttribute('data-tab');
-
-        cards.forEach(card => {
-          const cat = card.getAttribute('data-cat');
-          if (filter === 'todos' || filter === cat) {
-            card.style.display = 'flex';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-  });
-</script>

@@ -74,5 +74,6 @@ src/feature/personal/modulos/talleres/semilla*.json
 
 # 📦 Semillas temporales de despegue (solo locales para sembrar BD)
 src/infoNegocio.json
+src/infoServicios.json
 src/infoProductos.json
 src/info/
