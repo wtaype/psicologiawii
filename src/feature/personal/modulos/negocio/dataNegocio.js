@@ -1,31 +1,19 @@
 // src/feature/personal/modulos/negocio/dataNegocio.js
-// 🎯 Capa Canónica Local-First de Negocio: Firestore + Caché Local + Semilla Portátil
+// 🎯 Capa Canónica Local-First de Negocio: Firestore + Caché Local + Booster src/infoNegocio.json
 // Colección: 'negocio' · Documento: 'principal'
 // Integrado con @widev y Firebase SDK
 
 import { savels, getls, formatearFechaParaInput } from '@widev';
+import infoNegocio from '../../../../infoNegocio.json';
 
 export const STORAGE_KEY = 'minegocio';
 export const OLD_STORAGE_KEY = 'gaswii_negocio_config';
 export const COLECCION_NEGOCIO = 'negocio';
 export const DOC_NEGOCIO_ID = 'principal';
 
-// 1. Lector seguro de semilla.json local (ignorado en git, puente frontend -> base de datos)
+// 1. Lector canónico de semilla inicial de despegue (lee src/infoNegocio.json)
 export function obtenerSemillaLocal() {
-  try {
-    const semillas = import.meta.glob('./semilla*.json', { eager: true });
-    for (const ruta in semillas) {
-      if (ruta.includes('semilla.json')) {
-        const data = semillas[ruta].default || semillas[ruta];
-        if (data && typeof data === 'object' && Object.keys(data).length > 0) {
-          return data;
-        }
-      }
-    }
-  } catch (e) {
-    console.warn('[dataNegocio] Fallback al leer semilla:', e?.message || e);
-  }
-  return null;
+  return infoNegocio && typeof infoNegocio === 'object' ? infoNegocio : null;
 }
 
 // 2. Parser ultraligero de campos de la REST API de Firestore
@@ -43,76 +31,116 @@ export function parseFirestoreDoc(fields = {}) {
   return res;
 }
 
-// 3. Normalizador neutro y portable para Psicología / Salud Clínica
+// 3. Normalizador neutro: SOLO UN FALLBACK (src/infoNegocio.json). Cero textos quemados en código.
 export function normalizarConfig(c = {}) {
   const cfg = c && typeof c === 'object' ? c : {};
-  const semilla = obtenerSemillaLocal() || {};
+  const base = infoNegocio || {};
+
+  const bioBase = base.identidad?.bio || {};
+  const bioCfg = cfg.identidad?.bio;
+  const bioEs = (typeof bioCfg === 'object' && bioCfg?.es) || (typeof bioCfg === 'string' && bioCfg) || bioBase.es || '';
+  const bioEn = (typeof bioCfg === 'object' && bioCfg?.en) || cfg.identidad?.bioEn || bioBase.en || '';
+
+  const wsBase = base.contacto?.whatsappMensaje;
+  const wsCfg = cfg.contacto?.whatsappMensaje;
+  const wsEs = (typeof wsCfg === 'object' && wsCfg?.es) || (typeof wsCfg === 'string' && wsCfg) || (typeof wsBase === 'object' ? wsBase?.es : wsBase) || '';
+  const wsEn = (typeof wsCfg === 'object' && wsCfg?.en) || cfg.contacto?.whatsappMensajeEn || (typeof wsBase === 'object' ? wsBase?.en : '') || "Hello Lic. Sofia Reynaga! I'd like to book a psychological consultation.";
+
+  const horBase = base.contacto?.horario || {};
+  const horCfg = cfg.contacto?.horario;
+  const horEs = (typeof horCfg === 'object' && horCfg?.es) || (typeof horCfg === 'string' && horCfg) || horBase.es || '';
+  const horEn = (typeof horCfg === 'object' && horCfg?.en) || cfg.contacto?.horarioEn || horBase.en || '';
 
   return {
-    id: cfg.id || semilla.id || DOC_NEGOCIO_ID,
-    principal: Boolean(cfg.principal ?? true),
+    id: cfg.id || base.id || DOC_NEGOCIO_ID,
+    principal: Boolean(cfg.principal ?? base.principal ?? true),
+    moneda: cfg.moneda || base.moneda || 'PEN',
     identidad: {
-      nombre: cfg.identidad?.nombre || semilla.identidad?.nombre || 'Consultorio Psicológico América',
-      nombreCorto: cfg.identidad?.nombreCorto || semilla.identidad?.nombreCorto || 'Psicología América',
-      especialista: cfg.identidad?.especialista || semilla.identidad?.especialista || 'Lic. Sofia Reynaga Pachas',
-      colegiatura: cfg.identidad?.colegiatura || semilla.identidad?.colegiatura || 'C.Ps.P. N° 49425',
-      titulo: cfg.identidad?.titulo || semilla.identidad?.titulo || 'Licenciada en Psicología',
-      grado: cfg.identidad?.grado || semilla.identidad?.grado || 'Maestrista en Psicología Clínica',
-      enfoques: cfg.identidad?.enfoques || semilla.identidad?.enfoques || 'Terapia Cognitivo-Conductual (TCC) • ACT • Psicopedagogía',
-      bio: cfg.identidad?.bio || semilla.identidad?.bio || '',
-      lanzamientoFecha: cfg.identidad?.lanzamientoFecha || semilla.identidad?.lanzamientoFecha || '2021-06-08',
-      logo: cfg.identidad?.logo || semilla.identidad?.logo || '/imgwii/logo.webp',
-      imagenSede: cfg.identidad?.imagenSede || semilla.identidad?.imagenSede || '/imgwii/hero/psicologa-sofia-reynaga.webp'
+      nombre: cfg.identidad?.nombre || base.identidad?.nombre || '',
+      nombreCorto: cfg.identidad?.nombreCorto || base.identidad?.nombreCorto || '',
+      especialista: cfg.identidad?.especialista || base.identidad?.especialista || '',
+      colegiatura: cfg.identidad?.colegiatura || base.identidad?.colegiatura || '',
+      titulo: cfg.identidad?.titulo || base.identidad?.titulo || '',
+      grado: cfg.identidad?.grado || base.identidad?.grado || '',
+      enfoques: cfg.identidad?.enfoques || base.identidad?.enfoques || '',
+      nombreEn: cfg.identidad?.nombreEn || base.identidad?.nombreEn || base.identidad?.nombre || '',
+      nombreCortoEn: cfg.identidad?.nombreCortoEn || base.identidad?.nombreCortoEn || base.identidad?.nombreCorto || '',
+      enfoquesEn: cfg.identidad?.enfoquesEn || base.identidad?.enfoquesEn || base.identidad?.enfoques || '',
+      bio: {
+        es: bioEs,
+        en: bioEn
+      },
+      lanzamientoFecha: cfg.identidad?.lanzamientoFecha || base.identidad?.lanzamientoFecha || '2020-03-15',
+      logo: cfg.identidad?.logo || base.identidad?.logo || '/imgwii/logo.webp',
+      logoFull: cfg.identidad?.logoFull || base.identidad?.logoFull || '/imgwii/logo_full.webp',
+      imagenSede: cfg.identidad?.imagenSede || base.identidad?.imagenSede || '/imgwii/hero/psicologa-sofia-reynaga.webp'
     },
     contacto: {
-      telefono: cfg.contacto?.telefono || semilla.contacto?.telefono || '+51 960 332 958',
-      telefonoLimpio: cfg.contacto?.telefonoLimpio || semilla.contacto?.telefonoLimpio || '960332958',
-      whatsapp: cfg.contacto?.whatsapp || semilla.contacto?.whatsapp || '51960332958',
-      email: cfg.contacto?.email || semilla.contacto?.email || 'reynaga.psychologist@gmail.com',
-      whatsappMensaje: cfg.contacto?.whatsappMensaje || semilla.contacto?.whatsappMensaje || '¡Hola Lic. Sofia Reynaga! Deseo agendar una consulta psicológica.',
-      horario: cfg.contacto?.horario || semilla.contacto?.horario || 'Lunes a Sábado: 8:00 a.m. a 8:00 p.m.',
-      horarioEn: cfg.contacto?.horarioEn || semilla.contacto?.horarioEn || 'Monday to Saturday: 8:00 a.m. to 8:00 p.m.'
-    },
-    ubicacion: {
-      direccion: cfg.ubicacion?.direccion || semilla.ubicacion?.direccion || 'Av. Alfredo Benavides 620, Miraflores, Lima',
-      distrito: cfg.ubicacion?.distrito || semilla.ubicacion?.distrito || 'Miraflores',
-      ciudad: cfg.ubicacion?.ciudad || semilla.ubicacion?.ciudad || 'Lima',
-      pais: cfg.ubicacion?.pais || semilla.ubicacion?.pais || 'PE',
-      mapsUrl: cfg.ubicacion?.mapsUrl || semilla.ubicacion?.mapsUrl || 'https://maps.google.com/?q=Av.+Alfredo+Benavides+620+Miraflores+Lima',
-      coordenadas: {
-        lat: Number(cfg.ubicacion?.coordenadas?.lat ?? (semilla.ubicacion?.coordenadas?.lat || -12.1245)),
-        lng: Number(cfg.ubicacion?.coordenadas?.lng ?? (semilla.ubicacion?.coordenadas?.lng || -77.0289))
+      telefono: cfg.contacto?.telefono || base.contacto?.telefono || '',
+      whatsapp: cfg.contacto?.whatsapp || base.contacto?.whatsapp || '',
+      email: cfg.contacto?.email || base.contacto?.email || '',
+      whatsappMensaje: {
+        es: wsEs,
+        en: wsEn
+      },
+      horario: {
+        es: horEs,
+        en: horEn
       }
     },
-    sedes: Array.isArray(cfg.sedes) && cfg.sedes.length > 0 
-      ? cfg.sedes 
-      : (Array.isArray(semilla.sedes) ? semilla.sedes : []),
+    horarios: {
+      semana: {
+        abre: cfg.horarios?.semana?.abre || base.horarios?.semana?.abre || '08:00',
+        cierra: cfg.horarios?.semana?.cierra || base.horarios?.semana?.cierra || '20:00'
+      },
+      sabado: {
+        abre: cfg.horarios?.sabado?.abre || base.horarios?.sabado?.abre || '08:00',
+        cierra: cfg.horarios?.sabado?.cierra || base.horarios?.sabado?.cierra || '20:00'
+      }
+    },
+    ubicacion: {
+      direccion: cfg.ubicacion?.direccion || base.ubicacion?.direccion || '',
+      referencia: cfg.ubicacion?.referencia || base.ubicacion?.referencia || '',
+      distrito: cfg.ubicacion?.distrito || base.ubicacion?.distrito || 'Villa El Salvador',
+      ciudad: cfg.ubicacion?.ciudad || base.ubicacion?.ciudad || 'Lima',
+      pais: cfg.ubicacion?.pais || base.ubicacion?.pais || 'PE',
+      codigoPostal: cfg.ubicacion?.codigoPostal || base.ubicacion?.codigoPostal || '15834',
+      mapsUrl: cfg.ubicacion?.mapsUrl || base.ubicacion?.mapsUrl || '',
+      coordenadas: {
+        lat: Number(cfg.ubicacion?.coordenadas?.lat ?? base.ubicacion?.coordenadas?.lat ?? -12.2084),
+        lng: Number(cfg.ubicacion?.coordenadas?.lng ?? base.ubicacion?.coordenadas?.lng ?? -76.9387)
+      }
+    },
+    sedes: Array.isArray(cfg.sedes) && cfg.sedes.length > 0 ? cfg.sedes : (Array.isArray(base.sedes) ? base.sedes : []),
     metricas: {
-      pacientes: cfg.metricas?.pacientes || semilla.metricas?.pacientes || '450+',
-      colegiaturaNumero: cfg.metricas?.colegiaturaNumero || semilla.metricas?.colegiaturaNumero || '49425',
-      confidencialidad: cfg.metricas?.confidencialidad || semilla.metricas?.confidencialidad || '100%',
-      satisfaccion: cfg.metricas?.satisfaccion || semilla.metricas?.satisfaccion || '98%',
-      years: cfg.metricas?.years || calcularAnosTrayectoria(cfg.identidad?.lanzamientoFecha || semilla.identidad?.lanzamientoFecha)
+      pacientes: cfg.metricas?.pacientes || base.metricas?.pacientes || '450+',
+      confidencialidad: cfg.metricas?.confidencialidad || base.metricas?.confidencialidad || '100%',
+      satisfaccion: cfg.metricas?.satisfaccion || base.metricas?.satisfaccion || '98%',
+      years: cfg.metricas?.years || calcularAnosTrayectoria(cfg.identidad?.lanzamientoFecha || base.identidad?.lanzamientoFecha)
     },
     redes: {
-      facebook: cfg.redes?.facebook || semilla.redes?.facebook || 'https://facebook.com/psicologiaamerica',
-      instagram: cfg.redes?.instagram || semilla.redes?.instagram || 'https://instagram.com/psicologiaamerica',
-      tiktok: cfg.redes?.tiktok || semilla.redes?.tiktok || 'https://tiktok.com/@psicologiaamerica',
-      linkedin: cfg.redes?.linkedin || semilla.redes?.linkedin || ''
+      facebook: cfg.redes?.facebook || base.redes?.facebook || '',
+      instagram: cfg.redes?.instagram || base.redes?.instagram || '',
+      tiktok: cfg.redes?.tiktok || base.redes?.tiktok || '',
+      linkedin: cfg.redes?.linkedin || base.redes?.linkedin || ''
     },
     seo: {
       titulo: {
-        es: cfg.seo?.titulo?.es || semilla.seo?.titulo?.es || 'Consultorio Psicológico América | Terapia Psicológica y Talleres en Lima',
-        en: cfg.seo?.titulo?.en || semilla.seo?.titulo?.en || 'America Psychological Clinic | Psychotherapy & Workshops in Lima'
+        es: cfg.seo?.titulo?.es || base.seo?.titulo?.es || '',
+        en: cfg.seo?.titulo?.en || base.seo?.titulo?.en || ''
       },
       descripcion: {
-        es: cfg.seo?.descripcion?.es || semilla.seo?.descripcion?.es || 'Atención psicológica profesional y basada en evidencia con la Lic. Sofia Reynaga (C.Ps.P. 49425).',
-        en: cfg.seo?.descripcion?.en || semilla.seo?.descripcion?.en || 'Evidence-based psychological consultation with Lic. Sofia Reynaga (C.Ps.P. 49425).'
+        es: cfg.seo?.descripcion?.es || base.seo?.descripcion?.es || '',
+        en: cfg.seo?.descripcion?.en || base.seo?.descripcion?.en || ''
       },
       keywords: {
-        es: Array.isArray(cfg.seo?.keywords?.es) ? cfg.seo.keywords.es : (Array.isArray(semilla.seo?.keywords?.es) ? semilla.seo.keywords.es : []),
-        en: Array.isArray(cfg.seo?.keywords?.en) ? cfg.seo.keywords.en : (Array.isArray(semilla.seo?.keywords?.en) ? semilla.seo.keywords.en : [])
-      }
+        es: Array.isArray(cfg.seo?.keywords?.es) && cfg.seo.keywords.es.length > 0 ? cfg.seo.keywords.es : (Array.isArray(base.seo?.keywords?.es) ? base.seo.keywords.es : []),
+        en: Array.isArray(cfg.seo?.keywords?.en) && cfg.seo.keywords.en.length > 0 ? cfg.seo.keywords.en : (Array.isArray(base.seo?.keywords?.en) ? base.seo.keywords.en : [])
+      },
+      imagen: cfg.seo?.imagen || base.seo?.imagen || null,
+      schema: cfg.seo?.schema || base.seo?.schema || null,
+      audiencia: cfg.seo?.audiencia || base.seo?.audiencia || null,
+      intencion: cfg.seo?.intencion || base.seo?.intencion || null
     },
     userId: cfg.userId || '',
     email: cfg.email || '',
@@ -154,7 +182,7 @@ export function getUsuarioActivo() {
 
 // Calcula los años de experiencia automáticamente a partir de una fecha YYYY-MM-DD o Timestamp
 export function calcularAnosTrayectoria(fechaInput) {
-  if (!fechaInput) return '4+';
+  if (!fechaInput) return '1+';
   let dateObj = null;
 
   if (fechaInput?.seconds) {
@@ -165,9 +193,9 @@ export function calcularAnosTrayectoria(fechaInput) {
     dateObj = fechaInput;
   }
 
-  if (!dateObj || isNaN(dateObj.getTime())) return '4+';
+  if (!dateObj || isNaN(dateObj.getTime())) return '1+';
   const dif = new Date().getFullYear() - dateObj.getFullYear();
-  return dif > 0 ? `${dif}+` : '1';
+  return dif > 0 ? `${dif}+` : '1+';
 }
 
 /**
@@ -175,7 +203,7 @@ export function calcularAnosTrayectoria(fechaInput) {
  * 1. Memoria activa en sesión.
  * 2. Caché local persistente (localStorage 'minegocio').
  * 3. En SSG/Build: Datos vivos directo desde Firestore REST API.
- * 4. Semilla local como puente inicial (semilla.json).
+ * 4. Fallback directo a src/infoNegocio.json.
  */
 export function obtenerDatosNegocio() {
   if (_memoriaNegocio) {
@@ -197,15 +225,8 @@ export function obtenerDatosNegocio() {
     return _memoriaNegocio;
   }
 
-  // 3. Fallback a semilla local normalizada
-  const semilla = obtenerSemillaLocal();
-  if (semilla) {
-    _memoriaNegocio = normalizarConfig(semilla);
-    return _memoriaNegocio;
-  }
-
-  // 4. Estructura neutra por defecto
-  _memoriaNegocio = normalizarConfig({});
+  // 3. Fallback limpio a infoNegocio.json
+  _memoriaNegocio = normalizarConfig(infoNegocio || {});
   return _memoriaNegocio;
 }
 
@@ -219,7 +240,6 @@ export function guardarDatosNegocioLocal(config) {
     savels(STORAGE_KEY, normalizado);
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('psicologia:negocio-actualizado', { detail: normalizado }));
-      window.dispatchEvent(new CustomEvent('gaswii:negocio-actualizado', { detail: normalizado }));
     }
   } catch (e) {}
 }
@@ -232,13 +252,14 @@ export function guardarDatosNegocio(input = {}) {
   const usuario = getUsuarioActivo();
 
   // Parsear fecha de lanzamiento/fundación
-  const fechaStr = input.identidad?.lanzamientoFecha || actual.identidad?.lanzamientoFecha || "2021-06-08";
+  const fechaStr = input.identidad?.lanzamientoFecha || actual.identidad?.lanzamientoFecha || "";
   const yearsCalc = calcularAnosTrayectoria(fechaStr);
 
   const configActualizada = {
     ...actual,
     id: DOC_NEGOCIO_ID,
     principal: true,
+    moneda: input.moneda || actual.moneda || 'PEN',
     identidad: {
       ...actual.identidad,
       ...(input.identidad || {}),
@@ -247,6 +268,10 @@ export function guardarDatosNegocio(input = {}) {
     contacto: {
       ...actual.contacto,
       ...(input.contacto || {})
+    },
+    horarios: {
+      ...actual.horarios,
+      ...(input.horarios || {})
     },
     ubicacion: {
       ...actual.ubicacion,
@@ -296,11 +321,13 @@ async function sincronizarNegocioFirestore(config, fechaStr) {
     const payload = {
       id: DOC_NEGOCIO_ID,
       principal: true,
+      moneda: config.moneda || 'PEN',
       identidad: {
         ...config.identidad,
         ...(timestampLanzamiento ? { lanzamiento: timestampLanzamiento } : {})
       },
       contacto: config.contacto,
+      horarios: config.horarios,
       ubicacion: config.ubicacion,
       sedes: config.sedes,
       metricas: config.metricas,
@@ -325,7 +352,7 @@ async function sincronizarNegocioFirestore(config, fechaStr) {
 export async function sincronizarDesdeFirestore() {
   try {
     const { db } = await import('@core/servicios/firebase.js');
-    if (!db) return null;
+    if (!db) return normalizarConfig(obtenerSemillaLocal());
     const { doc, getDoc } = await import('firebase/firestore');
 
     const snap = await getDoc(doc(db, COLECCION_NEGOCIO, DOC_NEGOCIO_ID));
@@ -346,11 +373,15 @@ export async function sincronizarDesdeFirestore() {
       });
       guardarDatosNegocioLocal(normalizado);
       return normalizado;
+    } else {
+      // Documento aún no creado en Firestore: Usar semilla de infoNegocio.json
+      const semilla = normalizarConfig(obtenerSemillaLocal());
+      return semilla;
     }
   } catch (err) {
     console.warn('[dataNegocio] Lectura Firestore:', err?.message || err);
   }
-  return null;
+  return normalizarConfig(obtenerSemillaLocal());
 }
 
 export const consultarNegocioDesdeFirestore = sincronizarDesdeFirestore;

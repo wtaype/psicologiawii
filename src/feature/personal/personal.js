@@ -59,18 +59,52 @@ export function inicializarPersonal() {
     switchPanel(e.state?.modulo || (paramMod && esModuloValido(paramMod) ? paramMod : moduloDefecto), false);
   });
 
+  // 3.1 Drawer Móvil Off-Canvas
+  const sidebarMenu = document.getElementById('sidebarMenu');
+  const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+  const btnMobileToggle = document.getElementById('btnMobileSidebarToggle');
+  const btnMobileClose = document.getElementById('btnMobileSidebarClose');
+
+  function openMobileSidebar() {
+    sidebarMenu?.classList.add('mobile-open');
+    sidebarBackdrop?.classList.add('active');
+    document.body.classList.add('ps-locked-scroll');
+  }
+
+  function closeMobileSidebar() {
+    sidebarMenu?.classList.remove('mobile-open');
+    sidebarBackdrop?.classList.remove('active');
+    document.body.classList.remove('ps-locked-scroll');
+  }
+
+  btnMobileToggle?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (sidebarMenu?.classList.contains('mobile-open')) {
+      closeMobileSidebar();
+    } else {
+      openMobileSidebar();
+    }
+  });
+
+  btnMobileClose?.addEventListener('click', closeMobileSidebar);
+  sidebarBackdrop?.addEventListener('click', closeMobileSidebar);
+
   navItems.forEach(btn => {
-    btn.addEventListener('click', () => switchPanel(btn.getAttribute('data-panel-target'), true));
+    btn.addEventListener('click', () => {
+      closeMobileSidebar();
+      switchPanel(btn.getAttribute('data-panel-target'), true);
+    });
   });
 
   document.querySelectorAll('[data-jump-to]').forEach(btn => {
     btn.addEventListener('click', () => {
       closeDropdown();
+      closeMobileSidebar();
       switchPanel(btn.getAttribute('data-jump-to'), true);
     });
   });
 
-  // 4. Sidebar Colapsable
+  // 4. Sidebar Colapsable (Desktop)
   const btnCollapse = document.getElementById('btnCollapseSidebar');
   const iconCollapse = document.getElementById('iconCollapse');
   const labelCollapse = document.getElementById('labelCollapse');

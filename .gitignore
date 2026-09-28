@@ -71,3 +71,8 @@ src/pages/view*.astro
 src/feature/personal/modulos/negocio/semilla*.json
 src/feature/personal/modulos/servicios/semilla*.json
 src/feature/personal/modulos/talleres/semilla*.json
+
+# 📦 Semillas temporales de despegue (solo locales para sembrar BD)
+src/infoNegocio.json
+src/infoProductos.json
+src/info/

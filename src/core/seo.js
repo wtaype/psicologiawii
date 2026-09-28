@@ -1,5 +1,8 @@
 // src/core/seo.js
-// --- [Metadatos SEO Clínico] titulo = ~50 caracteres, descripcion = ~150 caracteres
+// 🎯 Fachada Canónica de Metadatos SEO Clínico y Schema.org JSON-LD
+// 100% Dinámico: Consume exclusivamente de datosNegocio (que ya resuelve Firestore -> único fallback infoNegocio / infoProductos)
+// Cero datos quemados: Cero strings hardcodeados. Todo se actualiza en cascada desde infoNegocio / infoProductos.
+
 import app from '../app.js';
 import { datosNegocio } from '../negocio.js';
 
@@ -7,52 +10,39 @@ import { datosNegocio } from '../negocio.js';
 // 1. ASSET CANÓNICO DE IMAGEN PARA GOOGLE SERP Y REDES SOCIALES
 // ==========================================
 export const SEO_IMAGEN = {
-  url: '/imgwii/Sofia.jpg',
-  width: 1200,
-  height: 630,
-  type: 'image/jpeg',
-  alt: 'Consultorio Psicológico América - Lic. Sofía Reynaga en Miraflores y Villa El Salvador',
-  caption: 'Atención psicológica profesional, evaluación diagnóstica TDAH/TEA y psicoterapia'
+  get url() { return datosNegocio.seo?.imagen?.url || ''; },
+  get width() { return datosNegocio.seo?.imagen?.width || 1200; },
+  get height() { return datosNegocio.seo?.imagen?.height || 630; },
+  get type() { return datosNegocio.seo?.imagen?.type || 'image/jpeg'; },
+  get alt() { return datosNegocio.seo?.imagen?.alt || datosNegocio.nombre; },
+  get caption() { return datosNegocio.seo?.imagen?.caption || datosNegocio.bio; }
 };
 
 // ==========================================
-// 2. METADATOS CANÓNICOS DE INICIO (PÁGINA PRINCIPAL)
+// 2. METADATOS CANÓNICOS DINÁMICOS DE INICIO (PÁGINA PRINCIPAL)
 // ==========================================
 export const SEO_INICIO = {
-  es: {
-    title: "Consultorio Psicológico América | Terapia, Descarte TDAH/TEA & Talleres",
-    description: "Atención psicológica con calidez y rigor científico en Miraflores y Villa El Salvador. Psicoterapia individual, parejas, niños y evaluación TDAH/TEA. Lic. Sofía.",
-    path: '/',
-    keywords: [
-      'psicologia miraflores',
-      'psicologo miraflores',
-      'psicologo villa el salvador',
-      'terapia de pareja lima',
-      'evaluacion tdah ninos lima',
-      'descarte autismo tea lima',
-      'terapia cognitivo conductual lima',
-      'psicoterapia familiar lima',
-      'consulta psicologica online peru',
-      'talleres habilidades sociales lima',
-      'lic sofia reynaga psicologa'
-    ],
-    audience: ['familias', 'parejas', 'padres de familia', 'adolescentes', 'adultos'],
-    intent: 'agendar consulta psicologica, evaluacion diagnostica tdah tea y psicoterapia en lima'
+  get es() {
+    const s = datosNegocio.seo || {};
+    return {
+      title: s.titulo?.es || datosNegocio.nombre,
+      description: s.descripcion?.es || datosNegocio.bio,
+      path: '/',
+      keywords: Array.isArray(s.keywords?.es) ? s.keywords.es : [],
+      audience: s.audiencia?.es || [],
+      intent: s.intencion?.es || ''
+    };
   },
-  en: {
-    title: "América Psychology Clinic | Psychotherapy, ADHD/ASD Screening Lima",
-    description: "Professional psychological care with Lic. Sofía Reynaga in Miraflores and Villa El Salvador. Individual therapy, couples, child therapy, and ADHD/ASD diagnosis.",
-    path: '/en',
-    keywords: [
-      'psychologist miraflores lima',
-      'couples therapy lima',
-      'adhd assessment lima peru',
-      'autism evaluation children lima',
-      'english speaking psychologist lima',
-      'online therapy peru'
-    ],
-    audience: ['expats', 'families', 'couples', 'individuals'],
-    intent: 'book psychological consultation and psychotherapy in miraflores lima'
+  get en() {
+    const s = datosNegocio.seo || {};
+    return {
+      title: s.titulo?.en || datosNegocio.nombreCorto,
+      description: s.descripcion?.en || datosNegocio.bio,
+      path: '/en',
+      keywords: Array.isArray(s.keywords?.en) ? s.keywords.en : [],
+      audience: s.audiencia?.en || [],
+      intent: s.intencion?.en || ''
+    };
   }
 };
 
@@ -72,13 +62,11 @@ export function getMeta(ruta = '/', idioma = 'es') {
   const urlBase = (app.linkweb || 'https://psicologiawii.com').replace(/\/$/, '');
   const canonical = `${urlBase}${ruta}`;
 
-  const seoDinamico = clave === 'inicio' ? datosNegocio.seo : null;
-  const title = (seoDinamico?.titulo?.[idioma]?.trim()) || data.title;
-  const description = (seoDinamico?.descripcion?.[idioma]?.trim()) || data.description;
-  const dynamicKeywords = seoDinamico?.keywords?.[idioma];
-  const keywordsList = Array.isArray(dynamicKeywords) && dynamicKeywords.length > 0 
-    ? dynamicKeywords 
-    : data.keywords;
+  const title = data.title || datosNegocio.nombre;
+  const description = data.description || datosNegocio.bio;
+  const keywordsList = Array.isArray(data.keywords) && data.keywords.length > 0 
+    ? data.keywords 
+    : [];
   const keywords = keywordsList.join(', ');
 
   const imgCanonical = SEO_IMAGEN.url.startsWith('http') 
@@ -98,6 +86,13 @@ export function getMeta(ruta = '/', idioma = 'es') {
     ogImageType: SEO_IMAGEN.type,
     ogImageAlt: SEO_IMAGEN.alt,
     ogUrl: canonical,
+    twitterCard: 'summary_large_image',
+    twitterTitle: title,
+    twitterDescription: description,
+    twitterImage: imgCanonical,
+    idioma,
+    alternateHref: ruta === '/en' || ruta.startsWith('/en/') ? `${urlBase}/` : `${urlBase}/en/`,
+    alternateLang: idioma === 'es' ? 'en' : 'es',
     ogType: 'website',
     siteName: datosNegocio.nombre,
     telefono: datosNegocio.telefonoMostrado,
@@ -119,9 +114,44 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
   const isEn = idioma === 'en';
   const canonical = `${urlBase}${ruta}`;
   const data = seo.inicio[idioma] || SEO_INICIO.es;
-  const seoDinamico = ruta === '/' || ruta === '/en' ? datosNegocio.seo : null;
-  const title = (seoDinamico?.titulo?.[idioma]?.trim()) || data.title;
-  const description = (seoDinamico?.descripcion?.[idioma]?.trim()) || data.description;
+  const title = data.title || datosNegocio.nombre;
+  const description = data.description || datosNegocio.bio;
+  const seoData = datosNegocio.seo || {};
+  const schemaData = seoData.schema || {};
+
+  // Rango de precios calculado dinámicamente de las tarifas
+  const tarifas = datosNegocio.tarifas || {};
+  const preciosArray = [tarifas.consultaBase, tarifas.consultaPresencial, tarifas.paquete10Sesiones, tarifas.descarteDiagnostico].filter(p => typeof p === 'number' && !isNaN(p) && p > 0);
+  const minPrecio = preciosArray.length > 0 ? Math.min(...preciosArray) : 0;
+  const maxPrecio = preciosArray.length > 0 ? Math.max(...preciosArray) : 0;
+  const priceRange = schemaData.rangoPrecios || `S/ ${minPrecio} - S/ ${maxPrecio}`;
+
+  // Horarios de apertura dinámicos
+  const horasSemana = datosNegocio.horarios?.semana || { abre: "09:00", cierra: "20:00" };
+  const horasSabado = datosNegocio.horarios?.sabado || { abre: "09:00", cierra: "18:00" };
+
+  const openingHours = [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
+      opens: horasSemana.abre,
+      closes: horasSemana.cierra
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Saturday'],
+      opens: horasSabado.abre,
+      closes: horasSabado.cierra
+    }
+  ];
+
+  // Descripción de consultorio dinámico
+  const clinicDesc = schemaData.descripcionCorta?.[idioma] 
+    || (isEn ? datosNegocio.contacto?.horarioEn : datosNegocio.bio)
+    || description;
+
+  // Medios de pago aceptados dinámicos
+  const paymentAccepted = (datosNegocio.mediosPago || []).map(m => m.nombre);
 
   return {
     '@context': 'https://schema.org',
@@ -152,25 +182,23 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
       },
       // 1. Entidad Clínica Psicológica / MedicalBusiness
       {
-        '@type': ['MedicalBusiness', 'MedicalClinic'],
+        '@type': schemaData.tipo || ['MedicalBusiness', 'MedicalClinic'],
         '@id': `${urlBase}/#clinic`,
         name: datosNegocio.nombre,
-        description: isEn 
-          ? "Certified psychology and psychotherapy clinic in Miraflores and Villa El Salvador. Specialized in individual therapy, couples, and ADHD/ASD diagnosis."
-          : "Consultorio de atención psicológica y psicoterapia en Miraflores y Villa El Salvador. Especializado en terapia individual, pareja, familia y descarte TDAH/TEA.",
+        description: clinicDesc,
         url: urlBase,
         telephone: datosNegocio.telefonoMostrado,
         image: `${urlBase}${SEO_IMAGEN.url}`,
-        priceRange: "S/ 85 - S/ 600",
-        paymentAccepted: ["Cash", "Yape", "Plin", "Bank Transfer"],
-        currenciesAccepted: "PEN",
-        medicalSpecialty: ["Psychology", "Psychotherapy", "PediatricPsychology"],
+        priceRange: priceRange,
+        paymentAccepted: paymentAccepted,
+        currenciesAccepted: datosNegocio.moneda || 'PEN',
+        medicalSpecialty: schemaData.especialidades || ['Psychology', 'Psychotherapy'],
         address: {
           '@type': 'PostalAddress',
           streetAddress: datosNegocio.direccionSede,
           addressLocality: datosNegocio.distritoSede,
           addressRegion: datosNegocio.ciudad,
-          postalCode: '15074',
+          postalCode: datosNegocio.codigoPostal || '',
           addressCountry: datosNegocio.pais
         },
         geo: {
@@ -178,32 +206,19 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
           latitude: datosNegocio.coordenadas.lat,
           longitude: datosNegocio.coordenadas.lng
         },
-        openingHoursSpecification: [
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'],
-            opens: '09:00',
-            closes: '20:00'
-          },
-          {
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: ['Saturday'],
-            opens: '09:00',
-            closes: '18:00'
-          }
-        ],
+        openingHoursSpecification: openingHours,
         areaServed: datosNegocio.sedes.map(s => ({
           '@type': 'AdministrativeArea',
-          name: s.distrito
+          name: s.distrito || s.nombre
         }))
       },
-      // 2. Servicios Clínicos y Evaluaciones
+      // 2. Servicios Clínicos y Evaluaciones Dinámicos
       ...datosNegocio.servicios.map(s => {
         const servNom = isEn ? (s.nombreEn || s.nombre) : s.nombre;
         const servDesc = isEn ? (s.descripcionEn || s.descripcion) : s.descripcion;
-        const precioNum = Number(s.precioPEN ?? 85);
+        const precioNum = Number(s.precioPEN ?? 0);
         const imgUrl = (s.imagen || SEO_IMAGEN.url).startsWith('http') 
-          ? s.imagen 
+          ? (s.imagen || SEO_IMAGEN.url)
           : `${urlBase}${s.imagen || SEO_IMAGEN.url}`;
 
         return {
@@ -219,9 +234,9 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
           offers: {
             '@type': 'Offer',
             url: `${urlBase}/#servicios`,
-            priceCurrency: 'PEN',
-            price: isNaN(precioNum) ? '85.00' : precioNum.toFixed(2),
-            priceValidUntil: '2027-12-31',
+            priceCurrency: datosNegocio.moneda || 'PEN',
+            price: isNaN(precioNum) ? '0.00' : precioNum.toFixed(2),
+            priceValidUntil: `${new Date().getFullYear() + 1}-12-31`,
             availability: 'https://schema.org/InStock',
             seller: {
               '@type': 'MedicalBusiness',

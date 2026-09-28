@@ -12,6 +12,17 @@ const listaModulos = getModulosActivos();
 ---
 
 <aside class="ps-sidebar" id="sidebarMenu">
+  <!-- Cabecera Móvil Drawer -->
+  <div class="ps-sidebar-mobile-header">
+    <div class="ps-sidebar-mobile-title">
+      <i class="fa-solid fa-compass"></i>
+      <span>Menú de Gestión</span>
+    </div>
+    <button type="button" class="ps-btn-icon ps-btn-mobile-close" id="btnMobileSidebarClose" aria-label="Cerrar menú">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+  </div>
+
   <nav class="ps-nav" aria-label="Menú del dueño">
     {listaModulos.map((m) => {
       const isActive = m.id === moduloActivo;

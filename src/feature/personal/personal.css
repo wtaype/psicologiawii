@@ -46,6 +46,16 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; }
   backdrop-filter: blur(16px);
 }
 
+.ps-topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ps-btn-mobile-toggle {
+  display: none;
+}
+
 .ps-brand {
   display: flex;
   align-items: center;
@@ -282,9 +292,60 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; }
 .ps-dropdown-item.danger i { color: var(--red); }
 .ps-dropdown-item.danger:hover { background: rgba(251, 124, 133, 0.12); }
 
+/* Backdrop Oscuro para Móvil (Drawer) */
+.ps-sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 1040;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.ps-sidebar-backdrop.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+body.ps-locked-scroll {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
 /* ============================================================
    SIDEBAR
    ============================================================ */
+.ps-sidebar-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+}
+
+.ps-sidebar-mobile-title {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: var(--fz_s6, 15px);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ps-sidebar-mobile-title i {
+  color: var(--brand-orange);
+}
+
+.ps-btn-mobile-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+}
+
 .ps-sidebar {
   position: fixed;
   top: var(--topbar-h);
@@ -718,6 +779,138 @@ html.is-collapsed .ps-main-shell {
 .sn-mb-14 { margin-bottom: 14px; }
 .sn-header-icon { color: var(--brand-orange); margin-right: 8px; }
 .sn-title-icon { color: var(--brand-orange); }
+
+/* ============================================================
+   RESPONSIVE DESIGN (TABLET & MOBILE)
+   ============================================================ */
+
+/* Pantallas medianas y móviles (< 992px) */
+@media (max-width: 991px) {
+  .ps-btn-mobile-toggle {
+    display: inline-flex;
+  }
+
+  .ps-brand-sub {
+    display: none;
+  }
+
+  .ps-brand-title {
+    font-size: var(--fz_m);
+  }
+
+  .ps-search-box {
+    width: 200px;
+  }
+
+  /* Drawer Lateral Off-Canvas */
+  .ps-sidebar {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(290px, 86vw);
+    height: 100vh;
+    z-index: 1050;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  .ps-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  .ps-sidebar-mobile-header {
+    display: flex;
+  }
+
+  .ps-sidebar-footer {
+    display: none;
+  }
+
+  /* Shell Principal ocupa el 100% de la pantalla */
+  .ps-main-shell,
+  html.is-collapsed .ps-main-shell {
+    margin-left: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px 14px 40px !important;
+    box-sizing: border-box;
+  }
+
+  /* Desactivar sticky en cabeceras de sección en móvil/tablet para no tapar contenido */
+  .ps-section-header {
+    position: static !important;
+    top: auto !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    margin-top: 0 !important;
+    margin-bottom: 16px !important;
+  }
+}
+
+/* Pantallas móviles estrechas (< 768px) */
+@media (max-width: 768px) {
+  .ps-topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .ps-top-actions {
+    gap: 8px;
+  }
+
+  .ps-search-box {
+    display: none;
+  }
+
+  .ps-user-name,
+  .ps-user-chevron {
+    display: none;
+  }
+
+  .ps-user-badge {
+    padding: 2px;
+    border-color: transparent;
+  }
+
+  .ps-user-avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  .ps-section-header {
+    position: static !important;
+    top: auto !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 6px 0 14px 0;
+    margin-top: 0 !important;
+  }
+
+  .ps-header-actions {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 8px;
+  }
+
+  .ps-section-title {
+    font-size: var(--fz_m2);
+  }
+
+  .ps-card {
+    padding: 14px;
+  }
+
+  .ps-grid-2,
+  .ps-grid-3,
+  .ps-grid-4 {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+}
 
 
 

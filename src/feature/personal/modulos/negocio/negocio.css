@@ -1,77 +1,103 @@
 /* src/feature/personal/modulos/negocio/negocio.css */
-/* Estilos Profesionales del Módulo Ficha de Negocio & Especialista (Psicología América) */
-/* Cero CSS Inline · 100% Variables de Tema witema · Radios 1vh y Fuente Poppins */
+/* Estilos Oficiales del Módulo Ficha de Negocio & Especialista (Psicología América) */
+/* Cero CSS Inline · Layout Split de 2 Columnas · Pestañas Bilingües ES/EN · 100% WiTema */
 
 .ng-container {
   display: flex;
   flex-direction: column;
-  gap: 1.2vh;
+  gap: 16px;
   width: 100%;
   max-width: 100%;
   margin: 0;
-  padding-block: 0;
-  padding-inline: 1vh;
+  padding: 0;
   box-sizing: border-box;
 }
 
-/* 1. Barra de Pestañas de Navegación */
-.ng-tabs-bar {
+/* ── 1. LAYOUT SPLIT A 2 COLUMNAS (Aprovechamiento Espacial 35% / Auto) ── */
+.ng-split-layout {
+  display: grid;
+  grid-template-columns: 35% auto;
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 991px) {
+  .ng-split-layout {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+/* Columna Izquierda: Global */
+.ng-col-global {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Columna Derecha: Bilingüe */
+.ng-col-traducciones {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+/* ── 2. PESTAÑAS DE IDIOMA (ESPAÑOL | ENGLISH) ── */
+.ng-lang-tabs {
   display: flex;
   align-items: center;
-  gap: 0.8vh;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  padding: 0.8vh 1vh;
-  border-radius: 1vh;
-  overflow-x: auto;
-  scrollbar-width: none;
+  gap: 8px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: var(--br_m, 12px);
+  padding: 6px 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
 }
 
-.ng-tabs-bar::-webkit-scrollbar {
-  display: none;
-}
-
-.ng-tab-btn {
+.ng-lang-tab-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.8vh;
-  padding: 0.8vh 1.4vh;
-  border-radius: 1vh;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 8px;
   border: none;
   background: transparent;
-  color: var(--muted);
+  color: var(--muted, #64748b);
   font-family: inherit;
   font-size: var(--fz_s4, 13px);
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.ng-tab-btn i {
+.ng-lang-tab-btn i {
   font-size: 14px;
 }
 
-.ng-tab-btn:hover {
-  color: var(--ink);
-  background: rgba(255, 255, 255, 0.04);
+.ng-lang-tab-btn:hover {
+  color: var(--ink, #0f172a);
+  background: var(--raised, rgba(0, 0, 0, 0.04));
 }
 
-.ng-tab-btn.active {
-  background: var(--p_v1, #1e5e75);
+.ng-lang-tab-btn.active {
+  background: var(--brand-orange, #ff6600);
   color: #ffffff;
-  font-weight: 600;
-  box-shadow: 0 2px 8px rgba(30, 94, 117, 0.25);
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.3);
 }
 
-/* 2. Paneles de Pestañas */
-.ng-tab-content {
+/* Paneles de Idioma */
+.ng-lang-pane {
   display: none;
-  animation: ngFadeIn 0.2s ease-out;
+  flex-direction: column;
+  gap: 16px;
 }
 
-.ng-tab-content.active {
-  display: block;
+.ng-lang-pane.active {
+  display: flex;
+  animation: ngFadeIn 0.22s ease-out;
 }
 
 @keyframes ngFadeIn {
@@ -79,58 +105,155 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* 3. Tarjetas de Formulario */
+/* ── 3. TARJETAS DE FORMULARIO ── */
 .ng-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: 1vh;
-  padding: 1vh;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: var(--br_m, 12px);
+  padding: 16px 18px;
   box-sizing: border-box;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
 }
 
 .ng-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1vh;
-  padding-bottom: 0.8vh;
-  border-bottom: 1px solid var(--border);
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line, #e2e8f0);
 }
 
 .ng-card-title {
   display: flex;
   align-items: center;
-  gap: 0.8vh;
-  font-size: var(--fz_s6, 16px);
-  font-weight: 600;
-  color: var(--ink);
+  gap: 8px;
+  font-size: var(--fz_s5, 15px);
+  font-weight: 700;
+  color: var(--ink, #0f172a);
   margin: 0;
 }
 
 .ng-card-title i {
-  color: var(--p_v1, #1e5e75);
+  color: var(--brand-orange, #ff6600);
 }
 
 .ng-card-desc {
   font-size: var(--fz_s3, 12px);
-  color: var(--muted);
-  margin: 0.4vh 0 0 0;
+  color: var(--muted, #64748b);
+  margin: 3px 0 0 0;
 }
 
-/* 4. Grillas de Formulario */
+.ng-badge-trayectoria {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  padding: 4px 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+/* ── 4. PREVIEW MULTIMEDIA DUAL (ESPECIALISTA + LOGO) ── */
+.ng-media-dual-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 480px) {
+  .ng-media-dual-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ng-media-preview-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--raised, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 10px;
+  padding: 10px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.ng-media-thumb {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--line, #e2e8f0);
+  margin-bottom: 8px;
+  background: var(--surface, #ffffff);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+.ng-media-meta {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ng-media-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted, #64748b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.ng-media-logos-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ng-media-thumb-full {
+  width: 100%;
+  max-width: 150px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--line, #e2e8f0);
+  margin-bottom: 8px;
+  background: var(--surface, #ffffff);
+  padding: 4px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.ng-media-preview-box.is-hero {
+  height: 100%;
+  justify-content: center;
+}
+
+.ng-input-sm {
+  padding: 6px 8px;
+  font-size: 11px;
+}
+
+/* ── 5. GRILLAS Y CAMPOS DE FORMULARIO ── */
 .ng-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1vh;
+  gap: 10px;
 }
 
 .ng-grid-3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1vh;
+  gap: 10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .ng-grid-2,
   .ng-grid-3 {
     grid-template-columns: 1fr;
@@ -140,14 +263,14 @@
 .ng-field {
   display: flex;
   flex-direction: column;
-  gap: 0.5vh;
+  gap: 5px;
 }
 
 .ng-field.span-2 {
   grid-column: span 2;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .ng-field.span-2 {
     grid-column: span 1;
   }
@@ -158,273 +281,136 @@
   align-items: center;
   justify-content: space-between;
   font-size: var(--fz_s3, 12px);
-  font-weight: 500;
-  color: var(--ink);
+  font-weight: 600;
+  color: var(--ink, #0f172a);
 }
 
 .ng-label-hint {
   font-size: 11px;
-  color: var(--muted);
+  font-weight: 400;
+  color: var(--muted, #64748b);
 }
 
-.ng-input {
+.ng-input,
+.ng-textarea {
   width: 100%;
-  padding: 1.4vh 1.8vh;
-  background: rgba(0, 0, 0, 0.15);
-  border: 1px solid var(--border);
-  border-radius: 1vh;
-  color: var(--ink);
+  padding: 9px 12px;
+  background: var(--raised, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  color: var(--ink, #0f172a);
   font-family: inherit;
   font-size: var(--fz_s4, 13px);
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
+  outline: none;
 }
 
-.ng-input:focus {
-  outline: none;
-  border-color: var(--p_v1, #1e5e75);
-  box-shadow: 0 0 0 2px rgba(30, 94, 117, 0.2);
+.ng-input:focus,
+.ng-textarea:focus {
+  border-color: var(--brand-orange, #ff6600);
+  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.15);
 }
 
 .ng-textarea {
-  min-height: 70px;
+  min-height: 60px;
   resize: vertical;
 }
 
-/* 5. Previews de Imágenes */
-.ng-media-preview-box {
+/* Horario en grupo abre/cierra */
+.ng-input-group-horario {
   display: flex;
   align-items: center;
-  gap: 1vh;
-  padding: 1vh;
-  background: rgba(0, 0, 0, 0.1);
-  border: 1px dashed var(--border);
-  border-radius: 1vh;
-  margin-top: 0.5vh;
+  gap: 6px;
 }
 
-.ng-logo-preview {
-  width: 50px;
-  height: 50px;
-  object-fit: contain;
-  background: #ffffff;
-  border-radius: 1vh;
-  padding: 0.4vh;
-}
-
-.ng-hero-preview {
-  width: 70px;
-  height: 70px;
-  object-fit: cover;
-  border-radius: 1vh;
-  border: 1px solid var(--border);
-}
-
-/* 6. Sedes y Modalidades Clínicas */
-.ng-sedes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1vh;
-}
-
-.ng-sede-card {
-  display: flex;
-  flex-direction: column;
-  gap: 0.8vh;
-  padding: 1vh;
-  background: rgba(0, 0, 0, 0.12);
-  border: 1px solid var(--border);
-  border-radius: 1vh;
-  transition: all 0.2s ease;
-}
-
-.ng-sede-card:hover {
-  border-color: var(--p_v1, #1e5e75);
-}
-
-.ng-sede-card.inactive {
-  opacity: 0.55;
-}
-
-.ng-sede-row-header {
-  display: grid;
-  grid-template-columns: 1fr 140px 50px 36px;
-  align-items: center;
-  gap: 0.8vh;
-}
-
-.ng-sede-row-body {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  align-items: center;
-  gap: 0.8vh;
-}
-
-@media (max-width: 768px) {
-  .ng-sede-row-header {
-    grid-template-columns: 1fr 100px 40px 32px;
-  }
-  .ng-sede-row-body {
-    grid-template-columns: 1fr;
-  }
-}
-
-.ng-btn-icon-del {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 1vh;
-  border: none;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.ng-btn-icon-del:hover {
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.1);
-}
-
-/* 7. Switch Toggle Minimalista */
-.ng-switch {
-  position: relative;
-  display: inline-block;
-  width: 38px;
-  height: 20px;
-}
-
-.ng-switch input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.ng-slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: var(--border);
-  transition: .2s;
-  border-radius: 20px;
-}
-
-.ng-slider:before {
-  position: absolute;
-  content: "";
-  height: 14px;
-  width: 14px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  transition: .2s;
-  border-radius: 50%;
-}
-
-.ng-switch input:checked + .ng-slider {
-  background-color: #10b981;
-}
-
-.ng-switch input:checked + .ng-slider:before {
-  transform: translateX(18px);
-}
-
-/* 8. Badge de Años de Trayectoria Dinámico */
-.ng-years-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6vh;
-  background: rgba(30, 94, 117, 0.15);
-  color: var(--p_v1, #1e5e75);
-  border: 1px solid rgba(30, 94, 117, 0.3);
-  padding: 0.4vh 1vh;
-  border-radius: 1vh;
+.ng-input-group-horario span {
   font-size: 11px;
-  font-weight: 600;
+  color: var(--muted, #64748b);
+  font-weight: 500;
 }
 
-/* 9. Barra de Acciones y Ayudante de Google Maps */
+/* Grupo Maps con botones */
 .ng-input-group-maps {
   display: flex;
+  gap: 6px;
   align-items: center;
-  gap: 0.8vh;
-  width: 100%;
-}
-
-.ng-input-group-maps .ng-input {
-  flex: 1;
 }
 
 .ng-btn-maps-action {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 0.6vh;
-  padding: 0.8vh 1.2vh;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid var(--border);
-  border-radius: 1vh;
-  color: var(--ink);
+  gap: 5px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--line, #e2e8f0);
+  background: var(--surface, #ffffff);
+  color: var(--ink, #0f172a);
   font-family: inherit;
-  font-size: var(--fz_s3, 12px);
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.2s ease;
-  box-sizing: border-box;
+  transition: all 0.15s ease;
 }
 
 .ng-btn-maps-action:hover {
-  background: rgba(30, 94, 117, 0.15);
-  border-color: var(--p_v1, #1e5e75);
-  color: var(--p_v1, #1e5e75);
+  border-color: var(--brand-orange, #ff6600);
+  color: var(--brand-orange, #ff6600);
 }
 
 .ng-btn-maps-test {
-  color: #10b981;
-}
-
-.ng-btn-maps-test:hover {
-  background: rgba(16, 185, 129, 0.12);
-  border-color: #10b981;
-  color: #10b981;
-}
-
-.ng-maps-helper-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.8vh;
-  margin-top: 0.4vh;
+  background: rgba(59, 130, 246, 0.08);
+  border-color: rgba(59, 130, 246, 0.25);
+  color: #3b82f6;
 }
 
 .ng-link-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5vh;
   background: none;
   border: none;
-  color: var(--p_v1, #1e5e75);
-  font-size: var(--fz_s3, 12px);
-  font-family: inherit;
-  font-weight: 500;
+  color: var(--brand-orange, #ff6600);
+  font-size: 11px;
+  font-weight: 600;
   cursor: pointer;
-  padding: 0.3vh 0.6vh;
-  border-radius: 1vh;
-  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  margin: 0;
 }
 
 .ng-link-btn:hover {
-  background: rgba(30, 94, 117, 0.1);
   text-decoration: underline;
 }
 
-@media (max-width: 680px) {
-  .ng-input-group-maps {
-    flex-direction: column;
-    align-items: stretch;
-  }
+/* ── 6. CAJAS DE SEDES OFICIALES (VES & VIRTUAL) ── */
+.ng-sede-box {
+  background: var(--raised, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 10px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
+
+.ng-sede-box-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(30, 94, 117, 0.12);
+  color: var(--p_v1, #1e5e75);
+  padding: 3px 8px;
+  border-radius: 6px;
+  align-self: flex-start;
+}
+
+.ng-sede-box-badge.online {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+
+/* Clases utilitarias */
+.sn-mt-10 { margin-top: 10px; }

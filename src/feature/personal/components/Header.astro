@@ -6,15 +6,21 @@ import { datosNegocio } from '@/negocio.js';
 ---
 
 <header class="ps-topbar">
-  <!-- Identidad de Sede -->
-  <div class="ps-brand">
-    <img src={datosNegocio.logo} alt={datosNegocio.nombre} class="ps-logo" />
-    <div class="ps-brand-text">
-      <span class="ps-brand-title">{datosNegocio.nombre.toUpperCase()}</span>
-      <span class="ps-brand-sub">
-        <span class="ps-badge-online"></span>
-        Sede {datosNegocio.direccionSede} · Centro de Operaciones
-      </span>
+  <!-- Izquierda: Botón Hamburguesa Móvil + Marca de Consultorio -->
+  <div class="ps-topbar-left">
+    <button type="button" class="ps-btn-icon ps-btn-mobile-toggle" id="btnMobileSidebarToggle" aria-label="Abrir menú de navegación" title="Abrir Menú">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+
+    <div class="ps-brand">
+      <img src={datosNegocio.logo} alt={datosNegocio.nombre} class="ps-logo" />
+      <div class="ps-brand-text">
+        <span class="ps-brand-title">{datosNegocio.nombre.toUpperCase()}</span>
+        <span class="ps-brand-sub">
+          <span class="ps-badge-online"></span>
+          Sede {datosNegocio.distritoSede} · Centro de Operaciones
+        </span>
+      </div>
     </div>
   </div>
 
