@@ -20,4 +20,4 @@ git tag -d v1 ; git tag v1 -m "Version v3 actualizada" ; git push origin v3 --fo
 // Actualizar versiones de seguridad [ELIMINAR CARPETA - ARCHIVO ONLINE] (5)
 git rm --cached skills-lock.json ; git commit -m "Archivo Eliminado" ; git push origin main
 git rm -r --cached .claude/ ; git commit -m "Carpeta Eliminada" ; git push origin main
- ACTUALIZACION TAG[END] */  
+ ACTUALIZACION TAG[END] */   
