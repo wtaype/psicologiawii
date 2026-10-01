@@ -1,11 +1,11 @@
 ---
-// src/feature/inicio/secciones/04-tecnico/Tecnico.astro
-// 4. SECCIÓN METODOLOGÍA TERAPÉUTICA EN 3 PASOS
+// src/feature/inicio/secciones/06-compania/Compania.astro
+// 6. SECCIÓN ACOMPAÑAMIENTO TERAPÉUTICO Y METODOLOGÍA EN 3 PASOS
 import { datosNegocio } from '../../../../negocio.js';
 import { resolverIdioma } from '../../idioma/idioma.js';
 import es from './idioma/es.json';
 import en from './idioma/en.json';
-import tecnicoCss from './tecnico.css?inline';
+import companiaCss from './compania.css?inline';
 
 interface Props {
   idioma?: string;
@@ -17,7 +17,7 @@ const t = resolverIdioma({ es, en }, idioma);
 const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(t.ws_msg)}`;
 ---
 
-<style is:global set:html={tecnicoCss}></style>
+<style is:global set:html={companiaCss}></style>
 
 <section id="metodologia" class="sec-seguridad section-py-body">
   <div class="pagewii">

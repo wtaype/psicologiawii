@@ -1,16 +1,15 @@
 ---
 // src/feature/inicio/inicioPage.astro
-// Orquestador Principal de Secciones de Inicio - Consultorio Psicológico América
+// Orquestador Principal de Secciones de Inicio (01 a 09) - Consultorio Psicológico América
 import Principal from '../../core/layouts/Principal.astro';
 import type { Idioma } from '../../core/idioma/idioma';
 import { buildRuta } from '../../core/idioma/idioma';
 import Hero from './secciones/01-hero/Hero.astro';
-import Productos from './secciones/02-productos/Productos.astro';
-import Talleres from './secciones/02b-talleres/Talleres.astro';
-import Garantia from './secciones/03-garantia/Garantia.astro';
-import Tecnico from './secciones/04-tecnico/Tecnico.astro';
+import Servicios from './secciones/02-servicios/Servicios.astro';
+import Talleres from './secciones/03-talleres/Talleres.astro';
+import Calculadora from './secciones/04-calculadora/Calculadora.astro';
 import Separador from './secciones/05-separador/Separador.astro';
-import Calculadora from './secciones/06-calculadora/Calculadora.astro';
+import Compania from './secciones/06-compania/Compania.astro';
 import Mapa from './secciones/07-mapa/Mapa.astro';
 import Nosotros from './secciones/08-nosotros/Nosotros.astro';
 import Faq from './secciones/09-faq/Faq.astro';
@@ -27,33 +26,30 @@ const ruta = buildRuta('/', idioma);
 <Principal idioma={idioma} ruta={ruta}>
   <style slot="head" is:global set:html={inicioCss}></style>
   
-  <!-- 1. Hero Autónomo: Bienvenida Empática, Colegiatura y Test de Orientación -->
+  <!-- 01. Hero Autónomo: Bienvenida Empática, C.Ps.P. 49425 y Test de Orientación -->
   <Hero idioma={idioma} />
 
-  <!-- 2. Catálogo Oficial de Especialidades Clínicas y Evaluaciones -->
-  <Productos idioma={idioma} />
+  <!-- 02. Catálogo Oficial de Especialidades Clínicas (Grilla 3x2 Fija) -->
+  <Servicios idioma={idioma} />
 
-  <!-- 2B. Espacios Vivenciales y Talleres Psicoeducativos -->
+  <!-- 03. Espacios Vivenciales y Talleres Psicoeducativos (Grilla 3x2 Fija) -->
   <Talleres idioma={idioma} />
 
-  <!-- 3. Rigor Científico, Terapias con Evidencia y Ética Profesional -->
-  <Garantia idioma={idioma} />
-
-  <!-- 4. Metodología Terapéutica en 3 Pasos Claros -->
-  <Tecnico idioma={idioma} />
-
-  <!-- 5. Separador de Orientación Empática Directa -->
-  <Separador idioma={idioma} />
-
-  <!-- 6. Cotizador Transparente de Sesiones y Paquetes de Ahorro Familiar -->
+  <!-- 04. Tarifas Transparentes y Calculadora de Ahorro Familiar -->
   <Calculadora idioma={idioma} />
 
-  <!-- 7. Sedes Oficiales (Miraflores, Villa El Salvador y Online) -->
+  <!-- 05. Separador de Orientación Empática Directa SOS -->
+  <Separador idioma={idioma} />
+
+  <!-- 06. Acompañamiento Terapéutico y Metodología Clínica en 3 Pasos -->
+  <Compania idioma={idioma} />
+
+  <!-- 07. Sedes Oficiales (Miraflores, Villa El Salvador y Online) -->
   <Mapa idioma={idioma} />
 
-  <!-- 8. Trayectoria, Compromiso y Vocación (+6 Años) -->
+  <!-- 08. Trayectoria, Compromiso y Vocación (+6 Años) -->
   <Nosotros idioma={idioma} />
 
-  <!-- 9. Preguntas Frecuentes Clínicas y Asistencia -->
+  <!-- 09. Preguntas Frecuentes Clínicas y Asistencia -->
   <Faq idioma={idioma} />
 </Principal>

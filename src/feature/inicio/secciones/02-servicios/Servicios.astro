@@ -1,12 +1,12 @@
 ---
-// src/feature/inicio/secciones/02-productos/Productos.astro
+// src/feature/inicio/secciones/02-servicios/Servicios.astro
 // 2. SECCIÓN ESPECIALIDADES CLÍNICAS (6 SERVICIOS EN GRILLA 3x2)
 // Consultorio Psicológico América - Lic. Sofía Reynaga
 import { datosNegocio, consultarProductosFirestoreFresco } from '../../../../negocio.js';
 import { resolverIdioma } from '../../idioma/idioma.js';
 import es from './idioma/es.json';
 import en from './idioma/en.json';
-import prodsCss from './productos.css?inline';
+import serviciosCss from './servicios.css?inline';
 
 interface Props {
   idioma?: string;
@@ -21,7 +21,7 @@ const serviciosActivos = todos.filter((p: any) => (!p.tipo || p.tipo === 'psicol
 const whatsappNumero = datosNegocio.whatsappLimpio;
 ---
 
-<style is:global set:html={prodsCss}></style>
+<style is:global set:html={serviciosCss}></style>
 
 <section id="servicios" class="sec-productos section-py-body">
   <div class="pagewii sec-prods-container">

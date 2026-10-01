@@ -1,0 +1,401 @@
+/* ==========================================================================
+   04-CALCULADORA SECTION STYLES - CONSULTORIO PSICOLÓGICO AMÉRICA
+   Cotizador Transparente de Sesiones y Paquetes de Ahorro Familiar
+   100% Cero CSS Inline · Variables de WiTema y Poppins/Outfit
+   ========================================================================== */
+
+#paquetes, #calculadora, .sec-calculadora {
+  padding: 8vh 0;
+  background: var(--bg-surface, #ffffff);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+:root[data-theme="futuro"] #paquetes,
+:root[data-theme="dark"] #paquetes {
+  background: var(--bg-surface, #0c202d);
+}
+
+/* ── 1. CABECERA DE LA SECCIÓN ── */
+.calc-header-box {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 5vh auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.calc-top-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: var(--brand-soft, #e5f4fa);
+  color: var(--brand-primary, #104356);
+  border: 1.5px solid rgba(16, 67, 86, 0.18);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+:root[data-theme="futuro"] .calc-top-badge,
+:root[data-theme="dark"] .calc-top-badge {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border-color: rgba(56, 189, 248, 0.3);
+}
+
+.calc-main-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1.8rem, 2.7vw, 2.7rem);
+  font-weight: 850;
+  color: var(--text-bright, #071923);
+  line-height: 1.18;
+  margin: 0;
+}
+
+.calc-main-desc {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(0.92rem, 1vw, 1.08rem);
+  color: var(--text-muted, #486576);
+  line-height: 1.62;
+  margin: 0;
+  max-width: 680px;
+}
+
+/* ── 2. GRILLA SPLIT 2 COLUMNAS ── */
+.calc-split-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  gap: 2.2vw;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+  .calc-split-grid {
+    grid-template-columns: 1fr !important;
+    gap: 4vh !important;
+  }
+}
+
+/* ── 3. PANEL IZQUIERDO: CONTROLES Y RESULTADO ── */
+.calc-card-controls {
+  background: var(--bg-card, #ffffff);
+  border: 1.5px solid var(--border-card, #dceaf2);
+  border-radius: 1.5vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3.5vh 2.2vw;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 16px rgba(16, 67, 86, 0.04);
+  box-sizing: border-box;
+}
+
+.calc-card-controls:hover {
+  border-color: var(--brand-sky, #38bdf8);
+  box-shadow: 0 12px 30px rgba(16, 67, 86, 0.08);
+}
+
+.calc-select-group {
+  margin-bottom: 2.2vh;
+}
+
+.calc-range-group {
+  margin-bottom: 2.2vh;
+  transition: opacity 0.2s ease;
+}
+
+.calc-range-label {
+  font-size: 0.9rem;
+  color: var(--text-main, #0f2735);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+}
+
+.calc-range-label i {
+  color: var(--brand-primary, #104356);
+  margin-right: 0.4rem;
+}
+
+:root[data-theme="futuro"] .calc-range-label i,
+:root[data-theme="dark"] .calc-range-label i {
+  color: var(--brand-sky, #38bdf8);
+}
+
+.calc-val-display {
+  color: var(--brand-primary, #104356);
+  font-size: 1.05rem;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-weight: 800;
+}
+
+:root[data-theme="futuro"] .calc-val-display,
+:root[data-theme="dark"] .calc-val-display {
+  color: var(--brand-sky, #38bdf8);
+}
+
+.calc-range-slider {
+  accent-color: var(--brand-primary, #104356);
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 0.8vh;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--border-card, #dceaf2);
+}
+
+:root[data-theme="futuro"] .calc-range-slider,
+:root[data-theme="dark"] .calc-range-slider {
+  accent-color: var(--brand-sky, #38bdf8);
+}
+
+.calc-select-tamano {
+  color: var(--text-main, #0f2735);
+  width: 100%;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+  background: var(--inp, #eaf3f8);
+  border: 1.5px solid var(--border-card, #dceaf2);
+  border-radius: 1vh;
+  outline: none;
+  padding: 1.3vh 1vw;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  box-sizing: border-box;
+}
+
+.calc-select-tamano:focus {
+  border-color: var(--brand-primary, #104356);
+  box-shadow: 0 0 0 3px rgba(16, 67, 86, 0.12);
+}
+
+:root[data-theme="futuro"] .calc-select-tamano,
+:root[data-theme="dark"] .calc-select-tamano {
+  background: #132838;
+  border-color: rgba(56, 189, 248, 0.2);
+  color: #e5f4fa;
+}
+
+/* Tarjeta Interior de Resultado */
+.calc-result-box {
+  text-align: center;
+  background: var(--brand-soft, #e5f4fa);
+  border: 1.5px solid rgba(16, 67, 86, 0.14);
+  border-radius: 1.2vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2vh;
+  padding: 2.8vh 1.6vw;
+  box-sizing: border-box;
+}
+
+:root[data-theme="futuro"] .calc-result-box,
+:root[data-theme="dark"] .calc-result-box {
+  background: rgba(16, 67, 86, 0.35);
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.calc-result-label {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--brand-primary, #104356);
+  margin-bottom: 0.4vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 800;
+}
+
+:root[data-theme="futuro"] .calc-result-label,
+:root[data-theme="dark"] .calc-result-label {
+  color: var(--brand-sky, #38bdf8);
+}
+
+.calc-result-days {
+  color: var(--brand-primary, #104356);
+  letter-spacing: -0.02em;
+  margin: 0.4vh 0;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(2.4rem, 3.2vw, 3.8rem);
+  font-weight: 900;
+  line-height: 1;
+}
+
+:root[data-theme="futuro"] .calc-result-days,
+:root[data-theme="dark"] .calc-result-days {
+  color: var(--brand-sky, #38bdf8);
+}
+
+.calc-result-guarantee {
+  font-size: 0.82rem;
+  color: #10b981;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 2vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 700;
+}
+
+.btn-calc-pedir {
+  color: #fff;
+  width: 100%;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.95rem;
+  cursor: pointer;
+  background: var(--wa, #25d366);
+  border: none;
+  border-radius: 1vh;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 1.3vh 1.8vw;
+  font-weight: 800;
+  text-decoration: none;
+  transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0.5vh 1.5vh rgba(37, 211, 102, 0.25);
+  box-sizing: border-box;
+}
+
+.btn-calc-pedir:hover {
+  background: var(--wa_hover, #1ebd5b);
+  transform: translateY(-0.2vh);
+  box-shadow: 0 0.8vh 2vh rgba(37, 211, 102, 0.4);
+}
+
+/* ── 4. PANEL DERECHO: IMAGEN Y CONSEJOS ── */
+.calc-card-tips {
+  background: var(--bg-card, #ffffff);
+  border: 1.5px solid var(--border-card, #dceaf2);
+  border-radius: 1.5vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.2vh 1.8vw;
+  box-shadow: 0 4px 16px rgba(16, 67, 86, 0.04);
+  box-sizing: border-box;
+}
+
+.calc-tips-media {
+  border-radius: 1.2vh;
+  height: 220px;
+  margin-bottom: 2vh;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+  background: #081620;
+}
+
+.calc-tips-img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.calc-tips-badge-overlay {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+
+.calc-media-badge {
+  background: rgba(7, 25, 35, 0.85);
+  backdrop-filter: blur(6px);
+  color: #ffffff;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.calc-tips-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-bright, #071923);
+  margin-bottom: 1.4vh;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.calc-tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2vh 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+}
+
+.calc-tip-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  font-size: 0.84rem;
+  color: var(--text-muted, #486576);
+  line-height: 1.45;
+}
+
+.calc-tip-item i {
+  color: #10b981;
+  font-size: 0.9rem;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+.calc-dudas-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1.4vh;
+  border-top: 1px solid var(--border-card, #dceaf2);
+  gap: 1rem;
+}
+
+.calc-dudas-text {
+  font-size: 0.82rem;
+  color: var(--text-muted, #486576);
+  font-weight: 600;
+}
+
+.btn-calc-consultar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--brand-primary, #104356);
+  color: #ffffff;
+  border-radius: 0.8vh;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-calc-consultar:hover {
+  background: var(--brand-primary-hover, #0a2d3a);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 67, 86, 0.2);
+}
