@@ -1,0 +1,173 @@
+{
+  "id": "principal",
+  "principal": true,
+  "moneda": "PEN",
+  "idiomaDefecto": "es",
+  "idiomasSoportados": ["es", "en"],
+
+  "identidad": {
+    "nombre": "Consultorio Psicológico América",
+    "nombreCorto": "Psicología América",
+    "especialista": "Lic. Sofia Reynaga Pachas",
+    "colegiatura": "C.Ps.P. N° 49425",
+    "titulo": "Licenciada en Psicología",
+    "grado": "Maestrista en Psicología Clínica",
+    "enfoques": "Terapia Cognitivo-Conductual (TCC) • Terapia de Aceptación y Compromiso (ACT) • Psicopedagogía • Sistémica",
+    "nombreEn": "America Psychological Clinic",
+    "nombreCortoEn": "America Psychology",
+    "enfoquesEn": "Cognitive Behavioral Therapy (CBT) • Acceptance and Commitment Therapy (ACT) • Psychopedagogy • Systemic",
+    "bio": {
+      "es": "Psicóloga clínica y colegiada por el Colegio de Psicólogos del Perú (C.Ps.P. 49425), con maestría en Psicología Clínica y 6 años de experiencia en acompañamiento psicoterapéutico ético, cálido y basado en evidencia.",
+      "en": "Clinical psychologist licensed by the College of Psychologists of Peru (C.Ps.P. 49425), with a Master's degree in Clinical Psychology and 6 years of experience in evidence-based psychotherapy."
+    },
+    "lanzamientoFecha": "2020-03-15",
+    "logo": "/imgwii/logo.webp",
+    "logoFull": "/imgwii/logo_full.webp",
+    "imagenSede": "/imgwii/hero/psicologa-sofia-reynaga.webp"
+  },
+
+  "contacto": {
+    "telefono": "+51 960 332 958",
+    "whatsapp": "51960332958",
+    "whatsappMensaje": {
+      "es": "¡Hola Lic. Sofia Reynaga! Deseo agendar una consulta psicológica.",
+      "en": "Hello Lic. Sofia Reynaga! I would like to book a psychological consultation."
+    },
+    "email": "reynaga.psychologist@gmail.com",
+    "horario": {
+      "es": "Lunes a Sábado: 8:00 a.m. a 8:00 p.m.",
+      "en": "Monday to Saturday: 8:00 a.m. to 8:00 p.m."
+    }
+  },
+
+  "horarios": {
+    "semana": { "abre": "08:00", "cierra": "20:00" },
+    "sabado": { "abre": "08:00", "cierra": "20:00" }
+  },
+
+  "ubicacion": {
+    "direccion": "Av. 3 de Octubre con Micaela Bastidas - RUTA B / Sector 3, Grupo 26, Lote comercial 7",
+    "referencia": "Frente a Paradero 3 de Octubre",
+    "distrito": "Villa El Salvador",
+    "ciudad": "Lima",
+    "pais": "PE",
+    "codigoPostal": "15834",
+    "mapsUrl": "https://maps.app.goo.gl/g7MFEUi8B6xpSjpn8",
+    "coordenadas": {
+      "lat": -12.2084,
+      "lng": -76.9387
+    }
+  },
+
+  "sedes": [
+    {
+      "id": "ves",
+      "nombre": "Sede Villa El Salvador",
+      "distrito": "Villa El Salvador",
+      "modalidad": "Presencial",
+      "direccion": "Av. 3 de Octubre con Micaela Bastidas - RUTA B / Sector 3, Grupo 26, Lote comercial 7",
+      "referencia": "Frente a Paradero 3 de Octubre",
+      "atencion": {
+        "es": "Lunes a Sábado (Previa Cita)",
+        "en": "Monday to Saturday (By Appointment)"
+      },
+      "mapsUrl": "https://maps.app.goo.gl/g7MFEUi8B6xpSjpn8",
+      "coordenadas": { "lat": -12.2084, "lng": -76.9387 },
+      "tag": {
+        "es": "Sede Villa El Salvador",
+        "en": "Villa El Salvador Clinic"
+      },
+      "activo": true
+    },
+    {
+      "id": "virtual",
+      "nombre": "Modalidad Online / Virtual",
+      "distrito": "Online",
+      "modalidad": "Virtual",
+      "direccion": "Google Meet / Zoom (Nacional e Internacional)",
+      "referencia": "Sesiones en vivo 100% privadas y seguras",
+      "atencion": {
+        "es": "Horarios Flexibles",
+        "en": "Flexible Schedule"
+      },
+      "mapsUrl": "",
+      "coordenadas": { "lat": 0, "lng": 0 },
+      "tag": {
+        "es": "100% Online",
+        "en": "100% Online"
+      },
+      "activo": true
+    }
+  ],
+
+  "metricas": {
+    "pacientes": "450+",
+    "confidencialidad": "100%",
+    "satisfaccion": "98%",
+    "years": "6+"
+  },
+
+  "redes": {
+    "facebook": "https://facebook.com/psicologiaamerica",
+    "instagram": "https://instagram.com/psicologiaamerica",
+    "tiktok": "https://tiktok.com/@psicologiaamerica",
+    "linkedin": "https://linkedin.com/in/sofia-reynaga"
+  },
+
+  "seo": {
+    "titulo": {
+      "es": "Consultorio Psicológico América | Terapia, Descarte TDAH/TEA & Talleres en Lima Sur y Online",
+      "en": "America Psychological Clinic | Psychotherapy, ADHD/ASD Screening in Lima & Online"
+    },
+    "descripcion": {
+      "es": "Atención psicológica profesional y basada en evidencia con la Lic. Sofia Reynaga (C.Ps.P. 49425). Psicoterapia individual, parejas, niños y descarte TDAH/TEA en Villa El Salvador y Online.",
+      "en": "Evidence-based psychological consultation with Lic. Sofia Reynaga (C.Ps.P. 49425). Individual, couples, child therapy and psychological screening in Villa El Salvador and Online."
+    },
+    "keywords": {
+      "es": [
+        "psicologo villa el salvador",
+        "psicologo lima sur",
+        "terapia psicologica lima",
+        "lic sofia reynaga",
+        "cpsp 49425",
+        "terapia cognitivo conductual lima",
+        "terapia de pareja lima",
+        "evaluacion tdah lima",
+        "descarte autismo tea lima",
+        "terapia psicologica online peru"
+      ],
+      "en": [
+        "psychologist villa el salvador lima",
+        "psychotherapy lima peru",
+        "couples therapy lima",
+        "adhd assessment lima peru",
+        "autism evaluation children lima",
+        "online therapy peru"
+      ]
+    },
+    "imagen": {
+      "url": "/imgwii/Sofia.jpg",
+      "width": 1200,
+      "height": 630,
+      "type": "image/jpeg",
+      "alt": "Consultorio Psicológico América - Lic. Sofía Reynaga en Villa El Salvador y Modalidad Online",
+      "caption": "Atención psicológica profesional, evaluación diagnóstica TDAH/TEA y psicoterapia"
+    },
+    "schema": {
+      "tipo": ["MedicalBusiness", "MedicalClinic"],
+      "especialidades": ["Psychology", "Psychotherapy", "PediatricPsychology"],
+      "descripcionCorta": {
+        "es": "Consultorio de atención psicológica y psicoterapia en Villa El Salvador y Modalidad Online. Especializado en terapia individual, pareja, familia y descarte TDAH/TEA.",
+        "en": "Certified psychology and psychotherapy clinic in Villa El Salvador and Online. Specialized in individual therapy, couples, and ADHD/ASD diagnosis."
+      }
+    },
+    "audiencia": {
+      "es": ["familias", "parejas", "padres de familia", "adolescentes", "adultos"],
+      "en": ["expats", "families", "couples", "individuals"]
+    },
+    "intencion": {
+      "es": "agendar consulta psicologica, evaluacion diagnostica tdah tea y psicoterapia en villa el salvador y online",
+      "en": "book psychological consultation and psychotherapy in lima and online"
+    }
+  }
+}

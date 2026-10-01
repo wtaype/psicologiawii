@@ -1,0 +1,602 @@
+[
+  {
+    "id": "psicoterapia-individual",
+    "tipo": "psicologia",
+    "orden": 1,
+    "activo": true,
+    "nombre": {
+      "es": "Psicoterapia Individual (TCC & Contextual)",
+      "en": "Individual Psychotherapy (CBT & Contextual)"
+    },
+    "descripcion": {
+      "es": "Abordaje empático y científico para el manejo de ansiedad, estrés, depresión, autoestima, gestión de emociones y duelo.",
+      "en": "Evidence-based empathetic therapy for anxiety, stress management, depression, self-esteem, emotional regulation, and grief."
+    },
+    "precioPEN": 85.00,
+    "duracion": {
+      "es": "45 - 60 min",
+      "en": "45 - 60 mins"
+    },
+    "enfoque": "Cognitivo Conductual / ACT",
+    "publico": {
+      "es": "Adolescentes y Adultos",
+      "en": "Teens and Adults"
+    },
+    "modalidad": {
+      "es": "Presencial y Online",
+      "en": "In-Person & Online"
+    },
+    "garantias": {
+      "es": [
+        "Espacio seguro y 100% confidencial",
+        "Herramientas prácticas para tu vida diaria",
+        "Acompañamiento cálido basado en evidencia científica"
+      ],
+      "en": [
+        "Safe and 100% confidential space",
+        "Practical tools for daily life",
+        "Compassionate evidence-based care"
+      ]
+    },
+    "imagen": "/imgwii/servicios/psicoterapia-individual.webp",
+    "badge": {
+      "es": "Más Solicitado",
+      "en": "Most Requested"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "psicoterapia-pareja",
+    "tipo": "psicologia",
+    "orden": 2,
+    "activo": true,
+    "nombre": {
+      "es": "Psicoterapia de Pareja",
+      "en": "Couples Psychotherapy"
+    },
+    "descripcion": {
+      "es": "Espacio de mediación y reconexión emocional con enfoque sistémico y humanista para superar crisis, sanar heridas y fortalecer acuerdos.",
+      "en": "Mediation and emotional reconnection with a systemic and humanistic approach to resolve conflicts and rebuild healthy bonds."
+    },
+    "precioPEN": 100.00,
+    "duracion": {
+      "es": "60 min",
+      "en": "60 mins"
+    },
+    "enfoque": "Sistémico y Humanista",
+    "publico": {
+      "es": "Parejas y Vínculos Afectivos",
+      "en": "Couples & Relationships"
+    },
+    "modalidad": {
+      "es": "Presencial y Online",
+      "en": "In-Person & Online"
+    },
+    "garantias": {
+      "es": [
+        "Comunicación asertiva y sin juicios",
+        "Resolución constructiva de conflictos",
+        "Pautas claras de convivencia y afectividad"
+      ],
+      "en": [
+        "Assertive non-judgmental communication",
+        "Constructive conflict resolution",
+        "Clear relationship guidelines"
+      ]
+    },
+    "imagen": "/imgwii/servicios/psicoterapia-pareja.webp",
+    "badge": {
+      "es": "Recomendado",
+      "en": "Recommended"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "psicoterapia-familiar",
+    "tipo": "psicologia",
+    "orden": 3,
+    "activo": true,
+    "nombre": {
+      "es": "Psicoterapia Familiar Sistémica",
+      "en": "Systemic Family Psychotherapy"
+    },
+    "descripcion": {
+      "es": "Intervención terapéutica integral para restaurar la armonía en el hogar, pautas de crianza respetuosa y resolución de tensiones intergeneracionales.",
+      "en": "Comprehensive family intervention to restore household harmony, respectful parenting techniques, and intergenerational understanding."
+    },
+    "precioPEN": 100.00,
+    "duracion": {
+      "es": "60 min",
+      "en": "60 mins"
+    },
+    "enfoque": "Sistémico Estructural",
+    "publico": {
+      "es": "Familias, Padres e Hijos",
+      "en": "Families, Parents & Youth"
+    },
+    "modalidad": {
+      "es": "Presencial y Online",
+      "en": "In-Person & Online"
+    },
+    "garantias": {
+      "es": [
+        "Entorno neutral donde cada integrante es escuchado",
+        "Estrategias prácticas de crianza positiva",
+        "Mejora sostenible de la convivencia diaria"
+      ],
+      "en": [
+        "Neutral environment where every member is heard",
+        "Practical positive parenting strategies",
+        "Sustainable improvement in daily living"
+      ]
+    },
+    "imagen": "/imgwii/servicios/psicoterapia-familiar.webp",
+    "badge": {
+      "es": "Familiar",
+      "en": "Family Focus"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "terapia-infantil-conducta",
+    "tipo": "psicologia",
+    "orden": 4,
+    "activo": true,
+    "nombre": {
+      "es": "Terapia Infantil y Modificación de Conducta",
+      "en": "Child Therapy & Behavior Modification"
+    },
+    "descripcion": {
+      "es": "Abordaje lúdico y conductual para niños con dificultades de autorregulación emocional, rabietas, impulsividad y adaptación escolar.",
+      "en": "Play-based behavioral therapy for children struggling with emotional self-regulation, tantrums, impulsivity, and school adjustment."
+    },
+    "precioPEN": 85.00,
+    "duracion": {
+      "es": "45 min",
+      "en": "45 mins"
+    },
+    "enfoque": "Conductual & Terapia del Juego",
+    "publico": {
+      "es": "Niños de 3 a 12 años",
+      "en": "Children aged 3 to 12"
+    },
+    "modalidad": {
+      "es": "Presencial Sede Sur y Online",
+      "en": "In-Person Clinic & Online"
+    },
+    "garantias": {
+      "es": [
+        "Técnicas estructuradas mediante el juego terapéutico",
+        "Asesoramiento y pautas continuas a padres",
+        "Coordinación y apoyo a tutores escolares"
+      ],
+      "en": [
+        "Structured play-therapy techniques",
+        "Ongoing parental guidance and coaching",
+        "Coordination with teachers and schools"
+      ]
+    },
+    "imagen": "/imgwii/servicios/terapia-infantil.webp",
+    "badge": {
+      "es": "Especializado",
+      "en": "Specialized"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "terapia-aprendizaje-tea",
+    "tipo": "psicologia",
+    "orden": 5,
+    "activo": true,
+    "nombre": {
+      "es": "Terapia de Aprendizaje y Teoría de la Mente (TEA)",
+      "en": "Learning Therapy & ASD Theory of Mind"
+    },
+    "descripcion": {
+      "es": "Estimulación psicopedagógica y desarrollo de habilidades cognitivas, comprensión social y Teoría de la Mente para niños con condición del espectro autista.",
+      "en": "Psychopedagogical stimulation, cognitive development, social understanding, and Theory of Mind for children on the autism spectrum."
+    },
+    "precioPEN": 85.00,
+    "duracion": {
+      "es": "45 min",
+      "en": "45 mins"
+    },
+    "enfoque": "Psicopedagógico & Neurodesarrollo",
+    "publico": {
+      "es": "Niños y Escolares",
+      "en": "Children & School Students"
+    },
+    "modalidad": {
+      "es": "Presencial Sede Sur",
+      "en": "In-Person Clinic"
+    },
+    "garantias": {
+      "es": [
+        "Material sensorial adaptado y libre de sobrecarga",
+        "Estrategias de comprensión socioemocional",
+        "Plan de avance individualizado con metas claras"
+      ],
+      "en": [
+        "Sensory-adapted low-distraction materials",
+        "Socioemotional understanding strategies",
+        "Individualized progress plan with clear milestones"
+      ]
+    },
+    "imagen": "/imgwii/servicios/terapia-aprendizaje.webp",
+    "badge": {
+      "es": "Neurodesarrollo",
+      "en": "Neurodevelopment"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "evaluacion-descarte-tdah-tea",
+    "tipo": "psicologia",
+    "orden": 6,
+    "activo": true,
+    "nombre": {
+      "es": "Evaluación y Descarte Diagnóstico TDAH / TEA",
+      "en": "ADHD / ASD Diagnostic Assessment"
+    },
+    "descripcion": {
+      "es": "Batería diagnóstica integral para niños, adolescentes y adultos. Incluye entrevistas clínicas, pruebas psicométricas estandarizadas e informe oficial con C.Ps.P.",
+      "en": "Comprehensive diagnostic battery for children, teens, and adults. Includes clinical interviews, standardized psychometric tests, and official psychological report."
+    },
+    "precioPEN": 600.00,
+    "duracion": {
+      "es": "Batería Completa (4 a 5 sesiones)",
+      "en": "Full Battery (4 to 5 sessions)"
+    },
+    "enfoque": "Evaluación Neurocognitiva & Diagnóstica",
+    "publico": {
+      "es": "Niños, Adolescentes y Adultos",
+      "en": "Children, Teens & Adults"
+    },
+    "modalidad": {
+      "es": "Presencial y Online",
+      "en": "In-Person & Online"
+    },
+    "garantias": {
+      "es": [
+        "Instrumentos psicométricos y proyectivos estandarizados",
+        "Informe clínico formal con valor institucional y legal",
+        "Sesión de devolución con plan de recomendaciones terapéuticas"
+      ],
+      "en": [
+        "Standardized psychometric and projective instruments",
+        "Formal psychological report signed by licensed psychologist",
+        "Feedback session with therapeutic recommendations roadmap"
+      ]
+    },
+    "imagen": "/imgwii/servicios/Evaluacion.webp",
+    "badge": {
+      "es": "Informe Oficial C.Ps.P.",
+      "en": "Official Report"
+    },
+    "tagClase": "badge-oro",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "taller-habilidades-sociales",
+    "tipo": "taller",
+    "orden": 7,
+    "activo": true,
+    "nombre": {
+      "es": "Taller de Habilidades Sociales y Comunicación Asertiva",
+      "en": "Social Skills & Assertive Communication Workshop"
+    },
+    "descripcion": {
+      "es": "Dinámicas grupales para vencer la timidez, iniciar conversaciones, defender puntos de vista con respeto y hacer amigos con confianza.",
+      "en": "Interactive group sessions to overcome shyness, build confidence, make friends, and communicate assertively with peers."
+    },
+    "precioPEN": 50.00,
+    "duracion": {
+      "es": "4 Sesiones (90 min c/u)",
+      "en": "4 Sessions (90 mins each)"
+    },
+    "enfoque": "Vivencial & Entrenamiento Asertivo",
+    "publico": {
+      "es": "Púberes y Adolescentes (11 a 17 años)",
+      "en": "Pre-teens & Adolescents (11 to 17 years)"
+    },
+    "modalidad": {
+      "es": "Grupal Presencial Sede Sur",
+      "en": "In-Person Group Session"
+    },
+    "garantias": {
+      "es": [
+        "Grupos reducidos por edades homogéneas",
+        "Prácticas y role-playing de situaciones cotidianas",
+        "Informe de desenvolvimiento y pautas a los padres"
+      ],
+      "en": [
+        "Small groups matched by age",
+        "Real-life role-playing practices",
+        "Progress feedback report for parents"
+      ]
+    },
+    "imagen": "/imgwii/talleres/taller-habilidades-sociales.jpg",
+    "badge": {
+      "es": "Más Solicitado",
+      "en": "Most Popular"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "taller-amor-propio-sexualidad",
+    "tipo": "taller",
+    "orden": 8,
+    "activo": true,
+    "nombre": {
+      "es": "Taller de Amor Propio, Autoestima y Afectividad",
+      "en": "Self-Esteem, Healthy Relationships & Sexuality Workshop"
+    },
+    "descripcion": {
+      "es": "Espacio seguro de autodescubrimiento, fortalecimiento del autoconcepto, establecimiento de límites personales saludables y vínculos afectivos sanos.",
+      "en": "A safe space for self-discovery, strengthening self-worth, setting healthy personal boundaries, and fostering respectful relationships."
+    },
+    "precioPEN": 50.00,
+    "duracion": {
+      "es": "4 Sesiones (90 min c/u)",
+      "en": "4 Sessions (90 mins each)"
+    },
+    "enfoque": "Psicoterapéutico & Humanista",
+    "publico": {
+      "es": "Adolescentes y Jóvenes (13 a 20 años)",
+      "en": "Teens & Young Adults (13 to 20 years)"
+    },
+    "modalidad": {
+      "es": "Presencial y Online",
+      "en": "In-Person & Online"
+    },
+    "garantias": {
+      "es": [
+        "Ambiente cálido, confidencial y sin juicios",
+        "Herramientas de autoaceptación y gestión emocional",
+        "Material de trabajo y diario reflexivo incluido"
+      ],
+      "en": [
+        "Warm, confidential, judgment-free space",
+        "Tools for self-worth and emotional safety",
+        "Workbook and reflective journal included"
+      ]
+    },
+    "imagen": "/imgwii/talleres/taller-amor-propio-sexualidad.jpg",
+    "badge": {
+      "es": "Recomendado",
+      "en": "Recommended"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "taller-inteligencia-emocional",
+    "tipo": "taller",
+    "orden": 9,
+    "activo": true,
+    "nombre": {
+      "es": "Taller de Inteligencia Emocional y Autorregulación",
+      "en": "Emotional Intelligence & Self-Regulation Workshop"
+    },
+    "descripcion": {
+      "es": "Aprendizaje lúdico para identificar emociones, tolerar la frustración, calmar la ansiedad y responder con serenidad ante situaciones difíciles.",
+      "en": "Playful learning to recognize feelings, build frustration tolerance, reduce anxiety, and foster emotional calm."
+    },
+    "precioPEN": 50.00,
+    "duracion": {
+      "es": "4 Sesiones (75 min c/u)",
+      "en": "4 Sessions (75 mins each)"
+    },
+    "enfoque": "Cognitivo Conductual & Mindfulness Lúdico",
+    "publico": {
+      "es": "Niños y Púberes (6 a 12 años)",
+      "en": "Children & Pre-teens (6 to 12 years)"
+    },
+    "modalidad": {
+      "es": "Grupal Presencial Sede Sur",
+      "en": "In-Person Group Session"
+    },
+    "garantias": {
+      "es": [
+        "Técnicas de respiración y termómetro emocional",
+        "Juegos colaborativos de autorregulación",
+        "Guía práctica de contención para el hogar"
+      ],
+      "en": [
+        "Breathing and emotional scale techniques",
+        "Collaborative self-regulation games",
+        "Parental emotional support guide"
+      ]
+    },
+    "imagen": "/imgwii/talleres/taller-inteligencia-emocional.jpg",
+    "badge": {
+      "es": "Formativo",
+      "en": "Formative"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "taller-expresion-artistica",
+    "tipo": "taller",
+    "orden": 10,
+    "activo": true,
+    "nombre": {
+      "es": "Taller de Expresión Artística y Teatro Terapéutico",
+      "en": "Art Expression & Therapeutic Theater Workshop"
+    },
+    "descripcion": {
+      "es": "Uso de la pintura, modelado en arcilla y dramatizaciones teatrales guiadas para canalizar emociones, desinhibirse y desarrollar creatividad.",
+      "en": "Using painting, clay modeling, and theatrical role-playing to release emotions, overcome social inhibition, and foster creativity."
+    },
+    "precioPEN": 55.00,
+    "duracion": {
+      "es": "4 Sesiones (90 min c/u)",
+      "en": "4 Sessions (90 mins each)"
+    },
+    "enfoque": "Arteterapia & Psicodrama",
+    "publico": {
+      "es": "Niños y Adolescentes (7 a 15 años)",
+      "en": "Children & Teens (7 to 15 years)"
+    },
+    "modalidad": {
+      "es": "Grupal Presencial Sede Sur",
+      "en": "In-Person Group Session"
+    },
+    "garantias": {
+      "es": [
+        "Materiales artísticos incluidos en cada sesión",
+        "Desarrollo de espontaneidad y confianza corporal",
+        "Muestra vivencial final con los padres"
+      ],
+      "en": [
+        "All artistic materials included per session",
+        "Development of body confidence and spontaneity",
+        "Final experiential presentation with parents"
+      ]
+    },
+    "imagen": "/imgwii/talleres/taller-expresion-artistica.jpg",
+    "badge": {
+      "es": "Creativo",
+      "en": "Creative"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "taller-liderazgo-oratoria",
+    "tipo": "taller",
+    "orden": 11,
+    "activo": true,
+    "nombre": {
+      "es": "Taller de Oratoria, Liderazgo y Habilidades Blandas",
+      "en": "Public Speaking, Leadership & Soft Skills Workshop"
+    },
+    "descripcion": {
+      "es": "Entrenamiento práctico para hablar en público sin miedo, modular la voz, estructurar ideas con claridad y liderar con empatía.",
+      "en": "Practical training to speak in public without fear, modulate tone of voice, structure ideas clearly, and lead with empathy."
+    },
+    "precioPEN": 50.00,
+    "duracion": {
+      "es": "4 Sesiones (90 min c/u)",
+      "en": "4 Sessions (90 mins each)"
+    },
+    "enfoque": "Comunicación Asertiva & Liderazgo Juvenil",
+    "publico": {
+      "es": "Adolescentes y Jóvenes (12 a 22 años)",
+      "en": "Teens & Young Adults (12 to 22 years)"
+    },
+    "modalidad": {
+      "es": "Presencial y Online",
+      "en": "In-Person & Online"
+    },
+    "garantias": {
+      "es": [
+        "Prácticas semanales con retroalimentación constructiva",
+        "Manejo de lenguaje no verbal y postura de seguridad",
+        "Certificado de participación en liderazgo y oratoria"
+      ],
+      "en": [
+        "Weekly practice with constructive feedback",
+        "Non-verbal language and posture mastery",
+        "Certificate of participation in leadership & speech"
+      ]
+    },
+    "imagen": "/imgwii/talleres/taller-liderazgo-oratoria.jpg",
+    "badge": {
+      "es": "Liderazgo",
+      "en": "Leadership"
+    },
+    "tagClase": "badge-serenidad",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  },
+  {
+    "id": "taller-orientacion-vocacional",
+    "tipo": "taller",
+    "orden": 12,
+    "activo": true,
+    "nombre": {
+      "es": "Taller de Orientación Vocacional y Proyecto de Vida",
+      "en": "Vocational Guidance & Life Project Workshop"
+    },
+    "descripcion": {
+      "es": "Evaluación psicopedagógica completa de aptitudes, intereses vocacionales y personalidad para elegir la carrera ideal y trazar un plan futuro.",
+      "en": "Comprehensive assessment of aptitudes, vocational interests, and personality to choose the ideal career and build a future plan."
+    },
+    "precioPEN": 120.00,
+    "duracion": {
+      "es": "Módulo Completo (2 Sesiones + Test)",
+      "en": "Full Module (2 Sessions + Tests)"
+    },
+    "enfoque": "Psicología Vocacional & Proyecto de Vida",
+    "publico": {
+      "es": "Escolares 4to/5to de Secundaria y Jóvenes",
+      "en": "High School Seniors & Youth"
+    },
+    "modalidad": {
+      "es": "Presencial y Online",
+      "en": "In-Person & Online"
+    },
+    "garantias": {
+      "es": [
+        "Batería de tests psicométricos vocacionales estandarizados",
+        "Informe de perfil profesional con opciones de carrera",
+        "Sesión de retroalimentación personalizada con padres"
+      ],
+      "en": [
+        "Standardized vocational psychometric battery",
+        "Professional profile report with top career matches",
+        "Personalized feedback session with parents"
+      ]
+    },
+    "imagen": "/imgwii/talleres/taller-orientacion-vocacional.jpg",
+    "badge": {
+      "es": "Evaluación Integral",
+      "en": "Full Assessment"
+    },
+    "tagClase": "badge-oro",
+    "userId": "sistema",
+    "email": "sistema",
+    "creado": null,
+    "actualizado": null
+  }
+]

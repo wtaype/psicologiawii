@@ -1,9 +1,9 @@
 // src/negocio.js
 // 🎯 Fachada Canónica y Reactiva de Negocio y Servicios (Consultorio Psicológico América)
 // Fuente Primaria: Base de Datos Firestore ('negocio/principal' y 'servicios')
-// Único Fallback: src/infoNegocio.json y src/infoServicios.json (fuera de Git)
+// Respaldo Seguro Offline / Semilla: src/feature/semillas/servicios.json
 
-import infoServicios from './infoServicios.json';
+import serviciosSemilla from './feature/semillas/servicios.json';
 import { obtenerDatosNegocio, parseFirestoreDoc } from './feature/personal/modulos/negocio/dataNegocio.js';
 
 /**
@@ -40,7 +40,7 @@ export function normalizarProductoFirestore(docRaw = {}) {
   };
 }
 
-let _serviciosBuildFirestore = Array.isArray(infoServicios) ? infoServicios : [];
+let _serviciosBuildFirestore = Array.isArray(serviciosSemilla) ? serviciosSemilla : [];
 
 export async function consultarProductosFirestoreFresco() {
   if (typeof window !== 'undefined') {

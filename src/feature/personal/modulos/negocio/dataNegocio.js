@@ -1,19 +1,19 @@
 // src/feature/personal/modulos/negocio/dataNegocio.js
-// 🎯 Capa Canónica Local-First de Negocio: Firestore + Caché Local + Booster src/infoNegocio.json
+// 🎯 Capa Canónica Local-First de Negocio: Firestore + Caché Local + Semilla src/feature/semillas/negocio.json
 // Colección: 'negocio' · Documento: 'principal'
 // Integrado con @widev y Firebase SDK
 
 import { savels, getls, formatearFechaParaInput } from '@widev';
-import infoNegocio from '../../../../infoNegocio.json';
+import negocioSemilla from '../../../semillas/negocio.json';
 
 export const STORAGE_KEY = 'minegocio';
 export const OLD_STORAGE_KEY = 'gaswii_negocio_config';
 export const COLECCION_NEGOCIO = 'negocio';
 export const DOC_NEGOCIO_ID = 'principal';
 
-// 1. Lector canónico de semilla inicial de despegue (lee src/infoNegocio.json)
+// 1. Lector canónico de semilla inicial de despegue (lee src/feature/semillas/negocio.json)
 export function obtenerSemillaLocal() {
-  return infoNegocio && typeof infoNegocio === 'object' ? infoNegocio : null;
+  return negocioSemilla && typeof negocioSemilla === 'object' ? negocioSemilla : null;
 }
 
 // 2. Parser ultraligero de campos de la REST API de Firestore
@@ -31,10 +31,10 @@ export function parseFirestoreDoc(fields = {}) {
   return res;
 }
 
-// 3. Normalizador neutro: SOLO UN FALLBACK (src/infoNegocio.json). Cero textos quemados en código.
+// 3. Normalizador neutro: SOLO UN FALLBACK (src/feature/semillas/negocio.json). Cero textos quemados en código.
 export function normalizarConfig(c = {}) {
   const cfg = c && typeof c === 'object' ? c : {};
-  const base = infoNegocio || {};
+  const base = negocioSemilla || {};
 
   const bioBase = base.identidad?.bio || {};
   const bioCfg = cfg.identidad?.bio;
@@ -225,8 +225,8 @@ export function obtenerDatosNegocio() {
     return _memoriaNegocio;
   }
 
-  // 3. Fallback limpio a infoNegocio.json
-  _memoriaNegocio = normalizarConfig(infoNegocio || {});
+  // 3. Fallback limpio a src/feature/semillas/negocio.json
+  _memoriaNegocio = normalizarConfig(negocioSemilla || {});
   return _memoriaNegocio;
 }
 
