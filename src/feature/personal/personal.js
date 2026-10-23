@@ -18,21 +18,38 @@ export function inicializarPersonal() {
   }
 
   // 2. Hidratación de usuario desde wiSmile (Firebase Auth)
-  const user = getls('wiSmile');
-  if (user) {
-    const avatar = document.getElementById('topbarUserImg');
-    const topName = document.getElementById('topbarUserName');
-    const dropName = document.getElementById('dropdownUserName');
-    const dropEmail = document.getElementById('dropdownUserEmail');
-    const heroName = document.getElementById('dbHeroUserName');
-    const nombre = user.nombre || user.usuario;
+  let user = null;
+  try {
+    const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('wiSmile') : null;
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      user = parsed?.value || parsed;
+    }
+  } catch (e) {}
+  if (!user) {
+    try { user = getls('wiSmile'); } catch (e) {}
+  }
 
+  const avatar = document.getElementById('topbarUserImg');
+  const topName = document.getElementById('topbarUserName');
+  const dropName = document.getElementById('dropdownUserName');
+  const dropEmail = document.getElementById('dropdownUserEmail');
+  const heroName = document.getElementById('dbHeroUserName');
+
+  if (user && typeof user === 'object') {
+    const nombreCompleto = user.nombre || user.usuario || '';
+    const primerNombre = nombreCompleto ? nombreCompleto.split(' ')[0] : '';
     const userFoto = (!user.foto && !user.avatar) || (user.avatar && user.avatar.includes('smile.webp')) ? '/smile.avif' : (user.foto || user.avatar);
+
     if (avatar) avatar.src = userFoto;
-    if (topName && nombre) topName.textContent = nombre;
-    if (dropName && nombre) dropName.textContent = nombre;
+    if (topName) topName.textContent = primerNombre || nombreCompleto;
+    if (dropName) dropName.textContent = nombreCompleto;
     if (dropEmail && user.email) dropEmail.textContent = user.email;
-    if (heroName && nombre) heroName.textContent = nombre;
+    if (heroName && nombreCompleto) heroName.textContent = primerNombre || nombreCompleto;
+  } else {
+    if (topName) topName.textContent = '';
+    if (dropName) dropName.textContent = '';
+    if (dropEmail) dropEmail.textContent = '';
   }
 
   // 3. Navegación y Rutas Dinámicas (/personal/[modulo])

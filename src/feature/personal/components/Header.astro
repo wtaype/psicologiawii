@@ -86,4 +86,23 @@ const defaultEmail = '';
       </div>
     </div>
   </div>
+  <script is:inline>
+    try {
+      const raw = localStorage.getItem('wiSmile');
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        const u = parsed?.value || parsed;
+        const nombre = u?.nombre ? u.nombre.split(' ')[0] : (u?.usuario || '');
+        const topEl = document.getElementById('topbarUserName');
+        if (topEl && nombre) topEl.textContent = nombre;
+        const dropEl = document.getElementById('dropdownUserName');
+        if (dropEl && (u?.nombre || u?.usuario)) dropEl.textContent = u.nombre || u.usuario;
+        const dropMail = document.getElementById('dropdownUserEmail');
+        if (dropMail && u?.email) dropMail.textContent = u.email;
+        const avatarEl = document.getElementById('topbarUserImg');
+        const userFoto = (!u?.foto && !u?.avatar) || (u?.avatar && u.avatar.includes('smile.webp')) ? '/smile.avif' : (u.foto || u.avatar);
+        if (avatarEl && userFoto) avatarEl.src = userFoto;
+      }
+    } catch (e) {}
+  </script>
 </header>

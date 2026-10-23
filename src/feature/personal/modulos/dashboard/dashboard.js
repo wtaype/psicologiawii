@@ -37,9 +37,16 @@ export function inicializarDashboard() {
 
     // Hidratar nombre de usuario desde wiSmile
     try {
-      const userSmile = getls('wiSmile');
+      let userSmile = null;
+      const raw = typeof localStorage !== 'undefined' ? localStorage.getItem('wiSmile') : null;
+      if (raw) {
+        const parsed = JSON.parse(raw);
+        userSmile = parsed?.value || parsed;
+      }
+      if (!userSmile) userSmile = getls('wiSmile');
       if (heroNameEl && (userSmile?.nombre || userSmile?.usuario)) {
-        heroNameEl.textContent = userSmile.nombre || userSmile.usuario;
+        const nom = userSmile.nombre ? userSmile.nombre.split(' ')[0] : userSmile.usuario;
+        heroNameEl.textContent = nom;
       }
     } catch (e) {}
   }
