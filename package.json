@@ -2,6 +2,7 @@
   "name": "psicologiawii-web",
   "type": "module",
   "version": "0.0.1",
+  "packageManager": "pnpm@12.14.0",
   "engines": {
     "node": ">=22.12.0"
   },
