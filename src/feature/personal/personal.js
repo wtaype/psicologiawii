@@ -1,12 +1,15 @@
 // src/feature/personal/personal.js
-// Controlador de cliente unificado para Feature Personal (Gaswii Solgas Surquillo)
+// Controlador de cliente unificado para Feature Personal
 // 100% JS Nativo · Integrado con @widev y @/feature/auth/sesion.js
 
 import { Notificacion, wiConfirmar, wiTema, getls, savels } from '@widev';
 import { salir } from '@/feature/auth/sesion.js';
 import { moduloDefecto, esModuloValido } from './modulos.js';
+import { inicializarProgresoDeploy } from '@core/servicios/actualizar.js';
 
 export function inicializarPersonal() {
+  // Inicializar dock de progreso de despliegue Cloudflare
+  inicializarProgresoDeploy();
   // 1. Buscador limpio sin autocompletado nativo del navegador
   const searchInput = document.getElementById('globalSearchInput');
   if (searchInput) {
@@ -21,12 +24,15 @@ export function inicializarPersonal() {
     const topName = document.getElementById('topbarUserName');
     const dropName = document.getElementById('dropdownUserName');
     const dropEmail = document.getElementById('dropdownUserEmail');
+    const heroName = document.getElementById('dbHeroUserName');
     const nombre = user.nombre || user.usuario;
 
-    if (avatar && (user.foto || user.avatar)) avatar.src = user.foto || user.avatar;
+    const userFoto = (!user.foto && !user.avatar) || (user.avatar && user.avatar.includes('smile.webp')) ? '/smile.avif' : (user.foto || user.avatar);
+    if (avatar) avatar.src = userFoto;
     if (topName && nombre) topName.textContent = nombre;
     if (dropName && nombre) dropName.textContent = nombre;
     if (dropEmail && user.email) dropEmail.textContent = user.email;
+    if (heroName && nombre) heroName.textContent = nombre;
   }
 
   // 3. Navegación y Rutas Dinámicas (/personal/[modulo])
@@ -111,9 +117,9 @@ export function inicializarPersonal() {
 
   btnCollapse?.addEventListener('click', () => {
     const isCollapsed = document.documentElement.classList.toggle('is-collapsed');
-    savels('gaswii_sidebar_collapsed', isCollapsed);
+    savels('wi_sidebar_collapsed', isCollapsed);
     if (iconCollapse && labelCollapse) {
-      iconCollapse.className = isCollapsed ? 'fa-solid fa-arrow-right-long' : 'fa-solid fa-arrow-left-long';
+      iconCollapse.className = isCollapsed ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left';
       labelCollapse.textContent = isCollapsed ? 'Expandir' : 'Colapsar';
     }
   });
@@ -157,6 +163,76 @@ export function inicializarPersonal() {
       setTimeout(salir, 600);
     }
   });
+
+  // 9. Router Universal de Guardado con Atajo Ctrl+S / Cmd+S
+  function ejecutarGuardadoUniversal() {
+    // A. Prioridad 1: ¿Hay algún modal abierto con botón de guardar?
+    const modalAbierto = document.querySelector('.modal-overlay.open, .modal-overlay.active, .modal.open, .modal.active');
+    if (modalAbierto) {
+      const btnGuardarModal = modalAbierto.querySelector('#prBtnGuardarModal, [id*="GuardarModal"], [id*="guardarModal"], [type="submit"]');
+      if (btnGuardarModal && !btnGuardarModal.disabled) {
+        btnGuardarModal.click();
+        return;
+      }
+    }
+
+    // B. Prioridad 2: Detectar el panel activo en pantalla
+    const panelActivo = document.querySelector('.ps-panel.active') || document.querySelector('.ps-panel');
+    const panelId = panelActivo?.id || '';
+
+    if (panelId === 'panel-negocio') {
+      const btn = document.getElementById('btnGuardarNegocio');
+      if (btn && !btn.disabled) {
+        btn.click();
+        return;
+      }
+    }
+
+    if (panelId === 'panel-productos') {
+      Notificacion('Todos los productos y precios están guardados y actualizados.', 'info', 2000);
+      return;
+    }
+
+    if (panelId === 'panel-notepad') {
+      const btnNote = document.getElementById('btnSaveNotepadFull') || panelActivo.querySelector('button[type="submit"]');
+      if (btnNote && !btnNote.disabled) {
+        btnNote.click();
+        return;
+      }
+    }
+
+    // C. Fallback inteligente: buscar el botón de guardar o submit del panel activo
+    const btnFallback = panelActivo?.querySelector('button[id*="Guardar"], button[id*="guardar"], button[type="submit"], .ps-btn-primary');
+    if (btnFallback && !btnFallback.disabled) {
+      btnFallback.click();
+      return;
+    }
+
+    Notificacion('No hay cambios pendientes por guardar en este módulo.', 'info', 2000);
+  }
+
+  // Registrar el atajo universal para todo el panel (Ctrl+S / Cmd+S)
+  window.addEventListener('keydown', (e) => {
+    if ((e.ctrlKey || e.metaKey) && (e.key === 's' || e.key === 'S')) {
+      e.preventDefault();
+      ejecutarGuardadoUniversal();
+    }
+  });
+}
+
+export function actualizarBadgesSidebar() {
+  const badgeClientes = document.getElementById('navBadge_clientes') || document.querySelector('[data-badge-target="clientes"]');
+  if (!badgeClientes) return;
+
+  try {
+    const clientes = getls('minegocio_crm_clientes');
+    if (Array.isArray(clientes)) {
+      badgeClientes.textContent = String(clientes.length);
+      return;
+    }
+  } catch (e) {}
+
+  badgeClientes.textContent = '3';
 }
 
 if (document.readyState === 'loading') {

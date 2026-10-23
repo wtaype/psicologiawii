@@ -6,7 +6,8 @@ import { savels, getls, formatearFechaHora } from '@widev';
 import { db } from '@core/servicios/firebase.js';
 import { doc, setDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 
-export const STORAGE_KEY = 'gaswii_owner_notes';
+export const STORAGE_KEY = 'wi_owner_notes';
+export const OLD_STORAGE_KEY = 'wi_notas_respaldo';
 export const COLECCION_NOTEPAD = 'notepad';
 
 export function getUsuarioActivo() {
@@ -32,7 +33,7 @@ function ordenarNotas(arr = []) {
 }
 
 export function obtenerNotas() {
-  const guardadas = getls(STORAGE_KEY);
+  const guardadas = getls(STORAGE_KEY) || getls(OLD_STORAGE_KEY);
   return Array.isArray(guardadas) ? ordenarNotas(guardadas) : [];
 }
 

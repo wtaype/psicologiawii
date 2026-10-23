@@ -1,0 +1,36 @@
+---
+// src/feature/redes/componentes/RedesTopBar.astro
+// Barra superior de la tarjeta de redes con botón para copiar enlace y badge oficial
+
+interface Props {
+  btnCopiarLabel?: string;
+  toastMensaje?: string;
+  badgeLabel?: string;
+}
+
+const { 
+  btnCopiarLabel = 'Copiar enlace', 
+  toastMensaje = '¡Enlace copiado al portapapeles!', 
+  badgeLabel = 'OFICIAL' 
+} = Astro.props;
+---
+
+<div class="redes-topbar">
+  <!-- Botón Copiar Enlace con Tooltip y Accesibilidad -->
+  <button 
+    id="btnCopiarEnlace" 
+    class="redes-btn-copy" 
+    type="button" 
+    title={btnCopiarLabel} 
+    aria-label={btnCopiarLabel}
+    data-toast-mensaje={toastMensaje}
+  >
+    <i class="fa-regular fa-clone"></i>
+  </button>
+
+  <!-- Badge Verificado Oficial -->
+  <div class="redes-badge-oficial">
+    <i class="fa-solid fa-circle-check"></i>
+    <span>{badgeLabel}</span>
+  </div>
+</div>

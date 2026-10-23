@@ -1,6 +1,6 @@
 /* src/feature/personal/modulos/negocio/negocio.css */
-/* Estilos Oficiales del Módulo Ficha de Negocio & Especialista (Psicología América) */
-/* Cero CSS Inline · Layout Split de 2 Columnas · Pestañas Bilingües ES/EN · 100% WiTema */
+/* Estilos Oficiales del Módulo Ficha de Mi Negocio */
+/* Cero CSS Inline · Layout con Pestañas Horizontales Compactas · 100% WiTema */
 
 .ng-container {
   display: flex;
@@ -13,91 +13,71 @@
   box-sizing: border-box;
 }
 
-/* ── 1. LAYOUT SPLIT A 2 COLUMNAS (Aprovechamiento Espacial 35% / Auto) ── */
-.ng-split-layout {
-  display: grid;
-  grid-template-columns: 35% auto;
-  gap: 20px;
-  align-items: start;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-@media (max-width: 991px) {
-  .ng-split-layout {
-    grid-template-columns: 1fr;
-    gap: 16px;
-  }
-}
-
-/* Columna Izquierda: Global */
-.ng-col-global {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-/* Columna Derecha: Bilingüe */
-.ng-col-traducciones {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  min-width: 0;
-}
-
-/* ── 2. PESTAÑAS DE IDIOMA (ESPAÑOL | ENGLISH) ── */
-.ng-lang-tabs {
+/* ── 1. BARRA DE PESTAÑAS HORIZONTALES COMPACTAS (BORDER-RADIUS 8PX) ── */
+.ng-tabs-bar {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--surface, #ffffff);
-  border: 1px solid var(--line, #e2e8f0);
-  border-radius: var(--br_m, 12px);
-  padding: 6px 10px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  overflow-x: auto;
+  padding: 2px 2px 8px 2px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--line, #e2e8f0);
+  scrollbar-width: thin;
 }
 
-.ng-lang-tab-btn {
+.ng-tab-btn {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  border-radius: 8px;
-  border: none;
-  background: transparent;
+  gap: 7px;
+  padding: 7px 15px;
+  border-radius: 8px; /* Idéntico al botón Guardar Cambios */
+  border: 1px solid var(--line, #e2e8f0);
+  background: var(--surface, #ffffff);
   color: var(--muted, #64748b);
-  font-family: inherit;
-  font-size: var(--fz_s4, 13px);
+  font-family: 'Poppins', sans-serif;
+  font-size: var(--fz_s3, 12.5px);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  white-space: nowrap;
 }
 
-.ng-lang-tab-btn i {
-  font-size: 14px;
+.ng-tab-btn i {
+  font-size: 13px;
+  transition: transform 0.2s;
 }
 
-.ng-lang-tab-btn:hover {
+.ng-tab-btn:hover {
   color: var(--ink, #0f172a);
-  background: var(--raised, rgba(0, 0, 0, 0.04));
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--raised, rgba(0, 0, 0, 0.02));
+  transform: translateY(-1px);
 }
 
-.ng-lang-tab-btn.active {
-  background: var(--brand-orange, #ff6600);
+.ng-tab-btn:hover i {
+  transform: scale(1.08);
+}
+
+.ng-tab-btn.active {
+  background: var(--mco, var(--brand-primary, #ff6600));
   color: #ffffff;
-  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.3);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  box-shadow: 0 2px 10px var(--brand-glow-orange, rgba(255, 102, 0, 0.28));
 }
 
-/* Paneles de Idioma */
-.ng-lang-pane {
+.ng-tab-btn.active i {
+  color: #ffffff;
+}
+
+/* Paneles de Pestañas */
+.ng-tab-pane {
   display: none;
-  flex-direction: column;
-  gap: 16px;
+  width: 100%;
 }
 
-.ng-lang-pane.active {
-  display: flex;
-  animation: ngFadeIn 0.22s ease-out;
+.ng-tab-pane.active {
+  display: block;
+  animation: ngFadeIn 0.22s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @keyframes ngFadeIn {
@@ -105,22 +85,61 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* ── 2. LAYOUTS EN GRILLA PARA LAS PESTAÑAS ── */
+.ng-grid-media-identidad {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr; /* 60% Multimedia / 40% Identidad */
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ng-grid-redes-contacto {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr; /* 60% Redes Izquierda / 40% Canales Derecha */
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ng-grid-2-equal {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  align-items: start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 960px) {
+  .ng-grid-media-identidad,
+  .ng-grid-redes-contacto,
+  .ng-grid-2-equal {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
 /* ── 3. TARJETAS DE FORMULARIO ── */
 .ng-card {
   background: var(--surface, #ffffff);
   border: 1px solid var(--line, #e2e8f0);
-  border-radius: var(--br_m, 12px);
-  padding: 16px 18px;
+  border-radius: var(--br_m, 14px);
+  padding: 20px 22px;
   box-sizing: border-box;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
 }
 
 .ng-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 14px;
-  padding-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--line, #e2e8f0);
 }
 
@@ -132,10 +151,11 @@
   font-weight: 700;
   color: var(--ink, #0f172a);
   margin: 0;
+  font-family: 'Poppins', sans-serif;
 }
 
 .ng-card-title i {
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .ng-card-desc {
@@ -152,110 +172,171 @@
   font-weight: 700;
   background: rgba(16, 185, 129, 0.12);
   color: #10b981;
-  padding: 4px 10px;
+  padding: 4px 12px;
   border-radius: 20px;
   border: 1px solid rgba(16, 185, 129, 0.25);
 }
 
-/* ── 4. PREVIEW MULTIMEDIA DUAL (ESPECIALISTA + LOGO) ── */
-.ng-media-dual-grid {
+/* ── 4. MULTIMEDIA & LOGOTIPOS (INSPIRADO EN IMAGEN 2) ── */
+.ng-media-2col-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 14px;
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
 }
 
-@media (max-width: 480px) {
-  .ng-media-dual-grid {
+@media (max-width: 640px) {
+  .ng-media-2col-grid {
     grid-template-columns: 1fr;
   }
 }
 
-.ng-media-preview-box {
+.ng-photo-box {
+  background: var(--raised, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 12px;
+  padding: 16px;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background: var(--raised, rgba(0, 0, 0, 0.03));
-  border: 1px solid var(--line, #e2e8f0);
-  border-radius: 10px;
-  padding: 10px;
-  box-sizing: border-box;
-  text-align: center;
+  justify-content: space-between;
 }
 
-.ng-media-thumb {
-  width: 72px;
-  height: 72px;
+[data-theme="futuro"] .ng-photo-box {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ng-photo-box-hero {
+  min-height: 290px;
+}
+
+.ng-photo-avatar-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+  flex-grow: 1;
+}
+
+.ng-thumb-specialist-lg {
+  width: 120px;
+  height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--line, #e2e8f0);
-  margin-bottom: 8px;
+  border: 2px solid var(--mco, var(--brand-primary, #ff6600));
   background: var(--surface, #ffffff);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transition: transform 0.2s;
 }
 
-.ng-media-meta {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.ng-thumb-specialist-lg:hover {
+  transform: scale(1.03);
 }
 
-.ng-media-label {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--muted, #64748b);
+.ng-thumb-circle-lg {
+  width: 78px;
+  height: 78px;
+  border-radius: 50%;
+  object-fit: contain;
+  padding: 6px;
+  border: 1px solid var(--line, #e2e8f0);
+  background: var(--surface, #ffffff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ng-thumb-full-lg {
+  width: 128px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: contain;
+  padding: 4px;
+  border: 1px solid var(--line, #e2e8f0);
+  background: var(--surface, #ffffff);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.ng-photo-box-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 7px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink, #0f172a);
+  margin-bottom: 10px;
+  font-family: 'Poppins', sans-serif;
 }
 
-.ng-media-logos-col {
+.ng-photo-box-title i {
+  color: var(--mco, var(--brand-primary, #ff6600));
+  font-size: 13px;
+}
+
+.ng-media-right-stack {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-}
-
-.ng-media-thumb-full {
-  width: 100%;
-  max-width: 150px;
-  height: 52px;
-  object-fit: contain;
-  border-radius: 8px;
-  border: 1px solid var(--line, #e2e8f0);
-  margin-bottom: 8px;
-  background: var(--surface, #ffffff);
-  padding: 4px;
-  box-sizing: border-box;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-}
-
-.ng-media-preview-box.is-hero {
+  gap: 12px;
   height: 100%;
+}
+
+.ng-input-url-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.ng-input-url {
+  font-family: monospace;
+  font-size: 11.5px;
+  letter-spacing: -0.01em;
+}
+
+.ng-btn-icon-link {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e2e8f0);
+  display: flex;
+  align-items: center;
   justify-content: center;
+  color: var(--mco, var(--brand-primary, #ff6600));
+  cursor: pointer;
+  text-decoration: none;
+  flex-shrink: 0;
+  transition: all 0.15s;
+  font-size: 13px;
 }
 
-.ng-input-sm {
-  padding: 6px 8px;
-  font-size: 11px;
+.ng-btn-icon-link:hover {
+  background: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--white, #ffffff);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  transform: translateY(-1px);
 }
 
-/* ── 5. GRILLAS Y CAMPOS DE FORMULARIO ── */
+/* ── 5. CAMPOS Y GRILLAS DE FORMULARIO ── */
+.ng-grid-1 {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.ng-gap-comfortable {
+  gap: 16px;
+}
+
 .ng-grid-2 {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-}
-
-.ng-grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+  gap: 14px;
 }
 
 @media (max-width: 600px) {
-  .ng-grid-2,
-  .ng-grid-3 {
+  .ng-grid-2 {
     grid-template-columns: 1fr;
   }
 }
@@ -280,137 +361,1470 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: var(--fz_s3, 12px);
+  font-size: var(--fz_s3, 12.5px);
   font-weight: 600;
   color: var(--ink, #0f172a);
 }
 
+.ng-label-prominent {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink, #0f172a);
+  margin-bottom: 2px;
+}
+
 .ng-label-hint {
   font-size: 11px;
-  font-weight: 400;
+  font-weight: normal;
   color: var(--muted, #64748b);
+}
+
+.ng-field-hint {
+  font-size: 11.5px;
+  color: var(--muted, #64748b);
+  margin: 0;
+}
+
+.sn-mt-10 {
+  margin-top: 10px;
 }
 
 .ng-input,
-.ng-textarea {
+.ng-textarea,
+.ng-select {
   width: 100%;
-  padding: 9px 12px;
-  background: var(--raised, rgba(0, 0, 0, 0.03));
+  padding: 9px 13px;
   border: 1px solid var(--line, #e2e8f0);
   border-radius: 8px;
+  background: var(--bg, #f8fafc);
   color: var(--ink, #0f172a);
   font-family: inherit;
   font-size: var(--fz_s4, 13px);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
-  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
 }
 
 .ng-input:focus,
-.ng-textarea:focus {
-  border-color: var(--brand-orange, #ff6600);
-  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.15);
+.ng-textarea:focus,
+.ng-select:focus {
+  outline: none;
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  box-shadow: 0 0 0 2px var(--mbg, rgba(255, 102, 0, 0.15));
 }
 
 .ng-textarea {
-  min-height: 60px;
   resize: vertical;
+  line-height: 1.55;
 }
 
-/* Horario en grupo abre/cierra */
+.ng-textarea-lg {
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
+/* ── 6. CONTACTO, HORARIOS & GOOGLE MAPS ── */
 .ng-input-group-horario {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
 }
 
-.ng-input-group-horario span {
-  font-size: 11px;
-  color: var(--muted, #64748b);
-  font-weight: 500;
+.ng-input-group-horario input[type="time"] {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  background: var(--bg, #f8fafc);
+  color: var(--ink, #0f172a);
+  font-family: inherit;
+  font-size: 13px;
 }
 
-/* Grupo Maps con botones */
 .ng-input-group-maps {
   display: flex;
-  gap: 6px;
-  align-items: center;
+  gap: 8px;
+}
+
+.ng-input-group-maps .ng-input {
+  flex-grow: 1;
 }
 
 .ng-btn-maps-action {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 8px 12px;
-  border-radius: 8px;
+  gap: 6px;
+  padding: 8px 14px;
   border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
   background: var(--surface, #ffffff);
   color: var(--ink, #0f172a);
-  font-family: inherit;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
-  transition: all 0.15s ease;
+  transition: all 0.15s;
 }
 
 .ng-btn-maps-action:hover {
-  border-color: var(--brand-orange, #ff6600);
-  color: var(--brand-orange, #ff6600);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .ng-btn-maps-test {
-  background: rgba(59, 130, 246, 0.08);
-  border-color: rgba(59, 130, 246, 0.25);
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+
+.ng-btn-maps-test:hover {
+  background: #10b981;
+  color: #ffffff;
+}
+
+/* ── 7. REDES SOCIALES OFICIALES (INSPIRADO EN IMAGEN 4) ── */
+.ng-add-red-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ng-select-add-red {
+  padding: 6px 12px;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  background: var(--bg, #f8fafc);
+  color: var(--ink, #0f172a);
+  font-size: 12px;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  min-width: 170px;
+}
+
+.ng-select-add-red:focus {
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+}
+
+.ng-btn-sm {
+  padding: 6px 12px;
+  font-size: 12px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.ng-redes-list-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.ng-red-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 10px 14px;
+  background: var(--raised, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 10px;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.ng-red-row.ng-red-hidden {
+  display: none !important;
+}
+
+[data-theme="futuro"] .ng-red-row {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ng-red-row.is-dragging {
+  opacity: 0.45;
+  border: 1px dashed var(--mco, var(--brand-primary, #ff6600));
+}
+
+.ng-red-row.is-drag-over {
+  border-top: 2px solid var(--mco, var(--brand-primary, #ff6600));
+}
+
+.ng-red-row-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ng-red-row-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ng-red-drag-handle {
+  color: var(--muted, #64748b);
+  cursor: grab;
+  padding: 2px 4px;
+  font-size: 13px;
+  transition: color 0.15s;
+}
+
+.ng-red-drag-handle:hover {
+  color: var(--ink, #0f172a);
+}
+
+.ng-red-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink, #0f172a);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ng-red-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e2e8f0);
+  color: var(--muted, #64748b);
+  text-transform: uppercase;
+}
+
+.ng-red-badge.active {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.ng-red-badge.inactive {
+  background: rgba(100, 116, 139, 0.1);
+  color: var(--muted, #64748b);
+  border-color: var(--line, #e2e8f0);
+}
+
+.ng-red-formato-hint {
+  font-size: 10.5px;
+  color: var(--muted, #64748b);
+  font-family: monospace;
+  background: var(--surface, #ffffff);
+  padding: 1px 7px;
+  border-radius: 4px;
+  border: 1px solid var(--line, #e2e8f0);
+  display: inline-block;
+}
+
+@media (max-width: 600px) {
+  .ng-red-formato-hint {
+    display: none;
+  }
+}
+
+.ng-red-move-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ng-btn-move {
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 6px;
+  background: var(--surface, #ffffff);
+  color: var(--muted, #64748b);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.ng-btn-move:hover {
+  color: var(--ink, #0f172a);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--raised, rgba(0, 0, 0, 0.04));
+}
+
+.ng-input-url-test-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.ng-input-red-url {
+  font-family: monospace;
+  font-size: 12px;
+  letter-spacing: -0.01em;
+  flex-grow: 1;
+}
+
+.ng-red-actions-group {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.ng-btn-red-action {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid var(--line, #e2e8f0);
+  background: var(--surface, #ffffff);
+  color: var(--muted, #64748b);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-size: 12px;
+  transition: all 0.15s;
+}
+
+.ng-btn-red-action:hover {
+  color: var(--ink, #0f172a);
+  border-color: var(--line, #cbd5e1);
+  transform: translateY(-1px);
+}
+
+.ng-btn-probar-red {
+  color: var(--mco, var(--brand-primary, #ff6600));
+}
+
+.ng-btn-probar-red:hover {
+  background: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--white, #ffffff);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+}
+
+.ng-btn-portal-red:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: #3b82f6;
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.ng-btn-quitar-red:hover {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* ── 8. SECCIÓN LIBRE INFERIOR: TEXTOS BILINGÜES & SEO (ESTILO IMAGEN 5) ── */
+.ng-section-bilingue-wrap {
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 2px dashed var(--line, #e2e8f0);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.ng-section-bilingue-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 6px;
+}
+
+.ng-section-bilingue-title {
+  font-size: var(--fz_s6, 17px);
+  font-weight: 700;
+  color: var(--ink, #0f172a);
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Poppins', sans-serif;
+}
+
+.ng-section-bilingue-title i {
+  color: var(--mco, var(--brand-primary, #ff6600));
+}
+
+.ng-section-bilingue-sub {
+  font-size: var(--fz_s3, 12px);
+  color: var(--text-muted, var(--muted, #64748b));
+  margin: 4px 0 0 0;
+}
+
+.ng-lang-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-surface-elevated, var(--raised, #0f172a));
+  border: 1px solid var(--border-card, var(--line, rgba(255, 255, 255, 0.08)));
+  border-radius: var(--r_m, 12px);
+  padding: 4px 6px;
+  box-shadow: var(--shadow-card, 0 4px 14px rgba(0, 0, 0, 0.15));
+}
+
+.ng-lang-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border-radius: var(--r_s, 8px);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text-muted, var(--muted, #94a3b8));
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s3, 13px);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--tr_m, 0.2s cubic-bezier(0.16, 1, 0.3, 1));
+}
+
+.ng-lang-tab-btn:hover {
+  color: var(--text-bright, var(--tx, #f8fafc));
+  background: var(--mbg, rgba(255, 102, 0, 0.08));
+}
+
+.ng-lang-tab-btn.active {
+  background: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--white, #ffffff);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  font-weight: 700;
+  box-shadow: var(--shadow-hover, 0 2px 8px rgba(255, 102, 0, 0.35));
+}
+
+.ng-lang-pane {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ng-lang-pane.active {
+  display: flex;
+  animation: ngFadeIn 0.22s ease-out;
+}
+
+/* Sedes y Modalidades */
+.ng-sede-box {
+  background: var(--raised, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 10px;
+  padding: 12px 14px;
+}
+
+[data-theme="futuro"] .ng-sede-box {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ng-sede-box-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--mco, var(--brand-primary, #ff6600));
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+
+.ng-sede-box-badge.online {
   color: #3b82f6;
 }
 
 .ng-link-btn {
-  background: none;
+  background: transparent;
   border: none;
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco, var(--brand-primary, #ff6600));
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  padding: 0;
-  margin: 0;
 }
 
 .ng-link-btn:hover {
   text-decoration: underline;
 }
 
-/* ── 6. CAJAS DE SEDES OFICIALES (VES & VIRTUAL) ── */
-.ng-sede-box {
-  background: var(--raised, rgba(0, 0, 0, 0.02));
-  border: 1px solid var(--line, #e2e8f0);
+/* ── 9. TARJETAS SPLIT CON PREVIEW EN VIVO (55% EDITOR / 45% PREVIEW) ── */
+.ng-card-split {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .ng-card-split {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+}
+
+.ng-split-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+}
+
+.ng-split-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  position: sticky;
+  top: 20px;
+  width: 100%;
+}
+
+.ng-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+}
+
+.ng-preview-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.ng-char-badge {
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 2px 7px;
   border-radius: 10px;
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  font-family: monospace;
+}
+
+.ng-char-badge.warning {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+}
+
+.ng-char-badge.danger {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+}
+
+/* ── 9.1 MOCKUP EXACTO GOOGLE SERP ── */
+.google-serp-card {
+  background: #17171c; /* Google SERP Dark Theme */
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 16px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #e8eaed;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+[data-theme="luz"] .google-serp-card {
+  background: #ffffff;
+  border: 1px solid #dadce0;
+  color: #202124;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.google-serp-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.google-serp-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.google-serp-favicon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #202124;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  flex-shrink: 0;
+}
+
+[data-theme="luz"] .google-serp-favicon {
+  background: #f1f3f4;
+  border: 1px solid #dadce0;
+}
+
+.google-serp-site-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.google-serp-sitename {
+  font-size: 13.5px;
+  font-weight: 500;
+  color: #dadce0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'Poppins', sans-serif;
+}
+
+[data-theme="luz"] .google-serp-sitename {
+  color: #202124;
+}
+
+.google-serp-url-row {
+  font-size: 11.5px;
+  color: #9aa0a6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="luz"] .google-serp-url-row {
+  color: #4d5156;
+}
+
+.google-serp-translate {
+  color: #99c3ff;
+  cursor: pointer;
+}
+
+[data-theme="luz"] .google-serp-translate {
+  color: #1a0dab;
+}
+
+.google-serp-dots {
+  color: #9aa0a6;
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.google-serp-body {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.google-serp-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.google-serp-title {
+  font-size: 18.5px;
+  font-weight: 500;
+  color: #99c3ff;
+  line-height: 1.35;
+  margin: 0 0 6px 0;
+  cursor: pointer;
+  word-break: break-word;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+[data-theme="luz"] .google-serp-title {
+  color: #1a0dab;
+}
+
+.google-serp-title:hover {
+  text-decoration: underline;
+}
+
+.google-serp-desc {
+  font-size: 13px;
+  line-height: 1.5;
+  color: #bdc1c6;
+  margin: 0;
+  word-break: break-word;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+[data-theme="luz"] .google-serp-desc {
+  color: #4d5156;
+}
+
+.google-serp-thumb-box {
+  width: 90px;
+  height: 90px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+[data-theme="luz"] .google-serp-thumb-box {
+  border: 1px solid #dadce0;
+}
+
+.google-serp-thumb-box:hover {
+  transform: scale(1.03);
+  box-shadow: 0 4px 14px rgba(255, 102, 0, 0.35);
+}
+
+.google-serp-thumb-img {
+  max-width: 86%;
+  max-height: 86%;
+  object-fit: contain;
+}
+
+.google-serp-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 11.5px;
+  color: #9aa0a6;
+}
+
+[data-theme="luz"] .google-serp-footer {
+  border-top: 1px solid #f1f3f4;
+}
+
+/* ── 9.2 MOCKUP FICHA DEL ESPECIALISTA / SOBRE NOSOTROS ── */
+.mockup-bio-card {
+  background: var(--surface, #1e293b);
+  border: 1px solid var(--border-card, var(--line, rgba(255, 255, 255, 0.08)));
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mockup-bio-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.mockup-bio-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--mco, #ff6600);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.mockup-bio-title-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mockup-bio-name {
+  font-size: 15.5px;
+  font-weight: 700;
+  color: var(--ink, #ffffff);
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mockup-bio-cargo {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mco, #ff6600);
+}
+
+.mockup-bio-registro {
+  font-size: 11px;
+  color: var(--muted, #94a3b8);
+}
+
+.mockup-bio-body {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--tx, #cbd5e1);
+  background: var(--raised, rgba(0, 0, 0, 0.15));
   padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.05));
+  word-break: break-word;
+}
+
+.mockup-bio-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mockup-bio-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255, 102, 0, 0.1);
+  border: 1px solid rgba(255, 102, 0, 0.25);
+  color: var(--mco, #ff6600);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.mockup-bio-footer {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line, rgba(255, 255, 255, 0.06));
 }
 
-.ng-sede-box-badge {
+.mockup-bio-horario {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--muted, #94a3b8);
+}
+
+.mockup-bio-wa-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #25d366;
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25);
+  cursor: pointer;
+}
+
+/* ── 9.3 MOCKUP COBERTURA Y SEDES OFICIALES ── */
+.mockup-sedes-card {
+  background: var(--surface, #1e293b);
+  border: 1px solid var(--border-card, var(--line, rgba(255, 255, 255, 0.08)));
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mockup-sedes-loc {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink, #ffffff);
+}
+
+.mockup-sedes-loc i {
+  color: #ef4444;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.mockup-sedes-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+@media (max-width: 600px) {
+  .mockup-sedes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mockup-sedes-box {
+  background: var(--raised, rgba(0, 0, 0, 0.15));
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.06));
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mockup-sedes-box-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--mco, #ff6600);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.mockup-sedes-box-title.online {
+  color: #3b82f6;
+}
+
+.mockup-sedes-box-hor {
+  font-size: 11px;
+  color: var(--muted, #94a3b8);
+}
+
+.mockup-zonas-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mockup-zona-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  background: var(--raised, rgba(255, 255, 255, 0.04));
+  border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+  font-size: 11px;
+  color: var(--tx, #cbd5e1);
+}
+
+.mockup-zona-chip strong {
+  color: var(--mco, #ff6600);
+}
+
+.mockup-sedes-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: var(--mco, #ff6600);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.25);
+}
+
+/* ═════════════════════════════════════════════════════════════
+   ESTILOS PESTAÑA: ZONAS & COBERTURA DE REPARTO (PRO 60%/40%)
+   ═════════════════════════════════════════════════════════════ */
+.ng-grid-zonas-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .ng-grid-zonas-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ng-card-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.ng-btn-add-zona {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--mco, #ff6600);
+  color: #ffffff;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+  box-shadow: 0 2px 6px rgba(255, 102, 0, 0.25);
+}
+
+.ng-btn-add-zona:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
+.ng-zonas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ng-zona-card {
+  padding: 16px;
+  background: var(--raised, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 12px;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.ng-zona-card:hover {
+  border-color: rgba(255, 102, 0, 0.3);
+}
+
+[data-theme="futuro"] .ng-zona-card {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.ng-zona-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line, #e2e8f0);
+}
+
+.ng-zona-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ng-zona-bullet {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(255, 102, 0, 0.12);
+  color: var(--mco, #ff6600);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.ng-zona-name-preview {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink, #0f172a);
+}
+
+.ng-zona-tag-preview {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e2e8f0);
+  color: var(--muted, #64748b);
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.ng-zona-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.ng-switch-wrap {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  cursor: pointer;
+}
+
+.ng-switch-wrap input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.ng-switch-slider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--line, #cbd5e1);
+  transition: .3s;
+  border-radius: 22px;
+}
+
+.ng-switch-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+.ng-switch-wrap input:checked + .ng-switch-slider {
+  background-color: #10b981;
+}
+
+.ng-switch-wrap input:checked + .ng-switch-slider:before {
+  transform: translateX(16px);
+}
+
+.ng-btn-eliminar-zona {
+  background: transparent;
+  border: 1px solid var(--line, #e2e8f0);
+  color: #ef4444;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.ng-btn-eliminar-zona:hover {
+  background: rgba(239, 68, 68, 0.1);
+}
+
+.ng-grid-zona-inputs {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .ng-grid-zona-inputs {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ng-card-sticky-preview {
+  position: sticky;
+  top: 24px;
+}
+
+.ng-zona-preview-box {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ng-zona-preview-hero-mock {
+  padding: 18px;
+  background: var(--surface, #ffffff);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+[data-theme="futuro"] .ng-zona-preview-hero-mock {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ng-mock-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink, #0f172a);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ng-mock-chips-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.ng-mock-chip {
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--raised, rgba(0, 0, 0, 0.02));
+  border: 1px solid var(--line, #e2e8f0);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.ng-mock-chip.active {
+  border-color: var(--mco, #ff6600);
+  background: rgba(255, 102, 0, 0.08);
+}
+
+.ng-mock-chip-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink, #0f172a);
+}
+
+.ng-mock-chip-time {
+  font-size: 11px;
+  color: var(--mco, #ff6600);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ng-mock-chip.inactive {
+  opacity: 0.4;
+  filter: grayscale(1);
+}
+
+.ng-mock-footer {
+  padding-top: 10px;
+  border-top: 1px solid var(--line, #e2e8f0);
+  font-size: 12px;
+  color: var(--muted, #64748b);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.ng-mock-footer strong {
+  color: var(--ink, #0f172a);
+}
+
+.ng-zona-preview-tip {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--muted, #64748b);
+  background: var(--raised, rgba(0, 0, 0, 0.02));
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px dashed var(--line, #e2e8f0);
+}
+
+.ng-zona-preview-tip i {
+  color: var(--mco, #ff6600);
+  margin-top: 2px;
+}
+
+/* ── 9.4 GRID DE MÉTRICAS EN 1 LÍNEA & HERO MOCKUP ── */
+.ng-grid-3-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.3fr;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .ng-grid-3-metrics {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ng-metric-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ng-sublabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--muted, #94a3b8);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ng-badge-years {
+  background: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  padding: 2px 7px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mockup-hero-card {
+  background: var(--surface, #1e293b);
+  border: 1px solid var(--border-card, var(--line, rgba(255, 255, 255, 0.08)));
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mockup-hero-badge {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 11px;
+  background: rgba(255, 102, 0, 0.12);
+  border: 1px solid rgba(255, 102, 0, 0.3);
+  color: var(--mco, #ff6600);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 10.5px;
   font-weight: 700;
-  background: rgba(30, 94, 117, 0.12);
-  color: var(--p_v1, #1e5e75);
-  padding: 3px 8px;
-  border-radius: 6px;
-  align-self: flex-start;
+  width: fit-content;
 }
 
-.ng-sede-box-badge.online {
-  background: rgba(16, 185, 129, 0.12);
-  color: #10b981;
+.mockup-hero-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--ink, #ffffff);
+  margin: 0;
+  line-height: 1.35;
+  font-family: 'Poppins', sans-serif;
 }
 
-/* Clases utilitarias */
-.sn-mt-10 { margin-top: 10px; }
+.mockup-hero-desc {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--tx, #cbd5e1);
+  margin: 0;
+}
+
+.mockup-hero-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line, rgba(255, 255, 255, 0.06));
+}
+
+.mockup-hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.mockup-hero-stat strong {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.mockup-hero-stat span {
+  font-size: 10px;
+  color: var(--muted, #94a3b8);
+}
+
+/* ── 9.5 MOCKUP FICHA INFORMATIVA & HORARIOS ── */
+.mockup-info-card {
+  background: var(--surface, #1e293b);
+  border: 1px solid var(--border-card, var(--line, rgba(255, 255, 255, 0.08)));
+  border-radius: 14px;
+  padding: 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.mockup-info-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.mockup-info-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: rgba(255, 102, 0, 0.1);
+  border: 1px solid rgba(255, 102, 0, 0.25);
+  color: var(--mco, #ff6600);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ── 9.6 TRADUCCIONES SOBRE MI NEGOCIO (DOS COLUMNAS EN WEB + HERO SPAN CON NG-GRID-3) ── */
+.ng-traducciones-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: stretch;
+}
+
+.ng-subcard {
+  background: var(--surface-card, rgba(255, 255, 255, 0.02));
+  border: 1px solid var(--border-card, var(--line, rgba(255, 255, 255, 0.08)));
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ng-subcard-full {
+  grid-column: 1 / -1;
+}
+
+.ng-subcard-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--tx, #f3f6fc);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line, rgba(255, 255, 255, 0.06));
+}
+
+.ng-grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+@media (max-width: 992px) {
+  .ng-traducciones-grid {
+    grid-template-columns: 1fr;
+  }
+  .ng-subcard-full {
+    grid-column: auto;
+  }
+  .ng-grid-3 {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+

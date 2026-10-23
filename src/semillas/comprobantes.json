@@ -1,0 +1,30 @@
+[
+  {
+    "id": "RHE-E001-142",
+    "tipo": "RHE",
+    "numero": "E001-142",
+    "fecha": "2026-10-20",
+    "emisor": "Lic. Sofia Reynaga Pachas",
+    "rucEmisor": "10478923411",
+    "paciente": "Camila Valdivia Morales",
+    "docPaciente": "74829103",
+    "concepto": "Atención Psicoterapéutica Individual - 4 Sesiones TCC",
+    "montoPEN": 340.00,
+    "retencionCuarta": 0.00,
+    "netoPEN": 340.00,
+    "estado": "emitido"
+  },
+  {
+    "id": "BOL-B001-089",
+    "tipo": "BOLETA",
+    "numero": "B001-089",
+    "fecha": "2026-10-18",
+    "emisor": "Consultorio Psicológico América",
+    "rucEmisor": "10478923411",
+    "paciente": "Carlos Paredes Salazar",
+    "docPaciente": "45892147",
+    "concepto": "Inscripción a Taller Vivencial de Inteligencia Emocional",
+    "montoPEN": 85.00,
+    "estado": "emitido"
+  }
+]

@@ -12,13 +12,13 @@ export function mdToEmailHtml(md = '') {
     .replace(/\r\n/g, '\n')
     .replace(/^### (.*$)/gim, '<h3 style="color:#1e293b;margin:16px 0 8px;font-size:16px;font-weight:700;">$1</h3>')
     .replace(/^## (.*$)/gim, '<h2 style="color:#0f172a;margin:20px 0 10px;font-size:18px;font-weight:800;border-bottom:1px solid #e2e8f0;padding-bottom:6px;">$1</h2>')
-    .replace(/^\> (.*$)/gim, '<blockquote style="margin:14px 0;padding:10px 16px;background:#f8fafc;border-left:4px solid #ff6a00;color:#475569;border-radius:0 8px 8px 0;font-style:italic;">$1</blockquote>')
+    .replace(/^\> (.*$)/gim, '<blockquote style="margin:14px 0;padding:10px 16px;background:#f8fafc;border-left:4px solid #ff6600;color:#475569;border-radius:0 8px 8px 0;font-style:italic;">$1</blockquote>')
     .replace(/\*\*(.*?)\*\*/gim, '<strong style="color:#0f172a;font-weight:700;">$1</strong>')
     .replace(/\*(.*?)\*/gim, '<em style="color:#334155;">$1</em>')
     .replace(/~~(.*?)~~/gim, '<del style="color:#94a3b8;">$1</del>')
     .replace(/`([^`]+)`/gim, '<code style="background:#f1f5f9;color:#0f172a;padding:2px 6px;border-radius:4px;font-size:12px;font-family:monospace;">$1</code>')
     .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img alt="$1" src="$2" style="max-width:100%;border-radius:8px;margin:12px 0;display:block;" />')
-    .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#ff6a00;font-weight:600;text-decoration:underline;">$1</a>')
+    .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank" rel="noopener noreferrer" style="color:#ff6600;font-weight:600;text-decoration:underline;">$1</a>')
     .replace(/^---/gim, '<hr style="border:none;border-top:1px solid #e2e8f0;margin:20px 0;" />');
 
   // Procesamiento línea a línea para listas y tablas

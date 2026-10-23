@@ -1,9 +1,10 @@
 // src/feature/personal/modulos/perfil/perfil.js
-// Controlador Frontend Autónomo del Módulo Mi Perfil (Solgas Surquillo)
+// Controlador Frontend Autónomo del Módulo Mi Perfil
 // 100% JS Nativo · Integrado con @widev
 
 import { Notificacion, wiSpin } from '@widev';
 import { obtenerDatosPerfil, guardarDatosPerfil } from './dataPerfil.js';
+import { datosNegocio } from '@/negocio.js';
 
 export function inicializarModuloPerfil() {
   const panel = document.getElementById('panel-perfil');
@@ -51,18 +52,19 @@ export function inicializarModuloPerfil() {
   }
 
   function actualizarTarjetaId() {
-    const nom = `${inNombre?.value || 'Wilder'} ${inApellidos?.value || 'Taype'}`;
-    const usr = inUsuario?.value || 'wilder';
-    const email = inEmail?.value || 'wtaypeee@gmail.com';
-    const cel = inCelular?.value || '961229280';
-    const avt = inAvatar?.value || 'https://imgwii.web.app/smile.avif';
+    const nom = `${inNombre?.value || ''} ${inApellidos?.value || ''}`.trim() || 'Administrador';
+    const usr = inUsuario?.value || 'admin';
+    const email = inEmail?.value || datosNegocio.email || '-';
+    const cel = inCelular?.value || datosNegocio.telefono || '-';
+    const rawAvt = inAvatar?.value;
+    const avt = (!rawAvt || rawAvt.includes('smile.webp')) ? '/smile.avif' : rawAvt;
 
     if (idAvatar) idAvatar.src = avt;
     if (idNombre) idNombre.textContent = nom;
     if (idHandle) idHandle.textContent = `@${usr}`;
     if (idEmail) idEmail.textContent = email;
     if (idCelular) idCelular.textContent = cel;
-    if (idSede) idSede.textContent = 'Jr. Dante 260, Surquillo';
+    if (idSede) idSede.textContent = datosNegocio.direccionSede || '-';
   }
 
   [inNombre, inApellidos, inUsuario, inEmail, inCelular, inAvatar].forEach(el => {

@@ -1,0 +1,71 @@
+---
+// src/feature/redes/RedesPage.astro
+// Orquestador Maestro de la Vista Bio-Link Independiente (Ecosistema Wii)
+// 100% Desacoplado · Cero Header ni Footer institucional · Layout: Popular.astro
+import Popular from './layout/Popular.astro';
+import RedesTopBar from './componentes/RedesTopBar.astro';
+import RedesHero from './componentes/RedesHero.astro';
+import RedesLista from './componentes/RedesLista.astro';
+import RedesFooter from './componentes/RedesFooter.astro';
+import { datosNegocio } from '../../negocio.js';
+
+interface Props {
+  idioma?: string;
+  negocioOverride?: any;
+  redesOverride?: any;
+}
+
+const { idioma = 'es', negocioOverride = null, redesOverride = null } = Astro.props;
+const esEn = idioma === 'en';
+
+const negocioActivo = negocioOverride || datosNegocio;
+const redes = redesOverride || negocioActivo.redes || {};
+const titulo = esEn
+  ? `Official Social Media & Direct Links · ${negocioActivo.nombre}`
+  : `Redes Oficiales y Enlaces Directos · ${negocioActivo.nombre}`;
+
+const descripcion = esEn
+  ? `Verified channels and direct links for ${negocioActivo.nombre}.`
+  : `Canales verificados y enlaces oficiales de ${negocioActivo.nombre}. ${negocioActivo.subtitulo || negocioActivo.bio || ''}`;
+
+const handleUsuario = redes.instagramUser 
+  ? `@${redes.instagramUser.replace(/^@/, '')}`
+  : (redes.tiktokUser 
+      ? `@${redes.tiktokUser.replace(/^@/, '')}`
+      : (redes.youtubeUser 
+          ? `@${redes.youtubeUser.replace(/^@/, '')}`
+          : (negocioActivo.nombreCorto ? `@${negocioActivo.nombreCorto.toLowerCase().replace(/\s+/g, '')}` : '')));
+
+const bioTexto = esEn
+  ? (negocioActivo.raw?.identidad?.bio?.en || negocioActivo.subtitulo || negocioActivo.bio || '')
+  : (negocioActivo.subtitulo || negocioActivo.bio || '');
+
+const avatarImg = negocioActivo.fotoEspecialista || negocioActivo.identidad?.imagenSede || negocioActivo.hero?.imagen || negocioActivo.logo || '/imgwii/hero.webp';
+---
+
+<Popular titulo={titulo} descripcion={descripcion} idioma={idioma} negocioOverride={negocioActivo}>
+  <main class="redes-screen">
+    <div class="redes-card">
+      <!-- 1. TopBar con Botón Copiar URL y Badge Oficial -->
+      <RedesTopBar 
+        btnCopiarLabel={esEn ? 'Copy link' : 'Copiar enlace'}
+        toastMensaje={esEn ? 'Link copied to clipboard!' : '¡Enlace copiado al portapapeles!'}
+        badgeLabel={esEn ? 'OFFICIAL' : 'OFICIAL'}
+      />
+
+      <!-- 2. Hero con Avatar, Handle @ y Bio dinámicos -->
+      <RedesHero 
+        avatar={avatarImg}
+        handle={handleUsuario}
+        bio={bioTexto}
+        alt={negocioActivo.nombre}
+      />
+
+      <!-- 3. Lista de Botones Oficiales (Configurada desde configurar.js + Firestore) -->
+      <RedesLista idioma={idioma} negocioOverride={negocioActivo} redesOverride={redes} />
+
+      <!-- 4. Footer Discreto (Pill Promocional + Términos · Privacidad · Inicio) -->
+      <RedesFooter idioma={idioma} />
+    </div>
+  </main>
+</Popular>

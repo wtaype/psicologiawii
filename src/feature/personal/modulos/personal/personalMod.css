@@ -1,5 +1,5 @@
 /* src/feature/personal/modulos/personal/personalMod.css */
-/* Estilos del Módulo Personal & Choferes de Reparto (Solgas Surquillo) */
+/* Estilos del Módulo Personal & Especialistas */
 /* 100% Adaptado a witema.css y @widev · 0 CSS inline */
 
 /* ── GRID DE KPIS SUPERIORES ── */
@@ -11,8 +11,8 @@
 }
 
 .pe-kpi-card {
-  background: var(--surface, #0e192c);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--surface, var(--surface, #ffffff));
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: var(--br_m, 12px);
   padding: 16px 18px;
   display: flex;
@@ -24,15 +24,15 @@
 
 .pe-kpi-card:hover {
   transform: translateY(-2px);
-  border-color: var(--brand-orange, #ff6600);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .pe-kpi-icon-wrap {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: var(--brand-orange-subtle, rgba(255, 102, 0, 0.12));
-  color: var(--brand-orange, #ff6600);
+  background: var(--mbg, rgba(255, 102, 0, 0.12));
+  color: var(--mco, var(--brand-primary, #ff6600));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -63,7 +63,7 @@
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 1.35rem;
   font-weight: 800;
-  color: var(--tx, #f3f6fc);
+  color: var(--tx, var(--ink, #071626));
   line-height: 1.2;
 }
 
@@ -71,7 +71,7 @@
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: 11.5px;
   font-weight: 500;
-  color: var(--tx2, #90a4c3);
+  color: var(--tx2, var(--muted, #475569));
 }
 
 /* ── GRID DE TARJETAS DE CHOFERES ── */
@@ -83,8 +83,8 @@
 }
 
 .pe-driver-card {
-  background: var(--surface, #0e192c);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--surface, var(--surface, #ffffff));
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: var(--br_m, 12px);
   padding: 20px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
@@ -96,7 +96,7 @@
 
 .pe-driver-card:hover {
   transform: translateY(-2px);
-  border-color: var(--brand-orange, #ff6600);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .pe-driver-head {
@@ -108,9 +108,10 @@
 .pe-driver-avatar {
   width: 52px;
   height: 52px;
-  border-radius: 50%;
+  border-radius: 12px;
   object-fit: cover;
-  border: 2px solid var(--brd, #21314b);
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
+  background: var(--inp, #14223a);
 }
 
 .pe-driver-meta {
@@ -124,13 +125,13 @@
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--tx, #f3f6fc);
+  color: var(--tx, var(--ink, #071626));
   line-height: 1.2;
 }
 
 .pe-driver-cargo {
   font-size: 11.5px;
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco, var(--brand-primary, #ff6600));
   font-weight: 600;
 }
 
@@ -162,7 +163,7 @@
 
 .pe-driver-details {
   background: var(--inp, #14223a);
-  border: 1px solid var(--brd, #21314b);
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: 8px;
   padding: 12px;
   display: flex;
@@ -174,11 +175,85 @@
 .pe-detail-row {
   display: flex;
   justify-content: space-between;
-  color: var(--tx, #f3f6fc);
+  align-items: center;
+  color: var(--tx, var(--ink, #071626));
+  gap: 8px;
 }
 
 .pe-detail-lbl {
-  color: var(--tx2, #90a4c3);
+  color: var(--tx2, var(--muted, #475569));
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+
+.pe-detail-val {
+  font-weight: 600;
+  text-align: right;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* EMAIL CON COPIADO RÁPIDO */
+.pe-email-copy-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 170px;
+}
+
+.pe-email-text {
+  font-family: monospace;
+  font-size: 11.5px;
+  color: var(--tx, #f8fafc);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pe-btn-copy-email {
+  background: transparent;
+  border: 1px solid var(--brd, #1e293b);
+  border-radius: 4px;
+  color: var(--tx2, #94a3b8);
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.pe-btn-copy-email:hover {
+  border-color: var(--brand-primary, #ff6600);
+  color: var(--brand-primary, #ff6600);
+  background: var(--surface, #1e293b);
+}
+
+.pe-btn-copy-email.copied {
+  border-color: #10b981;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+}
+
+/* BADGE DE ANTIGÜEDAD DINÁMICA EN EL MODAL */
+.pe-antiguedad-badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #10b981;
+  background: rgba(16, 185, 129, 0.15);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  padding: 2px 8px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .pe-driver-actions {
@@ -198,7 +273,7 @@
   justify-content: center;
   gap: 6px;
   cursor: pointer;
-  border: 1px solid var(--brd, #21314b);
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   transition: all 0.15s ease;
   text-decoration: none;
 }
@@ -214,12 +289,158 @@
   color: #ffffff;
 }
 
-.pe-btn-driver.toggle {
+.pe-btn-driver.toggle,
+.pe-btn-driver.edit {
   background: var(--inp, #14223a);
-  color: var(--tx, #f3f6fc);
+  color: var(--tx, var(--ink, #071626));
 }
 
-.pe-btn-driver.toggle:hover {
-  border-color: var(--brand-orange, #ff6600);
-  color: var(--brand-orange, #ff6600);
+.pe-btn-driver.toggle:hover,
+.pe-btn-driver.edit:hover {
+  border-color: var(--brand-primary, var(--mco, #ff6600));
+  color: var(--brand-primary, var(--mco, #ff6600));
 }
+
+/* ── MODAL OVERLAYS (ESTADO ACTIVO) ── */
+.cl-modal-overlay.active,
+.cl-modal-overlay.open {
+  display: flex !important;
+}
+
+/* ── MODAL EDITAR COLABORADOR (PRO & INTUITIVO) ── */
+.pe-modal-editar {
+  max-width: 620px;
+  width: 94%;
+  padding: 24px;
+  border-radius: var(--br_m, 12px);
+  background: var(--surface, #0f1c2e);
+  border: 1px solid var(--brd, var(--line, #1e293b));
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+}
+
+.pe-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* HERO DEL MODAL CON ESTADO HABILITADO / INACTIVO */
+.pe-edit-hero {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: var(--inp, #14223a);
+  border: 1px solid var(--brd, var(--line, #1e293b));
+  border-radius: 10px;
+  padding: 12px 16px;
+  flex-wrap: wrap;
+}
+
+.pe-edit-avatar-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.pe-edit-avatar {
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+  object-fit: cover;
+  border: 1px solid var(--brd, #1e293b);
+  background: var(--surface, #0f1c2e);
+}
+
+.pe-edit-hero-meta {
+  flex: 1;
+  min-width: 140px;
+}
+
+.pe-edit-nombre-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--tx, #f8fafc);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pe-edit-tag {
+  font-size: 11px;
+  color: var(--tx2, #94a3b8);
+  font-family: monospace;
+}
+
+/* GRUPO DE BOTONES PARA CAMBIAR ESTADO */
+.pe-edit-status-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.pe-edit-status-lbl {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tx2, #94a3b8);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pe-status-toggle-group {
+  display: inline-flex;
+  gap: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  padding: 4px;
+  border-radius: 20px;
+  border: 1px solid var(--brd, #1e293b);
+}
+
+.pe-status-pill-btn {
+  border: none;
+  background: transparent;
+  padding: 5px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--tx2, #94a3b8);
+  transition: all 0.2s ease;
+}
+
+.pe-status-pill-btn.active-btn {
+  background: #10b981;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.35);
+}
+
+.pe-status-pill-btn.inactive-btn {
+  background: #ef4444;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.35);
+}
+
+.pe-status-pill-btn:not(.active-btn):not(.inactive-btn):hover {
+  color: var(--tx, #f8fafc);
+}
+
+.pe-edit-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+@media (max-width: 580px) {
+  .pe-edit-hero {
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .pe-edit-status-box {
+    align-items: center;
+  }
+}
+

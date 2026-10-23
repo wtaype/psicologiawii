@@ -1,5 +1,5 @@
 /* src/feature/personal/modulos/perfil/perfil.css */
-/* Estilos del Módulo Mi Perfil: Ficha de Usuario y Seguridad (Solgas Surquillo) */
+/* Estilos del Módulo Mi Perfil: Ficha de Usuario y Seguridad */
 /* 100% Adaptado a witema.css y @widev · 0 CSS inline */
 
 /* ── LAYOUT DIVIDIDO (FORMULARIO 60% / TARJETA ID EN VIVO 40%) ── */
@@ -57,7 +57,7 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 102, 0, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--border-accent, rgba(255, 102, 0, 0.25)) 0%, transparent 70%);
 }
 
 .pf-id-header {
@@ -71,16 +71,16 @@
   font-family: var(--ff_O, sans-serif);
   font-size: 14px;
   font-weight: 800;
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco, var(--brand-primary, #ff6600));
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .pf-id-role-badge {
-  background: rgba(255, 102, 0, 0.15);
-  border: 1px solid var(--brand-orange, #ff6600);
-  color: var(--brand-orange, #ff6600);
+  background: var(--mbg, rgba(255, 102, 0, 0.15));
+  border: 1px solid var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #ff6600));
   font-size: 10.5px;
   font-weight: 800;
   text-transform: uppercase;
@@ -102,8 +102,8 @@
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--brand-orange, #ff6600);
-  box-shadow: 0 4px 14px rgba(255, 102, 0, 0.3);
+  border: 3px solid var(--mco, var(--brand-primary, #ff6600));
+  box-shadow: var(--shadow-hover, 0 4px 14px rgba(255, 102, 0, 0.3));
 }
 
 .pf-id-name {

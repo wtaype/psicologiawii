@@ -72,4 +72,4 @@ src/feature/personal/modulos/negocio/semilla*.json
 src/feature/personal/modulos/servicios/semilla*.json
 src/feature/personal/modulos/talleres/semilla*.json
 
-# 📦 Semillas canónicas (en src/feature/semillas/ para arranque offline y fallback)
+# 📦 Semillas canónicas (en src/semillas/ para arranque offline y fallback)

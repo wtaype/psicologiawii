@@ -4,8 +4,8 @@
 const ACCOUNT_ID = import.meta.env.PUBLIC_R2_ACCOUNT_ID;
 const ACCESS_KEY_ID = import.meta.env.PUBLIC_R2_ACCESS_KEY_ID;
 const SECRET_ACCESS_KEY = import.meta.env.PUBLIC_R2_SECRET_ACCESS_KEY;
-const BUCKET_NAME = import.meta.env.PUBLIC_R2_BUCKET_NAME || 'gaswii-media';
-const PUBLIC_R2_URL = import.meta.env.PUBLIC_R2_URL || 'https://media.solgassurquillo.com';
+const BUCKET_NAME = import.meta.env.PUBLIC_R2_BUCKET_NAME || 'psicologia-media';
+const PUBLIC_R2_URL = import.meta.env.PUBLIC_R2_URL || 'https://media.psicologiawii.com';
 
 // Utilidades criptográficas nativas usando crypto.subtle del navegador
 async function hmacSha256(key, data) {
@@ -30,7 +30,7 @@ function hex(buffer) {
  * Sube cualquier archivo directamente a Cloudflare R2 mediante firma SigV4 nativa
  * Reutilizable para: Productos, Comprobantes de Clientes, Fotos de Perfil, Documentos
  * @param {File|Blob} file - Archivo seleccionado
- * @param {string} [slug] - Nombre base o prefijo sugerido (ej. "solgas-10kg" o "comprobante-123")
+ * @param {string} [slug] - Nombre base o prefijo sugerido (ej. "consulta-individual" o "comprobante-123")
  * @returns {Promise<{ ok: boolean, url: string, key: string, size: number }>}
  */
 export async function subirImagenR2(file, slug = '') {

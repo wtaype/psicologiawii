@@ -3,33 +3,35 @@
 // 100% JS Nativo · Integrado con @widev
 
 import { getls, savels } from '@widev';
+import { datosNegocio } from '@/negocio.js';
 
 export function obtenerDatosPerfil() {
   const user = getls('wiSmile');
+  const sedeNegocio = datosNegocio.direccionSede || '';
   if (user) {
     return {
-      uid: user.uid || '8sDpFzfnjFdpTCTkU2hq9PB35o22',
-      nombre: user.nombre || 'Wilder',
-      apellidos: user.apellidos || 'Taype Espinoza',
-      usuario: user.usuario || 'wilder',
-      email: user.email || 'wtaypeee@gmail.com',
-      celular: user.celular || '961229280',
+      uid: user.uid || '',
+      nombre: user.nombre || 'Administrador',
+      apellidos: user.apellidos || '',
+      usuario: user.usuario || 'admin',
+      email: user.email || '',
+      celular: user.celular || '',
       rol: user.rol || 'gestor',
-      sede: 'Sede Principal Jr. Dante 260, Surquillo',
-      avatar: user.avatar || user.foto || 'https://imgwii.web.app/smile.avif'
+      sede: user.sede || sedeNegocio,
+      avatar: (!user.avatar && !user.foto) || (user.avatar && user.avatar.includes('smile.webp')) ? '/smile.avif' : (user.avatar || user.foto)
     };
   }
 
   return {
-    uid: '8sDpFzfnjFdpTCTkU2hq9PB35o22',
-    nombre: 'Wilder',
-    apellidos: 'Taype Espinoza',
-    usuario: 'wilder',
-    email: 'wtaypeee@gmail.com',
-    celular: '961229280',
+    uid: '',
+    nombre: 'Administrador',
+    apellidos: '',
+    usuario: 'admin',
+    email: '',
+    celular: '',
     rol: 'gestor',
-    sede: 'Sede Principal Jr. Dante 260, Surquillo',
-    avatar: 'https://imgwii.web.app/smile.avif'
+    sede: sedeNegocio,
+    avatar: '/smile.avif'
   };
 }
 

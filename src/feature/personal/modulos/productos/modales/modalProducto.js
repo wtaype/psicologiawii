@@ -1,6 +1,6 @@
 // src/feature/personal/modulos/productos/modales/modalProducto.js
-// Controlador Frontend del Modal de Producto (87vw × 70vh mín.)
-// Integrado con wiModal de @widev/modales.js y Firestore
+// Controlador Frontend del Modal de Producto & Accesorio
+// Integrado con wiModal de @widev/modales.js, Selects nativos, Firestore y solicitarActualizacionWeb
 
 import { wiModal, Notificacion, wiSpin } from '@widev';
 import {
@@ -8,10 +8,44 @@ import {
   generarSlug,
   obtenerProductosLocal
 } from '../dataProductos.js';
-import { solicitarActualizacionWeb } from '../../../../../actualizar.js';
+import { solicitarActualizacionWeb } from '@core/servicios/actualizar.js';
 
 export const MODAL_ID = 'prModalBackdrop';
 
+/**
+ * Resuelve una URL relativa a la URL absoluta con el origen actual de la web
+ * para que el usuario pueda copiarla o reemplazarla fácilmente en el input.
+ */
+export function resolverUrlCompleta(urlRaw = '') {
+  const u = (urlRaw || '').trim();
+  if (!u) return '';
+  if (u.startsWith('http://') || u.startsWith('https://')) return u;
+  if (typeof window !== 'undefined' && window.location.origin) {
+    const ruta = u.startsWith('/') ? u : `/${u}`;
+    return `${window.location.origin}${ruta}`;
+  }
+  return u;
+}
+
+/**
+ * Normaliza la URL antes de persistir en Firestore o LocalStorage.
+ * Si coincide con el origen local/dominio actual, se guarda como ruta relativa (/imgwii/...)
+ * para asegurar portabilidad entre localhost y producción.
+ */
+export function normalizarUrlParaGuardar(urlRaw = '') {
+  const u = (urlRaw || '').trim();
+  if (!u) return '';
+  if (typeof window !== 'undefined' && window.location.origin) {
+    if (u.startsWith(window.location.origin)) {
+      return u.replace(window.location.origin, '');
+    }
+  }
+  return u;
+}
+
+/**
+ * Inicializa los eventos del modal, previsualización de imagen e iconos
+ */
 export function inicializarModalProducto() {
   const modalEl = document.getElementById(MODAL_ID);
   if (!modalEl || modalEl.dataset.modalInit === 'true') return;
@@ -21,6 +55,9 @@ export function inicializarModalProducto() {
   const inputImagen = document.getElementById('prFormImagen');
   const previewImg = document.getElementById('prModalPreviewImg');
   const previewEmpty = document.getElementById('prModalPreviewEmpty');
+  const inputBadgeIcon = document.getElementById('prFormBadgeIcon');
+  const previewBadgeIcon = document.getElementById('prBadgeIconPreview');
+
   const btnGuardar = document.getElementById('prBtnGuardarModal');
   const btnCerrar = document.getElementById('prBtnCerrarModal');
   const btnCancelar = document.getElementById('prBtnCancelarModal');
@@ -46,11 +83,13 @@ export function inicializarModalProducto() {
     }
   });
 
-  // 1. Actualización en tiempo real de la imagen preview
+  // Previsualización dinámica de imagen
   function actualizarPreview() {
-    const url = (inputImagen?.value || '').trim();
-    if (url && previewImg) {
-      previewImg.src = url;
+    const rawVal = (inputImagen?.value || '').trim();
+    const fullUrl = resolverUrlCompleta(rawVal);
+
+    if (fullUrl && previewImg) {
+      previewImg.src = fullUrl;
       previewImg.style.display = 'block';
       if (previewEmpty) previewEmpty.style.display = 'none';
       previewImg.onerror = () => {
@@ -68,7 +107,15 @@ export function inicializarModalProducto() {
     inputImagen.addEventListener('change', actualizarPreview);
   }
 
-  // 2. Conmutador de Pestañas Bilingües (ES / EN)
+  // Previsualización dinámica de icono de FontAwesome
+  if (inputBadgeIcon && previewBadgeIcon) {
+    inputBadgeIcon.addEventListener('input', () => {
+      const iconClass = inputBadgeIcon.value.trim() || 'fa-solid fa-star';
+      previewBadgeIcon.innerHTML = `<i class="${iconClass}"></i>`;
+    });
+  }
+
+  // Conmutador de Pestañas Bilingües (Español / English)
   document.querySelectorAll('.pr-modal-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.pr-modal-tab-btn').forEach(b => b.classList.remove('active'));
@@ -80,48 +127,60 @@ export function inicializarModalProducto() {
     });
   });
 
-  // 3. Envío del Formulario
+  // Envío del Formulario
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const prFormId = document.getElementById('prFormId');
-      const prFormCategoria = document.getElementById('prFormCategoria');
       const prFormPrecio = document.getElementById('prFormPrecio');
-      const prFormPrecioEnvase = document.getElementById('prFormPrecioEnvase');
       const prFormStock = document.getElementById('prFormStock');
-      const prFormStockMin = document.getElementById('prFormStockMin');
       const prFormOrden = document.getElementById('prFormOrden');
+      const prFormPeso = document.getElementById('prFormPeso');
+      const prFormCategoria = document.getElementById('prFormCategoria');
+      const prFormBadgeIcon = document.getElementById('prFormBadgeIcon');
+      const prFormBadgeTexto = document.getElementById('prFormBadgeTexto');
       const prFormEstado = document.getElementById('prFormEstado');
+      const prFormTagClase = document.getElementById('prFormTagClase');
 
       // ES
       const prFormNombreEs = document.getElementById('prFormNombreEs');
       const prFormDescEs = document.getElementById('prFormDescEs');
-      const prFormPesoEs = document.getElementById('prFormPesoEs');
-      const prFormPesoFullEs = document.getElementById('prFormPesoFullEs');
       const prFormValvulaEs = document.getElementById('prFormValvulaEs');
-      const prFormDeliveryEs = document.getElementById('prFormDeliveryEs');
-      const prFormSeguridadEs = document.getElementById('prFormSeguridadEs');
+      const prFormPublicoEs = document.getElementById('prFormPublicoEs');
       const prFormGarantiasEs = document.getElementById('prFormGarantiasEs');
 
       // EN
       const prFormNombreEn = document.getElementById('prFormNombreEn');
       const prFormDescEn = document.getElementById('prFormDescEn');
-      const prFormPesoEn = document.getElementById('prFormPesoEn');
-      const prFormPesoFullEn = document.getElementById('prFormPesoFullEn');
       const prFormValvulaEn = document.getElementById('prFormValvulaEn');
-      const prFormDeliveryEn = document.getElementById('prFormDeliveryEn');
-      const prFormSeguridadEn = document.getElementById('prFormSeguridadEn');
+      const prFormPublicoEn = document.getElementById('prFormPublicoEn');
+      const prFormBadgeTextoEn = document.getElementById('prFormBadgeTextoEn');
       const prFormGarantiasEn = document.getElementById('prFormGarantiasEn');
 
       const nombreEs = prFormNombreEs?.value.trim() || '';
       if (!nombreEs) {
-        Notificacion('El nombre en español es requerido.', 'warning', 3000);
+        Notificacion('El nombre del producto es requerido.', 'warning', 3000);
         return;
       }
 
       const idExistente = prFormId?.value.trim() || '';
       const idFinal = idExistente || generarSlug(nombreEs);
+      const tipo = prFormCategoria?.value || 'servicio';
+
+      // Sanitizar valores numéricos desde inputs tipo texto sin demoras
+      const precioNum = parseFloat(String(prFormPrecio?.value || '').replace(/[^0-9.]/g, '')) || (tipo === 'servicio' ? 65 : 70);
+      const stockNum = parseInt(String(prFormStock?.value || '').replace(/[^0-9]/g, ''), 10) || 50;
+      const ordenNum = parseInt(String(prFormOrden?.value || '').replace(/[^0-9]/g, ''), 10) || 1;
+
+      const valvulaEs = (prFormValvulaEs?.value || '').trim() || 'Click-On';
+      const valvulaEn = (prFormValvulaEn?.value || '').trim() || valvulaEs;
+
+      const badgeTextoEs = (prFormBadgeTexto?.value || '').trim() || 'Más Pedido';
+      const badgeTextoEn = (prFormBadgeTextoEn?.value || '').trim() || (badgeTextoEs === 'Más Pedido' ? 'Most Popular' : badgeTextoEs);
+
+      const publicoEs = (prFormPublicoEs?.value || '').trim() || 'Hogar';
+      const publicoEn = (prFormPublicoEn?.value || '').trim() || 'Household';
 
       const garantiasEs = (prFormGarantiasEs?.value || '')
         .split('\n')
@@ -135,16 +194,21 @@ export function inicializarModalProducto() {
       const payload = {
         id: idFinal,
         slug: idFinal,
-        tipoCategoria: prFormCategoria?.value || 'gas',
-        precio: Number(prFormPrecio?.value || 0),
-        precioEnvase: Number(prFormPrecioEnvase?.value || 0),
-        stock: Number(prFormStock?.value || 0),
-        stockMin: Number(prFormStockMin?.value || 5),
-        orden: Number(prFormOrden?.value || 1),
-        imagen: (inputImagen?.value || '').trim() || '/imgwii/productos/BALON-10KG.webp',
+        tipo,
+        tipoCategoria: tipo === 'asesoria' ? 'accesorio' : 'gas',
+        precio: precioNum,
+        stock: stockNum,
+        orden: ordenNum,
         estado: prFormEstado?.value || 'activo',
-        badgeIcon: prFormCategoria?.value === 'gas' ? 'fa-solid fa-fire' : 'fa-solid fa-wrench',
-        tagClase: prFormCategoria?.value === 'gas' ? 'badge-fire' : 'badge-accesorio',
+        activo: prFormEstado?.value !== 'pausado',
+        imagen: normalizarUrlParaGuardar(inputImagen?.value || '/imgwii/productos/BALON-10KG.webp'),
+        badgeIcon: (prFormBadgeIcon?.value || '').trim() || 'fa-solid fa-star',
+        tagClase: prFormTagClase?.value || 'badge-fire',
+        peso: (prFormPeso?.value || '').trim() || '10 kg',
+        valvula: valvulaEs,
+        valvulaEn: valvulaEn,
+        delivery: 'Despacho en puerta',
+        seguridad: 'Precinto verificado',
 
         nombre: {
           es: nombreEs,
@@ -154,28 +218,21 @@ export function inicializarModalProducto() {
           es: prFormDescEs?.value.trim() || '',
           en: prFormDescEn?.value.trim() || ''
         },
-        peso: {
-          es: prFormPesoEs?.value.trim() || '',
-          en: prFormPesoEn?.value.trim() || ''
+        badge: {
+          es: badgeTextoEs,
+          en: badgeTextoEn
         },
-        pesoFull: {
-          es: prFormPesoFullEs?.value.trim() || '',
-          en: prFormPesoFullEn?.value.trim() || ''
-        },
-        valvula: {
-          es: prFormValvulaEs?.value.trim() || '',
-          en: prFormValvulaEn?.value.trim() || ''
-        },
-        delivery: {
-          es: prFormDeliveryEs?.value.trim() || '',
-          en: prFormDeliveryEn?.value.trim() || ''
-        },
-        seguridad: {
-          es: prFormSeguridadEs?.value.trim() || '',
-          en: prFormSeguridadEn?.value.trim() || ''
+        publico: {
+          es: publicoEs,
+          en: publicoEn
         },
         garantias: {
-          es: garantiasEs,
+          es: garantiasEs.length > 0 ? garantiasEs : [
+            'Misma garantía de peso exacto de origen y base',
+            'Llama azul constante y duradera',
+            'Cilindro inspeccionado libre de corrosión',
+            'Entrega inmediata sin costo de flete'
+          ],
           en: garantiasEn
         }
       };
@@ -193,10 +250,13 @@ export function inicializarModalProducto() {
           : `Producto "${nombreEs}" registrado con éxito.`;
         Notificacion(msgExito, 'success', 3500);
 
-        // Disparar re-deploy en Cloudflare con debounce de 4s
+        // Disparar re-deploy con debounce
         solicitarActualizacionWeb({ motivo: idExistente ? 'producto-actualizado' : 'producto-creado' });
+
+        // Notificar al componente padre para re-renderizar la grilla
+        window.dispatchEvent(new CustomEvent('producto-guardado', { detail: payload }));
       } catch (err) {
-        Notificacion('Error al guardar el producto en Firestore.', 'error', 4000);
+        Notificacion('Error al guardar en Firestore.', 'error', 4000);
       } finally {
         if (btnGuardar) {
           wiSpin(btnGuardar, false);
@@ -208,7 +268,7 @@ export function inicializarModalProducto() {
 }
 
 /**
- * Abre el modal de producto (nuevo o editar) usando wiModal de @widev
+ * Abre el modal de producto (nuevo o editar)
  */
 export function abrirModalProducto(producto = null) {
   const modalEl = document.getElementById(MODAL_ID);
@@ -229,84 +289,123 @@ export function abrirModalProducto(producto = null) {
   const previewEmpty = document.getElementById('prModalPreviewEmpty');
 
   const prFormId = document.getElementById('prFormId');
-  const prFormCategoria = document.getElementById('prFormCategoria');
   const prFormPrecio = document.getElementById('prFormPrecio');
-  const prFormPrecioEnvase = document.getElementById('prFormPrecioEnvase');
   const prFormStock = document.getElementById('prFormStock');
-  const prFormStockMin = document.getElementById('prFormStockMin');
   const prFormOrden = document.getElementById('prFormOrden');
+  const prFormPeso = document.getElementById('prFormPeso');
+  const prFormCategoria = document.getElementById('prFormCategoria');
+  const prFormBadgeIcon = document.getElementById('prFormBadgeIcon');
+  const previewBadgeIcon = document.getElementById('prBadgeIconPreview');
+  const prFormBadgeTexto = document.getElementById('prFormBadgeTexto');
   const prFormEstado = document.getElementById('prFormEstado');
+  const prFormTagClase = document.getElementById('prFormTagClase');
 
   // ES
   const prFormNombreEs = document.getElementById('prFormNombreEs');
   const prFormDescEs = document.getElementById('prFormDescEs');
-  const prFormPesoEs = document.getElementById('prFormPesoEs');
-  const prFormPesoFullEs = document.getElementById('prFormPesoFullEs');
   const prFormValvulaEs = document.getElementById('prFormValvulaEs');
-  const prFormDeliveryEs = document.getElementById('prFormDeliveryEs');
-  const prFormSeguridadEs = document.getElementById('prFormSeguridadEs');
+  const prFormPublicoEs = document.getElementById('prFormPublicoEs');
   const prFormGarantiasEs = document.getElementById('prFormGarantiasEs');
 
   // EN
   const prFormNombreEn = document.getElementById('prFormNombreEn');
   const prFormDescEn = document.getElementById('prFormDescEn');
-  const prFormPesoEn = document.getElementById('prFormPesoEn');
-  const prFormPesoFullEn = document.getElementById('prFormPesoFullEn');
   const prFormValvulaEn = document.getElementById('prFormValvulaEn');
-  const prFormDeliveryEn = document.getElementById('prFormDeliveryEn');
-  const prFormSeguridadEn = document.getElementById('prFormSeguridadEn');
+  const prFormPublicoEn = document.getElementById('prFormPublicoEn');
+  const prFormBadgeTextoEn = document.getElementById('prFormBadgeTextoEn');
   const prFormGarantiasEn = document.getElementById('prFormGarantiasEn');
 
   if (producto) {
-    // MODO EDICIÓN
-    if (tituloEl) tituloEl.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Editar: ${producto.nombre?.es || producto.id}`;
+    // ── MODO EDICIÓN ──
+    const nombre = typeof producto.nombre === 'object' ? (producto.nombre?.es || '') : (producto.nombre || '');
+    if (tituloEl) tituloEl.innerHTML = `<i class="fa-solid fa-pen-to-square"></i> Editar: ${nombre || producto.id}`;
     if (prFormId) prFormId.value = producto.id;
-    if (prFormCategoria) prFormCategoria.value = producto.tipoCategoria || 'gas';
-    if (prFormPrecio) prFormPrecio.value = producto.precio ?? 0;
-    if (prFormPrecioEnvase) prFormPrecioEnvase.value = producto.precioEnvase ?? 0;
-    if (prFormStock) prFormStock.value = producto.stock ?? 0;
-    if (prFormStockMin) prFormStockMin.value = producto.stockMin ?? 10;
-    if (prFormOrden) prFormOrden.value = producto.orden ?? 1;
-    if (prFormEstado) prFormEstado.value = producto.estado || 'activo';
-    if (inputImagen) inputImagen.value = producto.imagen || '/imgwii/productos/BALON-10KG.webp';
+
+    // Fila 1: Precio - Stock - Orden (Inputs tipo texto sin lag)
+    if (prFormPrecio) prFormPrecio.value = String(producto.precio ?? producto.precioPEN ?? 65);
+    if (prFormStock) prFormStock.value = String(producto.stock ?? 50);
+    if (prFormOrden) prFormOrden.value = String(producto.orden ?? 1);
+
+    // Fila 2: Peso - Categoría (Select nativo)
+    if (prFormPeso) prFormPeso.value = producto.peso || '10 kg';
+    const catVal = (producto.tipo === 'asesoria' || producto.tipoCategoria === 'accesorio') ? 'asesoria' : 'servicio';
+    if (prFormCategoria) prFormCategoria.value = catVal;
+
+    // Fila 3: Icono - Badge Texto
+    if (prFormBadgeIcon) {
+      prFormBadgeIcon.value = producto.badgeIcon || 'fa-solid fa-star';
+      if (previewBadgeIcon) previewBadgeIcon.innerHTML = `<i class="${prFormBadgeIcon.value}"></i>`;
+    }
+    const badgeVal = typeof producto.badge === 'object' ? (producto.badge?.es || '') : (producto.badge || '');
+    if (prFormBadgeTexto) prFormBadgeTexto.value = badgeVal || 'Más Pedido';
+
+    // Fila 4: Estado - Estilo del Badge (Selects nativos)
+    const estVal = (producto.estado === 'pausado' || producto.activo === false) ? 'pausado' : 'activo';
+    if (prFormEstado) prFormEstado.value = estVal;
+
+    const tagVal = producto.tagClase || 'badge-fire';
+    if (prFormTagClase) prFormTagClase.value = tagVal;
+
+    // URL completa de la imagen para fácil edición/copia
+    if (inputImagen) {
+      inputImagen.value = resolverUrlCompleta(producto.imagen || '/imgwii/productos/BALON-10KG.webp');
+    }
 
     // Español
-    if (prFormNombreEs) prFormNombreEs.value = producto.nombre?.es || '';
-    if (prFormDescEs) prFormDescEs.value = producto.descripcion?.es || '';
-    if (prFormPesoEs) prFormPesoEs.value = producto.peso?.es || '';
-    if (prFormPesoFullEs) prFormPesoFullEs.value = producto.pesoFull?.es || '';
-    if (prFormValvulaEs) prFormValvulaEs.value = producto.valvula?.es || '';
-    if (prFormDeliveryEs) prFormDeliveryEs.value = producto.delivery?.es || '';
-    if (prFormSeguridadEs) prFormSeguridadEs.value = producto.seguridad?.es || '';
-    if (prFormGarantiasEs) prFormGarantiasEs.value = Array.isArray(producto.garantias?.es) ? producto.garantias.es.join('\n') : '';
+    if (prFormNombreEs) prFormNombreEs.value = nombre;
+    if (prFormDescEs) prFormDescEs.value = typeof producto.descripcion === 'object' ? (producto.descripcion?.es || '') : (producto.descripcion || '');
+    const valvEsVal = typeof producto.valvula === 'object' ? (producto.valvula?.es || '') : (producto.valvula || 'Click-On');
+    if (prFormValvulaEs) prFormValvulaEs.value = valvEsVal;
+    if (prFormPublicoEs) prFormPublicoEs.value = typeof producto.publico === 'object' ? (producto.publico?.es || '') : (producto.publico || producto.tipoUso || '');
+
+    const garEs = Array.isArray(producto.garantias?.es) ? producto.garantias.es : (Array.isArray(producto.garantias) ? producto.garantias : []);
+    if (prFormGarantiasEs) prFormGarantiasEs.value = garEs.join('\n');
 
     // Inglés
-    if (prFormNombreEn) prFormNombreEn.value = producto.nombre?.en || '';
-    if (prFormDescEn) prFormDescEn.value = producto.descripcion?.en || '';
-    if (prFormPesoEn) prFormPesoEn.value = producto.peso?.en || '';
-    if (prFormPesoFullEn) prFormPesoFullEn.value = producto.pesoFull?.en || '';
-    if (prFormValvulaEn) prFormValvulaEn.value = producto.valvula?.en || '';
-    if (prFormDeliveryEn) prFormDeliveryEn.value = producto.delivery?.en || '';
-    if (prFormSeguridadEn) prFormSeguridadEn.value = producto.seguridad?.en || '';
-    if (prFormGarantiasEn) prFormGarantiasEn.value = Array.isArray(producto.garantias?.en) ? producto.garantias.en.join('\n') : '';
+    if (prFormNombreEn) prFormNombreEn.value = typeof producto.nombre === 'object' ? (producto.nombre?.en || '') : (producto.nombreEn || '');
+    if (prFormDescEn) prFormDescEn.value = typeof producto.descripcion === 'object' ? (producto.descripcion?.en || '') : (producto.descripcionEn || '');
+    const valvEnVal = typeof producto.valvula === 'object' ? (producto.valvula?.en || '') : (producto.valvulaEn || producto.valvula || 'Click-On');
+    if (prFormValvulaEn) prFormValvulaEn.value = valvEnVal;
+    if (prFormPublicoEn) prFormPublicoEn.value = typeof producto.publico === 'object' ? (producto.publico?.en || '') : (producto.publicoEn || producto.tipoUsoEn || '');
+    const badgeEnVal = typeof producto.badge === 'object' ? (producto.badge?.en || '') : (producto.badgeEn || '');
+    if (prFormBadgeTextoEn) prFormBadgeTextoEn.value = badgeEnVal || 'Most Popular';
+
+    const garEn = Array.isArray(producto.garantias?.en) ? producto.garantias.en : (Array.isArray(producto.garantiasEn) ? producto.garantiasEn : []);
+    if (prFormGarantiasEn) prFormGarantiasEn.value = garEn.join('\n');
   } else {
-    // MODO NUEVO
-    if (tituloEl) tituloEl.innerHTML = `<i class="fa-solid fa-plus"></i> Registrar Nuevo Producto`;
+    // ── MODO NUEVO ──
+    if (tituloEl) tituloEl.innerHTML = `<i class="fa-solid fa-plus"></i> Registrar Nuevo Ítem en Catálogo`;
     if (form) form.reset();
     if (prFormId) prFormId.value = '';
-    if (prFormCategoria) prFormCategoria.value = 'gas';
-    if (prFormPrecio) prFormPrecio.value = '65';
-    if (prFormPrecioEnvase) prFormPrecioEnvase.value = '0';
-    if (prFormStock) prFormStock.value = '50';
-    if (prFormStockMin) prFormStockMin.value = '10';
-    if (prFormOrden) prFormOrden.value = String(obtenerProductosLocal().length + 1);
-    if (prFormEstado) prFormEstado.value = 'activo';
-    if (inputImagen) inputImagen.value = '/imgwii/productos/BALON-10KG.webp';
 
-    // Valores por defecto en español
-    if (prFormDeliveryEs) prFormDeliveryEs.value = 'Todo Incluido, despacho en puerta';
-    if (prFormSeguridadEs) prFormSeguridadEs.value = 'Garantía desde planta de Solgas';
-    if (prFormValvulaEs) prFormValvulaEs.value = 'Click-On (Acople Rápido)';
+    // Fila 1: Precio - Stock - Orden (Inputs tipo texto)
+    if (prFormPrecio) prFormPrecio.value = '65';
+    if (prFormStock) prFormStock.value = '50';
+    if (prFormOrden) prFormOrden.value = String(obtenerProductosLocal().length + 1);
+
+    // Fila 2: Peso - Categoría (Select nativo)
+    if (prFormPeso) prFormPeso.value = '10 kg';
+    if (prFormCategoria) prFormCategoria.value = 'servicio';
+
+    // Fila 3: Icono - Badge Texto
+    if (prFormBadgeIcon) {
+      prFormBadgeIcon.value = 'fa-solid fa-star';
+      if (previewBadgeIcon) previewBadgeIcon.innerHTML = `<i class="fa-solid fa-star"></i>`;
+    }
+    if (prFormBadgeTexto) prFormBadgeTexto.value = 'Más Pedido';
+
+    // Fila 4: Estado - Estilo del Badge (Selects nativos)
+    if (prFormEstado) prFormEstado.value = 'activo';
+    if (prFormTagClase) prFormTagClase.value = 'badge-fire';
+
+    // URL completa de la imagen por defecto
+    if (inputImagen) {
+      inputImagen.value = resolverUrlCompleta('/imgwii/productos/BALON-10KG.webp');
+    }
+
+    // Valores por defecto en Español
+    if (prFormValvulaEs) prFormValvulaEs.value = 'Click-On';
+    if (prFormPublicoEs) prFormPublicoEs.value = 'Hogar';
     if (prFormGarantiasEs) {
       prFormGarantiasEs.value = [
         'Misma garantía de peso exacto de origen y base',
@@ -315,12 +414,27 @@ export function abrirModalProducto(producto = null) {
         'Entrega inmediata sin costo de flete'
       ].join('\n');
     }
+
+    // Valores por defecto en Inglés
+    if (prFormValvulaEn) prFormValvulaEn.value = 'Click-On';
+    if (prFormPublicoEn) prFormPublicoEn.value = 'Household';
+    if (prFormBadgeTextoEn) prFormBadgeTextoEn.value = 'Most Popular';
+    if (prFormGarantiasEn) {
+      prFormGarantiasEn.value = [
+        'Same guarantee of exact weight from origin and base',
+        'Constant and long-lasting blue flame',
+        'Inspected cylinder free of corrosion',
+        'Immediate delivery without freight cost'
+      ].join('\n');
+    }
   }
 
-  // Actualizar imagen preview
-  const imgUrl = (inputImagen?.value || '').trim();
-  if (imgUrl && previewImg) {
-    previewImg.src = imgUrl;
+  // Actualizar imagen preview en vivo
+  const rawUrl = (inputImagen?.value || '').trim();
+  const fullUrl = resolverUrlCompleta(rawUrl);
+
+  if (fullUrl && previewImg) {
+    previewImg.src = fullUrl;
     previewImg.style.display = 'block';
     if (previewEmpty) previewEmpty.style.display = 'none';
   } else {
@@ -328,12 +442,11 @@ export function abrirModalProducto(producto = null) {
     if (previewEmpty) previewEmpty.style.display = 'flex';
   }
 
-  // Abrir usando wiModal universal de @widev
   wiModal.open(MODAL_ID);
 }
 
 /**
- * Cierra el modal de producto usando wiModal
+ * Cierra el modal de producto
  */
 export function cerrarModalProducto() {
   const modalEl = document.getElementById(MODAL_ID);
@@ -342,3 +455,9 @@ export function cerrarModalProducto() {
   }
   wiModal.close(MODAL_ID);
 }
+
+export default {
+  inicializarModalProducto,
+  abrirModalProducto,
+  cerrarModalProducto
+};

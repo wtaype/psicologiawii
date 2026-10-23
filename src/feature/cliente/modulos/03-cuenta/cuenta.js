@@ -1,9 +1,10 @@
 // src/feature/cliente/modulos/03-cuenta/cuenta.js
-// Controlador de Mi Cuenta · Solgas Surquillo
-// Formato Split 2 Columnas idéntico a 02-direccion
+// Controlador de Mi Cuenta Fiscal · Ecosistema Wii
+// Formato Split 2 Columnas idéntico a 02-direccion (0ms)
 // Integración de wiSelect de @widev, Local-First con wiSmile y feedback con wiSpin/Notificacion
 
 import { avatar, wiSpin, Notificacion, wiSelect } from '@widev';
+import { configSemilla } from '../../../../negocio.js';
 import {
   obtenerCuentaLocal,
   guardarPerfil,
@@ -14,7 +15,7 @@ import {
 
 let inicializado = false;
 let instSelectDocTipo = null;
-let instSelectValvula = null;
+let instSelectRegimen = null;
 let instSelectHorario = null;
 let instSelectPago = null;
 
@@ -36,12 +37,13 @@ function inicializarWiSelects() {
     });
   }
 
-  // 2. Selector de Tipo de Válvula
-  const elValvula = document.getElementById('ctSelectValvula');
-  if (elValvula && !elValvula.dataset.wiselect) {
-    instSelectValvula = wiSelect(elValvula, {
-      placeholder: 'Selecciona tipo de válvula...',
-      searchPlaceholder: 'Buscar válvula...'
+  // 2. Selector de Preferencia Especial (Tipo de Válvula / Régimen)
+  const termCampo = configSemilla?.terminologia?.campoEspecialCliente || 'Preferencia habitual';
+  const elRegimen = document.getElementById('ctSelectRegimen');
+  if (elRegimen && !elRegimen.dataset.wiselect) {
+    instSelectRegimen = wiSelect(elRegimen, {
+      placeholder: `Selecciona ${termCampo.toLowerCase()}...`,
+      searchPlaceholder: 'Buscar...'
     });
   }
 
@@ -76,7 +78,7 @@ export function poblarDatosUI(datos) {
   const elHeroUsuario = document.getElementById('ctHeroUsuario');
   const elPuntos = document.getElementById('ctPuntosNum');
 
-  const nombreCompleto = [datos.nombre, datos.apellidos].filter(Boolean).join(' ') || datos.usuario || 'Vecino Gaswii';
+  const nombreCompleto = [datos.nombre, datos.apellidos].filter(Boolean).join(' ') || datos.usuario || 'Contribuyente';
   if (elAvatar) {
     if (datos.avatar && datos.avatar.startsWith('http')) {
       elAvatar.innerHTML = `<img src="${datos.avatar}" alt="${nombreCompleto}" onerror="this.remove();" />`;
@@ -106,7 +108,10 @@ export function poblarDatosUI(datos) {
   if (inpEmail) inpEmail.value = datos.email || '';
   if (inpNom) inpNom.value = datos.nombre || '';
   if (inpApe) inpApe.value = datos.apellidos || '';
-  if (inpAvatar) inpAvatar.value = datos.avatar || 'https://imgwii.web.app/smile.avif';
+  if (inpAvatar) {
+    const rawAv = datos.avatar;
+    inpAvatar.value = (!rawAv || rawAv.includes('smile.webp')) ? '/smile.avif' : rawAv;
+  }
   if (inpIniciales) inpIniciales.value = datos.iniciales || avatar(nombreCompleto);
   if (inpCel) inpCel.value = datos.celular || '';
 
@@ -126,15 +131,15 @@ export function poblarDatosUI(datos) {
     rucBox.style.display = tipoDocVal === 'RUC' ? 'grid' : 'none';
   }
 
-  // 3. Columna Derecha: Preferencias de Entrega
+  // 3. Columna Derecha: Preferencias Tributarias
   const prefs = datos.preferencias || {};
 
-  const valValvula = prefs.tipoValvula || 'premium';
-  if (instSelectValvula) {
-    instSelectValvula.setValue(valValvula);
+  const valRegimen = prefs.regimenTributario || 'mype';
+  if (instSelectRegimen) {
+    instSelectRegimen.setValue(valRegimen);
   } else {
-    const elValv = document.getElementById('ctSelectValvula');
-    if (elValv) elValv.value = valValvula;
+    const elReg = document.getElementById('ctSelectRegimen');
+    if (elReg) elReg.value = valRegimen;
   }
 
   const valHorario = prefs.horarioHabitual || 'mañana';
@@ -187,7 +192,7 @@ function configurarFormularios() {
     const nom = document.getElementById('ctInputNombre')?.value || '';
     const ape = document.getElementById('ctInputApellidos')?.value || '';
     const user = document.getElementById('ctInputUsuario')?.value?.replace('@', '') || '';
-    const fullName = [nom, ape].filter(Boolean).join(' ') || user || 'Gaswii';
+    const fullName = [nom, ape].filter(Boolean).join(' ') || user || 'Contribuyente';
     const inicialesCalc = avatar(fullName);
     const inpIni = document.getElementById('ctInputIniciales');
     if (inpIni) inpIni.value = inicialesCalc;
@@ -233,7 +238,7 @@ function configurarFormularios() {
     }
   });
 
-  // 2. Guardar Preferencias de Entrega
+  // 2. Guardar Preferencias Tributarias
   const formPrefs = document.getElementById('formCuentaPreferencias');
   formPrefs?.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -241,16 +246,16 @@ function configurarFormularios() {
     wiSpin(btn, true, 'Guardando...');
 
     try {
-      const tipoValvula = instSelectValvula ? instSelectValvula.getValue() : (document.getElementById('ctSelectValvula')?.value || 'premium');
-      const horarioHabitual = instSelectHorario ? instSelectHorario.getValue() : (document.getElementById('ctSelectHorario')?.value || 'mañana');
-      const metodoPago = instSelectPago ? instSelectPago.getValue() : (document.getElementById('ctSelectMetodoPago')?.value || 'yape');
+      const regimenTributario = instSelectRegimen ? instSelectRegimen.getValue() : (document.getElementById('ctSelectRegimen')?.value || 'mype');
+      const horarioHabitual = instSelectHorario ? instSelectHorario.getValue() : (document.getElementById('ctSelectHorario')?.value || 'online-tarde');
+      const metodoPago = instSelectPago ? instSelectPago.getValue() : (document.getElementById('ctSelectMetodoPago')?.value || 'bcp');
       const timbreMalogrado = document.getElementById('ctSwitchTimbre')?.checked || false;
       const llamarAlLlegar = document.getElementById('ctSwitchLlamar')?.checked || false;
       const comprobanteEmail = document.getElementById('ctSwitchComprobante')?.checked || false;
       const pisoAscensor = document.getElementById('ctInputPisoAscensor')?.value || '';
 
       await guardarPreferencias({
-        tipoValvula,
+        regimenTributario,
         horarioHabitual,
         metodoPago,
         timbreMalogrado,
@@ -345,11 +350,13 @@ async function sincronizarCuentaDesdeFirestore() {
 
       const { savels } = await import('@widev');
       savels('wiSmile', fusionado, 144);
-      if (typeof window !== 'undefined') window.__GASWII_USER__ = fusionado;
+      if (typeof window !== 'undefined') {
+        window.__WI_USER__ = fusionado;
+      }
       poblarDatosUI(fusionado);
     }
   } catch (err) {
-    console.debug('[Gaswii Cuenta] Sincronización en segundo plano omitida:', err.message);
+    console.debug('[Cuenta Wii] Sincronización en segundo plano omitida:', err.message);
   }
 }
 

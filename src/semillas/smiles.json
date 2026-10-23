@@ -1,0 +1,41 @@
+[
+  {
+    "uid": "sofia_reynaga_admin",
+    "nombre": "Lic. Sofia Reynaga Pachas",
+    "usuario": "sofia.reynaga",
+    "email": "reynaga.psychologist@gmail.com",
+    "celular": "960332958",
+    "rol": "admin",
+    "cargo": "Especialista Principal & Fundadora",
+    "colegiatura": "C.Ps.P. N° 49425",
+    "avatar": "/imgwii/hero/psicologa-sofia-reynaga.webp",
+    "activo": true,
+    "creado": "2020-03-15T12:00:00Z"
+  },
+  {
+    "uid": "paciente_camilav",
+    "nombre": "Camila Valdivia Morales",
+    "usuario": "camilav",
+    "email": "cvaldivia.psico@gmail.com",
+    "celular": "987654321",
+    "rol": "cliente",
+    "motivoConsulta": "Psicoterapia Individual (Ansiedad y Autoestima)",
+    "modalidad": "Presencial Sede América",
+    "avatar": "https://api.dicebear.com/7.x/initials/svg?seed=Camila&backgroundColor=059669",
+    "activo": true,
+    "creado": "2026-09-10T15:30:00Z"
+  },
+  {
+    "uid": "paciente_carlosp",
+    "nombre": "Carlos Paredes Salazar",
+    "usuario": "carlosp",
+    "email": "cparedes.ing@hotmail.com",
+    "celular": "981123456",
+    "rol": "cliente",
+    "motivoConsulta": "Taller de Inteligencia Emocional & Manejo del Estrés",
+    "modalidad": "Virtual Vía Google Meet",
+    "avatar": "https://api.dicebear.com/7.x/initials/svg?seed=Carlos&backgroundColor=0284c7",
+    "activo": true,
+    "creado": "2026-09-15T18:00:00Z"
+  }
+]

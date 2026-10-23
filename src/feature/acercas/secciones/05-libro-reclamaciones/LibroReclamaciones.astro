@@ -1,6 +1,6 @@
----
+﻿---
 // src/feature/acercas/secciones/05-libro-reclamaciones/LibroReclamaciones.astro
-// Sección 05: Libro de Reclamaciones Virtual Conforme a INDECOPI (Leyes N° 29571 y 31435)
+// SecciÃ³n 05: Libro de Reclamaciones Virtual Conforme a INDECOPI (Leyes NÂ° 29571 y 31435)
 import { datosNegocio } from '../../../../negocio.js';
 import { resolverIdiomaSeccion } from '../../idioma/idioma';
 import AcercasHeader from '../../componentes/AcercasHeader.astro';
@@ -54,12 +54,12 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
             <strong>{t.proveedor_direccion}</strong> {datosNegocio.direccionSede}
           </div>
           <div class="reclamos-proveedor-item">
-            <strong>{t.proveedor_sede}</strong> {datosNegocio.nombreCorto || 'Solgas'} · Sede {datosNegocio.distritoSede}
+            <strong>{t.proveedor_sede}</strong> {datosNegocio.nombreCorto || 'Consultorio América'} Â· Sede {datosNegocio.distritoSede}
           </div>
         </div>
       </section>
 
-      <!-- Ficha de Éxito / Confirmación Imprimible -->
+      <!-- Ficha de Ã‰xito / ConfirmaciÃ³n Imprimible -->
       <div id="reclamosSuccessBox" class="reclamos-success-box">
         <div class="reclamos-success-icon">
           <i class="fa-solid fa-circle-check"></i>
@@ -93,10 +93,10 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
         </div>
       </div>
 
-      <!-- Formulario Oficial de Reclamación INDECOPI -->
+      <!-- Formulario Oficial de ReclamaciÃ³n INDECOPI -->
       <form id="formLibroReclamaciones" novalidate>
 
-        <!-- SECCIÓN 1: IDENTIFICACIÓN DEL CONSUMIDOR -->
+        <!-- SECCIÃ“N 1: IDENTIFICACIÃ“N DEL CONSUMIDOR -->
         <fieldset class="reclamos-form-card">
           <div class="reclamos-form-header">
             <i class="fa-solid fa-user-tag"></i>
@@ -106,14 +106,14 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
           <div class="reclamos-inputs-grid">
             <div class="reclamos-field-box reclamos-input-full">
               <label for="reclamoNombre">{t.lbl_nombre}</label>
-              <input type="text" id="reclamoNombre" name="nombre" required placeholder="Ej. Juan Pérez Quispe" class="reclamos-input" />
+              <input type="text" id="reclamoNombre" name="nombre" required placeholder="Ej. Juan PÃ©rez Quispe" class="reclamos-input" />
             </div>
 
             <div class="reclamos-field-box">
               <label for="reclamoTipoDoc">{t.lbl_tipo_doc}</label>
               <select id="reclamoTipoDoc" name="tipoDoc" required class="reclamos-select">
                 <option value="DNI">DNI (Documento Nacional de Identidad)</option>
-                <option value="CE">Carné de Extranjería (CE)</option>
+                <option value="CE">CarnÃ© de ExtranjerÃ­a (CE)</option>
                 <option value="Pasaporte">Pasaporte</option>
                 <option value="RUC">RUC</option>
               </select>
@@ -121,7 +121,7 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
 
             <div class="reclamos-field-box">
               <label for="reclamoNumDoc">{t.lbl_num_doc}</label>
-              <input type="text" id="reclamoNumDoc" name="numDoc" required placeholder="Número de documento" class="reclamos-input" />
+              <input type="text" id="reclamoNumDoc" name="numDoc" required placeholder="NÃºmero de documento" class="reclamos-input" />
             </div>
 
             <div class="reclamos-field-box">
@@ -148,7 +148,7 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
           </div>
         </fieldset>
 
-        <!-- SECCIÓN 2: BIEN CONTRATADO -->
+        <!-- SECCIÃ“N 2: BIEN CONTRATADO -->
         <fieldset class="reclamos-form-card">
           <div class="reclamos-form-header">
             <i class="fa-solid fa-box-open"></i>
@@ -183,12 +183,12 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
 
             <div class="reclamos-field-box reclamos-input-full">
               <label for="reclamoDescBien">{t.lbl_desc_bien}</label>
-              <input type="text" id="reclamoDescBien" name="descBien" required placeholder="Ej. Balón Solgas 10kg válvula normal con delivery" class="reclamos-input" />
+              <input type="text" id="reclamoDescBien" name="descBien" required placeholder="Ej. BalÃ³n Solgas 10kg vÃ¡lvula normal con delivery" class="reclamos-input" />
             </div>
           </div>
         </fieldset>
 
-        <!-- SECCIÓN 3: DETALLE DE LA RECLAMACIÓN -->
+        <!-- SECCIÃ“N 3: DETALLE DE LA RECLAMACIÃ“N -->
         <fieldset class="reclamos-form-card">
           <div class="reclamos-form-header">
             <i class="fa-solid fa-file-pen"></i>
@@ -223,11 +223,11 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
 
             <div class="reclamos-field-box reclamos-input-full">
               <label for="reclamoPedido">{t.lbl_pedido}</label>
-              <textarea id="reclamoPedido" name="pedido" required placeholder="Especifica qué solución solicitas (ej. cambio de balón, devolución, calibración)..." class="reclamos-textarea" style="min-height: 90px;"></textarea>
+              <textarea id="reclamoPedido" name="pedido" required placeholder="Especifica quÃ© soluciÃ³n solicitas (ej. cambio de balÃ³n, devoluciÃ³n, calibraciÃ³n)..." class="reclamos-textarea" style="min-height: 90px;"></textarea>
             </div>
           </div>
 
-          <!-- Declaración Legal Checkbox -->
+          <!-- DeclaraciÃ³n Legal Checkbox -->
           <div class="reclamos-checkbox-box">
             <input type="checkbox" id="reclamoCheckLegal" required />
             <label for="reclamoCheckLegal">
@@ -272,7 +272,7 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
     }
   } catch (e) {}
 
-  // 2. Manejo de Envío de Formulario
+  // 2. Manejo de EnvÃ­o de Formulario
   const form = document.getElementById('formLibroReclamaciones') as HTMLFormElement | null;
   const successBox = document.getElementById('reclamosSuccessBox');
   const codigoDisplay = document.getElementById('reclamoCodigoDisplay');
@@ -285,7 +285,7 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
 
       const check = document.getElementById('reclamoCheckLegal') as HTMLInputElement | null;
       if (check && !check.checked) {
-        alert('Por favor acepte la declaración de veracidad conforme a ley para registrar su reclamación.');
+        alert('Por favor acepte la declaraciÃ³n de veracidad conforme a ley para registrar su reclamaciÃ³n.');
         return;
       }
 
@@ -297,7 +297,7 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
       btnSubmit.disabled = true;
       btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Registrando en sistema...';
 
-      // Generar Correlativo Único HR-YYYYMMDD-XXXX
+      // Generar Correlativo Ãšnico HR-YYYYMMDD-XXXX
       const hoy = new Date();
       const yyyy = hoy.getFullYear();
       const mm = String(hoy.getMonth() + 1).padStart(2, '0');
@@ -327,14 +327,14 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
       };
 
       try {
-        // Guardado dual: Firestore + Envío de copia al cliente
+        // Guardado dual: Firestore + EnvÃ­o de copia al cliente
         await guardarReclamoFirestore(payload);
         await enviarConfirmacionCorreo(payload);
       } catch (err) {
         console.warn('[LibroReclamaciones] Registro local:', err);
       }
 
-      // Mostrar confirmación
+      // Mostrar confirmaciÃ³n
       codigoDisplay.textContent = codigoHR;
       form.style.display = 'none';
       successBox.classList.add('visible');
@@ -347,7 +347,7 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
         form.style.display = 'block';
         successBox.classList.remove('visible');
         btnSubmit.disabled = false;
-        btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Registrar Hoja de Reclamación Oficial</span>';
+        btnSubmit.innerHTML = '<i class="fa-solid fa-paper-plane"></i> <span>Registrar Hoja de ReclamaciÃ³n Oficial</span>';
         window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     }

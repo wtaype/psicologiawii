@@ -1,13 +1,26 @@
 ---
 // src/feature/personal/modulos/sunat/Sunat.astro
-// Módulo de SUNAT: Herramienta de Registro Fácil de Comprobantes (Solgas Surquillo)
-// 100% JS Nativo · Integrado con @widev, Firestore y smiles (rol: cliente)
+// Módulo de SUNAT: Facturación Electrónica & Comprobantes
+// 100% JS Nativo · Integrado con @widev, Firestore y comprobantes B001 / F001
+import { datosNegocio } from '@/negocio.js';
+import productosSemilla from '../../../../semillas/productos.json';
+import { configurarSistema } from '../../../../semillas/configurar.js';
 
 interface Props {
   esActivo?: boolean;
 }
 
 const { esActivo = false } = Astro.props;
+const term = configurarSistema.terminologia || {};
+const itemSingular = term.itemSingular || 'Ítem';
+const prodsRapidos = Array.isArray(productosSemilla) ? productosSemilla.slice(0, 5) : [];
+
+const rawNombreTicket = datosNegocio.nombreCorto || datosNegocio.nombre || '';
+const nombreTicket = String(typeof rawNombreTicket === 'object' ? (rawNombreTicket.es || '') : rawNombreTicket).toUpperCase();
+const subTicket = datosNegocio.identidad?.especialista || datosNegocio.identidad?.cargo || '';
+const rucTicket = datosNegocio.identidad?.ruc || '';
+const direccionTicket = datosNegocio.ubicacion?.direccion || '';
+const telefonoTicket = datosNegocio.telefonoMostrado || datosNegocio.whatsapp || '';
 ---
 
 <section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-sunat" data-sunat-init="false">
@@ -17,10 +30,10 @@ const { esActivo = false } = Astro.props;
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">
         <i class="fa-solid fa-file-invoice-dollar sn-header-icon"></i>
-        SUNAT · Registro Fácil de Comprobantes
+        SUNAT · Facturación & Comprobantes Electrónicos
       </h1>
       <p class="ps-section-sub">
-        Emisión ágil de Boletas (B001) y Facturas (F001) electrónicas para pedidos de gas GLP en Solgas Surquillo.
+        Emisión ágil de Boletas (B001) y Facturas (F001) electrónicas con validez tributaria y sincronización de comprobantes.
       </p>
     </div>
     <div class="ps-header-actions">
@@ -31,7 +44,7 @@ const { esActivo = false } = Astro.props;
         <i class="fa-solid fa-building"></i> Nueva Factura (F001)
       </button>
       <button type="button" class="cr-btn-send" id="btnRegistrarComprobante">
-        <i class="fa-solid fa-cloud-arrow-up"></i> Registrar Comprobante
+        <i class="fa-solid fa-cloud-arrow-up"></i> Emitir Comprobante
       </button>
     </div>
   </div>
@@ -59,8 +72,8 @@ const { esActivo = false } = Astro.props;
     </div>
 
     <div class="sn-kpi-card">
-      <div class="sn-kpi-icon-wrap sn-kpi-icon-amber">
-        <i class="fa-solid fa-building-columns"></i>
+      <div class="sn-kpi-icon-wrap sn-kpi-icon-purple">
+        <i class="fa-solid fa-building"></i>
       </div>
       <div class="sn-kpi-data">
         <span class="sn-kpi-val" id="snKpiFacturas">0</span>
@@ -70,119 +83,106 @@ const { esActivo = false } = Astro.props;
 
     <div class="sn-kpi-card">
       <div class="sn-kpi-icon-wrap sn-kpi-icon-green">
-        <i class="fa-solid fa-chart-line"></i>
+        <i class="fa-solid fa-handshake-simple"></i>
       </div>
       <div class="sn-kpi-data">
-        <span class="sn-kpi-val" id="snKpiIgv">S/ 0.00</span>
-        <span class="sn-kpi-lbl">IGV 18% Fiscal</span>
+        <span class="sn-kpi-val" id="snKpiClientes">0</span>
+        <span class="sn-kpi-lbl">Clientes Atendidos</span>
       </div>
     </div>
   </div>
 
-  <!-- LAYOUT DIVIDIDO (FORMULARIO DE REGISTRO 60% / TICKET EN VIVO 40%) -->
-  <div class="sn-split-layout">
+  <!-- LAYOUT PRINCIPAL: REDACTOR (IZQ) Y TICKET TÉRMICO SUNAT (DER) -->
+  <div class="sn-main-layout">
     
-    <!-- COLUMNA 1: FORMULARIO GENERADOR DE REGISTRO FÁCIL -->
-    <div class="sn-card">
-      <div class="sn-card-head">
-        <h2 class="sn-card-title">
-          <i class="fa-solid fa-pen-nib sn-title-icon"></i> Emisión de Comprobante
-        </h2>
-
-        <!-- Selector de Tipo de Documento -->
-        <div class="sn-type-tabs" id="snTypeTabs">
-          <button type="button" class="sn-type-btn active" data-type="boleta" id="snTabBoleta">
-            <i class="fa-solid fa-receipt"></i> Boleta B001
-          </button>
-          <button type="button" class="sn-type-btn" data-type="factura" id="snTabFactura">
-            <i class="fa-solid fa-building"></i> Factura F001
-          </button>
-        </div>
-      </div>
-
-      <form id="formSunatComprobante">
-        <input type="hidden" id="snTipoDoc" value="boleta" />
-
-        <!-- Fila 1: Serie, Correlativo y Fecha -->
-        <div class="sn-form-row-3">
+    <!-- COLUMNA 1: FORMULARIO REDACTOR INTELIGENTE -->
+    <div class="sn-composer-card">
+      <form id="formSunatComprobante" autocomplete="off">
+        
+        <!-- Fila 1: Tipo de Comprobante y Serie -->
+        <div class="sn-form-row">
           <div class="sn-form-group">
-            <label class="sn-label" for="snInpSerie">Serie Oficial</label>
-            <input type="text" id="snInpSerie" class="sn-input" value="B001" readonly />
+            <label class="sn-label" for="snSelectTipoDoc">Tipo de Comprobante *</label>
+            <select id="snSelectTipoDoc" class="sn-select" required>
+              <option value="boleta">Boleta de Venta Electrónica (B001)</option>
+              <option value="factura">Factura Comercial Electrónica (F001)</option>
+            </select>
           </div>
+
           <div class="sn-form-group">
-            <label class="sn-label" for="snInpNumero">N° Correlativo</label>
-            <input type="text" id="snInpNumero" class="sn-input" value="000483" readonly />
+            <label class="sn-label" for="snInpSerieNumero">Serie y Número Correlativo</label>
+            <input type="text" id="snInpSerieNumero" class="sn-input is-readonly" value="B001-000101" readonly />
           </div>
+
           <div class="sn-form-group">
-            <label class="sn-label" for="snInpFecha">Fecha de Emisión</label>
-            <input type="text" id="snInpFecha" class="sn-input" readonly />
+            <label class="sn-label" for="snInpFechaEmision">Fecha de Emisión</label>
+            <input type="text" id="snInpFechaEmision" class="sn-input is-readonly" value="Hoy" readonly />
           </div>
         </div>
 
-        <!-- Fila 2: Buscador Inteligente de Cliente desde smiles -->
-        <div class="sn-form-group sn-autocomplete-box sn-mb-14">
+        <!-- Fila 2: Autocompletado de Cliente Contable -->
+        <div class="sn-form-group sn-mt-14">
           <label class="sn-label" for="snInpClienteBuscar">
-            <i class="fa-solid fa-magnifying-glass sn-label-icon"></i> Buscar Cliente en Directorio (smiles con rol: cliente)
+            <i class="fa-solid fa-magnifying-glass"></i> Cliente / Razón Social *
+            <span class="sn-label-hint">Autocompletado con directorio de clientes o nuevos</span>
           </label>
-          <input 
-            type="text" 
-            id="snInpClienteBuscar" 
-            class="sn-input" 
-            placeholder="Escribe DNI, RUC, nombre o celular..." 
-            autocomplete="off" 
-          />
+          <div class="sn-autocomplete-wrap">
+            <input 
+              type="text" 
+              id="snInpClienteBuscar" 
+              class="sn-input sn-input-lg" 
+              placeholder="Buscar por RUC, DNI o Nombre de empresa..." 
+              required 
+            />
+            <div class="sn-sugerencias-dropdown" id="snDropdownClientes" style="display: none;"></div>
+          </div>
         </div>
 
-        <!-- Fila 3: Datos de Identidad y Contacto -->
-        <div class="sn-form-row-3">
+        <!-- Fila 3: Documento (DNI/RUC) y Celular de WhatsApp -->
+        <div class="sn-form-row sn-mt-10">
           <div class="sn-form-group">
-            <label class="sn-label" for="snInpDocTipo">Tipo Doc.</label>
-            <select id="snInpDocTipo" class="sn-select">
-              <option value="DNI">DNI (Persona Natural)</option>
-              <option value="RUC">RUC (Empresa / Negocio)</option>
+            <label class="sn-label" for="snSelectDocTipo">Tipo Doc.</label>
+            <select id="snSelectDocTipo" class="sn-select">
+              <option value="DNI">DNI (8 dígitos)</option>
+              <option value="RUC">RUC (11 dígitos)</option>
               <option value="CE">Carnet de Extranjería</option>
             </select>
           </div>
+
           <div class="sn-form-group">
-            <label class="sn-label" for="snInpDocNumero">N° Documento *</label>
-            <input type="text" id="snInpDocNumero" class="sn-input" placeholder="71779978" required />
+            <label class="sn-label" for="snInpDocNumero">Número de Documento *</label>
+            <input type="text" id="snInpDocNumero" class="sn-input" placeholder="Ej: 20554897123" required />
           </div>
+
           <div class="sn-form-group">
             <label class="sn-label" for="snInpClienteCelular">Celular WhatsApp</label>
-            <input type="tel" id="snInpClienteCelular" class="sn-input" placeholder="961229280" />
+            <input type="tel" id="snInpClienteCelular" class="sn-input" placeholder="Ej: 987654321" />
           </div>
         </div>
 
-        <!-- Fila 4: Nombre y Dirección -->
-        <div class="sn-form-row">
-          <div class="sn-form-group">
-            <label class="sn-label" for="snInpClienteNombre">Nombre Completo o Razón Social *</label>
-            <input type="text" id="snInpClienteNombre" class="sn-input" placeholder="Ej. Juan Pérez / Inversiones SAC" required />
-          </div>
-          <div class="sn-form-group">
-            <label class="sn-label" for="snInpClienteDireccion">Dirección de Entrega</label>
-            <input type="text" id="snInpClienteDireccion" class="sn-input" placeholder="Jr. Dante 260, Surquillo" />
-          </div>
+        <!-- Fila 4: Dirección / Domicilio Fiscal -->
+        <div class="sn-form-group sn-mt-10">
+          <label class="sn-label" for="snInpClienteDireccion">Domicilio Fiscal / Dirección</label>
+          <input type="text" id="snInpClienteDireccion" class="sn-input" placeholder="Ej: Av. Principal 123, Lima" />
         </div>
 
-        <!-- SECCIÓN DE SELECCIÓN RÁPIDA DE BALONES Y PRODUCTOS -->
+        <!-- SECCIÓN DE SELECCIÓN RÁPIDA DE ÍTEMS -->
         <div class="sn-quick-prods-wrap">
           <div class="sn-quick-title">
-            <i class="fa-solid fa-fire"></i> Añadir Balón o Accesorio con 1 Clic
+            <i class="fa-solid fa-cart-plus"></i> Añadir {itemSingular} con 1 Clic
           </div>
           <div class="sn-quick-buttons" id="snQuickButtonsWrap">
-            <button type="button" class="sn-quick-btn" data-prod-id="balon-10kg" data-prod-desc="Balón SOLGAS Premium 10 kg" data-prod-price="65.00">
-              🔥 Balón 10 kg <span class="price-tag">S/ 65.00</span>
-            </button>
-            <button type="button" class="sn-quick-btn" data-prod-id="balon-45kg" data-prod-desc="Balón SOLGAS Industrial 45 kg" data-prod-price="220.00">
-              🏭 Balón 45 kg <span class="price-tag">S/ 220.00</span>
-            </button>
-            <button type="button" class="sn-quick-btn" data-prod-id="regulador" data-prod-desc="Regulador Premium Click-On" data-prod-price="45.00">
-              🛡️ Regulador <span class="price-tag">S/ 45.00</span>
-            </button>
-            <button type="button" class="sn-quick-btn" data-prod-id="manguera" data-prod-desc="Manguera Reforzada GLP" data-prod-price="25.00">
-              🔌 Manguera <span class="price-tag">S/ 25.00</span>
-            </button>
+            {prodsRapidos.map((prod) => (
+              <button 
+                type="button" 
+                class="sn-quick-btn" 
+                data-prod-id={prod.id} 
+                data-prod-desc={prod.nombre} 
+                data-prod-price={Number(prod.precio ?? prod.precioPEN ?? 0).toFixed(2)}
+              >
+                <span>{prod.nombre}</span> <span class="price-tag">S/ {Number(prod.precio ?? prod.precioPEN ?? 0).toFixed(2)}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -191,7 +191,7 @@ const { esActivo = false } = Astro.props;
           <table class="sn-items-table">
             <thead>
               <tr>
-                <th class="sn-col-desc">Descripción del Producto / Servicio</th>
+                <th class="sn-col-desc">Descripción del Ítem / Detalle</th>
                 <th class="sn-col-qty">Cant.</th>
                 <th class="sn-col-price">P. Unit. (S/)</th>
                 <th class="sn-col-total">Total (S/)</th>
@@ -223,27 +223,26 @@ const { esActivo = false } = Astro.props;
         <!-- Fila 5: Forma de Pago y Estado -->
         <div class="sn-form-row sn-mt-14">
           <div class="sn-form-group">
-            <label class="sn-label" for="snSelectMetodoPago">Forma de Pago</label>
+            <label class="sn-label" for="snSelectMetodoPago">Medio de Pago</label>
             <select id="snSelectMetodoPago" class="sn-select">
-              <option value="Efectivo contra entrega">Efectivo contra entrega</option>
-              <option value="Yape / Plin">Yape / Plin</option>
               <option value="Transferencia BCP">Transferencia BCP</option>
+              <option value="Yape / Plin">Yape / Plin</option>
               <option value="Transferencia BBVA">Transferencia BBVA</option>
-              <option value="Tarjeta Débito / Crédito (POS)">Tarjeta Débito / Crédito (POS)</option>
+              <option value="Efectivo en oficina">Efectivo en oficina</option>
             </select>
           </div>
           <div class="sn-form-group">
             <label class="sn-label" for="snSelectEstado">Estado de Pago</label>
             <select id="snSelectEstado" class="sn-select">
               <option value="pagado">Pagado (Conforme)</option>
-              <option value="pendiente">Pendiente de cobro en ruta</option>
+              <option value="pendiente">Pendiente de transferencia</option>
             </select>
           </div>
         </div>
 
         <div class="sn-form-group sn-mt-10">
-          <label class="sn-label" for="snInpObservacion">Observación Interna / Conductor</label>
-          <input type="text" id="snInpObservacion" class="sn-input" placeholder="Ej. Balón con precinto intacto. Paga con billete de 100." />
+          <label class="sn-label" for="snInpObservacion">Observación del Comprobante</label>
+          <input type="text" id="snInpObservacion" class="sn-input" placeholder="Ej: Despacho a domicilio verificado con balanza digital conforme a Ley." />
         </div>
       </form>
     </div>
@@ -252,118 +251,117 @@ const { esActivo = false } = Astro.props;
     <div class="sn-ticket-wrap">
       <div class="sn-ticket-card" id="snTicketPreviewCard">
         <div class="sn-ticket-header">
-          <div class="sn-ticket-brand">SOLGAS SURQUILLO</div>
-          <div class="sn-ticket-ruc">RUC: 20601234567</div>
-          <div class="sn-ticket-address">Jr. Dante 260, Surquillo, Lima 15047</div>
-          <div class="sn-ticket-address">Telf / WhatsApp: 936 369 384</div>
+          <div class="sn-ticket-brand" data-negocio-nombre>{nombreTicket}</div>
+          {subTicket && <div class="sn-ticket-sub" data-negocio-especialista>{subTicket}</div>}
+          {rucTicket && <div class="sn-ticket-ruc">RUC: {rucTicket}</div>}
+          {direccionTicket && <div class="sn-ticket-address" data-negocio-direccion>{direccionTicket}</div>}
+          {telefonoTicket && <div class="sn-ticket-address">Telf / WhatsApp: {telefonoTicket}</div>}
           <div class="sn-ticket-type" id="snTicketTipoBadge">BOLETA DE VENTA ELECTRÓNICA</div>
-          <div class="sn-ticket-number" id="snTicketSerieNumero">B001-000483</div>
+          <div class="sn-ticket-number" id="snTicketSerieNumero">B001-000101</div>
         </div>
 
-        <div class="sn-ticket-meta">
-          <div><strong>Fecha:</strong> <span id="snTicketFecha">25 Sep 2026</span></div>
-          <div><strong>Cliente:</strong> <span id="snTicketCliente">Cliente Mostrador</span></div>
-          <div><strong><span id="snTicketDocLabel">DNI</span>:</strong> <span id="snTicketDoc">71779978</span></div>
-          <div><strong>Dirección:</strong> <span id="snTicketDireccion">Surquillo, Lima</span></div>
+        <div class="sn-ticket-divider">--------------------------------</div>
+
+        <div class="sn-ticket-info-grid">
+          <div class="sn-ti-row">
+            <span class="sn-ti-k">Fecha:</span>
+            <span class="sn-ti-v" id="snTicketFecha">Hoy</span>
+          </div>
+          <div class="sn-ti-row">
+            <span class="sn-ti-k">Cliente:</span>
+            <span class="sn-ti-v" id="snTicketCliente">Cliente General</span>
+          </div>
+          <div class="sn-ti-row">
+            <span class="sn-ti-k" id="snTicketDocLbl">Doc:</span>
+            <span class="sn-ti-v" id="snTicketDocVal">--------</span>
+          </div>
+          <div class="sn-ti-row">
+            <span class="sn-ti-k">Dirección:</span>
+            <span class="sn-ti-v" id="snTicketDir">-</span>
+          </div>
         </div>
 
-        <table class="sn-ticket-table">
-          <thead>
-            <tr>
-              <th class="sn-ticket-col-desc">DESCRIPCIÓN</th>
-              <th class="sn-ticket-col-qty">CANT</th>
-              <th class="sn-ticket-col-total">TOTAL</th>
-            </tr>
-          </thead>
-          <tbody id="snTicketItemsBody">
-            <!-- Render dinámico -->
-          </tbody>
-        </table>
+        <div class="sn-ticket-divider">--------------------------------</div>
+
+        <!-- ITEMS TICKET -->
+        <div class="sn-ticket-items" id="snTicketItemsList">
+          <!-- Render dinámico -->
+        </div>
+
+        <div class="sn-ticket-divider">--------------------------------</div>
 
         <div class="sn-ticket-totals">
-          <div class="sn-ticket-total-row">
+          <div class="sn-tt-row">
             <span>OP. GRAVADA:</span>
-            <span id="snTicketOpGravada">S/ 55.08</span>
+            <span id="snTicketOpGravada">S/ 0.00</span>
           </div>
-          <div class="sn-ticket-total-row">
+          <div class="sn-tt-row">
             <span>I.G.V. (18%):</span>
-            <span id="snTicketIgv">S/ 9.92</span>
+            <span id="snTicketIgv">S/ 0.00</span>
           </div>
-          <div class="sn-ticket-total-row final">
+          <div class="sn-tt-row total">
             <span>TOTAL A PAGAR:</span>
-            <span id="snTicketTotal">S/ 65.00</span>
-          </div>
-          <div class="sn-ticket-total-row sn-ticket-meta-pago">
-            <span>FORMA DE PAGO:</span>
-            <span id="snTicketPago">Efectivo</span>
+            <span id="snTicketTotal">S/ 0.00</span>
           </div>
         </div>
 
+        <div class="sn-ticket-divider">--------------------------------</div>
+
         <div class="sn-ticket-footer">
-          <div class="sn-qr-simulator">
-            <i class="fa-solid fa-qrcode"></i>
-          </div>
-          <div class="sn-ticket-auth-text">
-            Representación impresa de la Boleta Electrónica.<br />
-            Autorizado mediante resolución SUNAT.<br />
-            <strong>¡Garantía Oficial Solgas de Planta!</strong>
+          <div class="sn-tf-obs" id="snTicketObs">Comprobante emitido conforme a las normas de SUNAT.</div>
+          <div class="sn-tf-auth">Representación Impresa del Comprobante de Pago Electrónico</div>
+          <div class="sn-tf-auth">
+            <strong>{datosNegocio.slogan || 'Atención Rápida y Garantizada'}</strong>
           </div>
         </div>
       </div>
 
-      <!-- Acciones directas del ticket -->
+      <!-- BOTONES DE ACCIÓN DEL TICKET -->
       <div class="sn-ticket-actions">
-        <button type="button" class="sn-btn-ticket sn-btn-ticket-ws" id="btnTicketWhatsApp">
-          <i class="fa-brands fa-whatsapp"></i> Enviar por WhatsApp
+        <button type="button" class="sn-ticket-btn" id="btnImprimirTicket">
+          <i class="fa-solid fa-print"></i> Imprimir Comprobante
         </button>
-        <button type="button" class="sn-btn-ticket sn-btn-ticket-print" id="btnTicketImprimir">
-          <i class="fa-solid fa-print"></i> Imprimir Ticket
+        <button type="button" class="sn-ticket-btn sn-ticket-btn-wa" id="btnEnviarWhatsAppTicket">
+          <i class="fa-brands fa-whatsapp"></i> Enviar Comprobante por WhatsApp
         </button>
       </div>
     </div>
 
   </div>
 
-  <!-- SECCIÓN INFERIOR: HISTORIAL DE COMPROBANTES EMITIDOS -->
-  <div class="sn-history-card">
-    <div class="sn-history-toolbar">
-      <div class="sn-filters-pills" id="snFilterPillsWrap">
-        <button type="button" class="sn-filter-pill active" data-filter="todos">Todos</button>
-        <button type="button" class="sn-filter-pill" data-filter="boleta">Boletas (B001)</button>
-        <button type="button" class="sn-filter-pill" data-filter="factura">Facturas (F001)</button>
-        <button type="button" class="sn-filter-pill" data-filter="pagado">Pagados</button>
-        <button type="button" class="sn-filter-pill" data-filter="pendiente">Pendientes</button>
+  <!-- SECCIÓN HISTORIAL DE COMPROBANTES EMITIDOS RECIENTES -->
+  <div class="sn-history-section sn-mt-24">
+    <div class="sn-history-header">
+      <div class="sn-history-title-wrap">
+        <h2 class="sn-history-title">
+          <i class="fa-solid fa-clock-rotate-left"></i> Historial Reciente de Comprobantes
+        </h2>
+        <span class="sn-history-sub">Registro Local-First sincronizado con Firestore</span>
       </div>
-
-      <div class="sn-toolbar-right">
-        <span class="sn-history-count" id="snHistoryTotalCount">3 comprobantes</span>
-        <div class="sn-search-wrap">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input 
-            type="text" 
-            id="snHistorySearchInput" 
-            class="sn-search-input" 
-            placeholder="Buscar por N°, DNI/RUC o cliente..." 
-          />
-        </div>
+      <div class="sn-history-tools">
+        <button type="button" class="ps-btn ps-btn-secondary" id="btnExportarCsvSunat">
+          <i class="fa-solid fa-file-csv"></i> Exportar Comprobantes (CSV)
+        </button>
       </div>
     </div>
 
     <div class="sn-table-responsive">
-      <table class="sn-history-table">
+      <table class="sn-data-table">
         <thead>
           <tr>
-            <th>Comprobante</th>
+            <th>Serie / N°</th>
+            <th>Tipo</th>
             <th>Fecha y Hora</th>
-            <th>Cliente Receptor</th>
-            <th>Total (PEN)</th>
-            <th>Método de Pago</th>
+            <th>Cliente / Razón Social</th>
+            <th>RUC / DNI</th>
+            <th>Total (S/)</th>
+            <th>Medio Pago</th>
             <th>Estado</th>
-            <th class="sn-text-right">Acciones</th>
+            <th>Acciones</th>
           </tr>
         </thead>
-        <tbody id="snHistoryTableBody">
-          <!-- Renderizado dinámico desde sunat.js -->
+        <tbody id="snTableHistorialBody">
+          <!-- Inyectado por sunat.js -->
         </tbody>
       </table>
     </div>
@@ -372,7 +370,5 @@ const { esActivo = false } = Astro.props;
 </section>
 
 <script>
-  import { inicializarModuloSunat } from './sunat.js';
-  inicializarModuloSunat();
-  document.addEventListener('astro:page-load', inicializarModuloSunat);
+  import './sunat.js';
 </script>

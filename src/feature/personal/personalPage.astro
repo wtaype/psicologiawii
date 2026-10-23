@@ -1,9 +1,10 @@
 ---
 // src/feature/personal/personalPage.astro
-// Entrada Principal del Feature Personal (Solgas Surquillo)
+// Entrada Principal del Feature Personal
 // Layout: Sonrisa.astro · Los 14 Módulos Operativos · 100% Cero CSS Inline
 
 import Sonrisa from './layout/Sonrisa.astro';
+import { datosNegocio } from '@/negocio.js';
 
 // Módulos 1 a 6
 import Dashboard from './modulos/dashboard/Dashboard.astro';
@@ -19,23 +20,25 @@ import productosCss from './modulos/productos/productos.css?inline';
 import Sunat from './modulos/sunat/Sunat.astro';
 import sunatCss from './modulos/sunat/sunat.css?inline';
 
-// Módulos 7 a 14 (Fase 3 Completada)
+// Módulos 7 a 16 (Fase 3 & Expansión Operativa)
 import Clientes from './modulos/clientes/Clientes.astro';
 import clientesCss from './modulos/clientes/clientes.css?inline';
 import Whatsapp from './modulos/whatsapp/Whatsapp.astro';
 import whatsappCss from './modulos/whatsapp/whatsapp.css?inline';
 import Galeria from './modulos/galeria/Galeria.astro';
 import galeriaCss from './modulos/galeria/galeria.css?inline';
-import Entradas from './modulos/entradas/Entradas.astro';
-import entradasCss from './modulos/entradas/entradas.css?inline';
-import Paginas from './modulos/paginas/Paginas.astro';
-import paginasCss from './modulos/paginas/paginas.css?inline';
+import Blogs from './modulos/blogs/Blogs.astro';
+import blogsCss from './modulos/blogs/blogs.css?inline';
 import Personal from './modulos/personal/Personal.astro';
 import personalModCss from './modulos/personal/personalMod.css?inline';
 import Perfil from './modulos/perfil/Perfil.astro';
 import perfilCss from './modulos/perfil/perfil.css?inline';
 import Ajustes from './modulos/ajustes/Ajustes.astro';
 import ajustesCss from './modulos/ajustes/ajustes.css?inline';
+import Ayuda from './modulos/ayuda/Ayuda.astro';
+import ayudaCss from './modulos/ayuda/ayuda.css?inline';
+import Aprender from './modulos/aprender/Aprender.astro';
+import aprenderCss from './modulos/aprender/aprender.css?inline';
 
 import { moduloDefecto } from './modulos.js';
 
@@ -57,16 +60,17 @@ const estilosModulos = [
   clientesCss,
   whatsappCss,
   galeriaCss,
-  entradasCss,
-  paginasCss,
+  blogsCss,
   personalModCss,
   perfilCss,
-  ajustesCss
+  ajustesCss,
+  ayudaCss,
+  aprenderCss
 ].join('\n');
 ---
 
-<Sonrisa titulo="Dashboard del Dueño · Solgas Surquillo" moduloActivo={moduloActivo} idioma={idioma}>
-  <!-- Inyección limpia de CSS de los 14 módulos (0 CSS en runtime) -->
+<Sonrisa titulo={`Panel de Gestión · ${datosNegocio.nombreCorto || datosNegocio.nombre || 'Administración'}`} moduloActivo={moduloActivo} idioma={idioma}>
+  <!-- Inyección limpia de CSS de los 15 módulos (0 CSS en runtime) -->
   <style slot="modulo-css" is:global set:html={estilosModulos}></style>
 
   <!-- MÓDULO 1: DASHBOARD -->
@@ -93,14 +97,11 @@ const estilosModulos = [
   <!-- MÓDULO 8: WHATSAPP (Centro de Mensajería & Sandbox Smartphone) -->
   <Whatsapp esActivo={moduloActivo === 'whatsapp'} />
 
-  <!-- MÓDULO 9: GALERÍA (Bucket Cloudflare R2 gaswii-media) -->
+  <!-- MÓDULO 9: GALERÍA (Imágenes Locales & Cloudflare R2) -->
   <Galeria esActivo={moduloActivo === 'galeria'} />
 
-  <!-- MÓDULO 10: ENTRADAS (Blog SEO Markdown Estilo Workwii) -->
-  <Entradas esActivo={moduloActivo === 'entradas'} />
-
-  <!-- MÓDULO 11: PÁGINAS (Editor Institucional & Google SERP Simulator) -->
-  <Paginas esActivo={moduloActivo === 'paginas'} />
+  <!-- MÓDULO 10: BLOGS (Redactor Markdown & Gestor de Artículos) -->
+  <Blogs esActivo={moduloActivo === 'blogs'} />
 
   <!-- MÓDULO 12: PERSONAL (Equipo Operativo & Gestión de Flota) -->
   <Personal esActivo={moduloActivo === 'personal'} />
@@ -110,4 +111,10 @@ const estilosModulos = [
 
   <!-- MÓDULO 14: AJUSTES (Switch Maestro & Centro de Respaldo JSON) -->
   <Ajustes esActivo={moduloActivo === 'ajustes'} />
+
+  <!-- MÓDULO 15: AYUDA (Generador de Tickets y Mesa de Ayuda) -->
+  <Ayuda esActivo={moduloActivo === 'ayuda'} />
+
+  <!-- MÓDULO 16: APRENDER (Centro de Conocimiento & Documentación del Sistema) -->
+  <Aprender esActivo={moduloActivo === 'aprender'} />
 </Sonrisa>

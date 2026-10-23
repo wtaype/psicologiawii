@@ -1,26 +1,68 @@
 ---
 // src/feature/personal/modulos/negocio/Negocio.astro
-// Módulo: Ficha de Negocio & Especialista (Psicología América)
-// Layout Profesional Bilingüe de 2 Columnas (Datos Globales + Pestañas ES / EN)
-// 100% JS Nativo · Cero TypeScript · Local-First · Sincronizado con Firestore
+// Módulo: Ficha de Mi Negocio & Especialista
+// Rediseño Pro: Tabs Horizontales Compactos + Redes Dinámicas + SEO Prioritario + Métricas Reordenadas
+// 100% JS Nativo · Local-First · Sincronizado con Firestore · Cero Bloatware
 
-import { datosNegocio } from '@/negocio.js';
+import { datosNegocio, configSemilla } from '@/negocio.js';
 
 interface Props {
   esActivo?: boolean;
 }
 
 const { esActivo = false } = Astro.props;
+const esServicios = configSemilla?.modeloNegocio === 'servicios_y_asesorias';
 const n = datosNegocio;
+const raw = n.raw || {};
+const iden = raw.identidad || n.identidad || {};
+const idenNombreEs = typeof iden.nombre === 'object' ? (iden.nombre?.es || '') : (iden.nombre || n.nombre || '');
+const idenNombreEn = typeof iden.nombre === 'object' ? (iden.nombre?.en || iden.nombre?.es || '') : (iden.nombreEn || iden.nombre || n.nombre || '');
+const idenNombreCortoEs = typeof iden.nombreCorto === 'object' ? (iden.nombreCorto?.es || '') : (iden.nombreCorto || n.nombreCorto || '');
+const idenNombreCortoEn = typeof iden.nombreCorto === 'object' ? (iden.nombreCorto?.en || iden.nombreCorto?.es || '') : (iden.nombreCortoEn || iden.nombreCorto || n.nombreCorto || '');
+const idenTituloEs = typeof iden.titulo === 'object' ? (iden.titulo?.es || '') : (iden.titulo || iden.cargo || '');
+const idenTituloEn = typeof iden.titulo === 'object' ? (iden.titulo?.en || '') : (iden.tituloEn || 'Licensed Psychologist');
+const idenGradoEs = typeof iden.grado === 'object' ? (iden.grado?.es || '') : (iden.grado || '');
+const idenGradoEn = typeof iden.grado === 'object' ? (iden.grado?.en || '') : (iden.gradoEn || "Master's in Clinical Psychology");
+const idenEnfoquesEs = typeof iden.enfoques === 'object' ? (iden.enfoques?.es || '') : (iden.enfoques || '');
+const idenEnfoquesEn = typeof iden.enfoques === 'object' ? (iden.enfoques?.en || '') : (iden.enfoquesEn || '');
+const cont = raw.contacto || n.contacto || {};
+const ubi = raw.ubicacion || n.ubicacion || {};
+const seo = raw.seo || n.seo || {};
+const sedes = Array.isArray(raw.sedes) && raw.sedes.length > 0 ? raw.sedes : (Array.isArray(n.sedes) && n.sedes.length > 0 ? n.sedes : []);
+const sedePresencial = sedes[0] || {};
+const sedeVirtual = sedes[1] || {};
+const met = raw.metricas || n.metricas || {};
+const hor = raw.horarios || n.horarios || {
+  semana: { abre: '08:00', cierra: '20:00' },
+  sabado: { abre: '08:00', cierra: '20:00' }
+};
+const dominioBase = (Astro.url?.origin && Astro.url.origin !== 'null' && !Astro.url.origin.includes('psicologiawii.com'))
+  ? Astro.url.origin
+  : (import.meta.env.PUBLIC_SITE_URL || 'https://psicologiawii.web.app');
+
+const canonicalEs = dominioBase.replace(/\/$/, '');
+const canonicalEn = `${canonicalEs}/en`;
+
+const seoImg = typeof seo.imagen === 'string' ? seo.imagen : (seo.imagen?.url || '/imgwii/Sofia.jpg');
+const fullSeoImg = (seoImg.startsWith('http://') || seoImg.startsWith('https://'))
+  ? (seoImg.includes('psicologiawii.com') ? seoImg.replace(/https?:\/\/[^\/]+/, canonicalEs) : seoImg)
+  : `${canonicalEs}${seoImg.startsWith('/') ? '' : '/'}${seoImg}`;
+
+const heroImgRaw = n.hero?.imgHero || '/imgwii/Psychologist_listening_in_therapy.jpeg';
+const fullHeroImg = (heroImgRaw.startsWith('http://') || heroImgRaw.startsWith('https://'))
+  ? (heroImgRaw.includes('psicologiawii.com') ? heroImgRaw.replace(/https?:\/\/[^\/]+/, canonicalEs) : heroImgRaw)
+  : `${canonicalEs}${heroImgRaw.startsWith('/') ? '' : '/'}${heroImgRaw}`;
+const distritosList = n.distritos || [];
+const zonas = Array.isArray(raw.zonas) && raw.zonas.length > 0 ? raw.zonas : (Array.isArray(n.zonas) && n.zonas.length > 0 ? n.zonas : []);
 ---
 
 <section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-negocio">
   <!-- Encabezado de Sección -->
   <div class="ps-section-header">
     <div class="ps-section-title-wrap">
-      <h1 class="ps-section-title">Ficha de Consultorio & Especialista</h1>
+      <h1 class="ps-section-title">Ficha de Mi Negocio</h1>
       <p class="ps-section-sub">
-        Gestión central de credenciales oficiales (C.Ps.P. 49425), canales de citas WhatsApp, sedes clínicas y posicionamiento web bilingüe.
+        Configuración central de identidad oficial, canales de contacto directo, sede y presencia web bilingüe.
       </p>
     </div>
     <div class="ps-header-actions">
@@ -34,165 +76,548 @@ const n = datosNegocio;
   </div>
 
   <div class="ng-container">
-    <!-- ── LAYOUT PRINCIPAL DE 2 COLUMNAS (SPLIT LAYOUT) ── -->
-    <div class="ng-split-layout">
-      
-      <!-- ── COLUMNA IZQUIERDA: DATOS GLOBALES / NEUTRALES DE IDIOMA ── -->
-      <div class="ng-col-global">
+    
+    <!-- ── BARRA DE PESTAÑAS HORIZONTALES COMPACTAS (BORDER-RADIUS 8px) ── -->
+    <div class="ng-tabs-bar" id="ngMainTabs">
+      <button type="button" class="ng-tab-btn active" data-tab-target="ng-tab-identidad">
+        <i class="fa-solid fa-camera-retro"></i>
+        <span>Fotos & Identidad</span>
+      </button>
 
-        <!-- 1. IDENTIDAD PROFESIONAL & MULTIMEDIA -->
+      <button type="button" class="ng-tab-btn" data-tab-target="ng-tab-contacto">
+        <i class="fa-solid fa-share-nodes"></i>
+        <span>Redes & Contacto</span>
+      </button>
+
+      <button type="button" class="ng-tab-btn" data-tab-target="ng-tab-sede">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>Sede & Horarios</span>
+      </button>
+
+      <button type="button" class="ng-tab-btn" data-tab-target="ng-tab-zonas">
+        <i class="fa-solid fa-map-location-dot"></i>
+        <span>Zonas & Cobertura</span>
+      </button>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- PESTAÑA 1: 📸 FOTOS & IDENTIDAD (LAYOUT PRO 60% / 40%)     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ng-tab-pane active" id="ng-tab-identidad">
+      <div class="ng-grid-media-identidad">
+        
+        <!-- Columna Izquierda (Width 60%): Fotografías & Logotipos Oficiales (Inspirado en Imagen 2) -->
         <div class="ng-card">
           <div class="ng-card-header">
             <div>
-              <h2 class="ng-card-title"><i class="fa-solid fa-user-doctor"></i> Especialista & Multimedia</h2>
-              <p class="ng-card-desc">Credenciales oficiales y fotografías representativas.</p>
-            </div>
-            <span class="ng-badge-trayectoria" id="ngBadgeTrayectoria">
-              <i class="fa-solid fa-award"></i> <span id="ngYearsText">6+ años</span>
-            </span>
-          </div>
-
-          <!-- Previews de Fotos -->
-          <div class="ng-media-dual-grid">
-            <!-- Foto de la Especialista -->
-            <div class="ng-media-preview-box is-hero">
-              <img id="ngImgHeroPreview" src="/imgwii/hero/psicologa-sofia-reynaga.webp" alt="Foto Especialista" class="ng-media-thumb" />
-              <div class="ng-media-meta">
-                <span class="ng-media-label"><i class="fa-solid fa-camera"></i> Foto Especialista</span>
-                <input type="text" id="ngInputImagenSede" class="ng-input ng-input-sm" placeholder="/imgwii/hero/psicologa-sofia-reynaga.webp" />
-              </div>
-            </div>
-
-            <!-- Columna de Logos: Isotipo + Logo Full -->
-            <div class="ng-media-logos-col">
-              <!-- Logo Oficial (Isotipo Circular) -->
-              <div class="ng-media-preview-box">
-                <img id="ngImgLogoPreview" src="/imgwii/logo.webp" alt="Logo Consultorio" class="ng-media-thumb" />
-                <div class="ng-media-meta">
-                  <span class="ng-media-label"><i class="fa-solid fa-shield-heart"></i> Logo Oficial</span>
-                  <input type="text" id="ngInputLogo" class="ng-input ng-input-sm" placeholder="/imgwii/logo.webp" />
-                </div>
-              </div>
-
-              <!-- Logo Full (Horizontal Completo) -->
-              <div class="ng-media-preview-box">
-                <img id="ngImgLogoFullPreview" src="/imgwii/logo_full.webp" alt="Logo Full Consultorio" class="ng-media-thumb-full" />
-                <div class="ng-media-meta">
-                  <span class="ng-media-label"><i class="fa-solid fa-gem"></i> Logo Full</span>
-                  <input type="text" id="ngInputLogoFull" class="ng-input ng-input-sm" placeholder="/imgwii/logo_full.webp" />
-                </div>
-              </div>
+              <h2 class="ng-card-title"><i class="fa-solid fa-images"></i> Fotografías & Logotipos Oficiales</h2>
+              <p class="ng-card-desc">Imágenes institucionales en alta resolución con previsualización en vivo.</p>
             </div>
           </div>
 
-          <div class="ng-grid-2 sn-mt-10">
-            <div class="ng-field span-2">
-              <label class="ng-label" for="ngInputEspecialista">Nombre de la Especialista *</label>
-              <input type="text" id="ngInputEspecialista" class="ng-input" placeholder="Lic. Sofia Reynaga Pachas" required />
+          <!-- Cuadrícula interna: Foto Especialista (Izquierda) + Logos Oficial y Full (Derecha) -->
+          <div class="ng-media-2col-grid">
+            
+            <!-- 1. Foto Especialista Grande -->
+            <div class="ng-photo-box ng-photo-box-hero">
+              <div class="ng-photo-avatar-wrap">
+                <img id="ngImgHeroPreview" src={iden.imagenSede || n.fotoEspecialista || ""} alt="Foto Especialista" class="ng-thumb-specialist-lg" />
+              </div>
+              <div class="ng-photo-box-title">
+                <i class="fa-solid fa-camera"></i>
+                <span>Foto Especialista</span>
+              </div>
+              <div class="ng-input-url-group">
+                <input type="text" id="ngInputImagenSede" class="ng-input ng-input-url" placeholder={iden.imagenSede || n.fotoEspecialista || ""} />
+                <a id="btnLinkHero" href={iden.imagenSede || n.fotoEspecialista || "#"} target="_blank" class="ng-btn-icon-link" title="Abrir imagen en nueva pestaña">
+                  <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- 2. Columna Derecha: Stack de Logo Oficial y Logo Full -->
+            <div class="ng-media-right-stack">
+              
+              <!-- Mini-tarjeta: Logo Oficial Circular -->
+              <div class="ng-photo-box">
+                <div class="ng-photo-avatar-wrap">
+                  <img id="ngImgLogoPreview" src={iden.logo || n.logo || ""} alt="Logo Oficial" class="ng-thumb-circle-lg" />
+                </div>
+                <div class="ng-photo-box-title">
+                  <i class="fa-solid fa-shield-halved"></i>
+                  <span>Logo Oficial</span>
+                </div>
+                <div class="ng-input-url-group">
+                  <input type="text" id="ngInputLogo" class="ng-input ng-input-url" placeholder={iden.logo || n.logo || ""} />
+                  <a id="btnLinkLogo" href={iden.logo || n.logo || "#"} target="_blank" class="ng-btn-icon-link" title="Abrir imagen en nueva pestaña">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </a>
+                </div>
+              </div>
+
+              <!-- Mini-tarjeta: Logo Full Horizontal -->
+              <div class="ng-photo-box">
+                <div class="ng-photo-avatar-wrap">
+                  <img id="ngImgLogoFullPreview" src={iden.logoFull || n.logoFull || ""} alt="Logo Full" class="ng-thumb-full-lg" />
+                </div>
+                <div class="ng-photo-box-title">
+                  <i class="fa-solid fa-gem"></i>
+                  <span>Logo Full</span>
+                </div>
+                <div class="ng-input-url-group">
+                  <input type="text" id="ngInputLogoFull" class="ng-input ng-input-url" placeholder={iden.logoFull || n.logoFull || ""} />
+                  <a id="btnLinkLogoFull" href={iden.logoFull || n.logoFull || "#"} target="_blank" class="ng-btn-icon-link" title="Abrir imagen en nueva pestaña">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </a>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Columna Derecha (Width 40%): Identidad Comercial & Legal con espaciado amigable -->
+        <div class="ng-card">
+          <div class="ng-card-header">
+            <div>
+              <h2 class="ng-card-title"><i class="fa-solid fa-id-card"></i> Identidad Comercial & Legal</h2>
+              <p class="ng-card-desc">Datos oficiales de registro y titularidad profesional.</p>
+            </div>
+          </div>
+
+          <div class="ng-grid-1 ng-gap-comfortable">
+            <div class="ng-field">
+              <label class="ng-label" for="ngInputNombre">Nombre Oficial / Razón Social *</label>
+              <input type="text" id="ngInputNombre" class="ng-input" placeholder={idenNombreEs || n.nombre || ""} required />
             </div>
 
             <div class="ng-field">
-              <label class="ng-label" for="ngInputColegiatura">Colegiatura Oficial *</label>
-              <input type="text" id="ngInputColegiatura" class="ng-input" placeholder="C.Ps.P. N° 49425" required />
+              <label class="ng-label" for="ngInputNombreCorto">Nombre Corto / Marca Comercial</label>
+              <input type="text" id="ngInputNombreCorto" class="ng-input" placeholder={idenNombreCortoEs || n.nombreCorto || ""} />
             </div>
 
             <div class="ng-field">
-              <label class="ng-label" for="ngInputLanzamiento">Fecha de Fundación / Despegue</label>
-              <input type="date" id="ngInputLanzamiento" class="ng-input" value="2020-03-15" />
+              <label class="ng-label" for="ngInputEspecialista">Nombre del Especialista / Titular *</label>
+              <input type="text" id="ngInputEspecialista" class="ng-input" placeholder={n.especialista || ""} required />
             </div>
 
             <div class="ng-field">
-              <label class="ng-label" for="ngInputTitulo">Título Universitario</label>
-              <input type="text" id="ngInputTitulo" class="ng-input" placeholder="Licenciada en Psicología" />
+              <label class="ng-label" for="ngInputColegiatura">Colegiatura C.Ps.P.</label>
+              <input type="text" id="ngInputColegiatura" class="ng-input" placeholder={iden.colegiatura || "49425"} />
             </div>
 
             <div class="ng-field">
-              <label class="ng-label" for="ngInputGrado">Grado / Posgrado</label>
-              <input type="text" id="ngInputGrado" class="ng-input" placeholder="Maestrista en Psicología Clínica" />
+              <label class="ng-label" for="ngInputTitulo">Título Profesional</label>
+              <input type="text" id="ngInputTitulo" class="ng-input" placeholder={idenTituloEs || ""} />
+            </div>
+
+            <div class="ng-field">
+              <label class="ng-label" for="ngInputGrado">Grado / Acreditación</label>
+              <input type="text" id="ngInputGrado" class="ng-input" placeholder={idenGradoEs || ""} />
             </div>
           </div>
         </div>
 
-        <!-- 2. CANALES DIRECTOS DE CONTACTO & HORARIOS -->
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- PESTAÑA 2: 📞 REDES & CONTACTO (LAYOUT PRO 60% / 40%)       -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ng-tab-pane" id="ng-tab-contacto">
+      <div class="ng-grid-redes-contacto">
+        
+        <!-- Columna Izquierda (Width 60%): Redes Sociales Oficiales con Agregar Red y Acciones Pro -->
         <div class="ng-card">
           <div class="ng-card-header">
             <div>
-              <h2 class="ng-card-title"><i class="fa-solid fa-headset"></i> Canales de Contacto Directo</h2>
-              <p class="ng-card-desc">Líneas telefónicas, WhatsApp y horarios de operación.</p>
+              <h2 class="ng-card-title"><i class="fa-solid fa-share-nodes"></i> Enlaces y Redes Oficiales</h2>
+              <p class="ng-card-desc">Arrastra o usa las flechas para ordenar. Solo los canales activos saldrán en la web.</p>
+            </div>
+            
+            <!-- Barra de Agregar Red Social Dinámica -->
+            <div class="ng-add-red-toolbar">
+              <select id="ngSelectAgregarRed" class="ng-select-add-red">
+                <option value="" disabled selected>+ Agregar red social...</option>
+              </select>
+              <a href="/redes" target="_blank" rel="noopener noreferrer" class="ps-btn ps-btn-secondary ng-btn-sm" id="btnVerRedesPublico" title="Abrir página pública de enlaces y redes (/redes)">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Links redes
+              </a>
             </div>
           </div>
 
-          <div class="ng-grid-2">
+          <div class="ng-redes-list-wrap" id="ngListaRedesOrdenables">
+            
+            <!-- 1. LinkedIn -->
+            <div class="ng-red-row" data-red-id="linkedin" draggable="true">
+              <div class="ng-red-row-header">
+                <div class="ng-red-row-title-wrap">
+                  <span class="ng-red-drag-handle" title="Arrastrar para reordenar"><i class="fa-solid fa-grip-vertical"></i></span>
+                  <span class="ng-red-name">
+                    <i class="fa-brands fa-linkedin" style="color: #0a66c2;"></i> LinkedIn
+                  </span>
+                  <span class="ng-red-badge" data-badge-red="linkedin">Comprobando...</span>
+                  <span class="ng-red-formato-hint">https://linkedin.com/in/usuario</span>
+                </div>
+                <div class="ng-red-move-actions">
+                  <button type="button" class="ng-btn-move" data-dir="up" title="Subir"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="ng-btn-move" data-dir="down" title="Bajar"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+              </div>
+              <div class="ng-input-url-test-wrap">
+                <input type="text" id="ngInputRedLinkedin" class="ng-input ng-input-red-url" placeholder="https://linkedin.com/in/usuario" />
+                <div class="ng-red-actions-group">
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" data-red-id="linkedin" title="Probar enlace actual">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-portal-red" data-red-id="linkedin" title="Abrir portal oficial para copiar usuario">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-quitar-red" data-red-id="linkedin" title="Quitar de la lista activa">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2. Web Oficial -->
+            <div class="ng-red-row" data-red-id="web" draggable="true">
+              <div class="ng-red-row-header">
+                <div class="ng-red-row-title-wrap">
+                  <span class="ng-red-drag-handle" title="Arrastrar para reordenar"><i class="fa-solid fa-grip-vertical"></i></span>
+                  <span class="ng-red-name">
+                    <i class="fa-solid fa-globe" style="color: #00a2ed;"></i> Web Oficial
+                  </span>
+                  <span class="ng-red-badge" data-badge-red="web">Comprobando...</span>
+                  <span class="ng-red-formato-hint">https://tudominio.com</span>
+                </div>
+                <div class="ng-red-move-actions">
+                  <button type="button" class="ng-btn-move" data-dir="up" title="Subir"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="ng-btn-move" data-dir="down" title="Bajar"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+              </div>
+              <div class="ng-input-url-test-wrap">
+                <input type="text" id="ngInputRedWeb" class="ng-input ng-input-red-url" placeholder="https://tuweb.com" />
+                <div class="ng-red-actions-group">
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" data-red-id="web" title="Probar enlace actual">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-portal-red" data-red-id="web" title="Abrir portal oficial para verificar dominio">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-quitar-red" data-red-id="web" title="Quitar de la lista activa">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3. WhatsApp -->
+            <div class="ng-red-row" data-red-id="whatsapp" draggable="true">
+              <div class="ng-red-row-header">
+                <div class="ng-red-row-title-wrap">
+                  <span class="ng-red-drag-handle" title="Arrastrar para reordenar"><i class="fa-solid fa-grip-vertical"></i></span>
+                  <span class="ng-red-name">
+                    <i class="fa-brands fa-whatsapp" style="color: #25d366;"></i> WhatsApp
+                  </span>
+                  <span class="ng-red-badge" data-badge-red="whatsapp">Comprobando...</span>
+                  <span class="ng-red-formato-hint">https://wa.me/... o canal</span>
+                </div>
+                <div class="ng-red-move-actions">
+                  <button type="button" class="ng-btn-move" data-dir="up" title="Subir"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="ng-btn-move" data-dir="down" title="Bajar"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+              </div>
+              <div class="ng-input-url-test-wrap">
+                <input type="text" id="ngInputRedCanalWhatsapp" class="ng-input ng-input-red-url" placeholder="https://whatsapp.com/channel/... o https://wa.me/..." />
+                <div class="ng-red-actions-group">
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" data-red-id="whatsapp" title="Probar enlace actual">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-portal-red" data-red-id="whatsapp" title="Abrir WhatsApp Web">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-quitar-red" data-red-id="whatsapp" title="Quitar de la lista activa">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4. Instagram -->
+            <div class="ng-red-row" data-red-id="instagram" draggable="true">
+              <div class="ng-red-row-header">
+                <div class="ng-red-row-title-wrap">
+                  <span class="ng-red-drag-handle" title="Arrastrar para reordenar"><i class="fa-solid fa-grip-vertical"></i></span>
+                  <span class="ng-red-name">
+                    <i class="fa-brands fa-instagram" style="color: #e1306c;"></i> Instagram
+                  </span>
+                  <span class="ng-red-badge" data-badge-red="instagram">Comprobando...</span>
+                  <span class="ng-red-formato-hint">https://instagram.com/usuario</span>
+                </div>
+                <div class="ng-red-move-actions">
+                  <button type="button" class="ng-btn-move" data-dir="up" title="Subir"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="ng-btn-move" data-dir="down" title="Bajar"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+              </div>
+              <div class="ng-input-url-test-wrap">
+                <input type="text" id="ngInputRedInstagram" class="ng-input ng-input-red-url" placeholder="https://instagram.com/usuario" />
+                <div class="ng-red-actions-group">
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" data-red-id="instagram" title="Probar enlace actual">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-portal-red" data-red-id="instagram" title="Abrir Instagram">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-quitar-red" data-red-id="instagram" title="Quitar de la lista activa">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 5. Facebook -->
+            <div class="ng-red-row" data-red-id="facebook" draggable="true">
+              <div class="ng-red-row-header">
+                <div class="ng-red-row-title-wrap">
+                  <span class="ng-red-drag-handle" title="Arrastrar para reordenar"><i class="fa-solid fa-grip-vertical"></i></span>
+                  <span class="ng-red-name">
+                    <i class="fa-brands fa-facebook-f" style="color: #1877f2;"></i> Facebook
+                  </span>
+                  <span class="ng-red-badge" data-badge-red="facebook">Comprobando...</span>
+                  <span class="ng-red-formato-hint">https://facebook.com/pagina</span>
+                </div>
+                <div class="ng-red-move-actions">
+                  <button type="button" class="ng-btn-move" data-dir="up" title="Subir"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="ng-btn-move" data-dir="down" title="Bajar"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+              </div>
+              <div class="ng-input-url-test-wrap">
+                <input type="text" id="ngInputRedFacebook" class="ng-input ng-input-red-url" placeholder="https://facebook.com/pagina" />
+                <div class="ng-red-actions-group">
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" data-red-id="facebook" title="Probar enlace actual">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-portal-red" data-red-id="facebook" title="Abrir Facebook">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-quitar-red" data-red-id="facebook" title="Quitar de la lista activa">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 6. TikTok -->
+            <div class="ng-red-row" data-red-id="tiktok" draggable="true">
+              <div class="ng-red-row-header">
+                <div class="ng-red-row-title-wrap">
+                  <span class="ng-red-drag-handle" title="Arrastrar para reordenar"><i class="fa-solid fa-grip-vertical"></i></span>
+                  <span class="ng-red-name">
+                    <i class="fa-brands fa-tiktok" style="color: #ffffff;"></i> TikTok
+                  </span>
+                  <span class="ng-red-badge" data-badge-red="tiktok">Comprobando...</span>
+                  <span class="ng-red-formato-hint">https://tiktok.com/@usuario</span>
+                </div>
+                <div class="ng-red-move-actions">
+                  <button type="button" class="ng-btn-move" data-dir="up" title="Subir"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="ng-btn-move" data-dir="down" title="Bajar"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+              </div>
+              <div class="ng-input-url-test-wrap">
+                <input type="text" id="ngInputRedTiktok" class="ng-input ng-input-red-url" placeholder="https://tiktok.com/@usuario" />
+                <div class="ng-red-actions-group">
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" data-red-id="tiktok" title="Probar enlace actual">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-portal-red" data-red-id="tiktok" title="Abrir TikTok">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-quitar-red" data-red-id="tiktok" title="Quitar de la lista activa">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 7. YouTube -->
+            <div class="ng-red-row" data-red-id="youtube" draggable="true">
+              <div class="ng-red-row-header">
+                <div class="ng-red-row-title-wrap">
+                  <span class="ng-red-drag-handle" title="Arrastrar para reordenar"><i class="fa-solid fa-grip-vertical"></i></span>
+                  <span class="ng-red-name">
+                    <i class="fa-brands fa-youtube" style="color: #ff0000;"></i> YouTube
+                  </span>
+                  <span class="ng-red-badge" data-badge-red="youtube">Comprobando...</span>
+                  <span class="ng-red-formato-hint">https://youtube.com/@canal</span>
+                </div>
+                <div class="ng-red-move-actions">
+                  <button type="button" class="ng-btn-move" data-dir="up" title="Subir"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="ng-btn-move" data-dir="down" title="Bajar"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+              </div>
+              <div class="ng-input-url-test-wrap">
+                <input type="text" id="ngInputRedYoutube" class="ng-input ng-input-red-url" placeholder="https://youtube.com/@usuario" />
+                <div class="ng-red-actions-group">
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" data-red-id="youtube" title="Probar enlace actual">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-portal-red" data-red-id="youtube" title="Abrir YouTube">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-quitar-red" data-red-id="youtube" title="Quitar de la lista activa">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- 8. X / Twitter -->
+            <div class="ng-red-row" data-red-id="twitter" draggable="true">
+              <div class="ng-red-row-header">
+                <div class="ng-red-row-title-wrap">
+                  <span class="ng-red-drag-handle" title="Arrastrar para reordenar"><i class="fa-solid fa-grip-vertical"></i></span>
+                  <span class="ng-red-name">
+                    <i class="fa-brands fa-x-twitter" style="color: #e2e8f0;"></i> X (Twitter)
+                  </span>
+                  <span class="ng-red-badge" data-badge-red="twitter">Comprobando...</span>
+                  <span class="ng-red-formato-hint">https://x.com/usuario</span>
+                </div>
+                <div class="ng-red-move-actions">
+                  <button type="button" class="ng-btn-move" data-dir="up" title="Subir"><i class="fa-solid fa-chevron-up"></i></button>
+                  <button type="button" class="ng-btn-move" data-dir="down" title="Bajar"><i class="fa-solid fa-chevron-down"></i></button>
+                </div>
+              </div>
+              <div class="ng-input-url-test-wrap">
+                <input type="text" id="ngInputRedTwitter" class="ng-input ng-input-red-url" placeholder="https://x.com/usuario" />
+                <div class="ng-red-actions-group">
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" data-red-id="twitter" title="Probar enlace actual">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-portal-red" data-red-id="twitter" title="Abrir X (Twitter)">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                  <button type="button" class="ng-btn-red-action ng-btn-quitar-red" data-red-id="twitter" title="Quitar de la lista activa">
+                    <i class="fa-solid fa-trash-can"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Columna Derecha (Width 40%): Canales de Atención Directa en 1 sola columna -->
+        <div class="ng-card">
+          <div class="ng-card-header">
+            <div>
+              <h2 class="ng-card-title"><i class="fa-solid fa-headset"></i> Canales de Atención Directa</h2>
+              <p class="ng-card-desc">Líneas telefónicas, WhatsApp de atención y correo corporativo.</p>
+            </div>
+          </div>
+
+          <div class="ng-grid-1 ng-gap-comfortable">
+            <!-- 1. País de Operación -->
+            <div class="ng-field">
+              <label class="ng-label" for="ngSelectPais">
+                <span>País de Operación</span>
+                <span class="ng-label-hint" id="hintPaisCodigo">{cont.paisCode ? `+${cont.paisCode}` : ''}</span>
+              </label>
+              <select id="ngSelectPais" class="ng-input ng-select">
+                <option value="PE" data-code="51" selected>🇵🇪 Perú (+51)</option>
+                <option value="US" data-code="1">🇺🇸 Estados Unidos (+1)</option>
+                <option value="CL" data-code="56">🇨🇱 Chile (+56)</option>
+                <option value="CO" data-code="57">🇨🇴 Colombia (+57)</option>
+                <option value="MX" data-code="52">🇲🇽 México (+52)</option>
+                <option value="ES" data-code="34">🇪🇸 España (+34)</option>
+                <option value="AR" data-code="54">🇦🇷 Argentina (+54)</option>
+                <option value="EC" data-code="593">🇪🇨 Ecuador (+593)</option>
+                <option value="BO" data-code="591">🇧🇴 Bolivia (+591)</option>
+              </select>
+            </div>
+
+            <!-- 2. Correo Electrónico Oficial -->
+            <div class="ng-field">
+              <label class="ng-label" for="ngInputEmail">Correo Electrónico Oficial</label>
+              <input type="email" id="ngInputEmail" class="ng-input" placeholder={cont.email || n.email || ""} />
+            </div>
+
+            <!-- 3. Celular Principal -->
             <div class="ng-field">
               <label class="ng-label" for="ngInputTelefono">
-                <span>Teléfono Visible</span>
-                <span class="ng-label-hint" id="hintTelefonoFormato">+51 960 332 958</span>
+                <span>Celular Principal</span>
+                <span class="ng-label-hint" id="hintTelefonoFormato">{cont.celular || cont.telefono || n.celular || ''}</span>
               </label>
-              <input type="tel" id="ngInputTelefono" class="ng-input" placeholder="+51 960 332 958" />
+              <input type="tel" id="ngInputTelefono" class="ng-input" placeholder={cont.celular || cont.telefono || n.celular || ""} />
             </div>
 
+            <!-- 4. Celular Secundario -->
+            <div class="ng-field">
+              <label class="ng-label" for="ngInputTelefonoSecundario">
+                <span>Celular Secundario</span>
+                <span class="ng-label-hint">Línea de respaldo o guardia</span>
+              </label>
+              <input type="tel" id="ngInputTelefonoSecundario" class="ng-input" placeholder={cont.celularSecundario || cont.telefonoSecundario || ""} />
+            </div>
+
+            <!-- 5. Teléfono Fijo -->
+            <div class="ng-field">
+              <label class="ng-label" for="ngInputTelefonoFijo">
+                <span>Teléfono Fijo</span>
+                <span class="ng-label-hint">Línea de oficina / sede</span>
+              </label>
+              <input type="tel" id="ngInputTelefonoFijo" class="ng-input" placeholder={cont.telefonoFijo || ""} />
+            </div>
+
+            <!-- 6. WhatsApp API (Para Enlaces) -->
             <div class="ng-field">
               <label class="ng-label" for="ngInputWhatsapp">
-                <span>WhatsApp API (Sin +)</span>
-                <span class="ng-label-hint" id="hintWhatsappFormato">51960332958</span>
+                <span>WhatsApp API (Para Enlaces)</span>
+                <span class="ng-label-hint" id="hintWhatsappFormato">{cont.whatsapp || n.whatsapp || ''}</span>
               </label>
-              <input type="tel" id="ngInputWhatsapp" class="ng-input" placeholder="51960332958" />
-            </div>
-
-            <div class="ng-field span-2">
-              <label class="ng-label" for="ngInputEmail">Correo Electrónico Oficial</label>
-              <input type="email" id="ngInputEmail" class="ng-input" placeholder="reynaga.psychologist@gmail.com" />
-            </div>
-
-            <!-- Horarios Numéricos -->
-            <div class="ng-field">
-              <label class="ng-label">Lunes a Viernes</label>
-              <div class="ng-input-group-horario">
-                <input type="time" id="ngHorarioSemanaAbre" class="ng-input" value="08:00" />
-                <span>a</span>
-                <input type="time" id="ngHorarioSemanaCierra" class="ng-input" value="20:00" />
-              </div>
-            </div>
-
-            <div class="ng-field">
-              <label class="ng-label">Sábados</label>
-              <div class="ng-input-group-horario">
-                <input type="time" id="ngHorarioSabadoAbre" class="ng-input" value="08:00" />
-                <span>a</span>
-                <input type="time" id="ngHorarioSabadoCierra" class="ng-input" value="20:00" />
-              </div>
+              <input type="tel" id="ngInputWhatsapp" class="ng-input" placeholder={cont.whatsapp || n.whatsapp || ""} />
             </div>
           </div>
         </div>
 
-        <!-- 3. UBICACIÓN FÍSICA OFICIAL & GOOGLE MAPS -->
+      </div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- PESTAÑA 3: 📍 SEDE, MODALIDAD & HORARIOS                   -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ng-tab-pane" id="ng-tab-sede">
+      <div class="ng-grid-2-equal">
+        
+        <!-- Ubicación Física & Google Maps -->
         <div class="ng-card">
           <div class="ng-card-header">
             <div>
-              <h2 class="ng-card-title"><i class="fa-solid fa-map-location-dot"></i> Ubicación Principal (Villa El Salvador)</h2>
-              <p class="ng-card-desc">Sede clínica física principal y coordenadas oficiales.</p>
+              <h2 class="ng-card-title"><i class="fa-solid fa-map-location-dot"></i> Ubicación Principal & Google Maps</h2>
+              <p class="ng-card-desc">Sede física de atención, puntos de encuentro y coordenadas.</p>
             </div>
           </div>
 
           <div class="ng-grid-2">
             <div class="ng-field span-2">
               <label class="ng-label" for="ngInputDireccion">Dirección Física Completa</label>
-              <input type="text" id="ngInputDireccion" class="ng-input" placeholder="Av. 3 de Octubre con Micaela Bastidas - RUTA B / Sector 3, Grupo 26, Lote comercial 7" />
+              <input type="text" id="ngInputDireccion" class="ng-input" placeholder={ubi.direccion || ""} />
             </div>
 
             <div class="ng-field span-2">
               <label class="ng-label" for="ngInputReferencia">Referencia / Punto de Encuentro</label>
-              <input type="text" id="ngInputReferencia" class="ng-input" placeholder="Frente a Paradero 3 de Octubre" />
+              <input type="text" id="ngInputReferencia" class="ng-input" placeholder={ubi.referencia || ""} />
             </div>
 
             <div class="ng-field">
               <label class="ng-label" for="ngInputDistrito">Distrito</label>
-              <input type="text" id="ngInputDistrito" class="ng-input" placeholder="Villa El Salvador" />
+              <input type="text" id="ngInputDistrito" class="ng-input" placeholder={ubi.distrito || ""} />
             </div>
 
             <div class="ng-field">
               <label class="ng-label" for="ngInputCiudad">Ciudad y País</label>
-              <input type="text" id="ngInputCiudad" class="ng-input" placeholder="Lima, PE" />
+              <input type="text" id="ngInputCiudad" class="ng-input" placeholder={ubi.ciudad ? `${ubi.ciudad}${ubi.pais ? ', ' + ubi.pais : ''}` : ""} />
             </div>
 
             <div class="ng-field span-2">
@@ -200,7 +625,7 @@ const n = datosNegocio;
                 <span>Enlace Compartido Google Maps</span>
               </label>
               <div class="ng-input-group-maps">
-                <input type="url" id="ngInputMapsUrl" class="ng-input" placeholder="https://maps.app.goo.gl/g7MFEUi8B6xpSjpn8" />
+                <input type="url" id="ngInputMapsUrl" class="ng-input" placeholder={ubi.mapsUrl || ""} />
                 <button type="button" class="ng-btn-maps-action ng-btn-maps-test" id="btnProbarMapsUrl" title="Probar enlace actual">
                   <i class="fa-solid fa-circle-play"></i> Probar
                 </button>
@@ -212,71 +637,178 @@ const n = datosNegocio;
 
             <div class="ng-field">
               <label class="ng-label" for="ngInputLat">Latitud</label>
-              <input type="number" step="any" id="ngInputLat" class="ng-input" placeholder="-12.2084" />
+              <input type="number" step="any" id="ngInputLat" class="ng-input" placeholder={ubi.coordenadas?.lat != null ? String(ubi.coordenadas.lat) : ""} />
             </div>
 
             <div class="ng-field">
               <label class="ng-label" for="ngInputLng">Longitud</label>
-              <input type="number" step="any" id="ngInputLng" class="ng-input" placeholder="-76.9387" />
+              <input type="number" step="any" id="ngInputLng" class="ng-input" placeholder={ubi.coordenadas?.lng != null ? String(ubi.coordenadas.lng) : ""} />
             </div>
           </div>
         </div>
 
-        <!-- 4. MÉTRICAS DE CONFIANZA & REDES SOCIALES -->
+        <!-- Horarios de Operación y Modalidades -->
         <div class="ng-card">
           <div class="ng-card-header">
             <div>
-              <h2 class="ng-card-title"><i class="fa-solid fa-chart-line"></i> Métricas & Redes Sociales</h2>
-              <p class="ng-card-desc">Cifras de impacto y perfiles sociales oficiales.</p>
+              <h2 class="ng-card-title"><i class="fa-solid fa-clock"></i> Horarios de Atención</h2>
+              <p class="ng-card-desc">Rangos de disponibilidad semanal y fin de semana.</p>
             </div>
           </div>
 
-          <div class="ng-grid-3">
+          <div class="ng-grid-1">
             <div class="ng-field">
-              <label class="ng-label" for="ngInputMetricaPacientes">Pacientes</label>
-              <input type="text" id="ngInputMetricaPacientes" class="ng-input" placeholder="450+" />
+              <label class="ng-label">
+                <span>Lunes a Viernes</span>
+                <span class="ng-label-hint">Días laborales</span>
+              </label>
+              <div class="ng-input-group-horario">
+                <input type="time" id="ngHorarioSemanaAbre" value={hor.semana?.abre || ""} />
+                <span>a</span>
+                <input type="time" id="ngHorarioSemanaCierra" value={hor.semana?.cierra || ""} />
+              </div>
             </div>
 
             <div class="ng-field">
-              <label class="ng-label" for="ngInputMetricaSatisfaccion">Satisfacción</label>
-              <input type="text" id="ngInputMetricaSatisfaccion" class="ng-input" placeholder="98%" />
-            </div>
-
-            <div class="ng-field">
-              <label class="ng-label" for="ngInputMetricaConfidencialidad">Confidencial</label>
-              <input type="text" id="ngInputMetricaConfidencialidad" class="ng-input" placeholder="100%" />
-            </div>
-          </div>
-
-          <div class="ng-grid-2 sn-mt-10">
-            <div class="ng-field">
-              <label class="ng-label" for="ngInputRedInstagram"><i class="fa-brands fa-instagram"></i> Instagram</label>
-              <input type="url" id="ngInputRedInstagram" class="ng-input" placeholder="https://instagram.com/psicologiaamerica" />
-            </div>
-
-            <div class="ng-field">
-              <label class="ng-label" for="ngInputRedFacebook"><i class="fa-brands fa-facebook"></i> Facebook</label>
-              <input type="url" id="ngInputRedFacebook" class="ng-input" placeholder="https://facebook.com/psicologiaamerica" />
-            </div>
-
-            <div class="ng-field">
-              <label class="ng-label" for="ngInputRedTiktok"><i class="fa-brands fa-tiktok"></i> TikTok</label>
-              <input type="url" id="ngInputRedTiktok" class="ng-input" placeholder="https://tiktok.com/@psicologiaamerica" />
-            </div>
-
-            <div class="ng-field">
-              <label class="ng-label" for="ngInputRedLinkedin"><i class="fa-brands fa-linkedin"></i> LinkedIn</label>
-              <input type="url" id="ngInputRedLinkedin" class="ng-input" placeholder="https://linkedin.com/in/sofia-reynaga" />
+              <label class="ng-label">
+                <span>Sábados</span>
+                <span class="ng-label-hint">Medio día</span>
+              </label>
+              <div class="ng-input-group-horario">
+                <input type="time" id="ngHorarioSabadoAbre" value={hor.sabado?.abre || ""} />
+                <span>a</span>
+                <input type="time" id="ngHorarioSabadoCierra" value={hor.sabado?.cierra || ""} />
+              </div>
             </div>
           </div>
         </div>
 
       </div>
+    </div>
 
-      <!-- ── COLUMNA DERECHA: FICHA BILINGÜE (ESPAÑOL | ENGLISH) ── -->
-      <div class="ng-col-traducciones">
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- PESTAÑA: 🛵 ZONAS & COBERTURA DE REPARTO                   -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ng-tab-pane" id="ng-tab-zonas">
+      <div class="ng-grid-zonas-layout">
         
-        <!-- Pestañas de Idioma Superiores -->
+        <!-- Columna Izquierda (60%): Lista Dinámica de Distritos -->
+        <div class="ng-card">
+          <div class="ng-card-header ng-card-header-flex">
+            <div>
+              <h2 class="ng-card-title"><i class="fa-solid fa-map-location-dot"></i> Distritos & Tiempos de Cobertura</h2>
+              <p class="ng-card-desc">Personaliza los distritos atendidos y sus tiempos estimados de despacho desde la sede central.</p>
+            </div>
+            <button type="button" class="ng-btn-add-zona" id="btnAgregarZona">
+              <i class="fa-solid fa-plus"></i> Añadir Distrito
+            </button>
+          </div>
+
+          <!-- Contenedor Dinámico de Distritos -->
+          <div class="ng-zonas-lista" id="ngListaZonas">
+            {zonas.map((z: any, idx: number) => {
+              const uni = z.unidad || 'min';
+              return (
+                <div class="ng-zona-card" data-zona-idx={idx} data-zona-id={z.id || `zona-${idx}`}>
+                  <div class="ng-zona-card-header">
+                    <div class="ng-zona-title-wrap">
+                      <span class="ng-zona-bullet"><i class="fa-solid fa-location-dot"></i></span>
+                      <strong class="ng-zona-name-preview">{z.distrito || 'Nuevo Distrito'}</strong>
+                    </div>
+                    <div class="ng-zona-header-actions">
+                      <label class="ng-switch-wrap" title="Activar/Desactivar cobertura en este distrito">
+                        <input type="checkbox" class="ng-zona-activo" checked={z.activo !== false} />
+                        <span class="ng-switch-slider"></span>
+                      </label>
+                      <button type="button" class="ng-btn-eliminar-zona" title="Eliminar este distrito">
+                        <i class="fa-solid fa-trash-can"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="ng-grid-zona-inputs">
+                    <div class="ng-field">
+                      <label class="ng-label">Nombre del Distrito</label>
+                      <input type="text" class="ng-input ng-zona-distrito" value={z.distrito || ''} placeholder="Ej: Distrito" />
+                    </div>
+
+                    <div class="ng-field">
+                      <label class="ng-label">Unidad de Tiempo</label>
+                      <select class="ng-input ng-select ng-zona-unidad">
+                        <option value="min" selected={uni === 'min'}>min (Minutos)</option>
+                        <option value="hrs" selected={uni === 'hrs' || uni === 'horas'}>hrs (Horas)</option>
+                        <option value="dias" selected={uni === 'dias' || uni === 'días'}>días (Días)</option>
+                      </select>
+                    </div>
+
+                    <div class="ng-field">
+                      <label class="ng-label">Tiempo Mínimo</label>
+                      <input type="number" min="1" max="180" class="ng-input ng-zona-min" value={z.tiempoMin ?? 8} placeholder="8" />
+                    </div>
+
+                    <div class="ng-field">
+                      <label class="ng-label">Tiempo Máximo</label>
+                      <input type="number" min="1" max="180" class="ng-input ng-zona-max" value={z.tiempoMax ?? 18} placeholder="18" />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <!-- Columna Derecha (40%): Live Preview Sticky de la Web Pública -->
+        <div class="ng-card ng-card-sticky-preview">
+          <div class="ng-card-header">
+            <div>
+              <h3 class="ng-card-title"><i class="fa-solid fa-eye"></i> Vista Previa en Vivo</h3>
+              <p class="ng-card-desc">Así lo verán tus clientes en el Hero y en el modal de pedidos.</p>
+            </div>
+            <div class="ng-preview-pill"><i class="fa-solid fa-bolt"></i> 0 ms Live</div>
+          </div>
+
+          <div class="ng-zona-preview-box">
+            <div class="ng-zona-preview-hero-mock">
+              <div class="ng-mock-title"><i class="fa-solid fa-location-dot"></i> Zonas de Cobertura y Atención Clínica:</div>
+              <div class="ng-mock-chips-grid" id="ngMockZonasChips">
+                <!-- Se sincroniza en tiempo real con los inputs -->
+              </div>
+              <div class="ng-mock-footer">
+                <i class="fa-solid fa-hospital-user color-primary"></i>
+                <span id="ngMockEtaInfo">Atención desde sede central: <strong>Villa El Salvador</strong></span>
+              </div>
+            </div>
+
+            <div class="ng-zona-preview-tip">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Al presionar <strong>Guardar Cambios</strong>, la cobertura se actualiza en <strong>0 ms</strong> en la web y se sincroniza en Firestore.</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- 🌐 SECCIÓN LIBRE INFERIOR: TEXTOS BILINGÜES & SEO           -->
+    <!-- ORDEN: 1. SEO  2. PRESENTACIÓN  3. SEDES & MODALIDADES      -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="ng-section-bilingue-wrap" id="ngSeccionBilingue">
+      
+      <!-- Cabecera de la Sección Bilingüe con Switcher Pro -->
+      <div class="ng-section-bilingue-header">
+        <div class="ng-section-bilingue-title-wrap">
+          <h2 class="ng-section-bilingue-title">
+            <i class="fa-solid fa-language"></i> Textos Bilingües & Optimización SEO
+          </h2>
+          <p class="ng-section-bilingue-sub">
+            Posicionamiento en Google, redacción comercial oficial y sedes por idioma.
+          </p>
+        </div>
+
+        <!-- Selector de Idioma Bilingüe Cápsula (Estilo Imagen 5) -->
         <div class="ng-lang-tabs" id="ngLangTabs">
           <button type="button" class="ng-lang-tab-btn active" data-target="ng-pane-es">
             <i class="fa-solid fa-language"></i> Español [ES]
@@ -285,227 +817,643 @@ const n = datosNegocio;
             <i class="fa-solid fa-globe"></i> English [EN]
           </button>
         </div>
+      </div>
 
-        <!-- ═════════ PANEL ESPAÑOL [ES] ═════════ -->
-        <div class="ng-lang-pane active" id="ng-pane-es">
-          
-          <!-- Identidad Comercial (ES) -->
-          <div class="ng-card">
-            <div class="ng-card-header">
-              <h2 class="ng-card-title"><i class="fa-solid fa-signature"></i> Identidad y Textos Oficiales (ES)</h2>
+      <!-- ────── PANEL ESPAÑOL [ES] ────── -->
+      <div class="ng-lang-pane active" id="ng-pane-es">
+        
+        <!-- 1. Posicionamiento SEO para Google (PRIMERO - 55% Editor / 45% Live Google SERP Mockup) -->
+        <div class="ng-card">
+          <div class="ng-card-header">
+            <div>
+              <h3 class="ng-card-title"><i class="fa-solid fa-magnifying-glass"></i> Posicionamiento SEO & Palabras Clave (ES)</h3>
+              <p class="ng-card-desc">Metadatos de indexación orgánica para Google con previsualización en vivo del resultado SERP.</p>
             </div>
+            <div class="ng-preview-pill"><i class="fa-brands fa-google"></i> Vista Previa Google</div>
+          </div>
 
-            <div class="ng-grid-2">
+          <div class="ng-card-split">
+            <!-- Columna Izquierda: Editor (55%) -->
+            <div class="ng-split-editor">
               <div class="ng-field">
-                <label class="ng-label" for="ngInputNombre">Nombre Oficial (ES) *</label>
-                <input type="text" id="ngInputNombre" class="ng-input" placeholder="Consultorio Psicológico América" required />
+                <label class="ng-label ng-label-prominent" for="ngInputSeoTituloEs">
+                  <span>Meta Título para Google</span>
+                  <span class="ng-char-badge" id="ngSeoTituloCountEs">0 / 60</span>
+                </label>
+                <input type="text" id="ngInputSeoTituloEs" class="ng-input" placeholder={typeof seo.titulo === 'object' ? (seo.titulo?.es || "") : (seo.titulo || "")} />
               </div>
 
               <div class="ng-field">
-                <label class="ng-label" for="ngInputNombreCorto">Nombre Corto / Marca (ES)</label>
-                <input type="text" id="ngInputNombreCorto" class="ng-input" placeholder="Psicología América" />
+                <label class="ng-label ng-label-prominent" for="ngInputSeoDescEs">
+                  <span>Meta Descripción para Google</span>
+                  <span class="ng-char-badge" id="ngSeoDescCountEs">0 / 160</span>
+                </label>
+                <textarea id="ngInputSeoDescEs" class="ng-textarea" rows="3" placeholder={typeof seo.descripcion === 'object' ? (seo.descripcion?.es || "") : (seo.descripcion || "")}></textarea>
               </div>
 
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputEnfoques">Enfoques Psicoterapéuticos (ES)</label>
-                <input type="text" id="ngInputEnfoques" class="ng-input" placeholder="Terapia Cognitivo-Conductual (TCC) • Terapia de Aceptación y Compromiso (ACT) • Psicopedagogía • Sistémica" />
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputSeoKeywordsEs">
+                  <span>Palabras Clave SEO (Separadas por comas)</span>
+                  <span class="ng-label-hint">Términos de búsqueda frecuentes</span>
+                </label>
+                <textarea id="ngInputSeoKeywordsEs" class="ng-textarea" rows="2" placeholder={Array.isArray(seo.keywords?.es) ? seo.keywords.es.join(', ') : (typeof seo.keywords === 'string' ? seo.keywords : "")}></textarea>
               </div>
 
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputBioEs">Biografía Profesional / Resumen Clínico (ES)</label>
-                <textarea id="ngInputBioEs" class="ng-textarea" rows="3" placeholder="Psicóloga clínica y colegiada por el Colegio de Psicólogos del Perú (C.Ps.P. 49425)..."></textarea>
-              </div>
-
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputHorario">Horario de Atención Descriptivo (ES)</label>
-                <input type="text" id="ngInputHorario" class="ng-input" placeholder="Lunes a Sábado: 8:00 a.m. a 8:00 p.m." />
-              </div>
-
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputWhatsappMensaje">
-                  <span>Mensaje Predeterminado WhatsApp (ES)</span>
-                  <button type="button" class="ng-link-btn" id="btnRestaurarMensajeWs" title="Restaurar saludo dinámico">
-                    <i class="fa-solid fa-rotate-left"></i> Restaurar
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputSeoImgEs">
+                  <span>Imagen de Miniatura SEO (Google SERP & Redes)</span>
+                  <span class="ng-label-hint">URL de la foto representativa</span>
+                </label>
+                <div class="ng-input-url-test-wrap">
+                  <input type="text" id="ngInputSeoImgEs" class="ng-input ng-input-red-url" placeholder={fullSeoImg} value={fullSeoImg} />
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" id="btnProbarFotoSeoEs" title="Ver foto">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
                   </button>
-                </label>
-                <input type="text" id="ngInputWhatsappMensaje" class="ng-input" placeholder="¡Hola Lic. Sofia Reynaga! Deseo agendar una consulta psicológica." />
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna Derecha: Live Mockup Google SERP (45%) -->
+            <div class="ng-split-preview">
+              <div class="ng-preview-header">
+                <span>Resultado en Google (Desktop & Móvil)</span>
+                <span class="ng-preview-pill"><i class="fa-solid fa-circle-check"></i> SEO Activo</span>
+              </div>
+
+              <!-- Card Exacto Google SERP -->
+              <div class="google-serp-card" id="ngGoogleSerpCardEs">
+                <div class="google-serp-meta">
+                  <div class="google-serp-meta-left">
+                    <img src={iden.logo || "/imgwii/logo.webp"} alt="Favicon" class="google-serp-favicon" id="ngSerpFaviconEs" />
+                    <div class="google-serp-site-info">
+                      <span class="google-serp-sitename" id="ngSerpSiteNameEs">{idenNombreEs}</span>
+                      <div class="google-serp-url-row">
+                        <span id="ngSerpUrlTextEs">{canonicalEs}</span>
+                        <span class="google-serp-translate">· Translate this page</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="google-serp-dots">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                  </div>
+                </div>
+
+                <div class="google-serp-body">
+                  <div class="google-serp-text">
+                    <h3 class="google-serp-title" id="ngSerpTitleEs">
+                      {typeof seo.titulo === 'object' ? (seo.titulo?.es || n.titulo || idenNombreEs || '') : (seo.titulo || n.titulo || idenNombreEs || '')}
+                    </h3>
+                    <p class="google-serp-desc" id="ngSerpDescEs">
+                      {typeof seo.descripcion === 'object' ? (seo.descripcion?.es || n.hero?.descripcion || '') : (seo.descripcion || n.hero?.descripcion || '')}
+                    </p>
+                  </div>
+
+                  <!-- Miniatura Google SERP limpia -->
+                  <div class="google-serp-thumb-box" id="ngSerpThumbBoxEs" title="Miniatura Google SERP">
+                    <img src={seoImg} alt="Miniatura SERP" class="google-serp-thumb-img" id="ngSerpImgEs" />
+                  </div>
+                </div>
+
+                <div class="google-serp-footer">
+                  <span><i class="fa-solid fa-shield-halved"></i> Rich Snippet Verificado</span>
+                  <span>Miniatura Canónica 1200×630</span>
+                </div>
               </div>
             </div>
           </div>
-
-          <!-- Sedes & Modalidades (ES) -->
-          <div class="ng-card">
-            <div class="ng-card-header">
-              <h2 class="ng-card-title"><i class="fa-solid fa-building"></i> Sedes y Modalidades Oficiales (ES)</h2>
-            </div>
-
-            <!-- Sede 1: Villa El Salvador -->
-            <div class="ng-sede-box">
-              <div class="ng-sede-box-badge"><i class="fa-solid fa-hospital"></i> Sede Presencial</div>
-              <div class="ng-grid-2">
-                <div class="ng-field">
-                  <label class="ng-label" for="ngSedeVesTagEs">Etiqueta / Badge (ES)</label>
-                  <input type="text" id="ngSedeVesTagEs" class="ng-input" placeholder="Sede Villa El Salvador" />
-                </div>
-                <div class="ng-field">
-                  <label class="ng-label" for="ngSedeVesAtencionEs">Horario de Atención (ES)</label>
-                  <input type="text" id="ngSedeVesAtencionEs" class="ng-input" placeholder="Lunes a Sábado (Previa Cita)" />
-                </div>
-              </div>
-            </div>
-
-            <!-- Sede 2: Modalidad Virtual -->
-            <div class="ng-sede-box sn-mt-10">
-              <div class="ng-sede-box-badge online"><i class="fa-solid fa-video"></i> Modalidad Virtual</div>
-              <div class="ng-grid-2">
-                <div class="ng-field">
-                  <label class="ng-label" for="ngSedeVirtualTagEs">Etiqueta / Badge (ES)</label>
-                  <input type="text" id="ngSedeVirtualTagEs" class="ng-input" placeholder="100% Online" />
-                </div>
-                <div class="ng-field">
-                  <label class="ng-label" for="ngSedeVirtualAtencionEs">Horario de Atención (ES)</label>
-                  <input type="text" id="ngSedeVirtualAtencionEs" class="ng-input" placeholder="Horarios Flexibles" />
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- SEO Dinámico (ES) -->
-          <div class="ng-card">
-            <div class="ng-card-header">
-              <h2 class="ng-card-title"><i class="fa-solid fa-magnifying-glass"></i> Posicionamiento SEO & Palabras Clave (ES)</h2>
-            </div>
-
-            <div class="ng-grid-2">
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputSeoTituloEs">Meta Título (ES)</label>
-                <input type="text" id="ngInputSeoTituloEs" class="ng-input" placeholder="Consultorio Psicológico América | Terapia, Descarte TDAH/TEA & Talleres en Lima Sur y Online" />
-              </div>
-
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputSeoDescEs">Meta Descripción (ES)</label>
-                <textarea id="ngInputSeoDescEs" class="ng-textarea" rows="2" placeholder="Atención psicológica profesional y basada en evidencia con la Lic. Sofia Reynaga (C.Ps.P. 49425)..."></textarea>
-              </div>
-
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputSeoKeywordsEs">
-                  <span>Palabras Clave (Separadas por comas)</span>
-                </label>
-                <textarea id="ngInputSeoKeywordsEs" class="ng-textarea" rows="2" placeholder="psicologo villa el salvador, psicologo lima sur, terapia psicologica lima..."></textarea>
-              </div>
-            </div>
-          </div>
-
         </div>
 
-        <!-- ═════════ PANEL INGLÉS [EN] ═════════ -->
-        <div class="ng-lang-pane" id="ng-pane-en">
-          
-          <!-- Identidad Comercial (EN) -->
-          <div class="ng-card">
-            <div class="ng-card-header">
-              <h2 class="ng-card-title"><i class="fa-solid fa-signature"></i> Official Identity & Content (EN)</h2>
+        <!-- 2. Titular Principal H1 & Hero Web (ES) (55% Editor / 45% Live Hero Mockup) -->
+        <div class="ng-card">
+          <div class="ng-card-header">
+            <div>
+              <h3 class="ng-card-title"><i class="fa-solid fa-heading"></i> Titular Principal H1 & Hero Web (ES)</h3>
+              <p class="ng-card-desc">Configuración del titular principal H1, descripción del servicio y métricas destacadas.</p>
+            </div>
+            <div class="ng-preview-pill"><i class="fa-solid fa-eye"></i> Hero Web en Vivo</div>
+          </div>
+
+          <div class="ng-card-split">
+            <!-- Columna Izquierda: Editor (55%) -->
+            <div class="ng-split-editor">
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputHeroTituloEs">
+                  <span>Título Principal H1 para la Web</span>
+                  <span class="ng-label-hint">Encabezado principal visible en el Hero</span>
+                </label>
+                <input type="text" id="ngInputHeroTituloEs" class="ng-input font-bold" placeholder={typeof n.hero?.titulo === 'object' ? (n.hero?.titulo?.es || "¿Sientes que el estrés o la ansiedad te sobrepasan?") : (n.hero?.titulo || "¿Sientes que el estrés o la ansiedad te sobrepasan?")} value={typeof n.hero?.titulo === 'object' ? (n.hero?.titulo?.es || "") : (n.hero?.titulo || "")} />
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputHeroDescEs">
+                  <span>Descripción / Subtítulo Hero</span>
+                  <span class="ng-label-hint">Texto explicativo de confianza y garantía</span>
+                </label>
+                <textarea id="ngInputHeroDescEs" class="ng-textarea" rows="3" placeholder={typeof n.hero?.subtitulo === 'object' ? (n.hero?.subtitulo?.es || "Un espacio clínico seguro, confidencial y sin juicios...") : (n.hero?.subtitulo || "Un espacio clínico seguro, confidencial y sin juicios...")}>{typeof n.hero?.subtitulo === 'object' ? (n.hero?.subtitulo?.es || "") : (n.hero?.subtitulo || "")}</textarea>
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputHeroImg">
+                  <span>Imagen de Portada Hero (URL)</span>
+                  <span class="ng-label-hint">Fotografía clínica principal del Hero</span>
+                </label>
+                <div class="ng-input-url-test-wrap">
+                  <input type="text" id="ngInputHeroImg" class="ng-input ng-input-red-url" placeholder={fullHeroImg} value={fullHeroImg} />
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" id="btnProbarHeroImg" title="Ver imagen de portada">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Fila Unificada de Métricas Clave (1 sola línea integrada) -->
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent">
+                  <span>Métricas de Confianza & Trayectoria</span>
+                  <span class="ng-label-hint">Cifras clave visibles debajo del Hero</span>
+                </label>
+                <div class="ng-grid-3-metrics">
+                  <div class="ng-metric-col">
+                    <label class="ng-sublabel" for="ngInputMetricaClientes">Pacientes</label>
+                    <input type="text" id="ngInputMetricaClientes" class="ng-input" placeholder="+450" value={met.pacientes || "+450"} />
+                  </div>
+                  <div class="ng-metric-col">
+                    <label class="ng-sublabel" for="ngInputMetricaBalanza">Confidencialidad</label>
+                    <input type="text" id="ngInputMetricaBalanza" class="ng-input" placeholder="100%" value={met.confidencialidad || "100%"} />
+                  </div>
+                  <div class="ng-metric-col">
+                    <label class="ng-sublabel" for="ngInputLanzamiento">Fundación <span class="ng-badge-years" id="ngYearsText">{met.years || "6+ años"}</span></label>
+                    <input type="date" id="ngInputLanzamiento" class="ng-input" value={iden.lanzamientoFecha || "2020-03-15"} />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="ng-grid-2">
-              <div class="ng-field">
-                <label class="ng-label" for="ngInputNombreEn">Official Name (EN)</label>
-                <input type="text" id="ngInputNombreEn" class="ng-input" placeholder="America Psychological Clinic" />
+            <!-- Columna Derecha: Live Mockup Hero (45%) -->
+            <div class="ng-split-preview">
+              <div class="ng-preview-header">
+                <span>Vista Previa del Hero Web</span>
+                <span class="ng-preview-pill"><i class="fa-solid fa-circle-check"></i> En Vivo</span>
               </div>
 
-              <div class="ng-field">
-                <label class="ng-label" for="ngInputNombreCortoEn">Short Name / Brand (EN)</label>
-                <input type="text" id="ngInputNombreCortoEn" class="ng-input" placeholder="America Psychology" />
-              </div>
+              <div class="mockup-hero-card">
+                <div class="mockup-hero-badge">
+                  <i class="fa-solid fa-shield-heart"></i>
+                  <span>ESPACIO SEGURO & CONFIDENCIAL {idenNombreEs.toUpperCase()}</span>
+                </div>
+                <h4 class="mockup-hero-title" id="ngHeroPreviewTituloEs">
+                  {typeof n.hero?.titulo === 'object' ? (n.hero?.titulo?.es || "¿Sientes que el estrés o la ansiedad te sobrepasan?") : (n.hero?.titulo || "¿Sientes que el estrés o la ansiedad te sobrepasan?")}
+                </h4>
+                <p class="mockup-hero-desc" id="ngHeroPreviewDescEs">
+                  {typeof n.hero?.subtitulo === 'object' ? (n.hero?.subtitulo?.es || "Un espacio clínico seguro, confidencial y sin juicios...") : (n.hero?.subtitulo || "Un espacio clínico seguro, confidencial y sin juicios...")}
+                </p>
 
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputEnfoquesEn">Therapeutic Approaches (EN)</label>
-                <input type="text" id="ngInputEnfoquesEn" class="ng-input" placeholder="Cognitive Behavioral Therapy (CBT) • Acceptance & Commitment Therapy (ACT) • Psychopedagogy" />
-              </div>
-
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputBioEn">Clinical Summary / Biography (EN)</label>
-                <textarea id="ngInputBioEn" class="ng-textarea" rows="3" placeholder="Clinical psychologist licensed by the College of Psychologists of Peru (C.Ps.P. 49425)..."></textarea>
-              </div>
-
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputHorarioEn">Operating Hours Description (EN)</label>
-                <input type="text" id="ngInputHorarioEn" class="ng-input" placeholder="Monday to Saturday: 8:00 a.m. to 8:00 p.m." />
-              </div>
-
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputWhatsappMensajeEn">Default WhatsApp Message (EN)</label>
-                <input type="text" id="ngInputWhatsappMensajeEn" class="ng-input" placeholder="Hello Lic. Sofia Reynaga! I'd like to book a psychological consultation." />
+                <div class="mockup-hero-stats">
+                  <div class="mockup-hero-stat">
+                    <strong id="ngHeroPreviewClientesEs" class="color-primary">{met.pacientes || "+450"}</strong>
+                    <span>Pacientes Atendidos</span>
+                  </div>
+                  <div class="mockup-hero-stat">
+                    <strong id="ngHeroPreviewBalanzaEs" class="color-emerald">{met.confidencialidad || "100%"}</strong>
+                    <span>Confidencialidad</span>
+                  </div>
+                  <div class="mockup-hero-stat">
+                    <strong id="ngHeroPreviewYearsEs" class="color-brand-blue">{met.years || "6+ Años"}</strong>
+                    <span>Trayectoria Clínica</span>
+                  </div>
+                  <div class="mockup-hero-stat">
+                    <strong class="color-gold">C.Ps.P.</strong>
+                    <span>49425 Habilitada</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- Sedes & Modalidades (EN) -->
-          <div class="ng-card">
-            <div class="ng-card-header">
-              <h2 class="ng-card-title"><i class="fa-solid fa-building"></i> Offices & Modalities (EN)</h2>
+        <!-- 3. Más traducciones sobre mi negocio (ES) (Sin Preview - 100% Ancho Útil en Sub-Cards) -->
+        <div class="ng-card">
+          <div class="ng-card-header">
+            <div>
+              <h3 class="ng-card-title"><i class="fa-solid fa-language"></i> Más traducciones sobre mi negocio (ES)</h3>
+              <p class="ng-card-desc">Sede principal, modalidades de atención, diferenciadores y textos clave que alimentan la portada.</p>
             </div>
+          </div>
 
-            <!-- Sede 1: Villa El Salvador (EN) -->
-            <div class="ng-sede-box">
-              <div class="ng-sede-box-badge"><i class="fa-solid fa-hospital"></i> In-Person Clinic</div>
+          <div class="ng-traducciones-grid">
+            
+            <!-- Sub-Card 1: Sedes & Modalidades de Atención -->
+            <div class="ng-subcard">
+              <div class="ng-subcard-title">
+                <i class="fa-solid fa-hospital-user" style="color: var(--brand-primary, #3b82f6);"></i>
+                <span>Sede & Modalidades de Atención</span>
+              </div>
+
               <div class="ng-grid-2">
                 <div class="ng-field">
-                  <label class="ng-label" for="ngSedeVesTagEn">Tag / Badge (EN)</label>
-                  <input type="text" id="ngSedeVesTagEn" class="ng-input" placeholder="Villa El Salvador Clinic" />
+                  <label class="ng-label ng-label-prominent" for="ngSedeVesTagEs">Sede Presencial Lima (Etiqueta / Badge)</label>
+                  <input type="text" id="ngSedeVesTagEs" class="ng-input" placeholder="Sede Presencial Lima" value={typeof sedePresencial.tag === 'object' ? (sedePresencial.tag?.es || "") : (sedePresencial.tag || "Sede Presencial Lima")} />
                 </div>
                 <div class="ng-field">
-                  <label class="ng-label" for="ngSedeVesAtencionEn">Opening Hours (EN)</label>
-                  <input type="text" id="ngSedeVesAtencionEn" class="ng-input" placeholder="Monday to Saturday (By Appointment)" />
+                  <label class="ng-label ng-label-prominent" for="ngSedeVesAtencionEs">Horario de Atención Sede</label>
+                  <input type="text" id="ngSedeVesAtencionEs" class="ng-input" placeholder="Lunes a Sábado: 8:00 a.m. a 8:00 p.m. (Previa Cita)" value={typeof sedePresencial.atencion === 'object' ? (sedePresencial.atencion?.es || "") : (sedePresencial.atencion || "Lunes a Sábado: 8:00 a.m. a 8:00 p.m. (Previa Cita)")} />
                 </div>
               </div>
-            </div>
 
-            <!-- Sede 2: Modalidad Virtual (EN) -->
-            <div class="ng-sede-box sn-mt-10">
-              <div class="ng-sede-box-badge online"><i class="fa-solid fa-video"></i> Online Modality</div>
               <div class="ng-grid-2">
                 <div class="ng-field">
-                  <label class="ng-label" for="ngSedeVirtualTagEn">Tag / Badge (EN)</label>
-                  <input type="text" id="ngSedeVirtualTagEn" class="ng-input" placeholder="100% Online" />
+                  <label class="ng-label ng-label-prominent" for="ngSedeVirtualTagEs">Modalidad Virtual (Etiqueta)</label>
+                  <input type="text" id="ngSedeVirtualTagEs" class="ng-input" placeholder="Google Meet & Teams" value={typeof sedeVirtual.tag === 'object' ? (sedeVirtual.tag?.es || "") : (sedeVirtual.tag || "Google Meet & Teams")} />
                 </div>
                 <div class="ng-field">
-                  <label class="ng-label" for="ngSedeVirtualAtencionEn">Opening Hours (EN)</label>
-                  <input type="text" id="ngSedeVirtualAtencionEn" class="ng-input" placeholder="Flexible Schedule" />
+                  <label class="ng-label ng-label-prominent" for="ngSedeVirtualAtencionEs">Disponibilidad de Sesiones</label>
+                  <input type="text" id="ngSedeVirtualAtencionEs" class="ng-input" placeholder="Horarios Flexibles (Lunes a Sábado de 8:00 a.m. a 9:00 p.m.)" value={typeof sedeVirtual.atencion === 'object' ? (sedeVirtual.atencion?.es || "") : (sedeVirtual.atencion || "Horarios Flexibles (Lunes a Sábado de 8:00 a.m. a 9:00 p.m.)")} />
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-Card 2: Diferenciadores, Presentación & WhatsApp -->
+            <div class="ng-subcard">
+              <div class="ng-subcard-title">
+                <i class="fa-solid fa-award" style="color: #10b981;"></i>
+                <span>Diferenciadores, Presentación & WhatsApp</span>
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputEnfoques">
+                  <span>Diferenciadores Clave / Puntos Fuertes</span>
+                  <span class="ng-label-hint">Separados por viñetas (·) o comas</span>
+                </label>
+                <input type="text" id="ngInputEnfoques" class="ng-input" placeholder="Terapia Cognitivo-Conductual (TCC) • Terapia Contextual (ACT) • Sistémica • Humanista" value={idenEnfoquesEs || "Terapia Cognitivo-Conductual (TCC) • Terapia Contextual (ACT) • Sistémica • Humanista"} />
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputBioEs">
+                  <span>Presentación Profesional / Biografía</span>
+                  <span class="ng-label-hint">Resumen institucional de la especialista</span>
+                </label>
+                <textarea id="ngInputBioEs" class="ng-textarea" rows="2" placeholder="Psicóloga clínica y colegiada C.Ps.P. 49425...">{typeof iden.bio === 'object' ? (iden.bio?.es || "") : (iden.bio || "")}</textarea>
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputWsMensajeEs">
+                  <span>Mensaje Predeterminado de WhatsApp</span>
+                  <span class="ng-label-hint">Texto inicial al abrir chat de citas</span>
+                </label>
+                <input type="text" id="ngInputWsMensajeEs" class="ng-input" placeholder="¡Hola Lic. Sofia Reynaga! Deseo agendar una consulta psicológica." value={typeof cont.whatsappMensaje === 'object' ? (cont.whatsappMensaje?.es || "") : (cont.whatsappMensaje || "")} />
+              </div>
+            </div>
+
+            <!-- Sub-Card 3: Textos Destacados de Portada (Feature Inicio) -->
+            <div class="ng-subcard ng-subcard-full">
+              <div class="ng-subcard-title">
+                <i class="fa-solid fa-bullhorn" style="color: #3b82f6;"></i>
+                <span>Textos Destacados de Portada (Hero / Inicio)</span>
+              </div>
+
+              <div class="ng-grid-3">
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngInputHeroBadgeEs">
+                    <span>Insignia Superior del Hero (Badge)</span>
+                    <span class="ng-label-hint">Texto destacado arriba del título</span>
+                  </label>
+                  <input type="text" id="ngInputHeroBadgeEs" class="ng-input font-bold" placeholder="ESPACIO SEGURO Y CONFIDENCIAL" value={typeof n.hero?.badge === 'object' ? (n.hero?.badge?.es || "ESPACIO SEGURO Y CONFIDENCIAL") : (n.hero?.badge || "ESPACIO SEGURO Y CONFIDENCIAL")} />
+                </div>
+
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngInputHeroDriverTituloEs">
+                    <span>Tarjeta de Primera Consulta (Título)</span>
+                    <span class="ng-label-hint">Título del servicio</span>
+                  </label>
+                  <input type="text" id="ngInputHeroDriverTituloEs" class="ng-input" placeholder="Primera Consulta y Evaluación" value={typeof n.hero?.driverTitulo === 'object' ? (n.hero?.driverTitulo?.es || "Primera Consulta y Evaluación") : (n.hero?.driverTitulo || "Primera Consulta y Evaluación")} />
+                </div>
+
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngInputHeroDriverDescEs">
+                    <span>Detalle de Consulta (Modalidad)</span>
+                    <span class="ng-label-hint">Duración y modalidad</span>
+                  </label>
+                  <input type="text" id="ngInputHeroDriverDescEs" class="ng-input" placeholder="Sesión individual de 50 min presencial u online" value={typeof n.hero?.driverDesc === 'object' ? (n.hero?.driverDesc?.es || "Sesión individual de 50 min presencial u online") : (n.hero?.driverDesc || "Sesión individual de 50 min presencial u online")} />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ────── PANEL INGLÉS [EN] ────── -->
+      <div class="ng-lang-pane" id="ng-pane-en">
+        
+        <!-- 1. SEO & Search Keywords (EN) (55% Editor / 45% Live Google SERP Mockup) -->
+        <div class="ng-card">
+          <div class="ng-card-header">
+            <div>
+              <h3 class="ng-card-title"><i class="fa-solid fa-magnifying-glass"></i> SEO & Search Keywords (EN)</h3>
+              <p class="ng-card-desc">Google metadata for english-speaking searches with live SERP preview.</p>
+            </div>
+            <div class="ng-preview-pill"><i class="fa-brands fa-google"></i> Google Preview</div>
+          </div>
+
+          <div class="ng-card-split">
+            <!-- Columna Izquierda: Editor (55%) -->
+            <div class="ng-split-editor">
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputSeoTituloEn">
+                  <span>Meta Title</span>
+                  <span class="ng-char-badge" id="ngSeoTituloCountEn">0 / 60</span>
+                </label>
+                <input type="text" id="ngInputSeoTituloEn" class="ng-input" placeholder={typeof seo.titulo === 'object' ? (seo.titulo?.en || "") : (seo.tituloEn || "")} />
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputSeoDescEn">
+                  <span>Meta Description</span>
+                  <span class="ng-char-badge" id="ngSeoDescCountEn">0 / 160</span>
+                </label>
+                <textarea id="ngInputSeoDescEn" class="ng-textarea" rows="3" placeholder={typeof seo.descripcion === 'object' ? (seo.descripcion?.en || "") : (seo.descripcionEn || "")}></textarea>
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputSeoKeywordsEn">
+                  <span>Keywords (Comma separated)</span>
+                  <span class="ng-label-hint">Frequent search terms</span>
+                </label>
+                <textarea id="ngInputSeoKeywordsEn" class="ng-textarea" rows="2" placeholder={Array.isArray(seo.keywords?.en) ? seo.keywords.en.join(', ') : (typeof seo.keywordsEn === 'string' ? seo.keywordsEn : "")}></textarea>
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputSeoImgEn">
+                  <span>SEO Thumbnail Image (Google SERP & Social)</span>
+                  <span class="ng-label-hint">Representative image URL</span>
+                </label>
+                <div class="ng-input-url-test-wrap">
+                  <input type="text" id="ngInputSeoImgEn" class="ng-input ng-input-red-url" placeholder={fullSeoImg} value={fullSeoImg} />
+                  <button type="button" class="ng-btn-red-action ng-btn-probar-red" id="btnProbarFotoSeoEn" title="View photo">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Columna Derecha: Live Mockup Google SERP (EN) -->
+            <div class="ng-split-preview">
+              <div class="ng-preview-header">
+                <span>Google Search Result (EN)</span>
+                <span class="ng-preview-pill"><i class="fa-solid fa-circle-check"></i> Live SEO</span>
+              </div>
+
+              <!-- Card Exacto Google SERP -->
+              <div class="google-serp-card" id="ngGoogleSerpCardEn">
+                <div class="google-serp-meta">
+                  <div class="google-serp-meta-left">
+                    <img src={iden.logo || "/imgwii/logo.webp"} alt="Favicon" class="google-serp-favicon" id="ngSerpFaviconEn" />
+                    <div class="google-serp-site-info">
+                      <span class="google-serp-sitename" id="ngSerpSiteNameEn">{idenNombreEn}</span>
+                      <div class="google-serp-url-row">
+                        <span id="ngSerpUrlTextEn">{canonicalEn}</span>
+                        <span class="google-serp-translate">· Translate this page</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="google-serp-dots">
+                    <i class="fa-solid fa-ellipsis-vertical"></i>
+                  </div>
+                </div>
+
+                <div class="google-serp-body">
+                  <div class="google-serp-text">
+                    <h3 class="google-serp-title" id="ngSerpTitleEn">
+                      {typeof seo.titulo === 'object' ? (seo.titulo?.en || seo.titulo?.es || idenNombreEn || '') : (seo.tituloEn || seo.titulo || idenNombreEn || '')}
+                    </h3>
+                    <p class="google-serp-desc" id="ngSerpDescEn">
+                      {typeof seo.descripcion === 'object' ? (seo.descripcion?.en || seo.descripcion?.es || '') : (seo.descripcionEn || seo.descripcion || '')}
+                    </p>
+                  </div>
+
+                  <!-- Miniatura Google SERP limpia -->
+                  <div class="google-serp-thumb-box" id="ngSerpThumbBoxEn" title="SERP Thumbnail">
+                    <img src={seoImg} alt="Thumbnail SERP" class="google-serp-thumb-img" id="ngSerpImgEn" />
+                  </div>
+                </div>
+
+                <div class="google-serp-footer">
+                  <span><i class="fa-solid fa-shield-halved"></i> Verified Rich Snippet</span>
+                  <span>Canonical 1200×630</span>
                 </div>
               </div>
             </div>
           </div>
+        </div>
 
-          <!-- SEO Dinámico (EN) -->
-          <div class="ng-card">
-            <div class="ng-card-header">
-              <h2 class="ng-card-title"><i class="fa-solid fa-magnifying-glass"></i> SEO & Search Keywords (EN)</h2>
+        <!-- 2. Main Heading H1 & Hero Web (EN) (55% Editor / 45% Live Hero Mockup) -->
+        <div class="ng-card">
+          <div class="ng-card-header">
+            <div>
+              <h3 class="ng-card-title"><i class="fa-solid fa-heading"></i> Main Heading H1 & Hero Web (EN)</h3>
+              <p class="ng-card-desc">Main H1 headline, service description and highlighted metrics in English.</p>
+            </div>
+            <div class="ng-preview-pill"><i class="fa-solid fa-eye"></i> Live Web Hero</div>
+          </div>
+
+          <div class="ng-card-split">
+            <!-- Columna Izquierda: Editor (55%) -->
+            <div class="ng-split-editor">
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputHeroTituloEn">
+                  <span>Main H1 Headline (English)</span>
+                  <span class="ng-label-hint">Primary heading visible on the Hero section</span>
+                </label>
+                <input type="text" id="ngInputHeroTituloEn" class="ng-input font-bold" placeholder={typeof n.hero?.titulo === 'object' ? (n.hero?.titulo?.en || "Do you feel overwhelmed by stress or anxiety?") : (n.hero?.tituloEn || "Do you feel overwhelmed by stress or anxiety?")} value={typeof n.hero?.titulo === 'object' ? (n.hero?.titulo?.en || "") : (n.hero?.tituloEn || "")} />
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputHeroDescEn">
+                  <span>Hero Description / Subtitle (English)</span>
+                  <span class="ng-label-hint">Evidence-based clinical care and compassionate space</span>
+                </label>
+                <textarea id="ngInputHeroDescEn" class="ng-textarea" rows="3" placeholder={typeof n.hero?.subtitulo === 'object' ? (n.hero?.subtitulo?.en || "A safe, confidential and non-judgmental clinical space...") : (n.hero?.subtituloEn || "A safe, confidential and non-judgmental clinical space...")}>{typeof n.hero?.subtitulo === 'object' ? (n.hero?.subtitulo?.en || "") : (n.hero?.subtituloEn || "")}</textarea>
+              </div>
+
+              <!-- Metrics Reference in English -->
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent">
+                  <span>Trust Metrics (Synchronized)</span>
+                  <span class="ng-label-hint">Values shared across all languages</span>
+                </label>
+                <div class="ng-grid-3-metrics">
+                  <div class="ng-metric-col">
+                    <span class="ng-sublabel">Patients</span>
+                    <input type="text" class="ng-input" value={met.pacientes || "+450"} disabled />
+                  </div>
+                  <div class="ng-metric-col">
+                    <span class="ng-sublabel">Confidentiality</span>
+                    <input type="text" class="ng-input" value={met.confidencialidad || "100%"} disabled />
+                  </div>
+                  <div class="ng-metric-col">
+                    <span class="ng-sublabel">Experience</span>
+                    <input type="text" class="ng-input" value={met.years ? `${met.years}` : "6+ Years"} disabled />
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div class="ng-grid-2">
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputSeoTituloEn">Meta Title (EN)</label>
-                <input type="text" id="ngInputSeoTituloEn" class="ng-input" placeholder="America Psychological Clinic | Psychotherapy, ADHD/ASD Screening in Lima & Online" />
+            <!-- Columna Derecha: Live Mockup Hero (EN) -->
+            <div class="ng-split-preview">
+              <div class="ng-preview-header">
+                <span>Web Hero Preview (EN)</span>
+                <span class="ng-preview-pill"><i class="fa-solid fa-circle-check"></i> Live Preview</span>
               </div>
 
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputSeoDescEn">Meta Description (EN)</label>
-                <textarea id="ngInputSeoDescEn" class="ng-textarea" rows="2" placeholder="Evidence-based psychological consultation with Lic. Sofia Reynaga (C.Ps.P. 49425)..."></textarea>
-              </div>
+              <div class="mockup-hero-card">
+                <div class="mockup-hero-badge">
+                  <i class="fa-solid fa-face-smile-beam"></i>
+                  <span>OFFICIAL SERVICE {idenNombreEn.toUpperCase()}</span>
+                </div>
+                <h4 class="mockup-hero-title" id="ngHeroPreviewTituloEn">
+                  {typeof n.hero?.titulo === 'object' ? (n.hero?.titulo?.en || "Do you feel overwhelmed by stress or anxiety?") : (n.hero?.tituloEn || n.hero?.titulo || "Do you feel overwhelmed by stress or anxiety?")}
+                </h4>
+                <p class="mockup-hero-desc" id="ngHeroPreviewDescEn">
+                  {typeof n.hero?.subtitulo === 'object' ? (n.hero?.subtitulo?.en || "A safe, confidential and non-judgmental clinical space...") : (n.hero?.subtituloEn || n.hero?.subtitulo || "A safe, confidential and non-judgmental clinical space...")}
+                </p>
 
-              <div class="ng-field span-2">
-                <label class="ng-label" for="ngInputSeoKeywordsEn">Keywords (Comma separated)</label>
-                <textarea id="ngInputSeoKeywordsEn" class="ng-textarea" rows="2" placeholder="psychologist villa el salvador lima, psychotherapy lima peru, online therapy peru..."></textarea>
+                <div class="mockup-hero-stats">
+                  <div class="mockup-hero-stat">
+                    <strong class="color-primary">{met.pacientes || "+450"}</strong>
+                    <span>Patients</span>
+                  </div>
+                  <div class="mockup-hero-stat">
+                    <strong class="color-emerald">{met.confidencialidad || "100%"}</strong>
+                    <span>Confidentiality</span>
+                  </div>
+                  <div class="mockup-hero-stat">
+                    <strong class="color-brand-blue">{met.years || "6+ Years"}</strong>
+                    <span>Clinical Experience</span>
+                  </div>
+                  <div class="mockup-hero-stat">
+                    <strong class="color-gold">C.Ps.P.</strong>
+                    <span>49425 Licensed</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
+        </div>
 
+        <!-- 3. More translations about my business (EN) (No Preview - 100% Full Width Sub-Cards) -->
+        <div class="ng-card">
+          <div class="ng-card-header">
+            <div>
+              <h3 class="ng-card-title"><i class="fa-solid fa-language"></i> More translations about my business (EN)</h3>
+              <p class="ng-card-desc">Headquarters, delivery modalities, differentiators and featured landing page copy in English.</p>
+            </div>
+          </div>
+
+          <div class="ng-traducciones-grid">
+            
+            <!-- Sub-Card 1: Headquarters & Delivery Modalities -->
+            <div class="ng-subcard">
+              <div class="ng-subcard-title">
+                <i class="fa-solid fa-hospital-user" style="color: var(--brand-primary, #3b82f6);"></i>
+                <span>In-Person Clinic & Virtual Modalities (EN)</span>
+              </div>
+
+              <div class="ng-grid-2">
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngSedeVesTagEn">In-Person Clinic Tag / Badge</label>
+                  <input type="text" id="ngSedeVesTagEn" class="ng-input" placeholder="In-Person Lima Clinic" value={typeof sedePresencial.tag === 'object' ? (sedePresencial.tag?.en || "") : (sedePresencial.tagEn || "In-Person Lima Clinic")} />
+                </div>
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngSedeVesAtencionEn">Opening Hours</label>
+                  <input type="text" id="ngSedeVesAtencionEn" class="ng-input" placeholder="Monday to Saturday: 8:00 a.m. to 8:00 p.m. (By Appointment)" value={typeof sedePresencial.atencion === 'object' ? (sedePresencial.atencion?.en || "") : (sedePresencial.atencionEn || "Monday to Saturday: 8:00 a.m. to 8:00 p.m. (By Appointment)")} />
+                </div>
+              </div>
+
+              <div class="ng-grid-2">
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngSedeVirtualTagEn">Virtual Modality Tag</label>
+                  <input type="text" id="ngSedeVirtualTagEn" class="ng-input" placeholder="Google Meet & Teams" value={typeof sedeVirtual.tag === 'object' ? (sedeVirtual.tag?.en || "") : (sedeVirtual.tagEn || "Google Meet & Teams")} />
+                </div>
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngSedeVirtualAtencionEn">Session Availability</label>
+                  <input type="text" id="ngSedeVirtualAtencionEn" class="ng-input" placeholder="Flexible Hours (Monday to Saturday 8:00 a.m. to 9:00 p.m.)" value={typeof sedeVirtual.atencion === 'object' ? (sedeVirtual.atencion?.en || "") : (sedeVirtual.atencionEn || "Flexible Hours (Monday to Saturday 8:00 a.m. to 9:00 p.m.)")} />
+                </div>
+              </div>
+            </div>
+
+            <!-- Sub-Card 2: Differentiators, Profile & WhatsApp -->
+            <div class="ng-subcard">
+              <div class="ng-subcard-title">
+                <i class="fa-solid fa-award" style="color: #10b981;"></i>
+                <span>Differentiators, Profile & WhatsApp (EN)</span>
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputEnfoquesEn">
+                  <span>Differentiators / Key Points</span>
+                  <span class="ng-label-hint">Comma separated values</span>
+                </label>
+                <input type="text" id="ngInputEnfoquesEn" class="ng-input" placeholder="Cognitive Behavioral Therapy (CBT) • Acceptance and Commitment Therapy (ACT) • Systemic" value={idenEnfoquesEn || "Cognitive Behavioral Therapy (CBT) • Acceptance and Commitment Therapy (ACT) • Systemic"} />
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputBioEn">
+                  <span>Commercial Profile / Short Bio</span>
+                  <span class="ng-label-hint">Institutional service overview</span>
+                </label>
+                <textarea id="ngInputBioEn" class="ng-textarea" rows="2" placeholder="Clinical psychologist licensed by the College of Psychologists of Peru (C.Ps.P. 49425)...">{typeof iden.bio === 'object' ? (iden.bio?.en || "") : (iden.bioEn || "")}</textarea>
+              </div>
+
+              <div class="ng-field">
+                <label class="ng-label ng-label-prominent" for="ngInputWsMensajeEn">
+                  <span>Default WhatsApp Order Message</span>
+                  <span class="ng-label-hint">Initial greeting when starting order chat</span>
+                </label>
+                <input type="text" id="ngInputWsMensajeEn" class="ng-input" placeholder="Hello! I would like to inquire or place an order." value={typeof cont.whatsappMensaje === 'object' ? (cont.whatsappMensaje?.en || "") : (cont.whatsappMensajeEn || "")} />
+              </div>
+            </div>
+
+            <!-- Sub-Card 3: Featured Landing Page Copy (Hero / Home) -->
+            <div class="ng-subcard ng-subcard-full">
+              <div class="ng-subcard-title">
+                <i class="fa-solid fa-bullhorn" style="color: #3b82f6;"></i>
+                <span>Featured Landing Page Copy (Hero / Home EN)</span>
+              </div>
+
+              <div class="ng-grid-3">
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngInputHeroBadgeEn">
+                    <span>Hero Top Badge (English)</span>
+                    <span class="ng-label-hint">Headline pill above the title</span>
+                  </label>
+                  <input type="text" id="ngInputHeroBadgeEn" class="ng-input font-bold" placeholder="SAFE & CONFIDENTIAL SPACE" value={typeof n.hero?.badge === 'object' ? (n.hero?.badge?.en || "SAFE & CONFIDENTIAL SPACE") : (n.hero?.badgeEn || "SAFE & CONFIDENTIAL SPACE")} />
+                </div>
+
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngInputHeroDriverTituloEn">
+                    <span>Clinical Assessment Card (Title)</span>
+                    <span class="ng-label-hint">Badge heading</span>
+                  </label>
+                  <input type="text" id="ngInputHeroDriverTituloEn" class="ng-input" placeholder="First Consultation & Clinical Assessment" value={typeof n.hero?.driverTitulo === 'object' ? (n.hero?.driverTitulo?.en || "First Consultation & Clinical Assessment") : (n.hero?.driverTituloEn || "First Consultation & Clinical Assessment")} />
+                </div>
+
+                <div class="ng-field">
+                  <label class="ng-label ng-label-prominent" for="ngInputHeroDriverDescEn">
+                    <span>Clinical Assessment Card (Description)</span>
+                    <span class="ng-label-hint">Session duration and modality</span>
+                  </label>
+                  <input type="text" id="ngInputHeroDriverDescEn" class="ng-input" placeholder="50 min individual session in-person or online" value={typeof n.hero?.driverDesc === 'object' ? (n.hero?.driverDesc?.en || "50 min individual session in-person or online") : (n.hero?.driverDescEn || "50 min individual session in-person or online")} />
+                </div>
+              </div>
+            </div>
+
+          </div>
         </div>
 
       </div>
 
     </div>
+
   </div>
 </section>
 

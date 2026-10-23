@@ -1,0 +1,38 @@
+---
+// src/feature/redes/componentes/RedesHero.astro
+// Cabecera de la tarjeta: Avatar circular con resplandor dorado, @handle y bio
+
+interface Props {
+  avatar?: string;
+  handle?: string;
+  bio?: string;
+  alt?: string;
+}
+
+const {
+  avatar = '/imgwii/hero.webp',
+  handle = '',
+  bio = '',
+  alt = 'Avatar'
+} = Astro.props;
+---
+
+<div class="redes-hero">
+  <!-- Avatar con Halo Dorado Cálido -->
+  <div class="redes-avatar-wrap">
+    <img 
+      src={avatar} 
+      alt={alt} 
+      class="redes-avatar-img" 
+      width="104" 
+      height="104" 
+      loading="eager"
+      decoding="async"
+      data-negocio-avatar
+    />
+  </div>
+
+  <!-- Handle y Biografía Descriptiva -->
+  <h1 class="redes-handle" data-negocio-handle style={handle ? undefined : "display: none;"}>{handle}</h1>
+  <p class="redes-bio" data-negocio-bio style={bio ? undefined : "display: none;"}>{bio}</p>
+</div>

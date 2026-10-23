@@ -4,10 +4,16 @@
     "paths": {
       "@/*": ["./src/*"],
       "@core/*": ["./src/core/*"],
+      "@servicios/*": ["./src/core/servicios/*"],
+      "@semillas/*": ["./src/semillas/*"],
       "@widev": ["./src/core/widev/widev.js"],
       "@widev/*": ["./src/core/widev/*"],
       "@wii": ["./src/wii.js"],
-      "@feature/*": ["./src/feature/*"]
+      "@feature/*": ["./src/feature/*"],
+      "@auth/*": ["./src/feature/auth/*"],
+      "@cliente/*": ["./src/feature/cliente/*"],
+      "@personal/*": ["./src/feature/personal/*"],
+      "@redes/*": ["./src/feature/redes/*"]
     }
   },
   "include": [".astro/types.d.ts", "**/*"],

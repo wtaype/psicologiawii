@@ -5,7 +5,9 @@
 import { getls, savels, removels } from '../../core/widev/storage.js';
 import { Mensaje, cerrarTodos } from '../../core/widev/widev.js';
 import { ROL_PATH } from '../../core/rutas.js';
+import { configurarSistema } from '../../negocio.js';
 
+const COLECCION_USUARIOS = configurarSistema?.colecciones?.usuarios || 'smiles';
 const bus = new Set();
 
 if (typeof window !== 'undefined') {
@@ -28,14 +30,26 @@ export const wiAuth = {
   },
 
   login(wi, h = 144, keep = []) {
-    removels.except(['wiTema_gaswii', 'wiTema', 'cookiesPrivacidad', 'wiSmart', ...keep]);
+    try {
+      localStorage.removeItem('wi_theme_cliente');
+    } catch {}
+    removels.except(['wiTema', 'cookiesPrivacidad', 'wiSmart', ...keep]);
     savels('wiSmile', wi, h);
     this.emit(wi);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('wi-auth-cambio', { detail: wi }));
+    }
   },
 
   logout(keep = []) {
-    removels.except(['wiTema_gaswii', 'wiTema', 'cookiesPrivacidad', 'wiSmart', ...keep]);
+    try {
+      localStorage.removeItem('wi_theme_cliente');
+    } catch {}
+    removels.except(['wiTema', 'cookiesPrivacidad', 'wiSmart', ...keep]);
     this.emit(null);
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('wi-auth-cambio', { detail: null }));
+    }
   }
 };
 
@@ -46,18 +60,21 @@ const _actualizarTimestamp = (uid) => {
     import('../../core/servicios/firebase.js'),
     import('firebase/firestore')
   ]).then(([{ db }, { doc, updateDoc, serverTimestamp }]) =>
-    updateDoc(doc(db, 'smiles', uid), { actualizado: serverTimestamp() }).catch(() => {})
+    updateDoc(doc(db, COLECCION_USUARIOS, uid), { actualizado: serverTimestamp() }).catch(() => {})
   ).catch(() => {});
 };
 
-// Redirección y bienvenida al ingresar — sin await, redirect a 150ms
-export const entrar = (wi) => {
-  wiAuth.login(wi, 144, ['wiSmart', 'cookiesPrivacidad']);
+// Redirección y bienvenida al ingresar — soporta recordar sesión (infinito vs 144h)
+export const entrar = (wi, recordar = true) => {
+  // recordar = true -> null (sesión permanente/infinita en LocalStorage)
+  // recordar = false -> 144 (expiración estricta de 6 días)
+  const horas = (recordar === true || recordar === 'true') ? null : 144;
+  wiAuth.login(wi, horas, ['wiSmart', 'cookiesPrivacidad']);
 
   const modal = document.querySelector('#wi_auth_modal.active') || document.querySelector('#modalLogin');
   if (modal) cerrarTodos();
 
-  Mensaje(`<i class="fa-solid fa-hand-wave"></i> ¡Bienvenido, ${wi?.nombre || wi?.usuario || 'Gaswii'}!`, 'success');
+  Mensaje(`<i class="fa-solid fa-hand-wave"></i> ¡Bienvenido, ${wi?.nombre || wi?.usuario || 'Usuario'}!`, 'success');
 
   _actualizarTimestamp(wi?.uid);
 
@@ -95,7 +112,7 @@ export const protegerRuta = (rolesPermitidos = []) => {
 };
 
 export const generarAvatarUrl = (nombre = '', usuario = '') => {
-  const semilla = encodeURIComponent(nombre || usuario || 'Gaswii');
+  const semilla = encodeURIComponent(nombre || usuario || 'Usuario');
   return `https://api.dicebear.com/7.x/initials/svg?seed=${semilla}&backgroundColor=ff6600,0284c7,10b981`;
 };
 
@@ -108,24 +125,25 @@ export const sincronizarSmile = async (user, extraData = {}) => {
   const { db } = await import('../../core/servicios/firebase.js');
   const { doc, getDoc, setDoc, updateDoc, serverTimestamp } = await import('firebase/firestore');
 
-  const docRef = doc(db, 'smiles', user.uid);
+  const docRef = doc(db, COLECCION_USUARIOS, user.uid);
   let docSnap = null;
   try { docSnap = await getDoc(docRef); } catch (e) { console.warn('Firestore offline:', e); }
 
-  const imgEmail = 'https://imgwii.web.app/smile.avif';
+  const imgEmail = '/smile.avif';
   const { avatar: calcIniciales } = await import('../../core/widev/nombre.js');
 
   let smileData;
   if (docSnap?.exists()) {
     const ex = docSnap.data();
-    const avatar = user.photoURL || extraData.avatar || ex.avatar || imgEmail;
-    const iniciales = extraData.iniciales || ex.iniciales || calcIniciales(ex.nombre || user.displayName || 'Vecino Solgas');
+    const rawAv = user.photoURL || extraData.avatar || ex.avatar;
+    const avatar = (!rawAv || rawAv.includes('smile.webp')) ? imgEmail : rawAv;
+    const iniciales = extraData.iniciales || ex.iniciales || calcIniciales(ex.nombre || user.displayName || 'Usuario');
     smileData = { ...ex, ...extraData, avatar, iniciales, actualizado: new Date().toISOString() };
     const payload = { ...extraData, avatar, iniciales, actualizado: serverTimestamp() };
     Object.keys(payload).forEach(k => payload[k] === undefined && delete payload[k]);
     updateDoc(docRef, payload).catch(() => {});
   } else {
-    const nombre = extraData.nombre || user.displayName || 'Vecino Solgas';
+    const nombre = extraData.nombre || user.displayName || 'Usuario';
     const usuario = extraData.usuario || (user.email?.split('@')[0] || 'usuario').toLowerCase().replace(/[^a-z0-9_-]/g, '');
     const avatar = user.photoURL || extraData.avatar || imgEmail;
     const iniciales = extraData.iniciales || calcIniciales(nombre);

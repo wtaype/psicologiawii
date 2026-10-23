@@ -1,9 +1,10 @@
 // src/feature/cliente/modulos/02-direccion/dataDireccion.js
-// Capa Canónica Local-First de Direcciones · Solgas Surquillo
+// Capa Canónica Local-First de Direcciones / Domicilio Fiscal · Ecosistema Wii
 // Esquema Firestore: smiles/{uid}.direcciones como ARRAY con Timestamps nativos
 // Sincronización en segundo plano (0ms UX) y logging exhaustivo
 
 import { getls, savels } from '@widev';
+import { datosNegocio } from '@/negocio.js';
 
 /**
  * Normaliza fechas provenientes de Timestamp Firestore, objetos serializados o ISO strings
@@ -29,10 +30,10 @@ export function normalizarDireccionesArray(rawDirs = []) {
       if (typeof d === 'string' && d.trim()) {
         return {
           id: `dir_${idx}`,
-          alias: idx === 0 ? 'Casa' : `Dirección ${idx + 1}`,
+          alias: idx === 0 ? 'Domicilio Fiscal' : `Sede ${idx + 1}`,
           calle: d.trim(),
           direccion: d.trim(),
-          distrito: 'Surquillo'
+          distrito: datosNegocio.distritoSede || ''
         };
       }
       return d;
@@ -42,10 +43,10 @@ export function normalizarDireccionesArray(rawDirs = []) {
       if (typeof d === 'string' && d.trim()) {
         return {
           id: key,
-          alias: 'Casa',
+          alias: 'Domicilio Fiscal',
           calle: d.trim(),
           direccion: d.trim(),
-          distrito: 'Surquillo'
+          distrito: datosNegocio.distritoSede || ''
         };
       }
       return {
@@ -62,13 +63,13 @@ export function normalizarDireccionesArray(rawDirs = []) {
     const esPrincipal = Boolean(d.esPrincipal ?? d.predeterminada ?? false);
     if (esPrincipal) hayPrincipal = true;
 
-    const alias = String(d.alias || d.etiqueta || (idx === 0 ? 'Casa' : `Dirección ${idx + 1}`)).trim();
+    const alias = String(d.alias || d.etiqueta || (idx === 0 ? 'Domicilio Fiscal' : `Sede ${idx + 1}`)).trim();
     const calle = String(d.calle || d.direccion || d.domicilio || '').trim();
     const dpto = String(d.dpto || '').trim();
-    const distrito = String(d.distrito || 'Surquillo').trim();
+    const distrito = String(d.distrito || datosNegocio.distritoSede || '').trim();
     const celular = String(d.celular || '').trim();
     const referencia = String(d.referencia || '').trim();
-    const eta = String(d.eta || '12–15 min').trim();
+    const eta = String(d.eta || 'Atención en Sede').trim();
 
     return {
       id: String(d.id || `dir_${Date.now()}_${idx}`),
@@ -102,7 +103,7 @@ export const normalizarDireccionesMap = normalizarDireccionesArray;
  * Obtiene la lista actual de direcciones desde el almacenamiento local wiSmile (0ms)
  */
 export function obtenerDireccionesLocal() {
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   return user ? normalizarDireccionesArray(user.direcciones) : [];
 }
 
@@ -113,7 +114,7 @@ export function obtenerDireccionesLocal() {
 let _sincronizando = false;
 export async function sincronizarDireccionesDesdeFirestore() {
   if (_sincronizando) return;
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   const userId = user?.userId || user?.uid;
   if (!userId) return;
 
@@ -135,13 +136,13 @@ export async function sincronizarDireccionesDesdeFirestore() {
         if (data.celular && !user.celular) user.celular = data.celular;
         savels('wiSmile', user, 144);
         if (typeof window !== 'undefined') {
-          window.__GASWII_USER__ = user;
+          window.__WI_USER__ = user;
           document.dispatchEvent(new CustomEvent('direccionesActualizadas', { detail: { direcciones: normalizadas } }));
         }
       }
     }
   } catch (err) {
-    console.warn('[Gaswii Direcciones] Aviso en sincronización en background:', err);
+    console.warn('[Direcciones Wii] Aviso en sincronización en background:', err);
   } finally {
     _sincronizando = false;
   }
@@ -164,15 +165,15 @@ function prepararItemParaFirestore(item, Timestamp) {
 
   return {
     id: String(item.id),
-    alias: String(item.alias || 'Casa'),
-    etiqueta: String(item.alias || 'Casa'),
+    alias: String(item.alias || 'Domicilio Fiscal'),
+    etiqueta: String(item.alias || 'Domicilio Fiscal'),
     calle: String(item.calle || ''),
     direccion: String(item.calle || ''),
     dpto: String(item.dpto || ''),
-    distrito: String(item.distrito || 'Surquillo'),
+    distrito: String(item.distrito || datosNegocio.distritoSede || ''),
     celular: String(item.celular || ''),
     referencia: String(item.referencia || ''),
-    eta: String(item.eta || '12–15 min'),
+    eta: String(item.eta || 'Atención en Sede'),
     esPrincipal: Boolean(item.esPrincipal),
     predeterminada: Boolean(item.esPrincipal),
     creado: creadoTs,
@@ -185,13 +186,13 @@ function prepararItemParaFirestore(item, Timestamp) {
  */
 function sincronizarSmilesFirestore(uid, listaDirecciones) {
   if (!uid) {
-    console.warn('[Gaswii Firestore] ⚠️ No hay UID de usuario para sincronizar.');
+    console.warn('[Direcciones Firestore] ⚠️ No hay UID de usuario para sincronizar.');
     return;
   }
 
   (async () => {
     try {
-      console.log(`[Gaswii Firestore] ⏳ Sincronizando en segundo plano para smiles/${uid}...`);
+      console.log(`[Direcciones Firestore] ⏳ Sincronizando en segundo plano para smiles/${uid}...`);
       const { db, auth } = await import('@core/servicios/firebase.js');
       const { doc, setDoc, serverTimestamp, Timestamp } = await import('firebase/firestore');
 
@@ -210,9 +211,9 @@ function sincronizarSmilesFirestore(uid, listaDirecciones) {
         actualizado: serverTimestamp()
       }, { merge: true });
 
-      console.log(`[Gaswii Firestore] ✅ ¡Éxito! Direcciones guardadas con Timestamps en smiles/${uid}:`, direccionesFirestore);
+      console.log(`[Direcciones Firestore] ✅ ¡Éxito! Direcciones guardadas con Timestamps en smiles/${uid}:`, direccionesFirestore);
     } catch (e) {
-      console.error(`[Gaswii Firestore] ❌ Error al guardar en colección smiles/${uid}:`, e);
+      console.error(`[Direcciones Firestore] ❌ Error al guardar en colección smiles/${uid}:`, e);
     }
   })();
 }
@@ -221,14 +222,14 @@ function sincronizarSmilesFirestore(uid, listaDirecciones) {
  * Persistencia unificada: Guarda en local wiSmile (0ms) y despacha en segundo plano a Firestore
  */
 function persistirLocalYFondo(nuevaLista) {
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   if (!user) throw new Error('No hay sesión de usuario activa.');
 
   const userId = user.userId || user.uid;
   user.direcciones = nuevaLista;
   savels('wiSmile', user, 144);
   if (typeof window !== 'undefined') {
-    window.__GASWII_USER__ = user;
+    window.__WI_USER__ = user;
     document.dispatchEvent(new CustomEvent('direccionesActualizadas', { detail: { direcciones: nuevaLista } }));
   }
 
@@ -247,15 +248,15 @@ export async function guardarDireccion(dirData = {}) {
 
   const nueva = {
     id,
-    alias: dirData.alias || 'Casa',
-    etiqueta: dirData.alias || 'Casa',
+    alias: dirData.alias || 'Domicilio Fiscal',
+    etiqueta: dirData.alias || 'Domicilio Fiscal',
     calle: dirData.calle || '',
     direccion: dirData.calle || '',
     dpto: dirData.dpto || '',
-    distrito: dirData.distrito || 'Surquillo',
+    distrito: dirData.distrito || datosNegocio.distritoSede || '',
     celular: dirData.celular || '',
     referencia: dirData.referencia || '',
-    eta: dirData.eta || '12–15 min',
+    eta: dirData.eta || 'Atención en Sede',
     esPrincipal,
     predeterminada: esPrincipal,
     actualizado: now,

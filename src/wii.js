@@ -2,7 +2,9 @@
 export const id = 'psicologiawii-web';
 export const app = 'Consultorio Psicológico América';
 export const by = '@wilder.taype';
-export const linkweb = 'https://psicologiawii.com/';
+export const linkweb = typeof window !== 'undefined' && window.location?.origin 
+  ? window.location.origin 
+  : (import.meta.env?.PUBLIC_SITE_URL || 'https://psicologiawii.web.app/');
 export const linkme = 'https://wtaype.github.io/';
 export const version = 1.0;
 export const versionName = 'v1';

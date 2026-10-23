@@ -1,210 +1,321 @@
 ---
 // src/feature/personal/modulos/dashboard/Dashboard.astro
-// Módulo 1: Panel General / Dashboard de Operaciones para el Dueño
-import { 
-  clientesRecientesDemo, 
-  notasInicialesDemo 
-} from '../../data/personalData.js';
-import { datosNegocio } from '@/negocio.js';
-
-const precioBalon10 = datosNegocio.productos[0]?.precioPEN 
-  ? `S/ ${Number(datosNegocio.productos[0].precioPEN).toFixed(2)}` 
-  : 'S/ 65.00';
-
-const estadisticas = [
-  { id: 'stat1', titulo: precioBalon10, subtitulo: `${datosNegocio.productos[0]?.nombre || 'Balón 10kg'} (Precio Web)`, icono: 'fa-solid fa-fire-burner', color: 'orange' },
-  { id: 'stat2', titulo: 'S/ 2,840.00', subtitulo: 'Facturado SUNAT', icono: 'fa-solid fa-file-invoice-dollar', color: 'green' },
-  { id: 'stat3', titulo: '124 Clientes', subtitulo: 'Registrados en Gaswii', icono: 'fa-solid fa-address-book', color: 'blue' },
-  { id: 'stat4', titulo: '3 Notas', subtitulo: 'En tu Notepad', icono: 'fa-solid fa-note-sticky', color: 'purple' }
-];
+// Módulo 1: Dashboard de Operaciones y Centro de Control Universal (100% Reutilizable)
+// Combina Banner Hero de Bienvenida (Día/Noche) + Top 3 Tarjetas de Negocio + Accesos Rápidos
+import { datosNegocio, configSemilla } from '@/negocio.js';
+import galeriaSemilla from '@/semillas/galeria.json';
 
 interface Props {
   esActivo?: boolean;
 }
 
 const { esActivo = true } = Astro.props;
+
+const esServicios = configSemilla?.modeloNegocio === 'servicios_y_asesorias';
+const term = configSemilla?.terminologia || {};
+
+// Métricas de catálogo calculadas dinámicamente desde el negocio configurado
+const productos = datosNegocio.productos || [];
+const precios = productos.map(p => Number(p.precioPEN || p.precio || 0)).filter(p => p > 0);
+const minPrecio = precios.length > 0 ? Math.min(...precios).toFixed(2) : '0.00';
+const maxPrecio = precios.length > 0 ? Math.max(...precios).toFixed(2) : '0.00';
+const totalFotos = Array.isArray(galeriaSemilla) ? galeriaSemilla.length : 0;
+const totalServicios = productos.length;
+
+const nombreNegocio = datosNegocio.nombreCorto || datosNegocio.nombre || 'Mi Negocio';
+const rucNegocio = datosNegocio.identidad?.ruc || '';
+const direccionNegocio = datosNegocio.direccionSede || datosNegocio.ubicacion?.direccion || 'Sede Principal';
+const distritoNegocio = datosNegocio.distritoSede || 'Sede Central';
+const telefonoNegocio = datosNegocio.telefonoMostrado || datosNegocio.contacto?.telefono || '';
+
+const tituloCatalogoCard = term.catalogoTituloCorto || (esServicios ? 'Mis Servicios' : 'Catálogo Comercial');
+const modalidadCard = term.modalidadDefecto || (datosNegocio.sedes?.[0]?.modalidad) || (esServicios ? '100% Online y Presencial' : 'Atención Directa');
+const btnWhatsappText = term.btnWhatsapp || 'WhatsApp Atención';
+const itemPlural = term.itemsPlural || (esServicios ? 'servicios' : 'productos');
+const defaultUserName = datosNegocio.nombreCorto || datosNegocio.nombre || 'Administrador';
 ---
 
 <section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-dashboard">
-  <!-- Encabezado de Sección -->
-  <div class="ps-section-header">
-    <div class="ps-section-title-wrap">
-      <h1 class="ps-section-title">Panel General</h1>
-      <p class="ps-section-sub">Gestión de precios vigentes en la web, atención por WhatsApp y clientes registrados.</p>
+
+  <!-- ======================================================== -->
+  <!-- 1. BANNER HERO DE BIENVENIDA (Estilo Imagen 2 - Agnóstico)-->
+  <!-- ======================================================== -->
+  <div class="db-hero-banner">
+    <div class="db-hero-content">
+      <div class="db-hero-badge">
+        <span class="db-hero-badge-dot"></span>
+        <span class="db-hero-badge-text">CENTRO DE OPERACIONES</span>
+      </div>
+
+      <h1 class="db-hero-title">
+        <span id="dbGreetingText">Buenas noches</span>, <span id="dbHeroUserName" class="db-hero-name">{defaultUserName}</span>
+      </h1>
+
+      <p class="db-hero-desc">
+        Administra la identidad oficial, catálogo de productos/servicios y recursos multimedia de tu plataforma web.
+      </p>
+
+      <div class="db-hero-tags">
+        <span class="db-hero-tag">
+          <i class="fa-solid fa-circle-check" style="color:var(--green, #10b981);"></i> Web Pública en Línea
+        </span>
+        <span class="db-hero-tag">
+          <i class="fa-solid fa-location-dot" style="color:var(--brand-primary, #ff6600);"></i> Sede {distritoNegocio}
+        </span>
+        <span class="db-hero-tag">
+          <i class="fa-solid fa-shield-halved" style="color:#60a5fa;"></i> Panel Seguro
+        </span>
+      </div>
     </div>
-    <div class="ps-header-actions">
+
+    <div class="db-hero-visual">
+      <div class="db-hero-icon-circle">
+        <i id="dbHeroTimeIcon" class="fa-solid fa-moon"></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2. ENCABEZADO DE HERRAMIENTAS CLAVE (Estilo Imagen 1)    -->
+  <!-- ======================================================== -->
+  <div class="db-section-header">
+    <div class="db-section-header-info">
+      <div class="db-section-pill">
+        <i class="fa-solid fa-cubes"></i> MÓDULOS DEL SISTEMA
+      </div>
+      <h2 class="db-section-heading">Herramientas Clave del Negocio</h2>
+      <p class="db-section-subheading">
+        Acceso inmediato con datos vivos a las áreas principales del sistema.
+      </p>
+    </div>
+    <div class="db-section-actions">
       <a 
-        href={`https://wa.me/${datosNegocio.telefonoLimpio || '51936369384'}`}
+        href={datosNegocio.linkweb || '/'} 
         target="_blank" 
         rel="noopener noreferrer" 
-        class="ps-btn ps-btn-secondary"
-        title="Abrir canal WhatsApp de Solgas Surquillo"
+        class="ps-btn ps-btn-secondary" 
+        title="Ver sitio web público"
       >
-        <i class="fa-brands fa-whatsapp" style="color:var(--green);"></i> WhatsApp Pedidos
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Web Pública
       </a>
-      <button class="ps-btn ps-btn-primary" data-jump-to="productos">
-        <i class="fa-solid fa-tags"></i> Actualizar Precios Web
+      <a 
+        href={`https://wa.me/${datosNegocio.whatsappLimpio || datosNegocio.telefonoLimpio}`} 
+        target="_blank" 
+        rel="noopener noreferrer" 
+        class="ps-btn ps-btn-primary" 
+        title="Abrir canal WhatsApp de atención"
+      >
+        <i class="fa-brands fa-whatsapp"></i> {btnWhatsappText}
+      </a>
+    </div>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 3. GRID DEL TOP 3 DE HERRAMIENTAS (Estilo Imagen 1)     -->
+  <!-- ======================================================== -->
+  <div class="db-tools-grid">
+
+    <!-- Tarjeta 1: Mi Negocio -->
+    <div class="db-tool-card" data-jump-to="negocio" role="button" tabindex="0">
+      <div class="db-tool-card-top">
+        <div class="db-tool-icon-wrap db-icon-emerald">
+          <i class="fa-solid fa-store"></i>
+        </div>
+        <span class="db-tool-badge db-badge-emerald">Identidad Oficial</span>
+      </div>
+      <div class="db-tool-card-body">
+        <h3 class="db-tool-title">Mi Negocio</h3>
+        <p class="db-tool-intro">Ficha institucional, sede y canales de atención de {nombreNegocio}.</p>
+        
+        <div class="db-tool-meta-list">
+          <div class="db-tool-meta-item">
+            <i class="fa-solid fa-location-dot"></i>
+            <span><strong>Sede:</strong> {direccionNegocio}</span>
+          </div>
+          <div class="db-tool-meta-item">
+            <i class="fa-solid fa-id-card"></i>
+            <span><strong>RUC:</strong> {rucNegocio || '--------'} · Registro Oficial</span>
+          </div>
+          <div class="db-tool-meta-item">
+            <i class="fa-brands fa-whatsapp"></i>
+            <span><strong>WhatsApp:</strong> {telefonoNegocio} (Atención)</span>
+          </div>
+        </div>
+      </div>
+      <div class="db-tool-card-footer">
+        <span class="db-tool-action-link">
+          Gestionar Sede y Contacto <i class="fa-solid fa-arrow-right"></i>
+        </span>
+      </div>
+    </div>
+
+    <!-- Tarjeta 2: Servicios & Productos -->
+    <div class="db-tool-card" data-jump-to="productos" role="button" tabindex="0">
+      <div class="db-tool-card-top">
+        <div class="db-tool-icon-wrap db-icon-blue">
+          <i class="fa-solid fa-box-archive"></i>
+        </div>
+        <span class="db-tool-badge db-badge-blue">Catálogo Web</span>
+      </div>
+      <div class="db-tool-card-body">
+        <h3 class="db-tool-title">{tituloCatalogoCard}</h3>
+        <p class="db-tool-intro">Tarifas vigentes, precios y modalidades publicadas en la web principal.</p>
+        
+        <div class="db-tool-meta-list">
+          <div class="db-tool-meta-item">
+            <i class="fa-solid fa-file-invoice"></i>
+            <span><strong>{esServicios ? 'Servicios:' : 'Productos:'}</strong> <span id="dbLiveServiciosCount">{totalServicios} {itemPlural}</span> publicados</span>
+          </div>
+          <div class="db-tool-meta-item">
+            <i class="fa-solid fa-tags"></i>
+            <span><strong>Tarifas:</strong> S/ <span id="dbLiveMinPrecio">{minPrecio}</span> a S/ <span id="dbLiveMaxPrecio">{maxPrecio}</span></span>
+          </div>
+          <div class="db-tool-meta-item">
+            <i class="fa-solid fa-truck-fast"></i>
+            <span><strong>Modalidad:</strong> {modalidadCard}</span>
+          </div>
+        </div>
+      </div>
+      <div class="db-tool-card-footer">
+        <span class="db-tool-action-link">
+          Actualizar Catálogo Web <i class="fa-solid fa-arrow-right"></i>
+        </span>
+      </div>
+    </div>
+
+    <!-- Tarjeta 3: Galería de Fotos -->
+    <div class="db-tool-card" data-jump-to="galeria" role="button" tabindex="0">
+      <div class="db-tool-card-top">
+        <div class="db-tool-icon-wrap db-icon-purple">
+          <i class="fa-solid fa-images"></i>
+        </div>
+        <span class="db-tool-badge db-badge-purple">Multimedia WebP</span>
+      </div>
+      <div class="db-tool-card-body">
+        <h3 class="db-tool-title">Galería de Imágenes</h3>
+        <p class="db-tool-intro">Fotografías oficiales, sede, despacho y recursos visuales optimizados.</p>
+        
+        <div class="db-tool-meta-list">
+          <div class="db-tool-meta-item">
+            <i class="fa-solid fa-photo-film"></i>
+            <span><strong>Catálogo:</strong> <span id="dbLiveFotosCount">{totalFotos} fotos</span> oficiales activas</span>
+          </div>
+          <div class="db-tool-meta-item">
+            <i class="fa-solid fa-bolt-lightning"></i>
+            <span><strong>Optimización:</strong> Formato WebP ultraligero (83 KB máx)</span>
+          </div>
+          <div class="db-tool-meta-item">
+            <i class="fa-solid fa-circle-check"></i>
+            <span><strong>Caché:</strong> Revalidación instantánea sin retrasos</span>
+          </div>
+        </div>
+      </div>
+      <div class="db-tool-card-footer">
+        <span class="db-tool-action-link">
+          Ver y Administrar Fotos <i class="fa-solid fa-arrow-right"></i>
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 4. BLOQUE INFERIOR: ACCESOS RÁPIDOS (ANCHO COMPLETO)     -->
+  <!-- ======================================================== -->
+  <div class="db-quicklinks-box">
+    <div class="db-box-head">
+      <div>
+        <strong class="db-box-title">Accesos Rápidos a Módulos</strong>
+        <p class="db-box-sub">Navegación directa en un clic a todas las herramientas operativas del sistema</p>
+      </div>
+    </div>
+    
+    <div class="db-quicklinks-grid">
+      <button type="button" class="db-quicklink-btn" data-jump-to="sunat">
+        <div class="db-quicklink-icon sn-c-green">
+          <i class="fa-solid fa-file-invoice-dollar"></i>
+        </div>
+        <div class="db-quicklink-text">
+          <strong>SUNAT Comprobantes</strong>
+          <small>Boletas B001 y Facturas F001</small>
+        </div>
+      </button>
+
+      <button type="button" class="db-quicklink-btn" data-jump-to="clientes">
+        <div class="db-quicklink-icon sn-c-blue">
+          <i class="fa-solid fa-address-book"></i>
+        </div>
+        <div class="db-quicklink-text">
+          <strong>Cartera de Clientes</strong>
+          <small>Directorio CRM y Regímenes</small>
+        </div>
+      </button>
+
+      <button type="button" class="db-quicklink-btn" data-jump-to="whatsapp">
+        <div class="db-quicklink-icon sn-c-emerald">
+          <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <div class="db-quicklink-text">
+          <strong>WhatsApp Mensajes</strong>
+          <small>Plantillas y Enlaces Rápidos</small>
+        </div>
+      </button>
+
+      <button type="button" class="db-quicklink-btn" data-jump-to="blogs">
+        <div class="db-quicklink-icon sn-c-orange">
+          <i class="fa-solid fa-newspaper"></i>
+        </div>
+        <div class="db-quicklink-text">
+          <strong>Blogs & Artículos</strong>
+          <small>Publicaciones Bilingües</small>
+        </div>
+      </button>
+
+      <button type="button" class="db-quicklink-btn" data-jump-to="correo">
+        <div class="db-quicklink-icon sn-c-purple">
+          <i class="fa-solid fa-envelope"></i>
+        </div>
+        <div class="db-quicklink-text">
+          <strong>Centro de Correo</strong>
+          <small>Plantillas y Notificaciones</small>
+        </div>
+      </button>
+
+      <button type="button" class="db-quicklink-btn" data-jump-to="notepad">
+        <div class="db-quicklink-icon sn-c-cyan">
+          <i class="fa-solid fa-note-sticky"></i>
+        </div>
+        <div class="db-quicklink-text">
+          <strong>Bloc de Notas</strong>
+          <small>Apuntes y Registro Rápido</small>
+        </div>
+      </button>
+
+      <button type="button" class="db-quicklink-btn" data-jump-to="personal">
+        <div class="db-quicklink-icon sn-c-blue">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <div class="db-quicklink-text">
+          <strong>Equipo de Trabajo</strong>
+          <small>Especialistas y Asistentes</small>
+        </div>
+      </button>
+
+      <button type="button" class="db-quicklink-btn" data-jump-to="ajustes">
+        <div class="db-quicklink-icon sn-c-orange">
+          <i class="fa-solid fa-gear"></i>
+        </div>
+        <div class="db-quicklink-text">
+          <strong>Ajustes del Sistema</strong>
+          <small>Configuraciones y Respaldo</small>
+        </div>
       </button>
     </div>
   </div>
 
-  <!-- Métricas Principales (KPIs) -->
-  <div class="db-stats-grid">
-    {estadisticas.map((st) => (
-      <div class="db-stat-card">
-        <div class={`db-stat-icon ${st.color}`}>
-          <i class={st.icono}></i>
-        </div>
-        <div class="db-stat-info">
-          <span class="db-stat-val" id={st.id === 'stat4' ? 'dashNotesCount' : undefined}>{st.titulo}</span>
-          <span class="db-stat-lbl">{st.subtitulo}</span>
-        </div>
-      </div>
-    ))}
-  </div>
-
-  <!-- Contenido: Precios Web + Clientes Frecuentes + Widget Notepad -->
-  <div class="db-layout-grid">
-    
-    <!-- Columna Izquierda: Precios y Clientes -->
-    <div style="display:flex; flex-direction:column; gap:20px;">
-      
-      <!-- Tabla: Precios Vigentes en la Web (Sede Dante 260) -->
-      <div class="db-table-wrap">
-        <div class="db-table-head">
-          <div>
-            <strong class="db-table-head-title">Precios Vigentes en la Web Principal</strong>
-            <p style="font-size:var(--fz_s3); color:var(--muted); margin:0;">Estos son los precios que los clientes ven al entrar a gaswii.com</p>
-          </div>
-          <button class="ps-btn ps-btn-secondary" style="padding:4px 10px; font-size:var(--fz_s3);" data-jump-to="productos">
-            <i class="fa-solid fa-pen-to-square"></i> Modificar
-          </button>
-        </div>
-
-        <table class="db-table">
-          <thead>
-            <tr>
-              <th>Producto</th>
-              <th>Tipo</th>
-              <th>Precio Líquido</th>
-              <th>Envase</th>
-              <th>Stock</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            {datosNegocio.productos.map((p) => (
-              <tr>
-                <td><strong>{p.nombre}</strong></td>
-                <td><span class="ps-badge ps-badge-blue">{p.tipo || p.tipoCategoria || 'Gas GLP'}</span></td>
-                <td><strong style="color:var(--brand-orange); font-size:var(--fz_m);">S/ {Number(p.precioPEN || 0).toFixed(2)}</strong></td>
-                <td>{p.precioEnvase && p.precioEnvase > 0 ? `S/ ${Number(p.precioEnvase).toFixed(2)}` : '—'}</td>
-                <td>{p.stock} unid.</td>
-                <td><span class="ps-badge ps-badge-success">{p.estado || 'Activo'}</span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-      <!-- Tabla: Clientes Registrados Recientes -->
-      <div class="db-table-wrap">
-        <div class="db-table-head">
-          <div>
-            <strong class="db-table-head-title">Directorio de Clientes Recientes</strong>
-            <p style="font-size:var(--fz_s3); color:var(--muted); margin:0;">Usuarios registrados desde la web y clientes habituales de Surquillo</p>
-          </div>
-          <button class="ps-btn ps-btn-secondary" style="padding:4px 10px; font-size:var(--fz_s3);" data-jump-to="clientes">
-            Ver los 124 clientes
-          </button>
-        </div>
-
-        <table class="db-table">
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Teléfono</th>
-              <th>Dirección de Entrega</th>
-              <th>Pedido Habitual</th>
-              <th>Comprobante</th>
-            </tr>
-          </thead>
-          <tbody>
-            {clientesRecientesDemo.map((c) => (
-              <tr>
-                <td><strong>{c.nombre}</strong></td>
-                <td>
-                  <a href={`tel:${c.telefono.replace(/\s+/g, '')}`} style="color:inherit; text-decoration:none; display:inline-flex; align-items:center; gap:5px;">
-                    <i class="fa-solid fa-phone" style="font-size:11px; color:var(--brand-orange);"></i> {c.telefono}
-                  </a>
-                </td>
-                <td style="max-width:200px; font-size:var(--fz_s3); color:var(--muted);">{c.direccion}</td>
-                <td><span class="ps-badge ps-badge-blue">{c.habitual}</span></td>
-                <td><span class="ps-badge ps-badge-purple">{c.comprobante}</span></td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-
-    </div>
-
-    <!-- Columna Derecha: Widget Notepad Rápido -->
-    <div class="db-quicknote-card">
-      <div class="db-quicknote-head">
-        <strong class="db-quicknote-title">Notepad Rápido</strong>
-        <button class="ps-btn ps-btn-secondary" style="padding:4px 8px; font-size:var(--fz_s3);" data-jump-to="notepad">
-          Abrir Notepad
-        </button>
-      </div>
-
-      <!-- Lista dinámica de notas recientes -->
-      <div id="dashNotesList" class="db-notes-list">
-        {notasInicialesDemo.map((n) => (
-          <div class="db-note-item">
-            <div class="db-note-info">
-              <div class="db-note-title" style={n.done ? 'text-decoration:line-through; opacity:0.6;' : ''}>
-                {n.titulo}
-              </div>
-              <div class="db-note-snippet">{n.texto.substring(0, 45)}…</div>
-            </div>
-            <button 
-              type="button" 
-              class="db-btn-toggle-note" 
-              data-id={n.id} 
-              style={`color: ${n.done ? 'var(--green)' : 'var(--muted)'};`}
-            >
-              <i class={`fa-${n.done ? 'solid fa-circle-check' : 'regular fa-circle'}`}></i>
-            </button>
-          </div>
-        ))}
-      </div>
-
-      <!-- Formulario de apunte express -->
-      <form id="formDashQuickNote" class="db-quicknote-form">
-        <input 
-          type="text" 
-          id="inputDashQuickTitle" 
-          class="db-quicknote-input" 
-          placeholder="Título de apunte…" 
-          autocomplete="off"
-        />
-        <textarea 
-          id="inputDashQuickText" 
-          rows="3" 
-          class="db-quicknote-textarea" 
-          placeholder="Nota o pendiente del día…"
-        ></textarea>
-        <button type="submit" class="ps-btn ps-btn-primary" style="padding:6px 12px; font-size:var(--fz_s4); width:100%;">
-          <i class="fa-solid fa-plus"></i> Guardar en Notepad
-        </button>
-      </form>
-    </div>
-
-  </div>
 </section>
 
-<!-- Script Cliente Autónomo para Mini-Notepad Unificado -->
+<!-- Script Cliente Autónomo para Hidratación Dinámica -->
 <script>
   import './dashboard.js';
 </script>

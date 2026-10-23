@@ -1,0 +1,381 @@
+---
+// src/feature/personal/modulos/aprender/Aprender.astro
+// Módulo: Aprender · Centro de Conocimiento & Documentación Maestra del Sistema
+// Enfoque 100% en el Dueño del Negocio · Top 7 Temas Maestros · Paleta Noble witema.css
+// 100% Iconos Font Awesome · Cero Emojis · 100% JS Nativo · Integrado con @widev
+
+import { top7Temas } from './dataAprender.js';
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-aprender" data-aprender-init="false">
+  
+  <!-- CABECERA STICKY DEL MÓDULO -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-graduation-cap sn-header-icon"></i>
+        Aprender · Centro de Conocimiento para el Dueño
+      </h1>
+      <p class="ps-section-sub">
+        Guía práctica en español sencillo: enlaces oficiales de tu negocio, respuestas a tus dudas del día a día y secretos para aprovechar al máximo tu sistema.
+      </p>
+    </div>
+    <div class="ps-header-actions">
+      <a href="/" target="_blank" class="ps-btn ps-btn-secondary" title="Abrir sitio web público">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver Web
+      </a>
+    </div>
+  </div>
+
+  <div class="ap-full-container">
+    
+    <!-- ── BARRA SUPERIOR DE BÚSQUEDA RÁPIDA ── -->
+    <div class="ap-search-header-bar">
+      <div class="ap-search-input-wrap">
+        <i class="fa-solid fa-magnifying-glass ap-search-bar-icon"></i>
+        <input 
+          type="text" 
+          id="aprenderSearchInput" 
+          class="ap-search-bar-input" 
+          placeholder="Buscar tema, enlace, pregunta o atajo (ej: whatsapp, clientes, backup, offline, velocidad)..." 
+          autocomplete="off"
+        />
+      </div>
+      <div class="ap-search-counter" id="aprenderSearchCounter">
+        <span>7 temas maestros</span>
+      </div>
+    </div>
+
+    <!-- ── LAYOUT DIVIDIDO A PANTALLA COMPLETA (SPLIT MASTER-DETAIL) ── -->
+    <div class="ap-split-view">
+      
+      <!-- ── COLUMNA IZQUIERDA: MENÚ DE NAVEGACIÓN TOP 7 ── -->
+      <aside class="ap-nav-sidebar">
+        <div class="ap-nav-sidebar-header">
+          <div class="ap-nav-sidebar-title">
+            <i class="fa-solid fa-compass"></i>
+            <span>GUÍAS PARA EL DUEÑO</span>
+          </div>
+          <span class="ap-nav-sidebar-badge">TOP 7</span>
+        </div>
+
+        <div class="ap-nav-items-list" id="aprenderNavList">
+          {top7Temas.map((tema, index) => {
+            const isFirst = index === 0;
+            return (
+              <button 
+                type="button" 
+                class={`ap-nav-item-btn ${isFirst ? 'is-active' : ''}`} 
+                data-tema-id={tema.id}
+                title={tema.titulo}
+              >
+                <div class="ap-nav-icon-wrap">
+                  <i class={`${tema.icono} ap-nav-item-icon`}></i>
+                </div>
+                <span class="ap-nav-item-name">{tema.titulo}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <!-- TARJETA DESTACADA: CONSEJOS DE ORO -->
+        <div class="ap-gold-tip-card">
+          <div class="ap-gold-tip-top">
+            <i class="fa-solid fa-lightbulb ap-gold-tip-icon"></i>
+            <div class="ap-gold-tip-meta">
+              <span class="ap-gold-tip-title">Consejo de Oro</span>
+              <span class="ap-gold-tip-badge">Soberanía Total</span>
+            </div>
+          </div>
+          <p class="ap-gold-tip-desc">
+            Todo lo que ves aquí está pensado para darte independencia. Tus datos te pertenecen y tu sistema nunca se cae con actualizaciones.
+          </p>
+        </div>
+      </aside>
+
+      <!-- ── COLUMNA DERECHA: PANEL DETALLADO DE CONTENIDO DE ALTO VALOR ── -->
+      <main class="ap-details-viewport" id="aprenderDetailsViewport">
+        {top7Temas.map((tema, index) => {
+          const isFirst = index === 0;
+          return (
+            <article 
+              class={`ap-detail-card ${isFirst ? 'is-active' : ''}`} 
+              id={`detail-${tema.id}`} 
+              data-card-tema={tema.id}
+            >
+              <!-- CABECERA DEL TEMA -->
+              <div class="ap-detail-header">
+                <div class="ap-detail-header-left">
+                  <div class="ap-detail-icon-wrap">
+                    <i class={`${tema.icono} ap-detail-icon-lg`}></i>
+                  </div>
+                  <div>
+                    <h2 class="ap-detail-title">{tema.titulo}</h2>
+                    <p class="ap-detail-sub">{tema.subtitulo}</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PÁRRAFO DESCRIPTIVO INTRODUCTORIO -->
+              <p class="ap-detail-lead-desc">{tema.descripcion}</p>
+
+              <!-- ── TIPO 1: ENLACES OFICIALES (WII LINKS) ── -->
+              {tema.tipoSeccion === 'links' && (
+                <div class="ap-section-body">
+                  {tema.consejoRapido && (
+                    <div class="ap-quick-tip-box">
+                      <i class="fa-solid fa-lightbulb ap-tip-icon"></i>
+                      <p>{tema.consejoRapido}</p>
+                    </div>
+                  )}
+
+                  <div class="ap-links-grid">
+                    {tema.enlaces && tema.enlaces.map((link) => (
+                      <div class="ap-link-card" data-link-id={link.id}>
+                        <div class="ap-link-card-top">
+                          <div class="ap-link-title-wrap">
+                            <i class={`${link.icono} ap-link-icon`}></i>
+                            <span class="ap-link-name">{link.nombre}</span>
+                          </div>
+                          <span class="ap-link-badge">{link.badge}</span>
+                        </div>
+
+                        <p class="ap-link-desc">{link.descripcion}</p>
+
+                        <div class="ap-link-route-display">
+                          <span class="ap-link-path-code">{link.ruta}</span>
+                          <i class="fa-solid fa-copy ap-link-copy-hint"></i>
+                        </div>
+
+                        <div class="ap-link-card-actions">
+                          <a href={link.ruta} target="_blank" class="ap-btn-open-link" title={`Abrir ${link.nombre}`}>
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir
+                          </a>
+                          <button 
+                            type="button" 
+                            class="ap-btn-copy-link" 
+                            data-copy-path={link.ruta}
+                            title="Copiar enlace directo"
+                          >
+                            <i class="fa-regular fa-copy"></i> Copiar enlace
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <!-- ── TIPO 2: PREGUNTAS FRECUENTES DEL DUEÑO (10 FAQS) ── -->
+              {tema.tipoSeccion === 'faq' && (
+                <div class="ap-section-body">
+                  <div class="ap-faq-accordion-list">
+                    {tema.preguntas && tema.preguntas.map((faq, fIndex) => {
+                      const isFaqOpen = fIndex === 0;
+                      return (
+                        <div class={`ap-faq-item ${isFaqOpen ? 'is-open' : ''}`}>
+                          <button type="button" class="ap-faq-btn" aria-expanded={isFaqOpen ? 'true' : 'false'}>
+                            <div class="ap-faq-q-left">
+                              <i class={`${faq.icono} ap-faq-q-icon`}></i>
+                              <span class="ap-faq-q-text">{faq.pregunta}</span>
+                            </div>
+                            <i class="fa-solid fa-chevron-down ap-faq-chevron"></i>
+                          </button>
+                          <div class="ap-faq-body">
+                            <div class="ap-faq-body-content">
+                              {faq.respuesta.split('\n\n').map((parrafo) => (
+                                <p set:html={parrafo.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\*(.*?)\*/g, '<em>$1</em>')}></p>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              <!-- ── TIPO 3: DOCUMENTACIÓN DE ARQUITECTURA (3 PILARES) ── -->
+              {tema.tipoSeccion === 'doc' && (
+                <div class="ap-section-body">
+                  <div class="ap-pillars-grid">
+                    {tema.pilares && tema.pilares.map((pilar) => (
+                      <div class="ap-pillar-card">
+                        <div class="ap-pillar-top">
+                          <div class="ap-pillar-icon-wrap">
+                            <i class={pilar.icono}></i>
+                          </div>
+                          <div class="ap-pillar-meta">
+                            <h3 class="ap-pillar-title">{pilar.titulo}</h3>
+                            <span class="ap-pillar-sub">{pilar.subtitulo}</span>
+                          </div>
+                        </div>
+                        <p class="ap-pillar-text">{pilar.explicacion}</p>
+                        <div class="ap-pillar-analogy">
+                          <i class="fa-solid fa-lightbulb ap-pillar-analogy-icon"></i>
+                          <p>{pilar.analogia}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              <!-- ── TIPO 4: COMPARATIVA WII VS OTROS ── -->
+              {tema.tipoSeccion === 'comparar' && (
+                <div class="ap-section-body">
+                  <div class="ap-table-wrap">
+                    <table class="ap-compare-table">
+                      <thead>
+                        <tr>
+                          <th>Aspecto Clave</th>
+                          <th class="th-wii"><i class="fa-solid fa-trophy"></i> Sistema Wii (Tu Plataforma)</th>
+                          <th class="th-otros">Páginas Tradicionales (WordPress / Wix)</th>
+                          <th>Impacto Real para tu Negocio</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {tema.tabla && tema.tabla.map((fila) => (
+                          <tr>
+                            <td class="td-criterio">
+                              <strong>{fila.criterio}</strong>
+                            </td>
+                            <td class="td-wii">
+                              <i class="fa-solid fa-check ap-icon-check"></i> {fila.wii}
+                            </td>
+                            <td class="td-otros">
+                              <i class="fa-solid fa-xmark ap-icon-cross"></i> {fila.otros}
+                            </td>
+                            <td class="td-impacto">
+                              <em>{fila.impacto}</em>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
+              <!-- ── TIPO 5: TRANSPARENCIA Y SOBERANÍA DE DATOS ── -->
+              {tema.tipoSeccion === 'transparencia' && (
+                <div class="ap-section-body">
+                  <div class="ap-transparency-grid">
+                    {tema.puntosClave && tema.puntosClave.map((punto) => (
+                      <div class="ap-trans-card">
+                        <div class="ap-trans-header">
+                          <i class={`${punto.icono} ap-trans-icon`}></i>
+                          <h3 class="ap-trans-title">{punto.titulo}</h3>
+                        </div>
+                        <p class="ap-trans-text">{punto.texto}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {tema.accionBackup && (
+                    <div class="ap-backup-banner">
+                      <div class="ap-backup-meta">
+                        <i class="fa-solid fa-download ap-backup-icon"></i>
+                        <div>
+                          <h4 class="ap-backup-title">Tus Datos Respaldados en Cualquier Momento</h4>
+                          <p class="ap-backup-desc">Descarga un archivo JSON estructurado con toda la base de datos de tu empresa con 1 clic.</p>
+                        </div>
+                      </div>
+                      <a href={tema.accionBackup.url} class="ap-btn-backup-action">
+                        <i class="fa-solid fa-floppy-disk"></i> {tema.accionBackup.textoBtn}
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <!-- ── TIPO 6: ACERCA DE NOSOTROS & SOPORTE ── -->
+              {tema.tipoSeccion === 'acerca' && (
+                <div class="ap-section-body">
+                  <div class="ap-values-grid">
+                    {tema.valores && tema.valores.map((val) => (
+                      <div class="ap-value-card">
+                        <div class="ap-value-icon">
+                          <i class={val.icono}></i>
+                        </div>
+                        <h3 class="ap-value-title">{val.titulo}</h3>
+                        <p class="ap-value-text">{val.texto}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {tema.soporteDirecto && (
+                    <div class="ap-support-card">
+                      <div class="ap-support-header">
+                        <i class="fa-solid fa-headset ap-support-icon"></i>
+                        <div>
+                          <h4 class="ap-support-title">¿Necesitas Asistencia o Tienes una Consulta?</h4>
+                          <p class="ap-support-desc">{tema.soporteDirecto.mensaje}</p>
+                        </div>
+                      </div>
+                      <div class="ap-support-actions">
+                        <a href={tema.soporteDirecto.modulo} class="ap-btn-support-ticket">
+                          <i class="fa-solid fa-ticket"></i> Generar Ticket en Ayuda
+                        </a>
+                        <a href={`mailto:${tema.soporteDirecto.correo}`} class="ap-btn-support-email">
+                          <i class="fa-solid fa-envelope"></i> Escribir a {tema.soporteDirecto.correo}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              <!-- ── TIPO 7: ATAJOS DE TECLADO & PRODUCTIVIDAD ── -->
+              {tema.tipoSeccion === 'atajos' && (
+                <div class="ap-section-body">
+                  <div class="ap-shortcuts-cards-grid">
+                    {tema.atajos && tema.atajos.map((at) => (
+                      <div class="ap-shortcut-item-card">
+                        <div class="ap-shortcut-header">
+                          <i class={`${at.icono} ap-shortcut-icon`}></i>
+                          <span class="ap-shortcut-name">{at.nombre}</span>
+                          <span class="ap-kbd-pill">{at.teclas}</span>
+                        </div>
+                        <p class="ap-shortcut-desc">{at.explicacion}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {tema.reglasOro && (
+                    <div class="ap-gold-rules-card">
+                      <h4 class="ap-gold-rules-title">
+                        <i class="fa-solid fa-award ap-gold-rules-icon"></i> Las 4 Reglas de Oro para Gestionar tu Negocio con Éxito
+                      </h4>
+                      <ul class="ap-gold-rules-list">
+                        {tema.reglasOro.map((regla) => (
+                          <li>
+                            <i class="fa-solid fa-circle-check ap-rule-icon"></i>
+                            <span>{regla}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              )}
+
+            </article>
+          );
+        })}
+      </main>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import './aprender.js';
+</script>

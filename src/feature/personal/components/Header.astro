@@ -3,6 +3,9 @@
 // Barra superior con logo de sede, buscador, conmutador de temas y dropdown de usuario
 import Busqueda from './Busqueda.astro';
 import { datosNegocio } from '@/negocio.js';
+
+const defaultNombre = '';
+const defaultEmail = '';
 ---
 
 <header class="ps-topbar">
@@ -12,16 +15,21 @@ import { datosNegocio } from '@/negocio.js';
       <i class="fa-solid fa-bars"></i>
     </button>
 
-    <div class="ps-brand">
-      <img src={datosNegocio.logo} alt={datosNegocio.nombre} class="ps-logo" />
+    <a href="/" class="ps-brand" title="Ir a la Tienda / Inicio">
+      <picture class="ps-brand-picture">
+        <source media="(max-width: 900px)" srcset={datosNegocio.logoFull} />
+        <img src={datosNegocio.logo} alt={datosNegocio.nombre} class="ps-logo" />
+      </picture>
       <div class="ps-brand-text">
-        <span class="ps-brand-title">{datosNegocio.nombre.toUpperCase()}</span>
+        <span class="ps-brand-title">
+          {datosNegocio.nombre.split(' ')[0]} <span>{datosNegocio.nombre.split(' ').slice(1).join(' ')}</span>
+        </span>
         <span class="ps-brand-sub">
           <span class="ps-badge-online"></span>
           Sede {datosNegocio.distritoSede} · Centro de Operaciones
         </span>
       </div>
-    </div>
+    </a>
   </div>
 
   <!-- Buscador Global Modular -->
@@ -34,9 +42,9 @@ import { datosNegocio } from '@/negocio.js';
       <i class="fa-solid fa-circle-half-stroke"></i>
     </button>
 
-    <!-- Ver Web Pública -->
-    <a href="/" target="_blank" class="ps-btn-icon" aria-label="Sitio web público" title="Ver Web Pública">
-      <i class="fa-solid fa-arrow-up-right-from-square"></i>
+    <!-- Ver Tienda Pública -->
+    <a href="/" target="_blank" class="ps-btn-icon" aria-label="Ver Tienda / Web Pública" title="Ver Tienda / Web Pública">
+      <i class="fa-solid fa-store"></i>
     </a>
 
     <!-- Badge del Usuario (Solo Avatar + Nombre + Dropdown al hacer clic) -->
@@ -45,22 +53,22 @@ import { datosNegocio } from '@/negocio.js';
         <div class="ps-user-avatar">
           <img 
             id="topbarUserImg" 
-            src="https://api.dicebear.com/7.x/initials/svg?seed=Wilder&backgroundColor=ff6600,0284c7,10b981" 
+            src="/smile.avif" 
             alt="Avatar" 
           />
         </div>
-        <span class="ps-user-name" id="topbarUserName">Wilder Taype</span>
+        <span class="ps-user-name" id="topbarUserName">{defaultNombre}</span>
         <i class="fa-solid fa-chevron-down ps-user-chevron"></i>
       </div>
 
       <!-- Dropdown Flotante -->
       <div class="ps-dropdown-menu" id="userDropdownMenu">
         <div class="ps-dropdown-header">
-          <strong style="font-size:var(--fz_s4); color:var(--ink); display:block;" id="dropdownUserName">Wilder Taype</strong>
-          <span class="ps-dropdown-email" id="dropdownUserEmail">wilder.taype@gaswii.com</span>
+          <strong style="font-size:var(--fz_s4); color:var(--ink); display:block;" id="dropdownUserName">{defaultNombre}</strong>
+          <span class="ps-dropdown-email" id="dropdownUserEmail">{defaultEmail}</span>
         </div>
         <a href="/" target="_blank" class="ps-dropdown-item">
-          <i class="fa-solid fa-store"></i> Ver Tienda Pública
+          <i class="fa-solid fa-globe"></i> Ver Web Pública
         </a>
         <button type="button" class="ps-dropdown-item" data-jump-to="perfil">
           <i class="fa-solid fa-user-gear"></i> Mi Perfil

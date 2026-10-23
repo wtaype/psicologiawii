@@ -1,169 +1,457 @@
 ---
 // src/feature/personal/modulos/whatsapp/Whatsapp.astro
-// Módulo de WhatsApp: Centro de Mensajería Oficial & Sandbox Smartphone (Solgas Surquillo)
-// 100% JS Nativo · Integrado con @widev · 0 CSS Inline
+// Módulo de WhatsApp: Centro de Mensajería, Canales Web y Sandbox
+// 100% JS Nativo · Arquitectura Modular con Pestañas ("Ajustes / Canales" y "Plantillas")
+// Layouts Porcentuales (60% / 40%) con Simulador Smartphone en Tiempo Real
+
+import { datosNegocio, configSemilla } from '@/negocio.js';
+import whatsappSemilla from '@/semillas/whatsapp.json';
+import productosSemilla from '@/semillas/productos.json';
+
+import waMainCss from './whatsapp.css?inline';
+import waCanalesCss from './tabs/canales.css?inline';
+import waPlantillasCss from './tabs/plantillas.css?inline';
 
 interface Props {
   esActivo?: boolean;
 }
 
 const { esActivo = false } = Astro.props;
+
+const term = configSemilla?.terminologia || {};
+const nombreNegocio = datosNegocio.nombreCorto || datosNegocio.nombre || '';
+const subNegocio = datosNegocio.identidad?.especialista ? `${datosNegocio.identidad.especialista} · Oficial` : (datosNegocio.subtitulo || 'Canal Oficial');
+const avatarNegocio = datosNegocio.identidad?.logo || datosNegocio.logo || '/smile.avif';
+const telefonoOficial = whatsappSemilla?.telefonoOficial || datosNegocio.whatsapp || '';
+const telefonoLimpio = String(telefonoOficial).replace(/^51/, '');
+const prodPrincipal = datosNegocio.productoPrincipal || productosSemilla?.[0]?.nombre || 'Producto Principal';
+const dirNegocio = datosNegocio.ubicacion?.direccion || '';
+const distNegocio = datosNegocio.ubicacion?.distrito || '';
+const listaProductos = Array.isArray(productosSemilla) && productosSemilla.length > 0 ? productosSemilla : [{ nombre: prodPrincipal, precio: 0 }];
 ---
 
+<!-- Inyección modular de estilos con set:html (0 CSS generado en compilación) -->
+<style is:global set:html={waMainCss + '\n' + waCanalesCss + '\n' + waPlantillasCss}></style>
+
 <section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-whatsapp" data-whatsapp-init="false">
-  
-  <!-- CABECERA SUPERIOR STICKY -->
-  <div class="ps-section-header">
-    <div class="ps-section-title-wrap">
-      <h1 class="ps-section-title">
-        <i class="fa-brands fa-whatsapp sn-header-icon" style="color: #25d366;"></i>
-        WhatsApp · Centro de Mensajería & Sandbox
-      </h1>
-      <p class="ps-section-sub">
-        Formatos y plantillas oficiales de despacho, garantía y fidelización con vista previa en vivo de smartphone.
-      </p>
-    </div>
-  </div>
+  <div class="wa-admin-shell">
 
-  <!-- LAYOUT DIVIDIDO (CONFIGURADOR 56% / SIMULADOR MÓVIL 44%) -->
-  <div class="wa-split-layout">
-    
-    <!-- COLUMNA 1: CONFIGURADOR DE PLANTILLAS Y VARIABLES -->
-    <div class="wa-card">
-      <h2 class="wa-card-title">
-        <i class="fa-solid fa-layer-group sn-title-icon"></i> 1. Selecciona la Plantilla Oficial
-      </h2>
-
-      <!-- Grid de 6 Plantillas Maestras -->
-      <div class="wa-templates-grid" id="waTemplatesGrid">
-        <!-- Render dinámico desde whatsapp.js -->
+    <!-- 1. BARRA PRINCIPAL DE PESTAÑAS (ESTILO BLOGS CON BORDER-RADIUS 1.2vh) -->
+    <div class="wa-main-tabs-bar">
+      <div class="wa-tabs-nav">
+        <button type="button" class="wa-tab-btn active" id="waBtnTabCanales">
+          <i class="fa-solid fa-sliders"></i> Ajustes / Canales
+        </button>
+        <button type="button" class="wa-tab-btn" id="waBtnTabPlantillas">
+          <i class="fa-solid fa-message"></i> Plantillas
+        </button>
       </div>
 
-      <!-- Parámetros Dinámicos -->
-      <div class="wa-params-box">
-        <div class="wa-params-title">
-          <i class="fa-solid fa-sliders"></i> 2. Personalizar Datos del Cliente y Despacho
-        </div>
-
-        <div class="wa-form-row">
-          <div class="sn-form-group">
-            <label class="sn-label" for="waInpCliente">Nombre del Cliente</label>
-            <input type="text" id="waInpCliente" class="sn-input" value="Wilder Taype" />
-          </div>
-          <div class="sn-form-group">
-            <label class="sn-label" for="waInpCelular">Celular WhatsApp Destino</label>
-            <input type="tel" id="waInpCelular" class="sn-input" value="961229280" placeholder="961229280" />
-          </div>
-        </div>
-
-        <div class="wa-form-row">
-          <div class="sn-form-group">
-            <label class="sn-label" for="waInpProducto">Producto / Balón</label>
-            <input type="text" id="waInpProducto" class="sn-input" value="Balón SOLGAS Premium 10 kg" />
-          </div>
-          <div class="sn-form-group">
-            <label class="sn-label" for="waInpMonto">Total PEN (S/)</label>
-            <input type="text" id="waInpMonto" class="sn-input" value="65.00" />
-          </div>
-        </div>
-
-        <div class="wa-form-row">
-          <div class="sn-form-group">
-            <label class="sn-label" for="waInpChofer">Conductor Asignado</label>
-            <input type="text" id="waInpChofer" class="sn-input" value="Juan Quispe (Móvil 02)" />
-          </div>
-          <div class="sn-form-group">
-            <label class="sn-label" for="waInpEta">Tiempo de Entrega (ETA)</label>
-            <input type="text" id="waInpEta" class="sn-input" value="12–15" />
-          </div>
-        </div>
-
-        <div class="sn-form-group sn-mt-10">
-          <label class="sn-label" for="waInpDireccion">Dirección de Entrega</label>
-          <input type="text" id="waInpDireccion" class="sn-input" value="Jr. Dante 260, Surquillo" />
-        </div>
-      </div>
-
-      <!-- Editor de Texto Final -->
-      <div class="sn-form-group">
-        <label class="sn-label" for="waTextareaMensaje">
-          <i class="fa-solid fa-pen-to-square"></i> 3. Mensaje Final Formateado (Editable)
-        </label>
-        <textarea id="waTextareaMensaje" class="wa-textarea"></textarea>
+      <div class="wa-tabs-actions">
+        <button type="button" class="wa-btn-reset-top" id="waBtnResetCanales" title="Restaurar valores predeterminados de fábrica">
+          <i class="fa-solid fa-rotate-left"></i> Restaurar
+        </button>
+        <button type="button" class="wa-btn-submit" id="waBtnGuardarTodo">
+          <i class="fa-solid fa-floppy-disk"></i> Guardar Ajustes
+        </button>
       </div>
     </div>
 
-    <!-- COLUMNA 2: SIMULADOR DE SMARTPHONE EN VIVO (SANDBOX) -->
-    <div class="wa-phone-wrap">
-      <div class="wa-phone-frame">
-        <!-- Status Bar -->
-        <div class="wa-phone-status-bar">
-          <span id="waPhoneClock">9:41</span>
-          <div>
-            <i class="fa-solid fa-signal" style="margin-right: 4px;"></i>
-            <i class="fa-solid fa-wifi" style="margin-right: 4px;"></i>
-            <i class="fa-solid fa-battery-full"></i>
-          </div>
-        </div>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- 2. PESTAÑA 1: AJUSTES / CANALES WEB (LAYOUT 60% / 40% CON MOCKUP) -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="wa-tab-view" id="waViewCanales">
+      <div class="wa-canales-shell">
 
-        <!-- Chat Header -->
-        <div class="wa-chat-header">
-          <div class="wa-chat-sender-info">
-            <i class="fa-solid fa-arrow-left" style="color: #aebac1; font-size: 13px;"></i>
-            <img src="https://imgwii.web.app/smile.avif" alt="Solgas" class="wa-chat-avatar" />
-            <div class="wa-chat-sender-meta">
-              <div class="wa-chat-sender-name">
-                Solgas Surquillo
-                <i class="fa-solid fa-circle-check wa-chat-verified-icon"></i>
+        <!-- Columna Izquierda (60%): Selector de Canales, Editor y Variables de Prueba -->
+        <div class="wa-canales-main-card">
+          
+          <h2 class="wa-canales-section-title">
+            <i class="fa-solid fa-layer-group"></i> 1. Selecciona el Canal Web a Personalizar
+          </h2>
+
+          <!-- Selector de Canales Web (Tarjetas idénticas a Plantillas) -->
+          <div class="wa-channel-selector-grid">
+            
+            <div class="wa-channel-sel-card active" data-canal-id="canal_catalogo_producto">
+              <div class="wa-channel-sel-head">
+                <i class="fa-solid fa-boxes-stacked"></i>
+                <span>Catálogo de Productos</span>
               </div>
-              <div class="wa-chat-sender-sub">Cuenta de empresa oficial</div>
+              <div class="wa-channel-sel-desc">Botón "Agendar por WhatsApp" en tarjetas de servicios clínicos.</div>
+            </div>
+
+            <div class="wa-channel-sel-card" data-canal-id="canal_modal_express">
+              <div class="wa-channel-sel-head">
+                <i class="fa-solid fa-cart-shopping"></i>
+                <span>Modal de Pedido Express</span>
+              </div>
+              <div class="wa-channel-sel-desc">Checkout emergente de compra rápida (Header y Hero).</div>
+            </div>
+
+            <div class="wa-channel-sel-card" data-canal-id="canal_general_header">
+              <div class="wa-channel-sel-head">
+                <i class="fa-solid fa-comments"></i>
+                <span>Consulta General</span>
+              </div>
+              <div class="wa-channel-sel-desc">Saludo general para consultas antes de comprar.</div>
+            </div>
+
+            <div class="wa-channel-sel-card" data-canal-id="canal_calculadora">
+              <div class="wa-channel-sel-head">
+                <i class="fa-solid fa-calculator"></i>
+                <span>Calculadora de Rendimiento</span>
+              </div>
+              <div class="wa-channel-sel-desc">Botón "Pedir Gas Calculado" con estimación de días.</div>
+            </div>
+
+          </div>
+
+          <!-- Caja de Edición del Canal Seleccionado -->
+          <div class="wa-active-channel-box">
+            
+            <div class="wa-channel-header-info">
+              <div>
+                <strong id="waCanalTitle" style="font-size: 1.05rem; color: var(--tx);">Catálogo de Productos</strong>
+                <p id="waCanalDesc" style="margin: 2px 0 0; font-size: 0.84rem; color: var(--tx2);">
+                  Mensaje generado al hacer clic en 'Pedir por WhatsApp' en cualquier producto del catálogo.
+                </p>
+              </div>
+              <span class="wa-channel-badge-pill" id="waCanalBadge">Catálogo</span>
+            </div>
+
+            <!-- Chips de Etiquetas Dinámicas -->
+            <div class="wa-tags-bar">
+              <span class="wa-tags-label"><i class="fa-solid fa-tags"></i> Insertar etiqueta en el cursor:</span>
+              <div class="wa-tags-container" id="waChipsContainer"></div>
+            </div>
+
+            <!-- Editor Textarea del Canal -->
+            <div class="wa-textarea-box">
+              <textarea 
+                id="waTextareaCanalActivo" 
+                class="wa-channel-textarea" 
+                placeholder="Escribe la plantilla del canal aquí..."
+              ></textarea>
+              <div class="wa-textarea-footer">
+                <span class="wa-counter-badge optimal" id="waCntCanalActivo">0 caracteres</span>
+              </div>
+            </div>
+
+            <!-- Variables de Simulación / Prueba en Vivo -->
+            <div class="wa-test-vars-box">
+              <div class="wa-test-vars-header">
+                <i class="fa-solid fa-sliders"></i> Variables de Prueba en Vivo (Simulador)
+              </div>
+
+              <!-- Simulación para Catálogo -->
+              <div class="wa-test-form-row" id="waTestVars_catalogo">
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimProd">{term.producto || 'Producto de Prueba'}</label>
+                  <select id="waSimProd" class="wa-field-select">
+                    {listaProductos.map((p) => (
+                      <option value={p.nombre}>{p.nombre}</option>
+                    ))}
+                  </select>
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimPrecio">Precio Simulado (S/)</label>
+                  <input type="text" id="waSimPrecio" class="wa-field-input" value={String(listaProductos[0]?.precio !== undefined ? Number(listaProductos[0]?.precio).toFixed(2) : '0.00')} />
+                </div>
+              </div>
+
+              <!-- Simulación para Modal Express -->
+              <div class="wa-test-form-row" id="waTestVars_modal" style="display: none;">
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimCliente">Cliente</label>
+                  <input type="text" id="waSimCliente" class="wa-field-input" value="Cliente Frecuente" />
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimDireccion">Dirección</label>
+                  <input type="text" id="waSimDireccion" class="wa-field-input" value={dirNegocio} placeholder="Dirección sede" />
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimDistrito">Distrito</label>
+                  <input type="text" id="waSimDistrito" class="wa-field-input" value={distNegocio} placeholder="Distrito" />
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimPago">Medio de Pago</label>
+                  <select id="waSimPago" class="wa-field-select">
+                    <option value="Efectivo (Pago contra entrega)">Efectivo</option>
+                    <option value="Yape / Plin">Yape / Plin</option>
+                    <option value="Tarjeta POS (Visa / Mastercard)">Tarjeta POS</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Simulación para General Header -->
+              <div class="wa-test-form-row" id="waTestVars_general" style="display: none;">
+                <div class="wa-field-group">
+                  <label class="wa-field-label">Nombre del Negocio</label>
+                  <input type="text" class="wa-field-input" value={nombreNegocio} readonly />
+                </div>
+              </div>
+
+              <!-- Simulación para Calculadora -->
+              <div class="wa-test-form-row" id="waTestVars_calculadora" style="display: none;">
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimKg">Unidad / Capacidad</label>
+                  <input type="text" id="waSimKg" class="wa-field-input" value="10" />
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimPersonas">Personas</label>
+                  <input type="text" id="waSimPersonas" class="wa-field-input" value="3" />
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimDias">Días Estimados</label>
+                  <input type="text" id="waSimDias" class="wa-field-input" value="30" />
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Barra de Configuración del Teléfono Oficial de Recepción -->
+          <div class="wa-tel-config-bar">
+            <div class="wa-tel-meta">
+              <i class="fa-solid fa-headset"></i>
+              <div>
+                <h5>Número de WhatsApp para Recepción de Pedidos</h5>
+                <p>Este número recibe todos los pedidos y consultas disparados desde la página web.</p>
+              </div>
+            </div>
+
+            <div class="wa-tel-input-box">
+              <span class="wa-tel-prefix"><i class="fa-solid fa-phone"></i> +51</span>
+              <input 
+                type="tel" 
+                id="waInputOficial" 
+                class="wa-tel-input" 
+                value={telefonoLimpio} 
+                placeholder="936369384" 
+                maxlength="9"
+              />
             </div>
           </div>
 
-          <div class="wa-chat-header-icons">
-            <i class="fa-solid fa-video"></i>
-            <i class="fa-solid fa-phone"></i>
-            <i class="fa-solid fa-ellipsis-vertical"></i>
-          </div>
         </div>
 
-        <!-- Chat Body -->
-        <div class="wa-chat-body">
-          <div class="wa-chat-date-pill">Hoy</div>
+        <!-- Columna Derecha (40%): Simulador Smartphone en Vivo -->
+        <div class="wa-phone-container">
+          <div class="wa-phone-frame">
+            <!-- Barra de Estado Móvil -->
+            <div class="wa-phone-notch-bar">
+              <span id="waPhoneClockCanales">9:41</span>
+              <div>
+                <i class="fa-solid fa-signal" style="margin-right: 4px;"></i>
+                <i class="fa-solid fa-wifi" style="margin-right: 4px;"></i>
+                <i class="fa-solid fa-battery-full"></i>
+              </div>
+            </div>
 
-          <div class="wa-chat-bubble-out">
-            <div id="waChatBubbleText">Cargando mensaje...</div>
-            <div class="wa-chat-bubble-meta">
-              <span id="waChatTime">09:41</span>
-              <i class="fa-solid fa-check-double wa-chat-ticks"></i>
+            <!-- Cabecera del Chat -->
+            <div class="wa-chat-header">
+              <div class="wa-chat-sender-info">
+                <i class="fa-solid fa-arrow-left" style="color: #8696a0; font-size: 13px;"></i>
+                <img src={avatarNegocio} alt={nombreNegocio} class="wa-chat-avatar" />
+                <div>
+                  <div class="wa-chat-sender-name">
+                    <span>{nombreNegocio}</span>
+                    <i class="fa-solid fa-circle-check wa-chat-verified-icon"></i>
+                  </div>
+                  <div class="wa-chat-sender-sub">{subNegocio}</div>
+                </div>
+              </div>
+              <div style="color: #8696a0; display: flex; gap: 12px; font-size: 13px;">
+                <i class="fa-solid fa-phone"></i>
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </div>
+            </div>
+
+            <!-- Cuerpo del Chat (Mensaje simulado del cliente al negocio con formato real) -->
+            <div class="wa-chat-body">
+              <div class="wa-chat-date-pill">Hoy</div>
+              <div class="wa-chat-bubble-out">
+                <div id="waChatBubbleCanales">Cargando mensaje...</div>
+                <div class="wa-chat-bubble-meta">
+                  <span id="waChatTimeCanales">09:41</span>
+                  <i class="fa-solid fa-check-double wa-chat-ticks"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Falso de WhatsApp -->
+            <div class="wa-chat-fake-footer">
+              <i class="fa-regular fa-face-smile" style="color: #8696a0; font-size: 16px;"></i>
+              <div class="wa-chat-fake-input">Escribe un mensaje aquí...</div>
+              <div class="wa-chat-mic-btn">
+                <i class="fa-solid fa-microphone"></i>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- Chat Footer -->
-        <div class="wa-chat-footer">
-          <i class="fa-regular fa-face-smile" style="color: #8696a0; font-size: 18px;"></i>
-          <div class="wa-chat-input-fake">Mensaje</div>
-          <i class="fa-solid fa-paperclip" style="color: #8696a0; font-size: 16px;"></i>
-          <div class="wa-chat-mic-btn">
-            <i class="fa-solid fa-microphone"></i>
+          <!-- Acciones de Disparo Directo -->
+          <div class="wa-phone-actions">
+            <button type="button" class="wa-btn-open-ws" id="btnWaOpenWsCanales">
+              <i class="fa-brands fa-whatsapp"></i> Probar en WhatsApp
+            </button>
+            <button type="button" class="wa-btn-copy" id="btnWaCopyCanales" title="Copiar mensaje">
+              <i class="fa-solid fa-copy"></i> Copiar
+            </button>
           </div>
         </div>
+
       </div>
+    </div>
 
-      <!-- Acciones de Disparo Directo -->
-      <div class="wa-sandbox-actions">
-        <button type="button" class="wa-btn-open-ws" id="btnWaOpenWs">
-          <i class="fa-brands fa-whatsapp"></i> Abrir en WhatsApp Web / Móvil
-        </button>
-        <button type="button" class="wa-btn-copy" id="btnWaCopy" title="Copiar mensaje">
-          <i class="fa-solid fa-copy"></i> Copiar
-        </button>
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- 3. PESTAÑA 2: PLANTILLAS OFICIALES & SANDBOX (DESPACHO GLP)      -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <div class="wa-tab-view hidden" id="waViewPlantillas">
+      <div class="wa-plantillas-shell">
+        
+        <!-- Columna Izquierda (60%): Selector de Plantillas y Variables Operativas -->
+        <div class="wa-ops-card">
+          <h2 class="wa-ops-title">
+            <i class="fa-solid fa-layer-group"></i> 1. Selecciona la Plantilla de Despacho
+          </h2>
+
+          <!-- Grid dinámico de las 5 plantillas -->
+          <div class="wa-tpls-grid" id="waTemplatesGrid"></div>
+
+          <!-- Variables Operativas de Gaswii (Cero SUNAT) -->
+          <div class="wa-vars-box">
+            <div class="wa-vars-header">
+              <i class="fa-solid fa-sliders"></i> 2. Variables Operativas de Gas
+            </div>
+
+            <div class="wa-form-row">
+              <div class="wa-field-group">
+                <label class="wa-field-label" for="waInpCliente">Cliente / Contacto</label>
+                <input type="text" id="waInpCliente" class="wa-field-input" value="Familia Gonzales" />
+              </div>
+              <div class="wa-field-group">
+                <label class="wa-field-label" for="waInpCelular">Celular WhatsApp Destino</label>
+                <input type="tel" id="waInpCelular" class="wa-field-input" placeholder="51900000000" />
+              </div>
+            </div>
+
+            <div class="wa-form-row">
+              <div class="wa-field-group">
+                <label class="wa-field-label" for="waInpPedidoId">Código de Pedido</label>
+                <input type="text" id="waInpPedidoId" class="wa-field-input" value="001" />
+              </div>
+              <div class="wa-field-group">
+                <label class="wa-field-label" for="waInpProducto">{term.producto || 'Producto'}</label>
+                <select id="waInpProducto" class="wa-field-select">
+                  {listaProductos.map((p) => (
+                    <option value={p.nombre}>{p.nombre}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div class="wa-form-row">
+              <div class="wa-field-group">
+                <label class="wa-field-label" for="waInpMonto">Monto Total (S/)</label>
+                <input type="text" id="waInpMonto" class="wa-field-input" value={String(listaProductos[0]?.precio !== undefined ? Number(listaProductos[0]?.precio).toFixed(2) : '0.00')} />
+              </div>
+              <div class="wa-field-group">
+                <label class="wa-field-label" for="waInpEta">Tiempo Estimado (ETA)</label>
+                <input type="text" id="waInpEta" class="wa-field-input" value="Atención Inmediata" />
+              </div>
+            </div>
+
+            <div class="wa-form-row">
+              <div class="wa-field-group">
+                <label class="wa-field-label" for="waInpDireccion">Dirección de Entrega</label>
+                <input type="text" id="waInpDireccion" class="wa-field-input" value={dirNegocio} placeholder="Dirección de entrega" />
+              </div>
+              <div class="wa-field-group">
+                <label class="wa-field-label" for="waInpDistrito">Distrito</label>
+                <input type="text" id="waInpDistrito" class="wa-field-input" value={distNegocio} placeholder="Distrito" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Editor del Mensaje Final -->
+          <div class="wa-final-editor-box">
+            <label class="wa-field-label" for="waTextareaMensajeFinal">
+              <i class="fa-solid fa-pen-to-square"></i> 3. Mensaje Final Formateado (Editable en Vivo)
+            </label>
+            <textarea id="waTextareaMensajeFinal" class="wa-final-textarea"></textarea>
+          </div>
+        </div>
+
+        <!-- Columna Derecha (40%): Simulador Smartphone en Vivo -->
+        <div class="wa-phone-container">
+          <div class="wa-phone-frame">
+            <!-- Barra de Estado Móvil -->
+            <div class="wa-phone-notch-bar">
+              <span id="waPhoneClock">9:41</span>
+              <div>
+                <i class="fa-solid fa-signal" style="margin-right: 4px;"></i>
+                <i class="fa-solid fa-wifi" style="margin-right: 4px;"></i>
+                <i class="fa-solid fa-battery-full"></i>
+              </div>
+            </div>
+
+            <!-- Cabecera del Chat -->
+            <div class="wa-chat-header">
+              <div class="wa-chat-sender-info">
+                <i class="fa-solid fa-arrow-left" style="color: #8696a0; font-size: 13px;"></i>
+                <img src={avatarNegocio} alt={nombreNegocio} class="wa-chat-avatar" />
+                <div>
+                  <div class="wa-chat-sender-name">
+                    <span>{nombreNegocio}</span>
+                    <i class="fa-solid fa-circle-check wa-chat-verified-icon"></i>
+                  </div>
+                  <div class="wa-chat-sender-sub">{subNegocio}</div>
+                </div>
+              </div>
+              <div style="color: #8696a0; display: flex; gap: 12px; font-size: 13px;">
+                <i class="fa-solid fa-phone"></i>
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+              </div>
+            </div>
+
+            <!-- Cuerpo del Chat -->
+            <div class="wa-chat-body">
+              <div class="wa-chat-date-pill">Hoy</div>
+              <div class="wa-chat-bubble-out">
+                <div id="waChatBubbleText">Cargando mensaje...</div>
+                <div class="wa-chat-bubble-meta">
+                  <span id="waChatTime">09:41</span>
+                  <i class="fa-solid fa-check-double wa-chat-ticks"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Footer Falso de WhatsApp -->
+            <div class="wa-chat-fake-footer">
+              <i class="fa-regular fa-face-smile" style="color: #8696a0; font-size: 16px;"></i>
+              <div class="wa-chat-fake-input">Escribe un mensaje aquí...</div>
+              <div class="wa-chat-mic-btn">
+                <i class="fa-solid fa-microphone"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acciones de Disparo Directo -->
+          <div class="wa-phone-actions">
+            <button type="button" class="wa-btn-open-ws" id="btnWaOpenWs">
+              <i class="fa-brands fa-whatsapp"></i> Abrir en WhatsApp
+            </button>
+            <button type="button" class="wa-btn-copy" id="btnWaCopy" title="Copiar mensaje">
+              <i class="fa-solid fa-copy"></i> Copiar
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
 
   </div>
-
 </section>
 
 <script>

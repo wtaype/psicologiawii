@@ -1,10 +1,12 @@
 // src/feature/cliente/modulos/04-soporte/dataSoporte.js
-// Capa de Datos Local-First de Soporte y Mesa de Ayuda · Solgas Surquillo
+// Capa de Datos Local-First de Consultas y Mesa de Ayuda
 // Gestión de tickets, Smart Cache con wiSoporte y wiCorreo, Firestore y Cloudflare Worker
 
 import { getls, savels } from '@widev';
 
-const CLOUDFLARE_CORREO_ENDPOINT = 'https://gaswii-correo.lourdesinformatica10.workers.dev/enviar';
+import { datosNegocio } from '../../../../negocio.js';
+
+const CLOUDFLARE_CORREO_ENDPOINT = import.meta.env.PUBLIC_CORREO_WORKER_ENDPOINT || 'https://correo.gaswii.workers.dev/enviar';
 
 /**
  * Obtiene la lista de tickets del cliente desde la caché local wiSoporte (0ms)
@@ -23,42 +25,44 @@ export function guardarTicketsLocal(tickets) {
 }
 
 /**
- * Genera un código de ticket amigable para el cliente (ej: GW-TK-1082)
+ * Genera un código de ticket amigable para el cliente (ej: TK-1082)
  */
 function generarCodigoTicket() {
   const rand = Math.floor(1000 + Math.random() * 9000);
-  return `GW-TK-${rand}`;
+  return `TK-${rand}`;
 }
 
 /**
- * Despacha el correo de notificación y acuse a través del Cloudflare Worker (gaswii-correo + Resend)
+ * Despacha el correo de notificación y acuse a través del Cloudflare Worker
  */
 async function despacharCorreoWorker(ticket) {
   try {
+    const nombreEmpresa = datosNegocio.nombreCorto || datosNegocio.nombre || 'Atención al Cliente';
+    const colorMarca = datosNegocio.colorPrimario || '#ff6600';
     const payload = {
       tipo: 'soporte',
-      para: ticket.email || 'wtaypeee@gmail.com',
-      nombre: ticket.nombre || 'Vecino Solgas',
-      asunto: `🔥 Solicitud Recibida #${ticket.ticketId} · Solgas Surquillo`,
-      resumen: `Tu solicitud de ${ticket.tipo.toUpperCase()} #${ticket.ticketId} ha sido registrada con éxito.`,
+      para: ticket.email || datosNegocio.email || '',
+      nombre: ticket.nombre || 'Cliente',
+      asunto: `🏛️ Consulta Recibida #${ticket.ticketId} · ${nombreEmpresa}`,
+      resumen: `Tu consulta sobre ${ticket.tipo.toUpperCase()} #${ticket.ticketId} ha sido registrada con éxito.`,
       html: `
         <div style="font-family:'Segoe UI',sans-serif; max-width:580px; margin:0 auto; padding:20px; border:1px solid #e2e8f0; border-radius:12px; background:#ffffff;">
-          <div style="background:#ff6600; padding:14px 20px; border-radius:8px 8px 0 0; color:#ffffff; font-weight:800; font-size:1.1rem;">
-            SOLGAS SURQUILLO · MESA DE AYUDA
+          <div style="background:${colorMarca}; padding:14px 20px; border-radius:8px 8px 0 0; color:#ffffff; font-weight:800; font-size:1.1rem; letter-spacing:0.5px;">
+            ${nombreEmpresa.toUpperCase()} · MESA DE CONSULTAS
           </div>
           <div style="padding:20px;">
-            <h3 style="color:#0f172a; margin-top:0;">Hemos recibido tu solicitud</h3>
+            <h3 style="color:#0f172a; margin-top:0;">Hemos recibido tu consulta</h3>
             <p style="color:#475569; font-size:0.9rem;">
-              Hola <strong>${ticket.nombre}</strong>, tu ticket <strong>#${ticket.ticketId}</strong> ha sido ingresado en nuestro sistema.
+              Estimado(a) <strong>${ticket.nombre}</strong>, tu ticket de atención <strong>#${ticket.ticketId}</strong> ha sido ingresado en nuestro sistema.
             </p>
-            <div style="background:#f8fafc; border-left:4px solid #ff6600; padding:12px; margin:16px 0; border-radius:4px;">
-              <p style="margin:0; font-size:0.85rem; color:#334155;"><strong>Trámite:</strong> ${ticket.tipo.toUpperCase()}</p>
+            <div style="background:#f8fafc; border-left:4px solid ${colorMarca}; padding:12px; margin:16px 0; border-radius:4px;">
+              <p style="margin:0; font-size:0.85rem; color:#334155;"><strong>Materia / Trámite:</strong> ${ticket.tipo.toUpperCase()}</p>
               <p style="margin:4px 0 0; font-size:0.85rem; color:#334155;"><strong>Prioridad:</strong> ${ticket.urgencia.toUpperCase()}</p>
-              ${ticket.pedidoRef ? `<p style="margin:4px 0 0; font-size:0.85rem; color:#334155;"><strong>Pedido Referencia:</strong> ${ticket.pedidoRef}</p>` : ''}
+              ${ticket.pedidoRef ? `<p style="margin:4px 0 0; font-size:0.85rem; color:#334155;"><strong>Referencia:</strong> ${ticket.pedidoRef}</p>` : ''}
               <p style="margin:6px 0 0; font-size:0.85rem; color:#64748b;"><strong>Detalle:</strong> ${ticket.detalle}</p>
             </div>
             <p style="font-size:0.82rem; color:#64748b;">
-              Un operador de Solgas Surquillo atenderá tu requerimiento en breve. También puedes coordinar directamente por WhatsApp al 961 229 280.
+              Un especialista del equipo revisará tu caso a la brevedad. Para urgencias, puedes escribir directo a WhatsApp al ${datosNegocio.telefonoMostrado || datosNegocio.whatsapp || ''}.
             </p>
           </div>
         </div>
@@ -82,10 +86,10 @@ async function despacharCorreoWorker(ticket) {
         resendId: data?.id || 'ok'
       });
       savels('wiCorreo', hist.slice(0, 20), 144);
-      console.log('[Gaswii Soporte] ✅ Notificación enviada por Cloudflare Worker');
+      console.log('[Soporte Wii] ✅ Notificación enviada por Cloudflare Worker');
     }
   } catch (err) {
-    console.debug('[Gaswii Soporte] Despacho por correo omitido o en segundo plano:', err.message);
+    console.debug('[Soporte Wii] Despacho por correo en segundo plano:', err.message);
   }
 }
 
@@ -93,7 +97,7 @@ async function despacharCorreoWorker(ticket) {
  * Crea una nueva solicitud / ticket en Local-First (0ms), Firestore soporte/{ticket_id} y Cloudflare Worker
  */
 export async function crearTicket(datos = {}) {
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   const uid = user?.uid || user?.userId || 'anonimo';
   const now = Date.now();
   const ticketDocId = `ticket_${now}_${uid.slice(0, 4)}`;
@@ -102,14 +106,14 @@ export async function crearTicket(datos = {}) {
   const nuevoTicket = {
     id: ticketDocId,
     ticketId: ticketCodigo,
-    userId: uid, // En colecciones satélite SÍ va userId haciendo referencia al cliente
-    usuario: user?.usuario || 'usuario',
+    userId: uid,
+    usuario: user?.usuario || 'cliente',
     email: user?.email || datos.email || '',
-    nombre: user?.nombre || datos.nombre || 'Vecino Solgas',
+    nombre: user?.nombre || datos.nombre || 'Cliente',
     celular: user?.celular || datos.celular || '',
-    tipo: datos.tipo || 'boleta',
+    tipo: datos.tipo || (datosNegocio.modeloNegocio === 'servicios_y_asesorias' ? 'declaracion' : 'pedido'),
     urgencia: datos.urgencia || 'normal',
-    asunto: datos.asunto || `Solicitud de ${datos.tipo || 'Soporte'}`,
+    asunto: datos.asunto || `Consulta de ${datos.tipo || 'Soporte'}`,
     detalle: (datos.detalle || '').trim(),
     pedidoRef: (datos.pedidoRef || '').trim(),
     datosFiscales: datos.datosFiscales || null,
@@ -149,9 +153,9 @@ export async function crearTicket(datos = {}) {
         actualizado: serverTimestamp()
       });
 
-      console.log(`[Gaswii Soporte] ✅ Ticket registrado en soporte/${ticketDocId}`);
+      console.log(`[Soporte Wii] ✅ Ticket registrado en soporte/${ticketDocId}`);
     } catch (err) {
-      console.error('[Gaswii Soporte] ❌ Error al registrar ticket en Firestore:', err);
+      console.error('[Soporte Wii] ❌ Error al registrar ticket en Firestore:', err);
     }
   })();
 
@@ -165,7 +169,7 @@ export async function crearTicket(datos = {}) {
  * Sincronización pasiva en segundo plano con Firestore para actualizar estados de tickets
  */
 export async function sincronizarTicketsDesdeFirestore() {
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   const uid = user?.uid || user?.userId;
   if (!uid) return;
 
@@ -188,7 +192,7 @@ export async function sincronizarTicketsDesdeFirestore() {
           id: docSnap.id,
           ticketId: d.ticketId || docSnap.id,
           userId: d.userId,
-          tipo: d.tipo || 'boleta',
+          tipo: d.tipo || (datosNegocio.modeloNegocio === 'servicios_y_asesorias' ? 'declaracion' : 'pedido'),
           urgencia: d.urgencia || 'normal',
           asunto: d.asunto || '',
           detalle: d.detalle || '',
@@ -206,6 +210,6 @@ export async function sincronizarTicketsDesdeFirestore() {
       }
     }
   } catch (err) {
-    console.debug('[Gaswii Soporte] Sincronización remota omitida:', err.message);
+    console.debug('[Soporte Wii] Sincronización remota omitida:', err.message);
   }
 }

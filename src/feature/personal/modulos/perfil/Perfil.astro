@@ -1,7 +1,9 @@
 ---
 // src/feature/personal/modulos/perfil/Perfil.astro
-// Módulo de Mi Perfil: Ficha de Usuario y Seguridad (Solgas Surquillo)
+// Módulo de Mi Perfil: Ficha de Usuario y Seguridad
 // 100% JS Nativo · Integrado con @widev y wiSmile · 0 CSS Inline
+
+import { datosNegocio } from '@/negocio.js';
 
 interface Props {
   esActivo?: boolean;
@@ -114,29 +116,29 @@ const { esActivo = false } = Astro.props;
       <div class="pf-id-card">
         <div class="pf-id-header">
           <div class="pf-id-brand">
-            <i class="fa-solid fa-fire"></i> SOLGAS SURQUILLO
+            <i class="fa-solid fa-scale-balanced"></i> {(datosNegocio.nombreCorto || datosNegocio.nombre || 'ADMINISTRACIÓN').toUpperCase()}
           </div>
           <span class="pf-id-role-badge">ADMINISTRADOR</span>
         </div>
 
         <div class="pf-id-body">
-          <img src="https://imgwii.web.app/smile.avif" alt="Avatar" class="pf-id-avatar" id="pfIdAvatar" />
-          <h3 class="pf-id-name" id="pfIdNombre">Wilder Taype</h3>
-          <p class="pf-id-handle" id="pfIdHandle">@wilder</p>
+          <img src="/smile.avif" alt="Avatar" class="pf-id-avatar" id="pfIdAvatar" />
+          <h3 class="pf-id-name" id="pfIdNombre">{datosNegocio.identidad?.especialista || datosNegocio.especialista || 'Administrador'}</h3>
+          <p class="pf-id-handle" id="pfIdHandle">@{datosNegocio.nombreCorto ? datosNegocio.nombreCorto.toLowerCase().replace(/\s+/g, '') : 'admin'}</p>
         </div>
 
         <div class="pf-id-meta-grid">
           <div class="pf-id-meta-row">
             <span class="pf-id-meta-lbl">Correo:</span>
-            <span id="pfIdEmail">wtaypeee@gmail.com</span>
+            <span id="pfIdEmail">{datosNegocio.email || '-'}</span>
           </div>
           <div class="pf-id-meta-row">
             <span class="pf-id-meta-lbl">WhatsApp:</span>
-            <span id="pfIdCelular">961229280</span>
+            <span id="pfIdCelular">{datosNegocio.whatsapp || '-'}</span>
           </div>
           <div class="pf-id-meta-row">
             <span class="pf-id-meta-lbl">Sede:</span>
-            <span id="pfIdSede">Jr. Dante 260</span>
+            <span id="pfIdSede">{datosNegocio.direccionSede || '-'}</span>
           </div>
           <div class="pf-id-meta-row">
             <span class="pf-id-meta-lbl">Estado de Sesión:</span>

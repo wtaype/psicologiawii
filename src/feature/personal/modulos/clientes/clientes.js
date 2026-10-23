@@ -1,12 +1,14 @@
 // src/feature/personal/modulos/clientes/clientes.js
-// Controlador Frontend Autónomo para el Módulo Clientes CRM (Solgas Surquillo)
+// Controlador Frontend Autónomo para el Módulo Clientes CRM Contable
 // 100% JS Nativo · Integrado con @widev y Local-First
-import { Notificacion, wiSpin, wiConfirmar, wiSugerencias, wiSelect } from '@widev';
+import { Notificacion, wiSpin, wiConfirmar } from '@widev';
+import { configSemilla } from '../../../../negocio.js';
 import {
   obtenerClientes,
   guardarCliente,
   eliminarCliente,
-  calcularMetricasClientes
+  calcularMetricasClientes,
+  sincronizarClientesDesdeFirestore
 } from './dataClientes.js';
 
 export function inicializarModuloClientes() {
@@ -17,14 +19,12 @@ export function inicializarModuloClientes() {
   let filtroActual = 'todos';
   let busquedaActual = '';
   let clienteSeleccionadoId = null;
-  let instSugerencias = null;
-  let instModalSelect = null;
 
   // ── Elementos de KPIs ──
   const kpiTotal = document.getElementById('clKpiTotal');
-  const kpiVip = document.getElementById('clKpiVip');
-  const kpiNuevos = document.getElementById('clKpiNuevos');
-  const kpiConsumo = document.getElementById('clKpiConsumo');
+  const kpiMype = document.getElementById('clKpiMype');
+  const kpiIndependientes = document.getElementById('clKpiIndependientes');
+  const kpiFacturacion = document.getElementById('clKpiFacturacion');
 
   // ── Toolbar y Filtros ──
   const filtersWrap = document.getElementById('clFiltersWrap');
@@ -33,15 +33,20 @@ export function inicializarModuloClientes() {
   const tableBody = document.getElementById('clTableBody');
 
   // ── Ficha CRM Derecha ──
-  const crmAvatar = document.getElementById('clCrmAvatar');
+  const crmAvatarBox = document.getElementById('clCrmAvatarBox');
+  const crmAvatarImg = document.getElementById('clCrmAvatarImg');
+  const crmAvatarLetter = document.getElementById('clCrmAvatarLetter');
   const crmNombre = document.getElementById('clCrmNombre');
   const crmDoc = document.getElementById('clCrmDoc');
-  const crmTotalPedidos = document.getElementById('clCrmTotalPedidos');
-  const crmMontoConsumido = document.getElementById('clCrmMontoConsumido');
-  const crmBalonHabitual = document.getElementById('clCrmBalonHabitual');
-  const crmPagoHabitual = document.getElementById('clCrmPagoHabitual');
-  const crmUltimoPedido = document.getElementById('clCrmUltimoPedido');
-  const crmAddressWrap = document.getElementById('clCrmAddressWrap');
+  const crmRegimen = document.getElementById('clCrmRegimen');
+  const crmHonorario = document.getElementById('clCrmHonorario');
+  const crmServicio = document.getElementById('clCrmServicio');
+  const crmDigitoRuc = document.getElementById('clCrmDigitoRuc');
+  const crmEstadoFiscal = document.getElementById('clCrmEstadoFiscal');
+  const crmFechaInicio = document.getElementById('clCrmFechaInicio');
+  const crmDireccion = document.getElementById('clCrmDireccion');
+  const crmContacto = document.getElementById('clCrmContacto');
+  const crmObservaciones = document.getElementById('clCrmObservaciones');
   const btnCrmWs = document.getElementById('btnCrmWs');
   const btnCrmCall = document.getElementById('btnCrmCall');
   const btnCrmSunat = document.getElementById('btnCrmSunat');
@@ -51,6 +56,13 @@ export function inicializarModuloClientes() {
   const btnModalClose = document.getElementById('btnModalClose');
   const formModalCliente = document.getElementById('formModalCliente');
   const selectModalDocTipo = document.getElementById('clModalDocTipo');
+  const inputModalDoc = document.getElementById('clModalDoc');
+  const inputModalNombre = document.getElementById('clModalNombre');
+  const selectModalRegimen = document.getElementById('clModalRegimen');
+  const inputModalHonorario = document.getElementById('clModalHonorario');
+  const inputModalCelular = document.getElementById('clModalCelular');
+  const inputModalEmail = document.getElementById('clModalEmail');
+  const inputModalDireccion = document.getElementById('clModalDireccion');
   const btnModalGuardar = document.getElementById('btnModalGuardar');
 
   // ════════════════════════════════════════════════════════════
@@ -60,31 +72,37 @@ export function inicializarModuloClientes() {
     const clientes = obtenerClientes();
     const metricas = calcularMetricasClientes(clientes);
     if (kpiTotal) kpiTotal.textContent = String(metricas.total);
-    if (kpiVip) kpiVip.textContent = String(metricas.vip);
-    if (kpiNuevos) kpiNuevos.textContent = String(metricas.nuevos);
-    if (kpiConsumo) kpiConsumo.textContent = `S/ ${metricas.consumoTotal}`;
+    if (kpiMype) kpiMype.textContent = String(metricas.mype);
+    if (kpiIndependientes) kpiIndependientes.textContent = String(metricas.independientes);
+    if (kpiFacturacion) kpiFacturacion.textContent = `S/ ${metricas.facturacionMensual}`;
+
+    // Sincronizar badge dinámico en el sidebar de clientes
+    const badgeSidebar = document.getElementById('navBadge_clientes') || document.querySelector('[data-badge-target="clientes"]');
+    if (badgeSidebar) {
+      badgeSidebar.textContent = String(metricas.total);
+    }
   }
 
   function getClientesFiltrados() {
     const lista = obtenerClientes();
     let res = lista;
 
-    if (filtroActual === 'vip') {
-      res = res.filter(c => c.plan === 'vip' || c.totalPedidos >= 5);
-    } else if (filtroActual === 'frecuente') {
-      res = res.filter(c => c.plan === 'frecuente' || (c.totalPedidos >= 2 && c.totalPedidos < 5));
-    } else if (filtroActual === 'nuevo') {
-      res = res.filter(c => c.plan === 'nuevo' || c.totalPedidos <= 1);
+    if (filtroActual === 'mype') {
+      res = res.filter(c => (c.regimenTributario || '').toLowerCase().includes('mype') || (c.regimenTributario || '').toLowerCase().includes('general') || (c.regimenTributario || '').toLowerCase().includes('comercial') || c.documentoTipo === 'RUC');
+    } else if (filtroActual === 'independiente') {
+      res = res.filter(c => (c.regimenTributario || '').toLowerCase().includes('4ta') || (c.regimenTributario || '').toLowerCase().includes('residencial') || (c.regimenTributario || '').toLowerCase().includes('hogar') || c.documentoTipo === 'DNI');
+    } else if (filtroActual === 'rer') {
+      res = res.filter(c => (c.regimenTributario || '').toLowerCase().includes('especial') || (c.regimenTributario || '').toLowerCase().includes('rer'));
     }
 
     if (busquedaActual.trim()) {
       const q = busquedaActual.toLowerCase().trim();
       res = res.filter(c =>
         c.nombre.toLowerCase().includes(q) ||
-        (c.apellidos && c.apellidos.toLowerCase().includes(q)) ||
+        (c.contacto && c.contacto.toLowerCase().includes(q)) ||
         (c.documento && c.documento.includes(q)) ||
         (c.celular && c.celular.includes(q)) ||
-        (c.direcciones && c.direcciones.some(d => d.calle.toLowerCase().includes(q) || d.distrito.toLowerCase().includes(q)))
+        (c.direccion && c.direccion.toLowerCase().includes(q))
       );
     }
 
@@ -101,56 +119,61 @@ export function inicializarModuloClientes() {
     if (filtrados.length === 0) {
       tableBody.innerHTML = `
         <tr>
-          <td colspan="6" class="sn-empty-history-cell">
-            <i class="fa-solid fa-users-slash sn-empty-history-icon"></i>
-            No se encontraron clientes con el criterio seleccionado.
+          <td colspan="6" class="sn-empty-history-cell" style="text-align:center; padding:32px 16px; color:var(--muted);">
+            <i class="fa-solid fa-users-slash" style="font-size:24px; margin-bottom:8px; display:block;"></i>
+            No se encontraron clientes tributarios con el criterio seleccionado.
           </td>
         </tr>
       `;
       return;
     }
 
-    // Si el cliente seleccionado no está en la lista filtrada, seleccionar el primero
     if (!clienteSeleccionadoId || !filtrados.some(c => c.id === clienteSeleccionadoId)) {
       clienteSeleccionadoId = filtrados[0].id;
     }
 
     tableBody.innerHTML = filtrados.map(c => {
       const isSelected = c.id === clienteSeleccionadoId;
-      const dirPrincipal = (c.direcciones && c.direcciones[0]) ? c.direcciones[0].calle : 'Surquillo';
-      const planBadge = c.plan || 'frecuente';
+      const ruc = c.documento || 'Sin doc';
+      const digito = c.ultimoDigitoRuc ?? (ruc.length >= 1 ? ruc.slice(-1) : 0);
+      const honorario = (parseFloat(c.honorarioPEN) || 0).toFixed(2);
+      const regimen = c.regimenTributario || 'MYPE';
 
-      return `
+        const avatarHtml = c.avatar 
+          ? `<img src="${c.avatar}" alt="${c.nombre}" class="cl-user-avatar" onerror="this.src='/smile.avif'" />`
+          : `<div class="cl-user-avatar-tag">${c.nombre.charAt(0).toUpperCase()}</div>`;
+
+        return `
         <tr class="cl-row ${isSelected ? 'selected' : ''}" data-id="${c.id}">
           <td>
             <div class="cl-user-cell">
-              <img src="${c.avatar || 'https://imgwii.web.app/smile.avif'}" alt="${c.nombre}" class="cl-user-avatar" />
+              ${avatarHtml}
               <div class="cl-user-meta">
-                <span class="cl-user-name">${c.nombre} ${c.apellidos || ''}</span>
-                <span class="cl-user-doc">${c.documentoTipo || 'DNI'}: ${c.documento || ''}</span>
+                <span class="cl-user-name">${c.nombre}</span>
+                <span class="cl-user-doc">${c.documentoTipo || 'RUC'}: ${ruc}</span>
               </div>
             </div>
           </td>
           <td>
-            <a href="tel:${c.celular}" class="cl-user-doc" style="color:var(--brand-orange); text-decoration:none; font-weight:600;">
+            <a href="tel:${c.celular}" class="cl-user-doc" style="color:var(--mco, var(--brand-primary, #ff6600)); text-decoration:none; font-weight:600;">
               ${c.celular || 'S/N'}
             </a>
           </td>
-          <td style="font-size: 11.5px; color: var(--tx2); max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-            ${dirPrincipal}
+          <td style="font-size: 12px; color: var(--tx);">
+            ${regimen}
           </td>
-          <td style="text-align: center; font-weight: 700; color: var(--tx);">
-            ${c.totalPedidos || 1}
+          <td style="text-align: center; font-weight: 800; color: var(--mco, var(--brand-primary, #ff6600)); font-size:14px;">
+            ${digito}
           </td>
-          <td>
-            <span class="cl-plan-badge ${planBadge}">${planBadge}</span>
+          <td style="text-align: right; font-weight: 700; color: var(--tx);">
+            S/ ${honorario}
           </td>
           <td>
             <div class="cl-row-actions">
-              <button type="button" class="cl-action-btn ws cl-btn-row-ws" data-id="${c.id}" title="WhatsApp">
+              <button type="button" class="cl-action-btn ws cl-btn-row-ws" data-id="${c.id}" title="Recordar Vencimiento por WhatsApp">
                 <i class="fa-brands fa-whatsapp"></i>
               </button>
-              <button type="button" class="cl-action-btn cl-btn-row-del" data-id="${c.id}" title="Eliminar">
+              <button type="button" class="cl-action-btn cl-btn-row-del" data-id="${c.id}" title="Eliminar Cliente">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
@@ -159,7 +182,6 @@ export function inicializarModuloClientes() {
       `;
     }).join('');
 
-    // Actualizar ficha CRM con el seleccionado
     const seleccionado = filtrados.find(c => c.id === clienteSeleccionadoId) || filtrados[0];
     if (seleccionado) {
       renderizarFichaCrm(seleccionado);
@@ -194,17 +216,17 @@ export function inicializarModuloClientes() {
         const c = obtenerClientes().find(x => x.id === id);
         if (!c) return;
 
-        const conf = await wiConfirmar(`¿Deseas eliminar del directorio al cliente ${c.nombre}?`, {
-          titulo: 'Eliminar Cliente CRM',
+        const conf = await wiConfirmar(`¿Deseas retirar a ${c.nombre} del directorio de clientes?`, {
+          titulo: 'Eliminar Cliente',
           tipo: 'danger',
-          siTexto: 'Sí, Eliminar'
+          siTexto: 'Sí, Retirar'
         });
 
         if (conf) {
-          eliminarCliente(id);
+          await eliminarCliente(id);
           actualizarKpis();
           renderizarTabla();
-          Notificacion(`Cliente ${c.nombre} eliminado.`, 'info');
+          Notificacion(`Cliente ${c.nombre} retirado del directorio.`, 'info', 2500);
         }
       });
     });
@@ -215,37 +237,52 @@ export function inicializarModuloClientes() {
   // ════════════════════════════════════════════════════════════
   function renderizarFichaCrm(c) {
     if (!c) return;
-    if (crmAvatar) crmAvatar.src = c.avatar || 'https://imgwii.web.app/smile.avif';
-    if (crmNombre) crmNombre.textContent = `${c.nombre} ${c.apellidos || ''}`;
-    if (crmDoc) crmDoc.textContent = `${c.documentoTipo || 'DNI'}: ${c.documento || 'No registrado'} · ${c.email || 'Sin correo'}`;
-    if (crmTotalPedidos) crmTotalPedidos.textContent = `${c.totalPedidos || 1} pedidos`;
-    if (crmMontoConsumido) crmMontoConsumido.textContent = `S/ ${(parseFloat(c.montoTotalConsumido) || 65.00).toFixed(2)}`;
-    if (crmBalonHabitual) crmBalonHabitual.textContent = c.balonHabitual || 'Balón 10 kg';
-    if (crmPagoHabitual) crmPagoHabitual.textContent = c.metodoPagoHabitual || 'Efectivo';
-    if (crmUltimoPedido) crmUltimoPedido.textContent = c.ultimoPedidoFecha || 'Reciente';
 
-    if (crmAddressWrap) {
-      const dirs = c.direcciones || [];
-      if (dirs.length === 0) {
-        crmAddressWrap.innerHTML = `<div class="cl-crm-address-sub">Sin dirección registrada</div>`;
-      } else {
-        crmAddressWrap.innerHTML = dirs.map(d => `
-          <div class="cl-crm-address-box">
-            <div class="cl-crm-address-title">
-              <span>📍 ${d.calle}</span>
-              <span style="font-size: 10px; color: var(--brand-orange);">${d.eta || '12 min'}</span>
-            </div>
-            <div class="cl-crm-address-sub">${d.dpto ? `${d.dpto} · ` : ''}${d.distrito || 'Surquillo'}</div>
-            ${d.referencia ? `<div class="cl-crm-address-sub" style="font-style: italic;">Ref: ${d.referencia}</div>` : ''}
-          </div>
-        `).join('');
+    if (c.avatar) {
+      if (crmAvatarImg) {
+        crmAvatarImg.src = c.avatar;
+        crmAvatarImg.style.display = 'block';
+        crmAvatarImg.onerror = () => {
+          crmAvatarImg.src = '/smile.avif';
+        };
+      }
+      if (crmAvatarLetter) crmAvatarLetter.style.display = 'none';
+    } else {
+      if (crmAvatarImg) crmAvatarImg.style.display = 'none';
+      if (crmAvatarLetter) {
+        crmAvatarLetter.style.display = 'flex';
+        crmAvatarLetter.textContent = (c.nombre || 'E').charAt(0).toUpperCase();
       }
     }
+
+    if (crmNombre) crmNombre.textContent = c.nombre;
+    if (crmDoc) crmDoc.textContent = `${c.documentoTipo || 'DOC'}: ${c.documento || 'No registrado'} · ${c.email || 'Sin correo'}`;
+    if (crmRegimen) crmRegimen.textContent = c.regimenTributario || (c.documentoTipo === 'RUC' ? 'Comercial' : 'Residencial');
+    if (crmHonorario) crmHonorario.textContent = `S/ ${(parseFloat(c.honorarioPEN) || 65.00).toFixed(2)}`;
+    if (crmServicio) crmServicio.textContent = c.servicioContratado || (c.valvulaPreferida ? `Balón con Válvula ${c.valvulaPreferida}` : 'Despacho Express');
+    
+    const ruc = c.documento || '';
+    const dig = c.ultimoDigitoRuc ?? (ruc.length >= 1 ? ruc.slice(-1) : 0);
+    if (crmDigitoRuc) crmDigitoRuc.textContent = `${dig}`;
+    
+    if (crmEstadoFiscal) {
+      crmEstadoFiscal.textContent = c.estadoTributario === 'al_dia' ? 'Al Día / Activo' : 'Pendiente';
+      crmEstadoFiscal.className = `cl-status-tag ${c.estadoTributario || 'al_dia'}`;
+    }
+    if (crmFechaInicio) crmFechaInicio.textContent = c.fechaInicio || 'Ene 2026';
+    if (crmDireccion) crmDireccion.textContent = c.direccion || '-';
+    if (crmContacto) crmContacto.textContent = `Contacto: ${c.contacto || c.nombre}`;
+    if (crmObservaciones) crmObservaciones.textContent = c.observaciones || 'Sin observaciones registradas.';
   }
 
   function abrirWhatsAppCliente(c) {
     const cel = c.celular?.replace(/\D/g, '') || '';
-    const texto = `¡Hola ${c.nombre}! Te saludamos de Solgas Surquillo (Sede Dante 260). ¿Deseas solicitar tu recarga habitual de ${c.balonHabitual || 'Balón de 10 kg'} a domicilio hoy con entrega en 15 minutos?`;
+    const ruc = c.documento || '';
+    const emisor = window.Wii?.negocio?.nombreCorto || window.Wii?.negocio?.nombre || 'la administración';
+    const esGlp = !window.Wii?.negocio?.identidad?.especialista?.toLowerCase().includes('contab');
+    const texto = esGlp
+      ? `¡Hola ${c.contacto || c.nombre}! Te saluda ${emisor}. Nos comunicamos para coordinar tu próximo pedido o consultar si requieres recarga de gas GLP con balanza comprobada. ¡Estamos a tu servicio!`
+      : `¡Hola ${c.contacto || c.nombre}! Te saluda ${emisor}. Te recordamos que la declaración mensual SUNAT de tu RUC (${ruc}) se aproxima a su fecha de vencimiento. Agradecemos remitir tus comprobantes para procesar tu declaración a tiempo.`;
     const url = cel 
       ? `https://wa.me/51${cel}?text=${encodeURIComponent(texto)}`
       : `https://wa.me/?text=${encodeURIComponent(texto)}`;
@@ -262,110 +299,110 @@ export function inicializarModuloClientes() {
     if (c && c.celular) {
       window.location.href = `tel:${c.celular}`;
     } else {
-      Notificacion('El cliente no tiene teléfono celular registrado.', 'warning');
+      Notificacion('El cliente no tiene celular registrado.', 'warning', 2500);
     }
   });
 
   btnCrmSunat?.addEventListener('click', () => {
     const c = obtenerClientes().find(x => x.id === clienteSeleccionadoId);
     if (!c) return;
-    // Navegar al módulo de SUNAT
-    const sunatTab = document.querySelector('[data-panel-target="sunat"]');
-    if (sunatTab) {
-      sunatTab.click();
+    // Navegar a módulo SUNAT y prellenar datos
+    const btnNavSunat = document.querySelector('[data-seccion="sunat"]');
+    if (btnNavSunat) {
+      btnNavSunat.click();
       setTimeout(() => {
-        const inpBuscar = document.getElementById('snInpClienteBuscar');
-        if (inpBuscar) {
-          inpBuscar.value = c.nombre;
-          inpBuscar.dispatchEvent(new Event('input'));
-        }
+        const inpRuc = document.getElementById('snInputDoc');
+        const inpRazon = document.getElementById('snInputNombre');
+        if (inpRuc) inpRuc.value = c.documento || '';
+        if (inpRazon) inpRazon.value = c.nombre || '';
       }, 300);
     }
   });
 
   // ════════════════════════════════════════════════════════════
-  // 4. FILTROS Y BÚSQUEDA CON WISUGERENCIAS
+  // 4. FILTROS Y BÚSQUEDA
   // ════════════════════════════════════════════════════════════
-  filtersWrap?.querySelectorAll('.cl-filter-pill').forEach(btn => {
-    btn.addEventListener('click', () => {
-      filtersWrap.querySelectorAll('.cl-filter-pill').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      filtroActual = btn.getAttribute('data-filter') || 'todos';
+  filtersWrap?.querySelectorAll('.cl-filter-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      filtersWrap.querySelectorAll('.cl-filter-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      filtroActual = pill.getAttribute('data-filter') || 'todos';
       renderizarTabla();
     });
   });
 
   searchInput?.addEventListener('input', (e) => {
-    busquedaActual = e.target.value;
+    busquedaActual = (e.target).value;
     renderizarTabla();
   });
-
-  if (searchInput && !searchInput.dataset.wisugerencias) {
-    instSugerencias = wiSugerencias(searchInput, {
-      sugerencias: () => obtenerClientes().map(c => `${c.nombre} · ${c.documento || c.celular}`),
-      maxResultados: 5,
-      onSelect: (val) => {
-        busquedaActual = val.split('·')[0].trim();
-        renderizarTabla();
-      }
-    });
-  }
 
   // ════════════════════════════════════════════════════════════
   // 5. MODAL NUEVO CLIENTE
   // ════════════════════════════════════════════════════════════
-  if (selectModalDocTipo && !selectModalDocTipo.dataset.wiselect) {
-    instModalSelect = wiSelect(selectModalDocTipo, {
-      placeholder: 'Selecciona tipo...'
-    });
-  }
-
   btnNuevoCliente?.addEventListener('click', () => {
-    modalOverlay?.classList.add('open');
-    document.getElementById('clModalNombre')?.focus();
+    if (formModalCliente) formModalCliente.reset();
+    if (modalOverlay) modalOverlay.classList.add('active');
   });
 
   btnModalClose?.addEventListener('click', () => {
-    modalOverlay?.classList.remove('open');
+    if (modalOverlay) modalOverlay.classList.remove('active');
   });
 
   modalOverlay?.addEventListener('click', (e) => {
-    if (e.target === modalOverlay) modalOverlay.classList.remove('open');
+    if (e.target === modalOverlay) {
+      modalOverlay.classList.remove('active');
+    }
   });
 
-  formModalCliente?.addEventListener('submit', (e) => {
+  formModalCliente?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const nombre = document.getElementById('clModalNombre')?.value?.trim();
-    const doc = document.getElementById('clModalDoc')?.value?.trim();
-    const cel = document.getElementById('clModalCelular')?.value?.trim();
-    const dir = document.getElementById('clModalDireccion')?.value?.trim();
-    const balon = document.getElementById('clModalBalon')?.value || 'Balón SOLGAS Premium 10 kg';
+    const docTipo = selectModalDocTipo?.value || 'RUC';
+    const doc = inputModalDoc?.value?.trim();
+    const nombre = inputModalNombre?.value?.trim();
+    const regimen = selectModalRegimen?.value || 'Régimen MYPE Tributario (RMT)';
+    const honorario = parseFloat(inputModalHonorario?.value) || 150.00;
+    const celular = inputModalCelular?.value?.trim();
+    const email = inputModalEmail?.value?.trim();
+    const direccion = inputModalDireccion?.value?.trim() || '';
 
-    if (!nombre || !doc) {
-      Notificacion('Completa al menos el nombre y documento del cliente.', 'warning');
+    if (!doc || !nombre || !celular) {
+      Notificacion('Completa los campos obligatorios (*).', 'warning', 2500);
       return;
     }
 
-    wiSpin(btnModalGuardar, true, 'Guardando...');
+    const spin = wiSpin ? wiSpin(btnModalGuardar) : null;
+    if (btnModalGuardar) btnModalGuardar.disabled = true;
 
-    setTimeout(() => {
-      const nuevo = guardarCliente({
+    try {
+      const nuevo = await guardarCliente({
         nombre,
-        documentoTipo: selectModalDocTipo?.value || 'DNI',
+        contacto: nombre,
+        documentoTipo: docTipo,
         documento: doc,
-        celular: cel,
-        direccion: dir,
-        balonHabitual: balon
+        regimenTributario: regimen,
+        honorarioPEN: honorario,
+        celular,
+        email,
+        direccion,
+        servicioContratado: configSemilla?.modeloNegocio === 'servicios_y_asesorias'
+          ? (regimen.includes('4ta') ? 'Asesoría y Consultoría Especializada' : 'Servicio Profesional Mensual')
+          : (configSemilla?.terminologia?.comprobanteConceptoDefault || 'Suministro y Recarga de Balón GLP'),
+        estadoTributario: 'al_dia',
+        fechaInicio: 'Hoy'
       });
 
-      wiSpin(btnModalGuardar, false);
-      modalOverlay?.classList.remove('open');
-      formModalCliente.reset();
       clienteSeleccionadoId = nuevo.id;
       actualizarKpis();
       renderizarTabla();
-      Notificacion(`¡Cliente ${nombre} registrado exitosamente!`, 'success');
-    }, 400);
+      if (modalOverlay) modalOverlay.classList.remove('active');
+      Notificacion(`Cliente ${nombre} registrado con éxito.`, 'success', 3000);
+    } catch (err) {
+      console.error(err);
+      Notificacion('Error al guardar cliente: ' + (err?.message || err), 'danger', 3000);
+    } finally {
+      if (spin) spin.stop();
+      if (btnModalGuardar) btnModalGuardar.disabled = false;
+    }
   });
 
   // ════════════════════════════════════════════════════════════
@@ -373,4 +410,10 @@ export function inicializarModuloClientes() {
   // ════════════════════════════════════════════════════════════
   actualizarKpis();
   renderizarTabla();
+
+  // Sincronización en segundo plano desde Firestore
+  sincronizarClientesDesdeFirestore().then(() => {
+    actualizarKpis();
+    renderizarTabla();
+  });
 }

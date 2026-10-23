@@ -1,163 +1,228 @@
 // src/feature/personal/modulos/personal/dataPersonal.js
-// Gestor de Personal Operativo, Repartidores y Flota de Solgas Surquillo
-// Sincronizado con colección Firestore 'smiles' (rol: 'personal') + Local-First
-// 100% JS Nativo · Integrado con @widev
+// Gestor Canónico del Equipo Profesional y Especialistas
+// Fuente Canónica: Colección Firestore 'smiles' · Roles exclusivos: 'personal' y 'gestor'
+// Respaldo canónico fiel a recursos-gaswii/firebase/smiles.md (2 gestores reales)
+// 100% JS Nativo · Integrado con @widev y Firebase SDK
 
-import { getls, savels } from '@widev';
+import { getls, savels, removels } from '@widev';
 
-const STORAGE_KEY = 'gaswii_equipo_personal';
+export const STORAGE_KEY = 'wi_equipo_personal';
+export const COLECCION_SMILES = 'smiles';
+const CACHE_TTL_MS = 15 * 60 * 1000; // 15 minutos de caché para ahorrar lecturas en Firestore
 
-const PERSONAL_SEMILLA = [
-  {
-    id: 'per_01',
-    uid: 'usr_per_juan_01',
-    nombre: 'Juan Quispe',
-    apellidos: 'Mamani',
-    usuario: 'juanq',
-    celular: '936369384',
-    email: 'jquispe.reparto@gmail.com',
-    documentoTipo: 'DNI',
-    documento: '45892147',
-    rol: 'personal',
-    cargo: 'Conductor Motorizado Líder',
-    vehiculoTipo: 'Moto de Carga GLP',
-    placa: '6741-4B',
-    capacidadBalones: 4,
-    cuadrante: 'Surquillo Centro & Dante',
-    estadoTurno: 'disponible', // 'disponible' | 'en_ruta' | 'descanso'
-    entregasHoy: 12,
-    calificacion: 4.9,
-    activo: true,
-    avatar: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'per_02',
-    uid: 'usr_per_carlos_02',
-    nombre: 'Carlos Ramos',
-    apellidos: 'Torres',
-    usuario: 'carlosr',
-    celular: '984512340',
-    email: 'cramos.gaswii@gmail.com',
-    documentoTipo: 'DNI',
-    documento: '71204589',
-    rol: 'personal',
-    cargo: 'Repartidor Express',
-    vehiculoTipo: 'Moto de Carga GLP',
-    placa: '3819-2C',
-    capacidadBalones: 4,
-    cuadrante: 'Barrio Médico & San Borja Sur',
-    estadoTurno: 'en_ruta',
-    entregasHoy: 9,
-    calificacion: 4.8,
-    activo: true,
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=120&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'per_03',
-    uid: 'usr_per_miguel_03',
-    nombre: 'Miguel Ángel',
-    apellidos: 'Benítez Silva',
-    usuario: 'miguelb',
-    celular: '971004512',
-    email: 'mbenitez.solgas@gmail.com',
-    documentoTipo: 'DNI',
-    documento: '09845123',
-    rol: 'personal',
-    cargo: 'Conductor de Furgón Industrial',
-    vehiculoTipo: 'Furgón Hyundai Porter',
-    placa: 'B3Z-841',
-    capacidadBalones: 24,
-    cuadrante: 'Restaurantes Miraflores & Mayorista',
-    estadoTurno: 'disponible',
-    entregasHoy: 5,
-    calificacion: 5.0,
-    activo: true,
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&auto=format&fit=crop&q=80'
-  },
-  {
-    id: 'per_04',
-    uid: 'usr_per_david_04',
-    nombre: 'David Flores',
-    apellidos: 'Campos',
-    usuario: 'davidf',
-    celular: '961229280',
-    email: 'dflores.surquillo@gmail.com',
-    documentoTipo: 'DNI',
-    documento: '43901245',
-    rol: 'personal',
-    cargo: 'Técnico de Válvulas & Instalación',
-    vehiculoTipo: 'Unidad de Asistencia Técnica',
-    placa: '8910-1F',
-    capacidadBalones: 2,
-    cuadrante: 'Inspección de Fugas & Redes',
-    estadoTurno: 'descanso',
-    entregasHoy: 4,
-    calificacion: 4.9,
-    activo: true,
-    avatar: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=120&auto=format&fit=crop&q=80'
+let _memoriaPersonal = null;
+
+// Detector de datos dummy o placeholders antiguos en caché local
+function esRegistroPlaceholder(p) {
+  if (!p) return true;
+  const id = String(p.id || p.uid || '');
+  const email = String(p.email || '').toLowerCase();
+  const nom = String(p.nombre || p.nombreCompleto || '').toLowerCase();
+  if (id.startsWith('per-') || id === 'per_01' || id === 'per_02') return true;
+  if (email.includes('solgassurquillo.com') || email.includes('gaswii.com')) return true;
+  if (nom.includes('administrador solgas') || nom.includes('técnico despachador') || nom.includes('repartidor')) return true;
+  return false;
+}
+
+export function normalizarMiembro(p = {}) {
+  let nombre = (p.nombre || '').trim();
+  let apellidos = (p.apellidos || '').trim();
+  let nombreCompleto = (p.nombreCompleto || '').trim();
+
+  if (!nombre && !apellidos && nombreCompleto) {
+    const partes = nombreCompleto.split(' ');
+    nombre = partes[0] || '';
+    apellidos = partes.slice(1).join(' ');
+  } else if (!nombreCompleto) {
+    nombreCompleto = `${nombre} ${apellidos}`.trim() || nombre;
   }
-];
+
+  const uid = p.uid || p.id || `per_${Date.now()}`;
+  const activo = p.activo !== undefined ? Boolean(p.activo) : (p.estado !== 'inactivo');
+  const rol = (p.rol === 'personal') ? 'personal' : 'gestor';
+
+  let avatar = p.avatar || '';
+  if (!avatar || avatar.includes('smile.webp') || avatar.includes('hero.webp')) {
+    avatar = '/smile.avif';
+  }
+
+  return {
+    id: uid,
+    uid: uid,
+    nombre: nombre,
+    apellidos: apellidos,
+    nombreCompleto: nombreCompleto,
+    usuario: p.usuario || (nombre ? nombre.toLowerCase().replace(/\s+/g, '') : 'personal'),
+    celular: p.celular || '',
+    email: p.email || '',
+    cargo: p.cargo || (rol === 'gestor' ? 'Gestor' : 'Colaborador'),
+    colegiatura: p.colegiatura || (activo ? 'Habilitado/a' : 'Inactivo/a'),
+    fechaIngreso: p.fechaIngreso || p.ingreso || '',
+    experiencia: p.experiencia || '',
+    cumpleanos: p.cumpleanos || p.fechaNacimiento || '',
+    dni: p.dni || p.documento || '',
+    avatar: avatar,
+    rol: rol,
+    activo: activo
+  };
+}
 
 export function obtenerPersonal() {
-  const guardados = getls(STORAGE_KEY);
-  if (guardados && Array.isArray(guardados) && guardados.length > 0) {
-    return guardados;
+  if (_memoriaPersonal && Array.isArray(_memoriaPersonal) && _memoriaPersonal.length > 0) return _memoriaPersonal;
+
+  try {
+    const local = getls(STORAGE_KEY);
+    if (local) {
+      const datos = Array.isArray(local) ? local : (local.datos || []);
+      if (datos.some(esRegistroPlaceholder)) {
+        removels(STORAGE_KEY);
+        removels('gaswii_equipo_personal');
+      } else if (datos.length > 0) {
+        _memoriaPersonal = datos.map(normalizarMiembro);
+        return _memoriaPersonal;
+      }
+    }
+  } catch (e) {}
+
+  // Cascada dinámica: usar sesión activa wiSmile si tiene rol administrativo
+  let lista = [];
+  const userSmile = getls('wiSmile');
+  if (userSmile && ['personal', 'gestor', 'admin'].includes(userSmile.rol)) {
+    lista.push(normalizarMiembro(userSmile));
   }
-  savels(STORAGE_KEY, PERSONAL_SEMILLA);
-  return PERSONAL_SEMILLA;
+
+  _memoriaPersonal = lista;
+  if (lista.length > 0) {
+    savels(STORAGE_KEY, {
+      timestamp: Date.now(),
+      fuente: 'sesion',
+      datos: lista
+    });
+  }
+  return _memoriaPersonal;
 }
 
-export function guardarMiembroPersonal(data) {
+export async function guardarMiembroPersonal(data) {
   const lista = obtenerPersonal();
-  const idx = lista.findIndex(p => p.id === data.id);
-
-  const registro = {
-    id: data.id || `per_${Date.now()}`,
-    uid: data.uid || `usr_${Date.now()}`,
-    nombre: data.nombre || 'Personal',
-    apellidos: data.apellidos || '',
-    usuario: data.usuario || (data.nombre ? data.nombre.toLowerCase().replace(/\s+/g, '') : 'personal'),
-    celular: data.celular || '936369384',
-    email: data.email || '',
-    documentoTipo: data.documentoTipo || 'DNI',
-    documento: data.documento || '',
-    rol: 'personal',
-    cargo: data.cargo || 'Repartidor Motorizado',
-    vehiculoTipo: data.vehiculoTipo || 'Moto de Carga GLP',
-    placa: data.placa || '6741-4B',
-    capacidadBalones: parseInt(data.capacidadBalones, 10) || 4,
-    cuadrante: data.cuadrante || 'Surquillo Centro',
-    estadoTurno: data.estadoTurno || 'disponible',
-    entregasHoy: parseInt(data.entregasHoy, 10) || 0,
-    calificacion: parseFloat(data.calificacion) || 5.0,
-    activo: true,
-    avatar: data.avatar || 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=120&auto=format&fit=crop&q=80'
-  };
+  const normalizado = normalizarMiembro(data);
+  const idx = lista.findIndex(p => p.id === normalizado.id);
 
   if (idx >= 0) {
-    lista[idx] = { ...lista[idx], ...registro };
+    lista[idx] = { ...lista[idx], ...normalizado };
   } else {
-    lista.unshift(registro);
+    lista.push(normalizado);
   }
 
-  savels(STORAGE_KEY, lista);
-  return registro;
-}
+  _memoriaPersonal = lista;
+  savels(STORAGE_KEY, {
+    timestamp: Date.now(),
+    fuente: 'firestore',
+    datos: lista
+  });
 
-export function cambiarEstadoTurno(id, nuevoEstado) {
-  const lista = obtenerPersonal();
-  const idx = lista.findIndex(p => p.id === id);
-  if (idx >= 0) {
-    lista[idx].estadoTurno = nuevoEstado;
-    savels(STORAGE_KEY, lista);
-    return lista[idx];
+  // Persistir en Firestore en la colección canónica 'smiles'
+  try {
+    const { db } = await import('@core/servicios/firebase.js');
+    if (db) {
+      const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
+      await setDoc(doc(db, COLECCION_SMILES, normalizado.id), {
+        uid: normalizado.uid,
+        usuario: normalizado.usuario,
+        nombre: normalizado.nombre,
+        apellidos: normalizado.apellidos,
+        email: normalizado.email,
+        celular: normalizado.celular,
+        documento: normalizado.dni,
+        documentoTipo: 'DNI',
+        cargo: normalizado.cargo,
+        rol: normalizado.rol,
+        avatar: normalizado.avatar || '/smile.avif',
+        activo: normalizado.activo,
+        estado: normalizado.activo ? 'activo' : 'inactivo',
+        cumpleanos: normalizado.cumpleanos,
+        fechaIngreso: normalizado.fechaIngreso,
+        actualizado: serverTimestamp()
+      }, { merge: true });
+    }
+  } catch (err) {
+    console.debug('[dataPersonal] Sincronización en segundo plano con smiles:', err?.message || err);
   }
-  return null;
+
+  return normalizado;
 }
 
-export function eliminarMiembroPersonal(id) {
+export async function eliminarMiembroPersonal(id) {
   let lista = obtenerPersonal();
   lista = lista.filter(p => p.id !== id);
-  savels(STORAGE_KEY, lista);
+  _memoriaPersonal = lista;
+  savels(STORAGE_KEY, {
+    timestamp: Date.now(),
+    fuente: 'firestore',
+    datos: lista
+  });
+
+  try {
+    const { db } = await import('@core/servicios/firebase.js');
+    if (db) {
+      const { doc, deleteDoc } = await import('firebase/firestore');
+      await deleteDoc(doc(db, COLECCION_SMILES, id));
+    }
+  } catch (err) {
+    console.debug('[dataPersonal] Eliminación en Firestore:', err?.message || err);
+  }
+
   return lista;
+}
+
+export async function sincronizarPersonalDesdeFirestore(forzar = false) {
+  try {
+    // 1. Ahorro de lecturas: si la caché local es reciente y de Firestore, reusar en 0ms
+    if (!forzar) {
+      const cache = getls(STORAGE_KEY);
+      if (cache && cache.fuente === 'firestore' && cache.timestamp && (Date.now() - cache.timestamp < CACHE_TTL_MS)) {
+        if (Array.isArray(cache.datos) && cache.datos.length > 0 && !cache.datos.some(esRegistroPlaceholder)) {
+          _memoriaPersonal = cache.datos.map(normalizarMiembro);
+          return _memoriaPersonal;
+        }
+      }
+    }
+
+    const { db, auth } = await import('@core/servicios/firebase.js');
+    if (!db) return obtenerPersonal();
+
+    // Esperar a que Firebase Auth resuelva la sesión si está iniciando
+    if (auth && typeof auth.authStateReady === 'function') {
+      try {
+        await auth.authStateReady();
+      } catch (e) {}
+    }
+
+    const { collection, getDocs, query, where } = await import('firebase/firestore');
+    // Consulta canónica: Solo roles 'personal' y 'gestor'
+    const q = query(
+      collection(db, COLECCION_SMILES),
+      where('rol', 'in', ['personal', 'gestor'])
+    );
+    const snap = await getDocs(q);
+
+    if (!snap.empty) {
+      const remotos = snap.docs
+        .map(d => normalizarMiembro({ id: d.id, ...d.data() }))
+        .filter(m => !esRegistroPlaceholder(m));
+      
+      if (remotos.length > 0) {
+        _memoriaPersonal = remotos;
+        savels(STORAGE_KEY, {
+          timestamp: Date.now(),
+          fuente: 'firestore',
+          datos: remotos
+        });
+        return remotos;
+      }
+    }
+  } catch (err) {
+    console.debug('[dataPersonal] Lectura Firestore diferida (usando equipo canónico local):', err?.message || err);
+  }
+
+  return obtenerPersonal();
 }

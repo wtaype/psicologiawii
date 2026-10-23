@@ -1,11 +1,11 @@
 ---
 // src/feature/cliente/modulos/01-pedidos/Pedidos.astro
-// Módulo de Realizar Pedidos · Solgas Surquillo
+// Módulo de Servicios y Asesorías · Ecosistema Wii
 // 100% Conectado a Firestore (datosNegocio.productos, datosNegocio.mediosPago)
-// Cero datos quemados/mock · Split 37% / 63% con WhatsApp Live Preview
-import { datosNegocio, MEDIOS_PAGO_BASE } from '@/negocio.js';
+// Split Layout con WhatsApp Live Preview (0ms)
+import { datosNegocio, MEDIOS_PAGO_BASE, configSemilla } from '@/negocio.js';
 
-import type { SmileData, SmileDireccion } from '@/core/tipos/auth.ts';
+import type { SmileData, SmileDireccion } from '@auth/lib/auth.ts';
 
 interface Props {
   cliente?: SmileData;
@@ -29,9 +29,9 @@ let listaDirecciones: DireccionPedido[] = [];
 if (Array.isArray(cliente.direcciones)) {
   listaDirecciones = (cliente.direcciones as SmileDireccion[]).map((d, idx) => ({
     id: String(d.id || `dir-${idx}`),
-    alias: d.alias || d.etiqueta || (idx === 0 ? 'Casa' : `Dirección ${idx + 1}`),
+    alias: d.alias || d.etiqueta || (idx === 0 ? 'Domicilio Fiscal' : `Sede ${idx + 1}`),
     calle: d.calle || d.direccion || '',
-    distrito: d.distrito || 'Surquillo',
+    distrito: d.distrito || datosNegocio.distritoSede || '',
     celular: d.celular || cliente.celular || cliente.telefono || '',
     referencia: d.referencia || '',
     eta: d.eta || '',
@@ -40,9 +40,9 @@ if (Array.isArray(cliente.direcciones)) {
 } else if (cliente.direcciones && typeof cliente.direcciones === 'object') {
   listaDirecciones = Object.entries(cliente.direcciones as Record<string, any>).map(([key, d]) => ({
     id: key,
-    alias: d.alias || d.etiqueta || (key === 'principal' ? 'Casa' : key),
+    alias: d.alias || d.etiqueta || (key === 'principal' ? 'Domicilio Fiscal' : key),
     calle: d.calle || d.direccion || '',
-    distrito: d.distrito || 'Surquillo',
+    distrito: d.distrito || datosNegocio.distritoSede || '',
     celular: d.celular || cliente.celular || cliente.telefono || '',
     referencia: d.referencia || '',
     eta: d.eta || '',
@@ -51,102 +51,130 @@ if (Array.isArray(cliente.direcciones)) {
 }
 
 // Catálogo Oficial Vivo desde Firestore (datosNegocio.productos)
-// Si el dueño pausa un producto o actualiza el precio en Firestore, se refleja de inmediato
 const prodsRaw = datosNegocio.productos || [];
 const prodsFiltrados = prodsRaw
   .filter(p => p.estado !== 'pausado' && p.estado !== 'inactivo')
   .sort((a, b) => (a.orden || 999) - (b.orden || 999));
 
+// Helper para sanitizar strings seguros desde objetos bilingües o primitivos
+function extraerTexto(val: any, defecto = ''): string {
+  if (!val) return defecto;
+  if (typeof val === 'string') return val.trim();
+  if (typeof val === 'object') {
+    return String(val.es || val.nombre || val.label || Object.values(val)[0] || defecto).trim();
+  }
+  return String(val).trim();
+}
+
+const term = configSemilla?.terminologia || {};
+
 // Fallback canónico de seguridad si Firestore no devolvió registros en build
-const productosCatalogo = prodsFiltrados.length > 0 ? prodsFiltrados.map((p, idx) => ({
-  id: p.id || `prod-${idx}`,
-  nombre: p.nombre || 'Balón de Gas',
-  nombreCorto: p.nombreCorto || p.nombre || 'Gas',
-  badge: p.badge || (idx === 0 ? 'MÁS PEDIDO' : ''),
-  tagClase: p.tagClase || (idx === 0 ? 'badge-fire' : 'badge-blue'),
-  precioPEN: Number(p.precioPEN ?? (p.precio ?? 0)),
-  imagen: p.imagen || '/imgwii/productos/BALON-10KG.webp',
-  valvula: p.valvula || 'Click-On o Rosca estándar',
-  balanza: (Array.isArray(p.caracteristicas) && p.caracteristicas.length > 0) 
-    ? p.caracteristicas[0] 
-    : (p.delivery || 'Balanza digital Inacal en puerta'),
-  defaultQty: idx === 0 ? 1 : 0
-})) : [
+const productosCatalogo = prodsFiltrados.length > 0 ? prodsFiltrados.map((p, idx) => {
+  const nombre = extraerTexto(p.nombre, term.itemSingular || 'Producto');
+  const nombreCorto = extraerTexto(p.nombreCorto, nombre);
+  const badgeRaw = extraerTexto(p.badge, '');
+  const badge = badgeRaw || (idx === 0 ? 'MÁS SOLICITADO' : 'ESPECIALIDAD');
+  const tagClase = p.tagClase || (idx === 0 ? 'badge-fire' : 'badge-blue');
+  const precioPEN = Number(p.precio ?? p.precioPEN ?? 85);
+  const imagen = p.imagen || '/imgwii/servicios/psicoterapia-individual.webp';
+  const modalidad = extraerTexto(p.modalidad || p.delivery, term.modalidadLabel || 'Sesión de 50 minutos con especialista');
+  const fallbackEnfoque = term.enfoqueDefecto || 'Terapia Cognitivo-Conductual y ACT basada en evidencia';
+  const enfoque = (Array.isArray(p.caracteristicas) && p.caracteristicas.length > 0)
+    ? extraerTexto(p.caracteristicas[0], '')
+    : (Array.isArray(p.garantias?.es) && p.garantias.es.length > 0)
+      ? extraerTexto(p.garantias.es[0], '')
+      : (Array.isArray(p.garantias) && p.garantias.length > 0)
+        ? extraerTexto(p.garantias[0], '')
+        : extraerTexto(p.enfoque || p.seguridad, fallbackEnfoque);
+
+  return {
+    id: p.id || `serv-${idx}`,
+    nombre,
+    nombreCorto,
+    badge,
+    tagClase,
+    precioPEN,
+    imagen,
+    modalidad,
+    enfoque,
+    defaultQty: idx === 0 ? 1 : 0
+  };
+}) : [
   {
-    id: 'bal-n-solgas-premium-10-kg',
-    nombre: 'Balón SOLGAS Premium 10 kg',
-    nombreCorto: 'Solgas 10 kg',
-    badge: 'MÁS PEDIDO',
+    id: 'psicoterapia-individual',
+    nombre: 'Psicoterapia Individual para Adultos',
+    nombreCorto: 'Psicoterapia Individual',
+    badge: 'MÁS SOLICITADO',
     tagClase: 'badge-fire',
-    precioPEN: 65.00,
-    imagen: '/imgwii/productos/BALON-10KG.webp',
-    valvula: 'Click-On o Rosca estándar',
-    balanza: 'Balanza digital Inacal en puerta',
+    precioPEN: 85.00,
+    imagen: '/imgwii/servicios/psicoterapia-individual.webp',
+    modalidad: 'Presencial Sede América o Google Meet (50 min)',
+    enfoque: 'Enfoque Cognitivo-Conductual y ACT para ansiedad, depresión y duelo',
     defaultQty: 1
   },
   {
-    id: 'balon-solgas-45-kg',
-    nombre: 'Balón SOLGAS 45 kg',
-    nombreCorto: 'Solgas 45 kg',
-    badge: 'COMERCIAL',
+    id: 'psicoterapia-pareja',
+    nombre: 'Terapia Psicológica de Pareja',
+    nombreCorto: 'Terapia de Pareja',
+    badge: 'VINCULAR',
     tagClase: 'badge-blue',
-    precioPEN: 230.00,
-    imagen: '/imgwii/productos/BALON-45KG.webp',
-    valvula: 'Rosca industrial alta presión',
-    balanza: 'Caudal continuo para negocios',
+    precioPEN: 120.00,
+    imagen: '/imgwii/servicios/psicoterapia-pareja.webp',
+    modalidad: 'Sesión integral presencial o virtual (60 min)',
+    enfoque: 'Comunicación asertiva, resolución de conflictos y proyectos de vida',
     defaultQty: 0
   },
   {
-    id: 'balon-masgas-de-10-kg',
-    nombre: 'Balón MASGAS de 10 kg',
-    nombreCorto: 'Masgas 10 kg',
-    badge: 'ECONÓMICO',
-    tagClase: 'badge-emerald',
-    precioPEN: 55.00,
-    imagen: '/imgwii/productos/MASGAS-10KG.webp',
-    valvula: 'Universal estándar para hogar',
-    balanza: 'Rendimiento diario garantizado',
-    defaultQty: 0
-  },
-  {
-    id: 'kit-regulador-solgas',
-    nombre: 'Kit Regulador SOLGAS',
-    nombreCorto: 'Regulador Solgas',
-    badge: 'SEGURIDAD',
+    id: 'evaluacion-tdah-tea',
+    nombre: 'Evaluación y Descarte Clínico TDAH / TEA',
+    nombreCorto: 'Evaluación TDAH / TEA',
+    badge: 'DIAGNÓSTICO',
     tagClase: 'badge-gold',
-    precioPEN: 70.00,
-    imagen: '/imgwii/productos/REGULADOR.webp',
-    valvula: 'Click-On traba antifugas',
-    balanza: 'Homologado por Osinergmin',
+    precioPEN: 180.00,
+    imagen: '/imgwii/servicios/Evaluacion.webp',
+    modalidad: 'Batería psicométrica con informe firmado C.Ps.P.',
+    enfoque: 'Evaluación integral infantil, adolescente y adultos',
+    defaultQty: 0
+  },
+  {
+    id: 'taller-inteligencia-emocional',
+    nombre: 'Taller Vivencial de Inteligencia Emocional',
+    nombreCorto: 'Taller Inteligencia Emocional',
+    badge: 'TALLER',
+    tagClase: 'badge-fire',
+    precioPEN: 85.00,
+    imagen: '/imgwii/talleres/taller-inteligencia-emocional.jpg',
+    modalidad: 'Grupal dinámico presencial Sede América',
+    enfoque: 'Gestión emocional, autorregulación y resiliencia práctica',
     defaultQty: 0
   }
 ];
 
 const mediosPagoLista = datosNegocio.mediosPago || MEDIOS_PAGO_BASE;
-const telefonoSede = datosNegocio.telefonoLimpio || '936369384';
-const whatsappSede = datosNegocio.whatsapp || '51936369384';
+const telefonoSede = datosNegocio.telefonoLimpio;
+const whatsappSede = datosNegocio.whatsappLimpio || datosNegocio.whatsapp;
 ---
 
 <div class="cl-pedidos-module" id="moduloPedidos">
   <div class="cl-grid-split">
     
-    <!-- COLUMNA IZQUIERDA: BANNER SUPERIOR + LISTA DE PRODUCTOS -->
+    <!-- COLUMNA IZQUIERDA: CATÁLOGO DE PRODUCTOS -->
     <div class="cl-col-left">
       
-      <!-- BANNER DE BIENVENIDA Y LEYENDA (IMAGEN 1) -->
+      <!-- BANNER DE BIENVENIDA -->
       <div class="cl-prods-header">
         <div class="cl-welcome-row">
           <div class="cl-welcome-title">
-            <span id="clWelcomeSalute">¡Hola!</span> 🔥 <strong class="cl-text-orange">Realiza tu Pedido Hoy</strong>
+            <span id="clWelcomeSalute">¡Hola!</span> 🔥 <strong class="cl-text-orange">{term.catalogoTitulo || datosNegocio.nombreCorto || 'Balones de Gas & Accesorios GLP'}</strong>
           </div>
-          <button type="button" class="cl-btn-ficha" id="btnGestionarFicha" title="Gestionar ficha de cliente">
-            <i class="fa-solid fa-id-card"></i> <span>Gestionar Ficha</span>
+          <button type="button" class="cl-btn-ficha" id="btnGestionarFicha" title="Gestionar mi cuenta y direcciones">
+            <i class="fa-solid fa-address-card"></i> <span>Mi Cuenta</span>
           </button>
         </div>
 
         <div class="cl-sub-legend-row">
-          <span class="cl-legend-left">SELECCIONA TU CILINDRO OFICIAL</span>
-          <span class="cl-legend-right"><i class="fa-solid fa-truck-fast"></i> DELIVERY Y PESAJE INCLUIDO</span>
+          <span class="cl-legend-left">{term.catalogoSubtitulo || 'SELECCIONA TUS BALONES O ACCESORIOS'}</span>
+          <span class="cl-legend-right"><i class={term.selloIcono || 'fa-solid fa-weight-scale'}></i> {term.selloConfianza || 'GARANTÍA DE PESO EXACTO EN PUERTA'}</span>
         </div>
       </div>
 
@@ -170,8 +198,8 @@ const whatsappSede = datosNegocio.whatsapp || '51936369384';
                 <span class="cl-h-title">{prod.nombre}</span>
               </div>
               <div class="cl-h-checks">
-                <span><i class="fa-solid fa-check"></i> {prod.valvula}</span>
-                <span><i class="fa-solid fa-check"></i> {prod.balanza}</span>
+                <span><i class="fa-solid fa-check"></i> {prod.modalidad}</span>
+                <span><i class="fa-solid fa-check"></i> {prod.enfoque}</span>
               </div>
             </div>
 
@@ -195,28 +223,27 @@ const whatsappSede = datosNegocio.whatsapp || '51936369384';
 
     </div>
 
-    <!-- COLUMNA DERECHA: 37% (PAGO & ENTREGA) + 63% (WHATSAPP PREVIEW) -->
+    <!-- COLUMNA DERECHA: PAGO Y CONTACTO DIRECTO POR WHATSAPP -->
     <div class="cl-col-right">
       
-      <!-- 37% CARD: PAGO & ENTREGA CON GARANTÍA SOLGAS (IMAGEN 2) -->
+      <!-- CARD: MODALIDAD Y PAGO -->
       <div class="cl-order-card">
         
         <!-- HEADER DE LA TARJETA -->
         <div class="cl-card-header">
           <span class="cl-card-title">
-            <i class="fa-solid fa-wallet"></i> PAGO & ENTREGA
+            <i class="fa-solid fa-calendar-check"></i> MODALIDAD & ATENCIÓN
           </span>
-          <span class="cl-inacal-badge">
-            Garantía Solgas <i class="fa-solid fa-circle-check"></i>
+          <span class="cl-certificada-badge">
+            {term.garantiaCorta || 'C.Ps.P. N° 49425'} <i class="fa-solid fa-circle-check"></i>
           </span>
         </div>
 
-        <!-- 1. DIRECCIÓN {SELECT} + BOTÓN AGREGAR -->
-        <!-- 1. DIRECCIÓN {SELECT} + BOTÓN AGREGAR -->
+        <!-- 1. DIRECCIÓN FISCAL {SELECT} + BOTÓN AGREGAR -->
         <div class="cl-dir-picker-row">
           <div class="cl-dir-label">
             <i class="fa-solid fa-location-dot"></i>
-            <span>Dirección:</span>
+            <span>Modalidad:</span>
           </div>
           <select class="cl-sel-dir" id="selDireccionPedido">
             {listaDirecciones.length > 0 ? (
@@ -234,11 +261,11 @@ const whatsappSede = datosNegocio.whatsapp || '51936369384';
               ))
             ) : (
               <option value="" disabled selected data-calle="" data-distrito="" data-celular="">
-                ⚠️ Sin dirección registrada — Haz clic en [+ Agregar]
+                {term.modalidadDefecto || 'Presencial en Consultorio Sede América'}
               </option>
             )}
           </select>
-          <button type="button" class="cl-btn-add-dir" id="btnAddDirJump" title="Gestionar o agregar nueva dirección">
+          <button type="button" class="cl-btn-add-dir" id="btnAddDirJump" title="Gestionar sedes y modalidades">
             <i class="fa-solid fa-plus"></i> <span>Agregar</span>
           </button>
         </div>
@@ -247,14 +274,14 @@ const whatsappSede = datosNegocio.whatsapp || '51936369384';
         <div class="cl-contact-picker-row" id="clContactPickerRow">
           <div class="cl-contact-label">
             <i class="fa-solid fa-phone"></i>
-            <span>Contacto:</span>
+            <span>WhatsApp:</span>
           </div>
           <div class="cl-contact-input-wrap">
             <input 
               type="tel" 
               class="cl-input-contact" 
               id="inCelularPedido" 
-              placeholder="Celular para coordinar entrega..." 
+              placeholder="Número de WhatsApp para coordinar tu cita..." 
               value={cliente.celular || ''} 
             />
           </div>
@@ -277,25 +304,25 @@ const whatsappSede = datosNegocio.whatsapp || '51936369384';
         <!-- 3. NOTA: {TEXTAREA} -->
         <div class="cl-notes-block">
           <label class="cl-notes-label" for="inNotasPedido">
-            <i class="fa-solid fa-pen-to-square"></i> Nota:
+            <i class="fa-solid fa-pen-to-square"></i> Instrucciones de Entrega / Notas:
           </label>
           <textarea 
             class="cl-notes-textarea" 
             id="inNotasPedido" 
-            placeholder="Escribe indicaciones de entrega o cómo prefieres pagar..."
+            placeholder={term.notaPedidoPlaceholder || "Indica piso, departamento, timbre o referencia para el repartidor..."}
           ></textarea>
         </div>
 
       </div>
 
-      <!-- 63% MOCKUP WHATSAPP REALISTA -->
+      <!-- MOCKUP WHATSAPP REALISTA -->
       <div class="cl-wa-box">
         <div class="cl-wa-header">
           <div class="cl-wa-header-left">
-            <img src="/imgwii/logo.webp" alt="Solgas" class="cl-wa-avatar" />
+            <img src={datosNegocio.identidad?.logo || datosNegocio.logo || '/imgwii/logo.webp'} alt={datosNegocio.nombre} class="cl-wa-avatar" data-negocio-avatar />
             <div>
-              <strong style="font-size:0.84rem;">Solgas Surquillo Oficial</strong>
-              <small style="font-size:0.68rem; opacity:0.9; display:block;">en línea · Despacho Jr. Dante 260</small>
+              <strong style="font-size:0.84rem;" data-negocio-nombre>{datosNegocio.nombreCorto || datosNegocio.nombre}</strong>
+              <small style="font-size:0.68rem; opacity:0.9; display:block;" data-negocio-especialista>{datosNegocio.identidad?.especialista ? `${datosNegocio.identidad.especialista} · En línea` : 'Despacho Express · En línea'}</small>
             </div>
           </div>
           <i class="fa-solid fa-phone" style="font-size:0.85rem;"></i>
@@ -310,16 +337,16 @@ const whatsappSede = datosNegocio.whatsapp || '51936369384';
 
         <div class="cl-summary-box">
           <div>
-            <div class="cl-summary-prod" id="sumItemsCount">1 producto seleccionado</div>
-            <div class="cl-summary-sub" id="sumDirSelected">Selecciona tu dirección</div>
+            <div class="cl-summary-prod" id="sumItemsCount">1 {term.itemSingular || 'consulta'} seleccionada</div>
+            <div class="cl-summary-sub" id="sumDirSelected">{term.modalidadDefecto || 'Presencial en Consultorio Sede América'}</div>
           </div>
-          <div class="cl-summary-price" id="sumPriceTotal">S/ 65.00</div>
+          <div class="cl-summary-price" id="sumPriceTotal">S/ 85.00</div>
         </div>
 
         <div class="cl-actions-row">
-          <a href={`tel:${telefonoSede}`} class="cl-btn-call" title="Llamar a Despacho"><i class="fa-solid fa-phone"></i></a>
+          <a href={`tel:${telefonoSede}`} class="cl-btn-call" title="Llamar al Consultorio"><i class="fa-solid fa-phone"></i></a>
           <a href={`https://wa.me/${whatsappSede}`} target="_blank" rel="noopener noreferrer" class="cl-btn-wa-order" id="btnWaOrder">
-            <i class="fa-brands fa-whatsapp"></i> <span id="lblBtnWaOrder">Pedir por WhatsApp</span>
+            <i class="fa-brands fa-whatsapp"></i> <span id="lblBtnWaOrder">Agendar por WhatsApp</span>
           </a>
         </div>
       </div>
@@ -331,11 +358,11 @@ const whatsappSede = datosNegocio.whatsapp || '51936369384';
   <!-- BARRA RESUMEN FLOTANTE EN MÓVIL (ENCIMA DEL BOTTOM DOCK) -->
   <div class="cl-mobile-cart-bar">
     <div class="cl-m-cart-left">
-      <span class="cl-m-cart-count" id="mCartCount">1 producto</span>
-      <span class="cl-m-cart-total" id="mCartTotal">S/ 65.00</span>
+      <span class="cl-m-cart-count" id="mCartCount">1 {term.itemSingular || 'consulta'}</span>
+      <span class="cl-m-cart-total" id="mCartTotal">S/ 85.00</span>
     </div>
     <a href={`https://wa.me/${whatsappSede}`} target="_blank" rel="noopener noreferrer" class="cl-m-cart-btn-wa" id="mBtnWaOrder">
-      <i class="fa-brands fa-whatsapp"></i> <span>Pedir ahora</span>
+      <i class="fa-brands fa-whatsapp"></i> <span>Agendar ahora</span>
     </a>
   </div>
 </div>

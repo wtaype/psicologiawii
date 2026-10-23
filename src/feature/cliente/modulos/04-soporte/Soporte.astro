@@ -1,14 +1,30 @@
 ---
 // src/feature/cliente/modulos/04-soporte/Soporte.astro
-// Módulo de Soporte Oficial y Atención al Cliente · Solgas Surquillo
+// Módulo de Soporte, Consultas y Mesa de Ayuda
 // 100% Humano, Smart, Split Layout 2 Columnas · Tokens witema.css
-import { datosNegocio } from '@/negocio.js';
+import { datosNegocio, configSemilla } from '@/negocio.js';
 
 interface Props {
   cliente?: any;
 }
-const { cliente = {} } = Astro.props;
-const whatsappSede = datosNegocio.whatsapp || '51961229280';
+const esServicios = configSemilla?.modeloNegocio === 'servicios_y_asesorias';
+const whatsappSede = datosNegocio.whatsappLimpio || datosNegocio.whatsapp || '';
+const telefonoSede = datosNegocio.telefonoLimpio || '';
+const telefonoMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono || '';
+const nombreEspecialista = datosNegocio.identidad?.especialista || datosNegocio.especialista || datosNegocio.nombre || '';
+const nombreNegocio = datosNegocio.nombreCorto || datosNegocio.nombre || '';
+const distritoSede = datosNegocio.ubicacion?.distrito || '';
+const badgeSede = distritoSede ? `Sede ${distritoSede} · Despacho y Atención Activa` : 'Atención y Despacho Activo';
+const term = configSemilla?.terminologia || {};
+const garantiaTxt = esServicios
+  ? (datosNegocio.identidad?.especialista
+      ? `Atención confidencial por ${datosNegocio.identidad.especialista}${datosNegocio.identidad?.colegiatura ? ` (${datosNegocio.identidad.colegiatura})` : ''}.`
+      : `Atención confidencial y asesoría personalizada por ${nombreNegocio}.`)
+  : (term.garantiaCorta || `Garantía oficial y pesaje exacto garantizado por ${nombreNegocio}.`);
+
+const tituloSoporte = 'Orientación Psicológica & Atención al Paciente';
+const subtituloSoporte = `Canal directo con la ${nombreEspecialista || nombreNegocio} para resolver dudas sobre citas, horarios, modalidades presencial/online y emisión de Recibos por Honorarios.`;
+const msjWsSoporte = `Hola ${nombreEspecialista || nombreNegocio}, deseo realizar una consulta sobre las citas y especialidades psicológicas.`;
 ---
 
 <div class="cl-soporte-module" id="moduloSoporte">
@@ -17,69 +33,82 @@ const whatsappSede = datosNegocio.whatsapp || '51961229280';
     <div class="sp-head-left">
       <div class="sp-panel-title">
         <i class="fa-solid fa-headset"></i>
-        <span>Centro de Atención y Soporte Solgas</span>
+        <span>{tituloSoporte}</span>
       </div>
       <span class="sp-panel-subtitle">
-        Estamos aquí para ayudarte con comprobantes electrónicos, consultas sobre tu gas o cotizaciones para tu negocio.
+        {subtituloSoporte}
       </span>
     </div>
 
     <!-- BADGE DE ATENCIÓN EN VIVO -->
     <div class="sp-head-badge">
       <span class="sp-live-dot"></span>
-      <span>Sede Surquillo · Atención Activa</span>
+      <span>{badgeSede}</span>
     </div>
   </div>
 
   <!-- 2. LAYOUT SPLIT: 2 COLUMNAS (50% / 50%) APROVECHANDO 100% DEL ESPACIO -->
   <div class="sp-layout-split">
     <!-- ========================================================
-         COLUMNA IZQUIERDA: FORMULARIO HUMANO Y SMART
+         COLUMNA IZQUIERDA: FORMULARIO DE CONSULTA
          ======================================================== -->
     <div class="sp-card-editor">
       <div class="sp-card-header">
         <div class="sp-card-title">
           <i class="fa-solid fa-paper-plane"></i>
-          <span>Envíanos un Mensaje</span>
+          <span>{esServicios ? 'Enviar Consulta a la Contadora' : 'Enviar Consulta a Central'}</span>
         </div>
       </div>
 
       <form id="formSoporteTicket" autocomplete="off">
-        <!-- Fila 1: ¿En qué te ayudamos hoy? con wiSelect -->
+        <!-- Fila 1: Tipo de Consulta con wiSelect -->
         <div class="sp-form-group">
           <label class="sp-form-label" for="spSelectTipo">
-            <i class="fa-solid fa-circle-question"></i> ¿En qué podemos ayudarte hoy?:
+            <i class="fa-solid fa-circle-question"></i> Motivo de tu Consulta:
           </label>
           <select class="sp-select" id="spSelectTipo">
-            <option value="comprobante">Comprobante de Pago (Boleta / Factura SUNAT)</option>
-            <option value="pedido">Consulta sobre la entrega de mi pedido</option>
-            <option value="cotizacion">Cotización para Negocio o Restaurante (45kg)</option>
-            <option value="valvula">Ayuda o asistencia con mi balón o válvula</option>
-            <option value="otro">Otra consulta o sugerencia para Solgas</option>
+            {esServicios ? (
+              <>
+                <option value="declaracion">Consulta sobre Servicio / Asesoría Activa</option>
+                <option value="esquela">Atención Urgente / Incidencia Prioritaria</option>
+                <option value="honorarios">Coordinación de Citas o Sesión Virtual</option>
+                <option value="comprobante">Comprobante de Pago Electrónico (Boleta / Factura)</option>
+                <option value="cotizacion">Presupuesto para Servicio o Consultoría Mensual</option>
+                <option value="otro">Otra consulta o requerimiento</option>
+              </>
+            ) : (
+              <>
+                <option value="pedido">Consulta sobre Estado de Pedido / Delivery Express</option>
+                <option value="comprobante">Solicitud de Comprobante Electrónico (Boleta / Factura)</option>
+                <option value="instalacion">Soporte de Instalación Técnica / Válvula Click-On</option>
+                <option value="cotizacion">Cotización por Mayor / Balones 45kg para Empresas</option>
+                <option value="otro">Otra consulta o sugerencia</option>
+              </>
+            )}
           </select>
         </div>
 
         <!-- Fila Contextual Comprobante SUNAT (Condicional) -->
-        <div class="sp-form-row" id="spCamposComprobante" style="display:grid;">
+        <div class="sp-form-row" id="spCamposComprobante" style="display:none;">
           <div class="sp-form-group">
             <label class="sp-form-label" for="spSelectTipoComp">
               <i class="fa-solid fa-receipt"></i> Tipo de Comprobante:
             </label>
             <select class="sp-select" id="spSelectTipoComp">
-              <option value="boleta">Boleta de Venta (DNI)</option>
-              <option value="factura">Factura Comercial (RUC)</option>
+              <option value="factura">{esServicios ? 'Factura de Honorarios (RUC)' : 'Factura Electrónica (RUC)'}</option>
+              <option value="boleta">{esServicios ? 'Boleta de Venta / Honorarios (DNI)' : 'Boleta de Venta (DNI)'}</option>
             </select>
           </div>
 
           <div class="sp-form-group">
             <label class="sp-form-label" for="spInputDocComp" id="spLabelDocComp">
-              <i class="fa-solid fa-hashtag"></i> N° de Documento (DNI/RUC):
+              <i class="fa-solid fa-hashtag"></i> N° de Documento (RUC/DNI):
             </label>
             <input 
               type="text" 
               class="sp-input" 
               id="spInputDocComp" 
-              placeholder="Ingresa tu DNI o RUC" 
+              placeholder="Ingresa tu RUC o DNI" 
               maxlength="11" 
             />
           </div>
@@ -97,65 +126,77 @@ const whatsappSede = datosNegocio.whatsapp || '51961229280';
           />
         </div>
 
-        <!-- Fila Contextual Cotización Mayorista (Condicional) -->
+        <!-- Fila Contextual Cotización (Condicional) -->
         <div class="sp-form-row" id="spCamposCotizacion" style="display:none;">
           <div class="sp-form-group">
             <label class="sp-form-label" for="spSelectTipoNegocio">
-              <i class="fa-solid fa-utensils"></i> Rubro de Negocio:
+              <i class="fa-solid fa-briefcase"></i> {esServicios ? 'Giro o Rubro Comercial:' : 'Giro de tu Negocio / Empresa:'}
             </label>
             <select class="sp-select" id="spSelectTipoNegocio">
-              <option value="restaurante">Restaurante / Pollería / Fuente de soda</option>
-              <option value="panaderia">Panadería / Pastelería</option>
-              <option value="lavanderia">Lavandería / Tintorería</option>
-              <option value="empresa">Empresa / Taller / Fábrica</option>
-              <option value="hogar">Uso doméstico intensivo</option>
+              {esServicios ? (
+                <>
+                  <option value="comercio">Comercio / Venta de productos físicos</option>
+                  <option value="servicios">Servicios profesionales / Consultoría / Software</option>
+                  <option value="restaurante">Restaurante / Alimentos</option>
+                  <option value="construccion">Construcción / Contratista</option>
+                  <option value="otro">Otro rubro comercial</option>
+                </>
+              ) : (
+                <>
+                  <option value="restaurante">Restaurante / Pollería / Chifa</option>
+                  <option value="panaderia">Panadería / Pastelería</option>
+                  <option value="lavanderia">Lavandería / Tintorería Industrial</option>
+                  <option value="condominio">Condominio / Edificio Multifamiliar</option>
+                  <option value="comercio">Comercio / Pequeña Empresa</option>
+                  <option value="otro">Otro rubro comercial</option>
+                </>
+              )}
             </select>
           </div>
 
           <div class="sp-form-group">
-            <label class="sp-form-label" for="spSelectBalonCotiz">
-              <i class="fa-solid fa-boxes-stacked"></i> Capacidad de Balón:
+            <label class="sp-form-label" for="spSelectRegimenCotiz">
+              <i class="fa-solid fa-scale-balanced"></i> {esServicios ? 'Régimen Tributario Estimado:' : 'Consumo Mensual Estimado:'}
             </label>
-            <select class="sp-select" id="spSelectBalonCotiz">
-              <option value="45kg">Balón Industrial de 45 kg</option>
-              <option value="15kg">Balón Comercial de 15 kg</option>
-              <option value="10kg">Balones estándar de 10 kg por volumen</option>
+            <select class="sp-select" id="spSelectRegimenCotiz">
+              {esServicios ? (
+                <>
+                  <option value="mype">Régimen MYPE Tributario (RMT)</option>
+                  <option value="rer">Régimen Especial de Renta (RER)</option>
+                  <option value="general">Régimen General</option>
+                  <option value="persona">Persona Natural con Negocio (RUC 10)</option>
+                </>
+              ) : (
+                <>
+                  <option value="comercial_45kg_2_5">2 a 5 Balones de 45kg al mes</option>
+                  <option value="comercial_45kg_6_15">6 a 15 Balones de 45kg al mes</option>
+                  <option value="comercial_45kg_mas">Más de 15 Balones de 45kg al mes</option>
+                  <option value="hogar_10kg_flota">Flota de Balones 10kg (Comercio / Hogar)</option>
+                </>
+              )}
             </select>
           </div>
         </div>
 
-        <!-- Fila Contextual Asistencia de Válvula / Balón (Condicional) -->
-        <div class="sp-form-group" id="spCamposValvula" style="display:none;">
-          <label class="sp-form-label" for="spSelectTipoValvula">
-            <i class="fa-solid fa-gear"></i> Tipo de Válvula o Asistencia:
-          </label>
-          <select class="sp-select" id="spSelectTipoValvula">
-            <option value="premium">Válvula Premium Clip-On (Palanca roja)</option>
-            <option value="rosca">Válvula Tradicional de Rosca</option>
-            <option value="pesaje">Solicito comprobación con balanza digital</option>
-            <option value="manguera">Cambio o revisión de manguera y regulador</option>
-          </select>
-        </div>
-
-        <!-- Fila Mensaje Detallado (Con respiro y espacio para explicarse) -->
+        <!-- Fila Mensaje Detallado -->
         <div class="sp-form-group">
           <label class="sp-form-label" for="spTextareaDetalle">
-            <i class="fa-solid fa-comment-dots"></i> Cuéntanos tu consulta o mensaje:
+            <i class="fa-solid fa-comment-dots"></i> Detalle de tu consulta o requerimiento:
           </label>
           <textarea 
             class="sp-textarea" 
             id="spTextareaDetalle" 
-            placeholder="Escribe aquí con total confianza. Indícanos los detalles de tu consulta o tu dirección para ayudarte con rapidez..." 
-            required
+            placeholder={esServicios ? "Describe tu caso con total confianza: número de RUC, plazo límite o duda sobre tus impuestos..." : "Describe tu requerimiento o consulta con total confianza: dirección, horario preferente o especificaciones..."} 
+            required 
             style="min-height: 120px;"
           ></textarea>
         </div>
 
-        <!-- Botón de Envío Naranja Solgas -->
+        <!-- Botón de Envío -->
         <div class="sp-form-actions">
           <button type="submit" class="sp-btn-save" id="btnEnviarTicket">
             <i class="fa-solid fa-paper-plane"></i>
-            <span>Enviar Mensaje al Equipo Solgas</span>
+            <span>Enviar Consulta a {nombreEspecialista || 'Especialista'}</span>
           </button>
         </div>
       </form>
@@ -170,38 +211,38 @@ const whatsappSede = datosNegocio.whatsapp || '51961229280';
         <div class="sp-card-header">
           <div class="sp-card-title">
             <i class="fa-solid fa-phone-volume"></i>
-            <span>Atención Directa e Inmediata</span>
+            <span>Canales Directos de Atención</span>
           </div>
         </div>
 
         <div class="sp-channels-grid">
-          <a href="tel:014456677" class="sp-channel-card">
+          <a href={`tel:${telefonoSede}`} class="sp-channel-card">
             <div class="sp-channel-head">
               <i class="fa-solid fa-phone" style="color:var(--cl-orange);"></i>
-              <span>Central Telefónica Sede</span>
+              <span>{esServicios ? 'Teléfono del Estudio' : 'Central de Atención'}</span>
             </div>
-            <span class="sp-channel-desc">Surquillo y alrededores</span>
-            <span class="sp-channel-val">(01) 445-6677</span>
+            <span class="sp-channel-desc">{esServicios ? 'Horario de oficina' : 'Horario de pedidos y reparto'}</span>
+            <span class="sp-channel-val">{telefonoMostrado}</span>
           </a>
 
-          <a href="tel:51961229280" class="sp-channel-card">
+          <a href={`https://wa.me/${whatsappSede}`} target="_blank" rel="noopener noreferrer" class="sp-channel-card">
             <div class="sp-channel-head">
-              <i class="fa-solid fa-mobile-screen" style="color:var(--cl-orange);"></i>
-              <span>Celular Directo</span>
+              <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i>
+              <span>WhatsApp Directo</span>
             </div>
-            <span class="sp-channel-desc">Llamadas y WhatsApp directo</span>
-            <span class="sp-channel-val">961 229 280</span>
+            <span class="sp-channel-desc">{esServicios ? 'Consultas y citas rápidas' : 'Pedidos express y consultas'}</span>
+            <span class="sp-channel-val">{telefonoMostrado || (whatsappSede ? `+${whatsappSede}` : '')}</span>
           </a>
         </div>
 
         <div style="font-size:0.75rem; color:var(--muted); line-height:1.4; display:flex; align-items:center; gap:8px;">
-          <i class="fa-solid fa-scale-balanced" style="color:var(--cl-emerald); font-size:0.9rem;"></i>
-          <span><strong>Balanza Digital Certificada:</strong> Si deseas comprobar el peso de tu balón en tu puerta, solicítalo sin costo a nuestro repartidor.</span>
+          <i class="fa-solid fa-certificate" style="color:var(--cl-emerald); font-size:0.9rem;"></i>
+          <span><strong>{esServicios ? 'Garantía Profesional:' : 'Garantía de Servicio:'}</strong> {garantiaTxt}</span>
         </div>
 
         <!-- Botón Directo WhatsApp Oficial con mensaje prellenado inteligente -->
         <a 
-          href={`https://wa.me/${whatsappSede}?text=${encodeURIComponent('Hola Solgas Surquillo, necesito ayuda con mi pedido de gas.')}`}
+          href={`https://wa.me/${whatsappSede}?text=${encodeURIComponent(msjWsSoporte)}`}
           target="_blank"
           rel="noopener noreferrer"
           class="sp-btn-wa-full"
@@ -212,12 +253,12 @@ const whatsappSede = datosNegocio.whatsapp || '51961229280';
         </a>
       </div>
 
-      <!-- TARJETA 2 (ABAJO): MIS CONSULTAS RECIENTES (SMART CACHE WISOPORTE) -->
+      <!-- TARJETA 2 (ABAJO): MIS CONSULTAS RECIENTES -->
       <div class="sp-card-section">
         <div class="sp-card-header">
           <div class="sp-card-title">
             <i class="fa-solid fa-clock-rotate-left"></i>
-            <span>Mis Mensajes y Consultas</span>
+            <span>{esServicios ? 'Mis Consultas y Casos Registrados' : 'Mis Consultas y Pedidos Registrados'}</span>
           </div>
           <span class="cd-badge-count" id="spBadgeTicketsCount">0</span>
         </div>
@@ -225,7 +266,7 @@ const whatsappSede = datosNegocio.whatsapp || '51961229280';
         <div class="sp-tickets-scroll" id="listaTicketsRecientes">
           <div class="sp-empty-tickets" id="spEmptyTickets">
             <i class="fa-solid fa-folder-open"></i>
-            <span>Aún no has enviado mensajes. Cuando nos envíes una consulta o trámite, aparecerá aquí con su estado de atención.</span>
+            <span>{esServicios ? 'Aún no has enviado consultas. Cuando envíes un requerimiento o trámite, aparecerá aquí con su estado de atención.' : 'Aún no has enviado consultas. Cuando registres una consulta sobre tu pedido o servicio, aparecerá aquí con su estado.'}</span>
           </div>
         </div>
       </div>

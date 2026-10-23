@@ -15,11 +15,48 @@ const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.pro
 const t = resolverIdioma({ es, en }, idioma);
 
 const primerServicio = datosNegocio.servicios[0];
-const precioBase = primerServicio ? primerServicio.precioPEN.toFixed(2) : '85.00';
+const precioBase = datosNegocio.hero?.driverPrecio ? datosNegocio.hero.driverPrecio.toFixed(2) : (primerServicio ? primerServicio.precioPEN.toFixed(2) : '85.00');
 const whatsappTexto = datosNegocio.getWhatsappMensaje(idioma) || datosNegocio.whatsappMensaje;
 const whatsappLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(whatsappTexto)}`;
 const colegiaturaNum = datosNegocio.colegiaturaNumero;
-const imagenHero = '/imgwii/Psychologist_listening_in_therapy.jpeg';
+const imagenHero = datosNegocio.imgHero || datosNegocio.hero?.imgHero || '/imgwii/Psychologist_listening_in_therapy.jpeg';
+
+// Datos reactivos del Hero con cascada: Firestore/Local -> semillas/negocio.json -> traducción i18n
+const heroTitulo = (typeof datosNegocio.hero?.titulo === 'object' ? datosNegocio.hero.titulo[idioma] : datosNegocio.hero?.titulo) || `${t.titulo_1} ${t.titulo_resaltado}`;
+const heroSubtitulo = (typeof datosNegocio.hero?.subtitulo === 'object' ? datosNegocio.hero.subtitulo[idioma] : datosNegocio.hero?.subtitulo) || t.subtitulo;
+const heroBadge = (typeof datosNegocio.hero?.badge === 'object' ? datosNegocio.hero.badge[idioma] : datosNegocio.hero?.badge) || datosNegocio.registroColegio;
+const driverTitulo = (typeof datosNegocio.hero?.driverTitulo === 'object' ? datosNegocio.hero.driverTitulo[idioma] : datosNegocio.hero?.driverTitulo) || t.driver_card_titulo;
+const driverDesc = (typeof datosNegocio.hero?.driverDesc === 'object' ? datosNegocio.hero.driverDesc[idioma] : datosNegocio.hero?.driverDesc) || t.driver_card_desc;
+const especialistaGrado = (datosNegocio.getGrado ? datosNegocio.getGrado(idioma) : (typeof datosNegocio.identidad?.grado === 'object' ? datosNegocio.identidad.grado[idioma] : datosNegocio.grado)) || 'Maestrista en Psicología Clínica';
+const metricasHero = datosNegocio.metricas || {};
+// Función para separar inteligentemente el título en base y frase resaltada (últimas palabras)
+function formatearTituloHero(titCompleto = '') {
+  const limpio = (titCompleto || '').trim();
+  if (!limpio) return { base: `${t.titulo_1} `, resaltado: t.titulo_resaltado };
+  
+  // Si contiene el signo '¿' y '?' típico, resaltar la frase final
+  if (limpio.includes('ansiedad te sobrepasan?')) {
+    const partes = limpio.split('ansiedad te sobrepasan?');
+    return {
+      base: partes[0],
+      resaltado: 'ansiedad te sobrepasan?'
+    };
+  }
+
+  // De forma genérica: resaltar las últimas 3 palabras para conservar el estilo CRO
+  const palabras = limpio.split(/\s+/);
+  if (palabras.length > 3) {
+    const corte = Math.max(1, palabras.length - 3);
+    return {
+      base: palabras.slice(0, corte).join(' ') + ' ',
+      resaltado: palabras.slice(corte).join(' ')
+    };
+  }
+
+  return { base: limpio, resaltado: '' };
+}
+
+const partesTitulo = formatearTituloHero(heroTitulo);
 ---
 
 <style is:global set:html={heroCss}></style>
@@ -36,23 +73,21 @@ const imagenHero = '/imgwii/Psychologist_listening_in_therapy.jpeg';
           <div class="hero-saludo">
             <span class="badge-serenidad hero-badge">
               <i class="fa-solid fa-circle hero-badge-dot"></i> 
-              <span data-negocio-badge>{datosNegocio.registroColegio}</span>
+              <span data-negocio-badge>{heroBadge}</span>
               <i class="fa-solid fa-circle-check hero-badge-check"></i>
             </span>
           </div>
         </div>
 
-        <!-- Titular Principal Empático -->
+        <!-- Titular Principal Empático con Gradiente CRO en últimas palabras -->
         <h1 class="hero-main-heading">
-          <span>{t.titulo_1}</span><br />
-          <span class="hero-title-highlight">
-            {t.titulo_resaltado}
-          </span>
+          <span data-negocio-hero-base>{partesTitulo.base}</span><br />
+          <span class="hero-title-highlight" data-negocio-hero-highlight>{partesTitulo.resaltado}</span>
         </h1>
 
         <!-- Subtítulo Explicativo y Cálido -->
-        <p class="hero-main-sub">
-          {t.subtitulo}
+        <p class="hero-main-sub" data-negocio-hero-sub>
+          {heroSubtitulo}
         </p>
 
         <!-- Selector Interactivo de Temas Clínicos (Tipo Gaswii: actualiza feedback en vivo y prepara mensaje sin saltar de golpe) -->
@@ -138,19 +173,19 @@ const imagenHero = '/imgwii/Psychologist_listening_in_therapy.jpeg';
         <!-- Métricas de Trayectoria Clínica -->
         <div class="stats-grid hero-stats-box">
           <div>
-            <div class="hero-stat-val">+450</div>
+            <div class="hero-stat-val" data-negocio-metrica-pacientes>{metricasHero.pacientes || '+450'}</div>
             <div class="hero-stat-label">{t.stat_clientes}</div>
           </div>
           <div>
-            <div class="hero-stat-val">{colegiaturaNum}</div>
+            <div class="hero-stat-val" data-negocio-colegiatura>{metricasHero.colegiatura || colegiaturaNum}</div>
             <div class="hero-stat-label">{t.stat_colegiatura}</div>
           </div>
           <div>
-            <div class="hero-stat-val">+6 Años</div>
+            <div class="hero-stat-val" data-negocio-metrica-years>{metricasHero.years || '+6 Años'}</div>
             <div class="hero-stat-label">{t.stat_anos}</div>
           </div>
           <div>
-            <div class="hero-stat-val">100%</div>
+            <div class="hero-stat-val" data-negocio-metrica-confidencial>{metricasHero.confidencialidad || '100%'}</div>
             <div class="hero-stat-label">{t.stat_confidencial}</div>
           </div>
         </div>
@@ -170,17 +205,18 @@ const imagenHero = '/imgwii/Psychologist_listening_in_therapy.jpeg';
               loading="eager"
               fetchpriority="high"
               class="hero-img"
+              data-negocio-foto-especialista
             />
             <div class="hero-specialist-overlay">
               <div class="hero-specialist-header">
                 <span class="hero-specialist-badge">
-                  <i class="fa-solid fa-briefcase"></i> {datosNegocio.especialista}
+                  <i class="fa-solid fa-briefcase"></i> <span data-negocio-especialista-nombre>{datosNegocio.especialista}</span>
                 </span>
                 <span class="hero-badge-available">
                   <span class="hero-available-dot"></span> Disponible Hoy
                 </span>
               </div>
-              <span class="hero-specialist-sub">Directora Terapéutica • TCC</span>
+              <span class="hero-specialist-sub" data-negocio-especialista-enfoque>{especialistaGrado}</span>
             </div>
           </div>
 
@@ -190,17 +226,17 @@ const imagenHero = '/imgwii/Psychologist_listening_in_therapy.jpeg';
                 <i class="fa-solid fa-spa"></i>
               </div>
               <div>
-                <div class="hero-guarantee-title">
-                  {t.driver_card_titulo}
+                <div class="hero-guarantee-title" data-negocio-driver-titulo>
+                  {driverTitulo}
                 </div>
-                <div class="hero-guarantee-sub">
-                  {t.driver_card_desc}
+                <div class="hero-guarantee-sub" data-negocio-driver-desc>
+                  {driverDesc}
                 </div>
               </div>
             </div>
             <div class="hero-guarantee-price">
               <div class="hero-price-sub">{t.precio_desde}</div>
-              <div class="hero-price-val">
+              <div class="hero-price-val" data-negocio-driver-precio>
                 S/ {precioBase}
               </div>
             </div>

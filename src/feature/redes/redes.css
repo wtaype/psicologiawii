@@ -1,0 +1,442 @@
+/* ============================================================ */
+/* 📱 REDES (BIO-LINK / LINKTREE STANDALONE) · ECOSISTEMA WII   */
+/* Inspirado en la interfaz de referencia limpia de Wiihope     */
+/* 100% Sin Header, Sin Footer institucional, Responsive Móvil  */
+/* ============================================================ */
+
+/* 1. Lienzo de Pantalla Completa Centrado */
+.redes-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1rem;
+  background-color: var(--bg);
+  background-image: radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--mco) 8%, transparent) 0%, transparent 65%);
+  box-sizing: border-box;
+}
+
+/* 2. Tarjeta Contenedora Principal (Estilo Smartphone Card) */
+.redes-card {
+  width: 100%;
+  max-width: 440px;
+  background-color: var(--wb);
+  border-radius: 32px;
+  border: 1px solid var(--brd);
+  box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.08), 0 0 1px 1px rgba(0, 0, 0, 0.02);
+  padding: 2rem 1.65rem 1.85rem;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  transition: transform var(--tr_m), box-shadow var(--tr_m);
+}
+
+/* 3. TopBar de la Tarjeta (Copiar Enlace & Badge Verificado) */
+.redes-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.redes-btn-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background-color: var(--bg);
+  border: 1px solid var(--brd);
+  color: var(--tx2);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all var(--tr_f);
+}
+
+.redes-btn-copy:hover {
+  color: var(--tx1);
+  background-color: var(--inp);
+  border-color: var(--mco);
+  transform: translateY(-1px);
+}
+
+.redes-btn-copy:active {
+  transform: scale(0.95);
+}
+
+.redes-btn-copy.copiado {
+  color: var(--success);
+  border-color: var(--success);
+  background-color: rgba(34, 197, 94, 0.12);
+}
+
+.redes-badge-oficial {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.32rem 0.75rem;
+  border-radius: var(--r_full);
+  background-color: var(--bg);
+  border: 1px solid var(--brd);
+  color: var(--tx2);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+.redes-badge-oficial i {
+  color: var(--mco);
+  font-size: 0.8rem;
+}
+
+/* 4. Sección Hero (Avatar, Handle y Bio) */
+.redes-hero {
+  text-align: center;
+  margin-bottom: 1.85rem;
+}
+
+.redes-avatar-wrap {
+  width: 104px;
+  height: 104px;
+  margin: 0 auto 1rem;
+  position: relative;
+}
+
+.redes-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+  box-shadow: 0 0 0 3.5px var(--mco), 0 8px 24px color-mix(in srgb, var(--mco) 35%, transparent);
+  transition: transform var(--tr_m);
+}
+
+.redes-avatar-wrap:hover .redes-avatar-img {
+  transform: scale(1.03);
+}
+
+.redes-handle {
+  font-family: var(--ff_P);
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--tx1);
+  margin: 0 0 0.35rem;
+  letter-spacing: -0.02em;
+}
+
+.redes-bio {
+  font-family: var(--ff_P);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: var(--tx2);
+  margin: 0;
+  max-width: 320px;
+  margin-inline: auto;
+}
+
+/* 5. Lista de Botones Oficiales (Canales de Redes) */
+.redes-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  margin-bottom: 1.85rem;
+}
+
+/* 6. Botón Individual de Enlace / Red Social (Diseño Arquitectónico Rico) */
+.redes-link-btn {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 60px;
+  padding: 0.75rem 1.15rem;
+  border-radius: 16px;
+  text-decoration: none;
+  font-family: var(--ff_P);
+  color: #ffffff !important;
+  position: relative;
+  box-sizing: border-box;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transition: transform var(--tr_f), box-shadow var(--tr_f), filter var(--tr_f), border-color var(--tr_f);
+  outline: none;
+  gap: 0.85rem;
+  user-select: none;
+  overflow: hidden;
+}
+
+.redes-link-btn:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.05);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.22);
+}
+
+.redes-link-btn:active {
+  transform: translateY(0);
+  filter: brightness(0.96);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+}
+
+/* Icono dentro de caja translúcida con relieve */
+.redes-link-icon-box {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3);
+  transition: transform var(--tr_f);
+}
+
+.redes-link-btn:hover .redes-link-icon-box {
+  transform: scale(1.06);
+}
+
+/* Contenido Central: Título + Subtítulo */
+.redes-link-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  text-align: left;
+}
+
+.redes-link-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.redes-link-title {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.redes-link-chip {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  line-height: 1;
+}
+
+.redes-link-sub {
+  font-size: 0.77rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.15rem;
+}
+
+/* Acción a la derecha (flechita exterior) */
+.redes-link-action {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.7);
+  flex-shrink: 0;
+  transition: transform var(--tr_f), color var(--tr_f);
+}
+
+.redes-link-btn:hover .redes-link-action {
+  transform: translate(2px, -2px);
+  color: #ffffff;
+}
+
+/* 7. Identidad Cromática Única para Cada Marca */
+/* WhatsApp: Esmeralda vivo con gradiente y glow */
+.redes-link-btn.whatsapp {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.28);
+}
+.redes-link-btn.whatsapp:hover {
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.42);
+}
+
+/* LinkedIn: Corporativo profundo zafiro */
+.redes-link-btn.linkedin {
+  background: linear-gradient(135deg, #0a66c2 0%, #004182 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(10, 102, 194, 0.25);
+}
+.redes-link-btn.linkedin:hover {
+  box-shadow: 0 8px 24px rgba(10, 102, 194, 0.38);
+}
+
+/* Web Oficial: Estilo Portal Institucional Premium (Gris Pizarra Oscuro con Borde Cyan) - ¡Diferenciado de Facebook y LinkedIn! */
+.redes-link-btn.web {
+  background: linear-gradient(135deg, #0d1e38 0%, #152c4f 100%);
+  border: 1.5px solid rgba(56, 189, 248, 0.45);
+  box-shadow: 0 4px 18px rgba(14, 116, 144, 0.25);
+}
+.redes-link-btn.web:hover {
+  border-color: rgba(56, 189, 248, 0.85);
+  box-shadow: 0 8px 24px rgba(14, 116, 144, 0.4);
+}
+.redes-link-btn.web .redes-link-icon-box {
+  background: rgba(56, 189, 248, 0.2);
+  color: #38bdf8;
+}
+.redes-link-btn.web .redes-link-chip {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: rgba(56, 189, 248, 0.4);
+  color: #7dd3fc;
+}
+
+/* Facebook: Azul Real Meta */
+.redes-link-btn.facebook {
+  background: linear-gradient(135deg, #1877f2 0%, #0d5ec4 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(24, 119, 242, 0.24);
+}
+.redes-link-btn.facebook:hover {
+  box-shadow: 0 8px 24px rgba(24, 119, 242, 0.36);
+}
+
+/* Instagram: Gradiente Sunset icónico */
+.redes-link-btn.instagram {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 4px 16px rgba(220, 39, 67, 0.28);
+}
+.redes-link-btn.instagram:hover {
+  box-shadow: 0 8px 24px rgba(220, 39, 67, 0.42);
+}
+
+/* TikTok: Cyber Dark */
+.redes-link-btn.tiktok {
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+}
+.redes-link-btn.tiktok .redes-link-icon-box {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+/* YouTube: Rojo Cinemático */
+.redes-link-btn.youtube {
+  background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 16px rgba(255, 0, 0, 0.28);
+}
+.redes-link-btn.youtube:hover {
+  box-shadow: 0 8px 24px rgba(255, 0, 0, 0.42);
+}
+
+/* X / Twitter: Obsidian Black minimalista */
+.redes-link-btn.twitter {
+  background: #0f1419;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* 8. Footer de la Tarjeta */
+.redes-footer {
+  text-align: center;
+}
+
+.redes-pill-promo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.55rem 1.15rem;
+  border-radius: var(--r_full);
+  background-color: var(--bg);
+  border: 1px solid var(--brd);
+  color: var(--tx1);
+  font-family: var(--ff_P);
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-bottom: 1.15rem;
+  transition: all var(--tr_f);
+}
+
+.redes-pill-promo:hover {
+  transform: translateY(-1px);
+  border-color: var(--mco);
+  background-color: var(--inp);
+}
+
+.redes-pill-promo span.promo-emoji {
+  font-size: 1rem;
+}
+
+.redes-links-legales {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--ff_P);
+  font-size: 0.76rem;
+  color: var(--tx3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.redes-links-legales a {
+  color: var(--tx3);
+  text-decoration: none;
+  transition: color var(--tr_f);
+}
+
+.redes-links-legales a:hover {
+  color: var(--tx1);
+  text-decoration: underline;
+}
+
+.redes-separador {
+  color: var(--tx3);
+  opacity: 0.5;
+  user-select: none;
+}
+
+/* 9. Responsive Móvil Ultra Estricto */
+@media (max-width: 480px) {
+  .redes-screen {
+    padding: 1.25rem 0.75rem;
+    align-items: flex-start;
+  }
+
+  .redes-card {
+    border-radius: 24px;
+    padding: 1.5rem 1.25rem 1.5rem;
+  }
+
+  .redes-avatar-wrap {
+    width: 92px;
+    height: 92px;
+  }
+
+  .redes-handle {
+    font-size: 1.22rem;
+  }
+
+  .redes-bio {
+    font-size: 0.84rem;
+  }
+
+  .redes-link-btn {
+    min-height: 48px;
+    padding: 0.75rem 1rem;
+    font-size: 0.94rem;
+  }
+}

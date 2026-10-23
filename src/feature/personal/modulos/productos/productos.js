@@ -1,5 +1,5 @@
 // src/feature/personal/modulos/productos/productos.js
-// Controlador Frontend Autónomo del Módulo de Productos (Solgas Surquillo)
+// Controlador Frontend Autónomo del Módulo de Servicios & Asesorías
 // 100% JS Nativo · Local-First · Integración con Firestore, @widev y modales.js
 
 import { Notificacion, wiSpin, wiConfirmar } from '@widev';
@@ -7,29 +7,30 @@ import {
   obtenerProductosLocal,
   sincronizarProductosFirestore,
   cambiarEstadoProducto,
-  actualizarPrecioYStock,
-  eliminarProductoFirestore
+  guardarProductoFirestore,
+  eliminarProductoFirestore,
+  normalizarProducto
 } from './dataProductos.js';
 import {
   inicializarModalProducto,
   abrirModalProducto
 } from './modales.js';
-import { solicitarActualizacionWeb } from '../../../../actualizar.js';
+import { solicitarActualizacionWeb } from '@core/servicios/actualizar.js';
 
 export function inicializarProductos() {
   const panel = document.getElementById('panel-productos');
   if (!panel || panel.dataset.productosInit === 'true') return;
   panel.dataset.productosInit = 'true';
 
-  // Inicializar controlador hijo del modal (preview en vivo, tabs ES/EN, wiModal)
+  // Inicializar controlador del modal
   inicializarModalProducto();
 
   // Elementos de la UI
   const prGrid = document.getElementById('prGridProductos');
   const prEmpty = document.getElementById('prEmptyState');
   const prStatTotal = document.getElementById('prStatTotal');
-  const prStatActivos = document.getElementById('prStatActivos');
-  const prStatStockBajo = document.getElementById('prStatStockBajo');
+  const prStatServicios = document.getElementById('prStatServicios');
+  const prStatAsesorias = document.getElementById('prStatAsesorias');
   const prFiltrosGroup = document.getElementById('prFiltrosGroup');
   const prInputBuscar = document.getElementById('prInputBuscar');
   const prBtnNuevo = document.getElementById('prBtnNuevo');
@@ -38,16 +39,23 @@ export function inicializarProductos() {
 
   let categoriaFiltro = 'todos';
   let busquedaTexto = '';
+  let _ultimoEditadoId = null;
+  let _ultimoCampoEditado = null;
 
-  // 1. RENDERIZADOR DE PRODUCTOS
+  // 1. RENDERIZADOR DE SERVICIOS Y ASESORÍAS (Orden estricto 1, 2, 3... garantizado)
   function renderizar(productos = obtenerProductosLocal()) {
-    const total = productos.length;
-    const activos = productos.filter(p => p.estado === 'activo').length;
-    const stockBajo = productos.filter(p => Number(p.stock) <= Number(p.stockMin || 5)).length;
+    const listaBase = Array.isArray(productos) && productos.length > 0 ? productos : obtenerProductosLocal();
+    const productosOrdenados = [...listaBase]
+      .map(normalizarProducto)
+      .sort((a, b) => (Number(a.orden) || 999) - (Number(b.orden) || 999));
+
+    const total = productosOrdenados.length;
+    const totalServicios = productosOrdenados.filter(p => p.tipo === 'servicio').length;
+    const totalAsesorias = productosOrdenados.filter(p => p.tipo === 'asesoria' || p.tipo === 'taller').length;
 
     if (prStatTotal) prStatTotal.textContent = total;
-    if (prStatActivos) prStatActivos.textContent = activos;
-    if (prStatStockBajo) prStatStockBajo.textContent = stockBajo;
+    if (prStatServicios) prStatServicios.textContent = totalServicios;
+    if (prStatAsesorias) prStatAsesorias.textContent = totalAsesorias;
 
     if (total === 0) {
       if (prGrid) prGrid.innerHTML = '';
@@ -58,12 +66,17 @@ export function inicializarProductos() {
     if (prEmpty) prEmpty.style.display = 'none';
 
     // Filtrar por categoría y texto
-    const filtrados = productos.filter(p => {
-      const matchCat = categoriaFiltro === 'todos' || p.tipoCategoria === categoriaFiltro;
+    const filtrados = productosOrdenados.filter(p => {
+      const tipoReal = (p.tipo === 'asesoria' || p.tipo === 'taller') ? 'asesoria' : 'servicio';
+      const matchCat = categoriaFiltro === 'todos' || tipoReal === categoriaFiltro;
       const texto = busquedaTexto.toLowerCase().trim();
+      const nombreEs = (typeof p.nombre === 'object' ? p.nombre?.es : p.nombre) || '';
+      const nombreEn = (typeof p.nombre === 'object' ? p.nombre?.en : p.nombreEn) || '';
+      const enfoque = p.enfoque || '';
       const matchText = !texto ||
-        (p.nombre?.es || '').toLowerCase().includes(texto) ||
-        (p.nombre?.en || '').toLowerCase().includes(texto) ||
+        nombreEs.toLowerCase().includes(texto) ||
+        nombreEn.toLowerCase().includes(texto) ||
+        enfoque.toLowerCase().includes(texto) ||
         (p.id || '').toLowerCase().includes(texto);
       return matchCat && matchText;
     });
@@ -71,9 +84,9 @@ export function inicializarProductos() {
     if (filtrados.length === 0) {
       if (prGrid) {
         prGrid.innerHTML = `
-          <div style="grid-column: 1 / -1; padding: 40px 20px; text-align: center; color: var(--muted, #64748b);">
+          <div style="grid-column: 1 / -1; padding: 40px 20px; text-align: center; color: var(--tx2, #64748b);">
             <i class="fa-solid fa-magnifying-glass" style="font-size: 28px; opacity: 0.5; margin-bottom: 10px; display: block;"></i>
-            No se encontraron productos coincidentes con los filtros actuales.
+            No se encontraron servicios ni asesorías que coincidan con la búsqueda.
           </div>
         `;
       }
@@ -82,19 +95,25 @@ export function inicializarProductos() {
 
     if (!prGrid) return;
     prGrid.innerHTML = filtrados.map(p => {
-      const esActivo = p.estado === 'activo';
-      const esGas = p.tipoCategoria === 'gas';
-      const esAlertaStock = Number(p.stock) <= Number(p.stockMin || 5);
+      const esActivo = p.estado === 'activo' && p.activo !== false;
+      const esServicio = p.tipo === 'servicio';
+      const nombre = typeof p.nombre === 'object' ? (p.nombre?.es || '') : (p.nombre || '');
+      const nombreEn = typeof p.nombre === 'object' ? (p.nombre?.en || '') : (p.nombreEn || '');
+      const precio = Number(p.precio ?? p.precioPEN ?? 0);
+      const stock = Number(p.stock ?? (p.tipoCategoria === 'accesorio' ? 35 : 50));
+      const peso = p.peso || '10 kg';
+      const valvula = p.valvula || 'Click-On';
+      const uso = typeof p.publico === 'object' ? (p.publico?.es || 'Hogar') : (p.publico || p.tipoUso || 'Hogar');
 
       return `
         <article class="pr-card ${esActivo ? '' : 'pausado'}" data-id="${p.id}">
           <header class="pr-card-header">
-            <span class="pr-badge-tag ${esGas ? 'badge-fire' : 'badge-accesorio'}">
-              <i class="${p.badgeIcon || (esGas ? 'fa-solid fa-fire' : 'fa-solid fa-wrench')}"></i>
-              ${esGas ? 'Balón' : 'Accesorio'}
+            <span class="pr-badge-tag ${p.tagClase || 'badge-fire'}">
+              <i class="${p.badgeIcon || (esServicio ? 'fa-solid fa-star' : 'fa-solid fa-box')}"></i>
+              ${(typeof p.badge === 'object' ? (p.badge?.es || 'Más Pedido') : (p.badge || 'Más Pedido'))}
             </span>
 
-            <label class="pr-switch-wrap" title="Activar o pausar producto">
+            <label class="pr-switch-wrap" title="Activar o pausar visibilidad">
               <span class="pr-switch-label ${esActivo ? 'activo' : ''}">${esActivo ? 'Activo' : 'Pausado'}</span>
               <span class="pr-switch">
                 <input type="checkbox" class="pr-input-switch" data-id="${p.id}" ${esActivo ? 'checked' : ''} />
@@ -104,49 +123,47 @@ export function inicializarProductos() {
           </header>
 
           <div class="pr-card-media">
-            <img src="${p.imagen || '/imgwii/productos/BALON-10KG.webp'}" alt="${p.nombre?.es || 'Producto'}" class="pr-card-img" loading="lazy" />
+            <img src="${p.imagen || '/imgwii/productos/BALON-10KG.webp'}" alt="${nombre}" class="pr-card-img" loading="lazy" />
           </div>
 
           <div class="pr-card-body">
-            <h3 class="pr-card-title">${p.nombre?.es || 'Sin nombre'}</h3>
-            ${p.nombre?.en ? `<div class="pr-card-sub-en">${p.nombre.en}</div>` : ''}
+            <h3 class="pr-card-title">${nombre || 'Sin título'}</h3>
+            ${nombreEn ? `<div class="pr-card-sub-en">${nombreEn}</div>` : ''}
 
             <div class="pr-card-specs">
-              ${p.peso?.es ? `<span class="pr-spec-chip"><i class="fa-solid fa-weight-scale"></i> ${p.peso.es}</span>` : ''}
-              ${p.valvula?.es ? `<span class="pr-spec-chip"><i class="fa-solid fa-gauge"></i> ${p.valvula.es}</span>` : ''}
-              ${p.delivery?.es ? `<span class="pr-spec-chip"><i class="fa-solid fa-truck-fast"></i> Delivery</span>` : ''}
+              <span class="pr-spec-chip"><i class="fa-solid fa-scale-balanced"></i> ${peso}</span>
+              <span class="pr-spec-chip"><i class="fa-solid fa-tag"></i> ${valvula}</span>
+              <span class="pr-spec-chip"><i class="fa-solid fa-user-tag"></i> ${uso}</span>
             </div>
 
-            <!-- Edición rápida de Precio y Stock -->
+            <!-- Edición rápida de Precio y Stock con 0 ms Local-First -->
             <div class="pr-quick-edit-row">
               <div class="pr-quick-field">
-                <span class="pr-quick-label">Precio (S/)</span>
+                <span class="pr-quick-label">Precio Oficial</span>
                 <div class="pr-quick-input-wrap">
                   <span class="pr-quick-prefix">S/</span>
                   <input
-                    type="number"
-                    step="0.5"
-                    min="0"
+                    type="text"
+                    inputmode="decimal"
                     class="pr-quick-input pr-quick-precio"
                     data-id="${p.id}"
-                    value="${p.precio ?? 0}"
-                    title="Modificar precio directamente"
+                    value="${precio}"
+                    title="Modificar precio oficial"
                   />
                 </div>
               </div>
-
               <div class="pr-quick-field">
-                <span class="pr-quick-label">Stock Actual</span>
+                <span class="pr-quick-label">Stock</span>
                 <div class="pr-quick-input-wrap">
+                  <span class="pr-quick-prefix"><i class="fa-solid fa-boxes-stacked" style="font-size: 0.75rem; color: var(--muted, #94a3b8);"></i></span>
                   <input
-                    type="number"
-                    min="0"
+                    type="text"
+                    inputmode="numeric"
                     class="pr-quick-input pr-quick-stock"
                     data-id="${p.id}"
-                    value="${p.stock ?? 0}"
-                    title="Modificar stock directamente"
+                    value="${stock}"
+                    title="Modificar stock disponible"
                   />
-                  ${esAlertaStock ? '<span class="pr-stock-alert" title="Stock bajo el mínimo"><i class="fa-solid fa-triangle-exclamation"></i></span>' : ''}
                 </div>
               </div>
             </div>
@@ -163,6 +180,20 @@ export function inicializarProductos() {
         </article>
       `;
     }).join('');
+
+    // Restaurar feedback visual verde si se editó un input recientemente
+    if (_ultimoEditadoId) {
+      const selector = _ultimoCampoEditado === 'stock'
+        ? `.pr-quick-stock[data-id="${_ultimoEditadoId}"]`
+        : `.pr-quick-precio[data-id="${_ultimoEditadoId}"]`;
+      const inputEl = prGrid.querySelector(selector);
+      if (inputEl) {
+        inputEl.classList.add('pr-input-saved');
+        setTimeout(() => inputEl.classList.remove('pr-input-saved'), 1000);
+      }
+      _ultimoEditadoId = null;
+      _ultimoCampoEditado = null;
+    }
   }
 
   // 2. LISTENERS DE BOTONES Y FILTROS
@@ -189,113 +220,165 @@ export function inicializarProductos() {
     });
   }
 
-  // Sincronizar con Firestore
+  // Sincronizar con Firestore (Reflejo seguro y ordenado)
   if (prBtnSincronizar) {
     prBtnSincronizar.addEventListener('click', async () => {
-      const originalText = prBtnSincronizar.innerHTML;
       prBtnSincronizar.disabled = true;
       wiSpin(prBtnSincronizar, true);
       try {
-        const prods = await sincronizarProductosFirestore();
-        renderizar(prods);
-        Notificacion(`Catálogo sincronizado: ${prods.length} productos.`, 'success', 3000);
+        const res = await sincronizarProductosFirestore({ forzarSemilla: false });
+        renderizar(res.datos || obtenerProductosLocal());
+        Notificacion('Catálogo sincronizado exitosamente con Firestore.', 'success', 3500);
       } catch (err) {
-        Notificacion('Error al conectar con Firestore.', 'error', 3500);
+        Notificacion('Error al sincronizar con Firestore.', 'error', 3500);
       } finally {
         wiSpin(prBtnSincronizar, false);
         prBtnSincronizar.disabled = false;
-        prBtnSincronizar.innerHTML = originalText;
       }
     });
   }
 
-  // Delegación de eventos en el Grid (Switch, Quick Edit, Edit Modal, Delete)
+  // 3. LISTENERS DENTRO DE LA GRILLA (DELEGACIÓN DE EVENTOS)
   if (prGrid) {
     // Switch Activo / Pausado
     prGrid.addEventListener('change', async (e) => {
-      const switchEl = e.target.closest('.pr-input-switch');
-      if (switchEl) {
-        const id = switchEl.getAttribute('data-id');
-        const nuevoEstado = switchEl.checked ? 'activo' : 'pausado';
+      if (e.target.classList.contains('pr-input-switch')) {
+        const id = e.target.getAttribute('data-id');
+        const nuevoEstado = e.target.checked ? 'activo' : 'pausado';
+        const card = e.target.closest('.pr-card');
+        const label = card?.querySelector('.pr-switch-label');
+
+        if (label) {
+          label.textContent = e.target.checked ? 'Activo' : 'Pausado';
+          label.classList.toggle('activo', e.target.checked);
+        }
+        if (card) {
+          card.classList.toggle('pausado', !e.target.checked);
+        }
+
         await cambiarEstadoProducto(id, nuevoEstado);
-        renderizar();
-        Notificacion(`Producto ${nuevoEstado === 'activo' ? 'activado' : 'pausado'}.`, 'success', 2500);
-        solicitarActualizacionWeb({ motivo: 'producto-estado' });
-        return;
-      }
-
-      // Quick Edit Precio
-      const precioEl = e.target.closest('.pr-quick-precio');
-      if (precioEl) {
-        const id = precioEl.getAttribute('data-id');
-        const nuevoPrecio = Number(precioEl.value || 0);
-        await actualizarPrecioYStock(id, { precio: nuevoPrecio });
-        Notificacion(`Precio actualizado a S/ ${nuevoPrecio.toFixed(2)}`, 'success', 2500);
-        solicitarActualizacionWeb({ motivo: 'producto-precio' });
-        return;
-      }
-
-      // Quick Edit Stock
-      const stockEl = e.target.closest('.pr-quick-stock');
-      if (stockEl) {
-        const id = stockEl.getAttribute('data-id');
-        const nuevoStock = Number(stockEl.value || 0);
-        await actualizarPrecioYStock(id, { stock: nuevoStock });
-        renderizar();
-        Notificacion(`Stock actualizado: ${nuevoStock} unidades.`, 'success', 2500);
-        solicitarActualizacionWeb({ motivo: 'producto-stock' });
-        return;
+        Notificacion(`Estado actualizado a ${nuevoEstado}.`, 'info', 2000);
       }
     });
 
-    // Clicks en Botones Editar y Eliminar
+    // Edición rápida de precio y stock (0 ms Local-First + Feedback visual verde)
+    prGrid.addEventListener('change', async (e) => {
+      if (e.target.classList.contains('pr-quick-precio')) {
+        const id = e.target.getAttribute('data-id');
+        const nuevoPrecio = parseFloat(String(e.target.value).replace(/[^0-9.]/g, '')) || 0;
+        e.target.value = nuevoPrecio;
+        const lista = obtenerProductosLocal();
+        const item = lista.find(p => p.id === id);
+        if (item) {
+          _ultimoEditadoId = id;
+          _ultimoCampoEditado = 'precio';
+          item.precio = nuevoPrecio;
+          const input = e.target;
+          input.classList.add('pr-input-saved');
+          setTimeout(() => input.classList.remove('pr-input-saved'), 1000);
+          await guardarProductoFirestore(item);
+        }
+      } else if (e.target.classList.contains('pr-quick-stock')) {
+        const id = e.target.getAttribute('data-id');
+        const nuevoStock = parseInt(String(e.target.value).replace(/[^0-9]/g, ''), 10) || 0;
+        e.target.value = nuevoStock;
+        const lista = obtenerProductosLocal();
+        const item = lista.find(p => p.id === id);
+        if (item) {
+          _ultimoEditadoId = id;
+          _ultimoCampoEditado = 'stock';
+          item.stock = nuevoStock;
+          const input = e.target;
+          input.classList.add('pr-input-saved');
+          setTimeout(() => input.classList.remove('pr-input-saved'), 1000);
+          await guardarProductoFirestore(item);
+        }
+      }
+    });
+
+    // Guardar al presionar Enter en inputs de edición rápida
+    prGrid.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && (e.target.classList.contains('pr-quick-precio') || e.target.classList.contains('pr-quick-stock'))) {
+        e.preventDefault();
+        e.target.blur();
+      }
+    });
+
+    // Botón Editar Ficha Completa
     prGrid.addEventListener('click', (e) => {
       const btnEdit = e.target.closest('.pr-btn-edit');
       if (btnEdit) {
         const id = btnEdit.getAttribute('data-id');
-        const lista = obtenerProductosLocal();
-        const prod = lista.find(p => p.id === id);
-        if (prod) abrirModalProducto(prod);
+        const item = obtenerProductosLocal().find(p => p.id === id);
+        if (item) abrirModalProducto(item);
         return;
       }
 
+      // Botón Eliminar
       const btnDel = e.target.closest('.pr-btn-del');
       if (btnDel) {
         const id = btnDel.getAttribute('data-id');
-        wiConfirmar('¿Estás seguro de que deseas eliminar este producto del catálogo oficial?', async () => {
-          try {
+        const item = obtenerProductosLocal().find(p => p.id === id);
+        const nombre = typeof item?.nombre === 'object' ? item.nombre.es : (item?.nombre || id);
+
+        wiConfirmar({
+          titulo: '¿Eliminar producto?',
+          mensaje: `¿Estás seguro de que deseas eliminar permanentemente "${nombre}" del catálogo?`,
+          textoConfirmar: 'Sí, eliminar',
+          tipo: 'danger'
+        }).then(async (confirmado) => {
+          if (confirmado) {
             await eliminarProductoFirestore(id);
             renderizar();
-            Notificacion('Producto eliminado del catálogo.', 'success', 3000);
-            solicitarActualizacionWeb({ motivo: 'producto-eliminado' });
-          } catch (err) {
-            Notificacion('No se pudo eliminar el producto.', 'error', 3500);
+            Notificacion(`Producto "${nombre}" eliminado.`, 'info', 3000);
           }
         });
-        return;
       }
     });
   }
 
-  // 3. INICIALIZACIÓN REACTIVA
-  window.addEventListener('gaswii:productos-actualizados', (e) => {
-    if (Array.isArray(e.detail)) renderizar(e.detail);
+  // Renderizador con rAF para evitar parpadeos y ejecuciones duplicadas simultáneas
+  let _renderTimer = null;
+  function renderizarConDebounce(datos) {
+    if (_renderTimer) cancelAnimationFrame(_renderTimer);
+    _renderTimer = requestAnimationFrame(() => {
+      renderizar(datos);
+    });
+  }
+
+  // Escuchar evento personalizado tras guardar desde el modal
+  window.addEventListener('producto-guardado', () => {
+    renderizarConDebounce();
   });
 
-  // Render inicial desde caché Local-First
+  // Escuchar actualizaciones globales de productos en 0 ms
+  window.addEventListener('wi:productos-actualizado', (e) => {
+    if (Array.isArray(e.detail) && e.detail.length > 0) {
+      renderizarConDebounce(e.detail);
+    } else {
+      renderizarConDebounce();
+    }
+  });
+
+  window.addEventListener('gaswii:productos-actualizado', (e) => {
+    if (Array.isArray(e.detail) && e.detail.length > 0) {
+      renderizarConDebounce(e.detail);
+    } else {
+      renderizarConDebounce();
+    }
+  });
+
+  // Render inicial
   renderizar();
-
-  // Sincronización en segundo plano con Firestore
-  sincronizarProductosFirestore().then(prods => {
-    renderizar(prods);
-  });
 }
 
-// Auto-arranque al cargar el script o en navegaciones Astro
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', inicializarProductos);
-} else {
-  inicializarProductos();
+// Auto-inicialización si el panel ya existe en el DOM
+if (typeof document !== 'undefined') {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializarProductos);
+  } else {
+    inicializarProductos();
+  }
 }
 
-document.addEventListener('astro:page-load', inicializarProductos);
+export default { inicializarProductos };

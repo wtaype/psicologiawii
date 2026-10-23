@@ -1,13 +1,13 @@
-/* ==========================================================================
-   APP.CSS - SOLGAS SURQUILLO (GASWII)
+﻿/* ==========================================================================
+   APP.CSS - CONSULTORIO PSICOLÓGICO AMÉRICA
    Estilos Core Globales: Variables de Tema, Reset, Componentes y Layout
    (100% Cero CSS Inline - Arquitectura set:html & ?inline)
    ========================================================================== */
 
-/* 1. DEPENDENCIAS DE DISEÑO: TODAS LAS VARIABLES PROVIENEN DE WITEMA.CSS (FUENTE ÚNICA) */
+/* 1. DEPENDENCIAS DE DISEÃ‘O: TODAS LAS VARIABLES PROVIENEN DE WITEMA.CSS (FUENTE ÃšNICA) */
 
 
-/* 2. RESET Y TIPOGRAFÍA BASE */
+/* 2. RESET Y TIPOGRAFÃA BASE */
 *, *::before, *::after {
   box-sizing: border-box !important;
   margin: 0;
@@ -105,7 +105,7 @@ img {
   transform: translateY(-0.4vh);
 }
 
-/* 5. BOTONES DE ACCIÓN */
+/* 5. BOTONES DE ACCIÃ“N */
 .btn-fire,
 .btn-serenidad {
   background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-hover) 100%);
@@ -809,7 +809,7 @@ img {
   box-sizing: border-box !important;
 }
 
-/* 11. DRAWER MÓVIL Y BACKDROP */
+/* 11. DRAWER MÃ“VIL Y BACKDROP */
 .drawer-backdrop {
   position: fixed;
   inset: 0;
@@ -977,7 +977,7 @@ img {
   padding: 0.4rem;
 }
 
-/* 12. BARRA STICKY MÓVIL (APP FEEL) */
+/* 12. BARRA STICKY MÃ“VIL (APP FEEL) */
 .mobile-sticky-bar {
   display: none;
   position: fixed;
@@ -1441,7 +1441,7 @@ img {
   .footer-grid-layout { grid-template-columns: 1fr; gap: 3.5vh; }
 }
 
-/* 17. UTILIDADES DE SISTEMA DE DISEÑO (FLEX, GRID, SPACING, TYPO) */
+/* 17. UTILIDADES DE SISTEMA DE DISEÃ‘O (FLEX, GRID, SPACING, TYPO) */
 .flex { display: flex; }
 .inline-flex { display: inline-flex; }
 .flex-col { flex-direction: column; }

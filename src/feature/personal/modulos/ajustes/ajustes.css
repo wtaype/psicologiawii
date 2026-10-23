@@ -1,13 +1,43 @@
 /* src/feature/personal/modulos/ajustes/ajustes.css */
-/* Estilos del Módulo Ajustes: Configuración Global & Backup JSON (Solgas Surquillo) */
+/* Estilos del Módulo Ajustes: Preferencias del Sistema, Temas & Diagnóstico */
 /* 100% Adaptado a witema.css y @widev · 0 CSS inline */
 
-/* ── GRID DE CONFIGURACIÓN ── */
-.aj-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+/* ── CONTENEDOR MAESTRO DE AJUSTES (2 ARRIBA, 3 ABAJO) ── */
+.aj-layout {
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   margin-bottom: 24px;
+}
+
+/* Fila Superior: 2 Cards (50% / 50%) */
+.aj-row-top {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+/* Fila Inferior: 3 Cards (33.3% / 33.3% / 33.3%) */
+.aj-row-bottom {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+@media (max-width: 1080px) {
+  .aj-row-top {
+    grid-template-columns: 1fr;
+  }
+  .aj-row-bottom {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .aj-row-top,
+  .aj-row-bottom {
+    grid-template-columns: 1fr;
+  }
 }
 
 .aj-card {
@@ -34,17 +64,59 @@
   border-bottom: 1px solid var(--brd, #21314b);
 }
 
-/* ── SWITCH MAESTRO DE SEDE ── */
-.aj-master-switch-box {
-  background: var(--inp, #14223a);
-  border: 1px solid var(--brd, #21314b);
-  border-radius: 10px;
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+/* ── SELECTOR VISUAL DE TEMAS ── */
+.aj-theme-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
 }
 
+.aj-theme-card {
+  background: var(--inp, #14223a);
+  border: 2px solid var(--brd, #21314b);
+  border-radius: var(--br_m, 10px);
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  color: var(--tx, #f3f6fc);
+  outline: none;
+}
+
+.aj-theme-card:hover {
+  border-color: var(--mco, #ff6600);
+  transform: translateY(-2px);
+  background: var(--bg3, #1e293b);
+}
+
+.aj-theme-card.is-active {
+  border-color: var(--mco, #ff6600);
+  background: rgba(255, 102, 0, 0.08);
+  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.25);
+}
+
+.aj-theme-icon {
+  font-size: 24px;
+  color: var(--mco, #ff6600);
+  margin-bottom: 2px;
+}
+
+.aj-theme-name {
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.aj-theme-desc {
+  font-size: 11px;
+  color: var(--tx2, #90a4c3);
+  line-height: 1.3;
+}
+
+/* ── SWITCHES Y METADATOS ── */
 .aj-switch-meta {
   display: flex;
   flex-direction: column;
@@ -60,6 +132,7 @@
 .aj-switch-sub {
   font-size: 11.5px;
   color: var(--tx2, #90a4c3);
+  line-height: 1.4;
 }
 
 /* Toggle Switch UI */
@@ -111,7 +184,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 12px 0;
   border-bottom: 1px dashed var(--brd, #21314b);
 }
 
@@ -119,22 +192,115 @@
   border-bottom: none;
 }
 
+/* Botón de prueba de sonido */
+.aj-btn-test-notif {
+  background: transparent;
+  color: var(--tx2, #90a4c3);
+  border: 1px solid var(--brd, #21314b);
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  margin-top: 4px;
+  align-self: flex-start;
+}
+
+.aj-btn-test-notif:hover {
+  color: var(--tx, #f3f6fc);
+  border-color: var(--mco, #ff6600);
+  background: var(--inp, #14223a);
+}
+
+/* ── LISTA DE DIAGNÓSTICO Y SEGURIDAD (VISUAL / SOLO LECTURA) ── */
+.aj-diag-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.aj-diag-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--inp, #14223a);
+  border: 1px solid var(--brd, #21314b);
+  border-radius: 8px;
+  font-size: 12.5px;
+}
+
+.aj-diag-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--tx2, #90a4c3);
+  font-weight: 500;
+}
+
+.aj-diag-val {
+  font-weight: 600;
+  color: var(--tx, #f3f6fc);
+  text-align: right;
+  max-width: 60%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aj-badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.aj-badge-online {
+  background: rgba(16, 185, 129, 0.15);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.aj-badge-tech {
+  background: rgba(59, 130, 246, 0.12);
+  color: #60a5fa;
+  border: 1px solid rgba(59, 130, 246, 0.25);
+}
+
+.aj-badge-ip {
+  background: rgba(255, 102, 0, 0.12);
+  color: var(--mco, #ff6600);
+  border: 1px solid rgba(255, 102, 0, 0.28);
+  font-family: monospace;
+  font-size: 11.5px;
+  letter-spacing: 0.3px;
+}
+
 /* ── CAJA DE BACKUP Y DESCARGA JSON ── */
 .aj-backup-box {
   background: var(--inp, #14223a);
   border: 1px dashed var(--brd, #21314b);
   border-radius: 10px;
-  padding: 18px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   text-align: center;
   align-items: center;
+  flex: 1;
+  justify-content: center;
 }
 
 .aj-backup-icon {
   font-size: 32px;
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .aj-backup-title {
@@ -152,7 +318,7 @@
 }
 
 .aj-btn-download-json {
-  background: var(--brand-orange, #ff6600);
+  background: var(--mco, var(--brand-primary, #ff6600));
   color: #ffffff;
   border: none;
   padding: 10px 20px;
@@ -168,6 +334,6 @@
 }
 
 .aj-btn-download-json:hover {
-  background: #e65c00;
-  box-shadow: 0 4px 14px rgba(255, 102, 0, 0.3);
+  background: var(--hv, #ff771a);
+  box-shadow: var(--shadow-hover, 0 4px 14px rgba(255, 102, 0, 0.3));
 }

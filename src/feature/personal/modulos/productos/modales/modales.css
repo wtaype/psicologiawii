@@ -1,5 +1,5 @@
 /* src/feature/personal/modulos/productos/modales/modales.css */
-/* Estilos Dedicados para Modales de Productos (Solgas Surquillo) */
+/* Estilos Dedicados para Modales de Productos y Servicios */
 /* Cero CSS Inline · 87vw de ancho · min-height 70vh · Layout 2 Columnas · WiTema */
 
 /* ── 1. BACKDROP / OVERLAY UNIVERSAL ── */
@@ -70,7 +70,7 @@
 }
 
 .pr-modal-title i {
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco);
 }
 
 .pr-modal-close {
@@ -191,7 +191,7 @@
 }
 
 .pr-modal-tab-btn.active {
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco);
 }
 
 .pr-modal-tab-btn.active::after {
@@ -201,7 +201,7 @@
   left: 0;
   right: 0;
   height: 3px;
-  background: var(--brand-orange, #ff6600);
+  background: var(--mco);
   border-radius: 3px 3px 0 0;
 }
 
@@ -244,7 +244,7 @@
 .pr-f-label {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--ink, #0f172a);
+  color: var(--tx);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -255,9 +255,9 @@
 .pr-f-textarea {
   padding: 8px 12px;
   border-radius: 8px;
-  border: 1px solid var(--line, #cbd5e1);
-  background: var(--surface, #ffffff);
-  color: var(--ink, #0f172a);
+  border: 1px solid var(--brd);
+  background: var(--surface);
+  color: var(--tx);
   font-family: inherit;
   font-size: 0.86rem;
   transition: all 0.2s ease;
@@ -265,12 +265,38 @@
   width: 100%;
 }
 
+.pr-f-select {
+  padding-right: 32px;
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px 14px;
+  cursor: pointer;
+}
+
+/* Input URL de imagen compacto para mejor legibilidad */
+.pr-f-input-url {
+  font-size: 0.74rem !important;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+  padding: 6px 10px !important;
+  letter-spacing: -0.01em;
+  background: var(--bg, #f8fafc) !important;
+  color: var(--tx2, #64748b) !important;
+}
+
+.pr-f-input-url:focus {
+  color: var(--tx, #0f172a) !important;
+  background: var(--surface, #ffffff) !important;
+}
+
 .pr-f-input:focus,
 .pr-f-select:focus,
 .pr-f-textarea:focus {
   outline: none;
-  border-color: var(--brand-orange, #ff6600);
-  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.12);
+  border-color: var(--mco);
+  box-shadow: 0 0 0 3px var(--mbg, rgba(255, 102, 0, 0.16));
 }
 
 .pr-f-textarea {
@@ -282,6 +308,63 @@
 .pr-f-help {
   font-size: 0.72rem;
   color: var(--muted, #94a3b8);
+}
+
+/* Input URL dinámica con dominio */
+.pr-url-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 8px;
+  background: var(--bg, #f8fafc);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.pr-url-input-wrap:focus-within {
+  border-color: var(--mco, #ff6600);
+  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2);
+}
+
+.pr-url-domain {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 8px 10px;
+  font-size: 0.74rem;
+  font-family: monospace;
+  color: var(--muted, #64748b);
+  border-right: 1px solid var(--line, #e2e8f0);
+  white-space: nowrap;
+  user-select: all;
+}
+
+.pr-input-dynamic-url {
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 8px 10px !important;
+  flex: 1;
+}
+
+/* Icono del Badge con preview */
+.pr-icon-input-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pr-icon-preview {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: var(--bg, #f1f5f9);
+  border: 1px solid var(--line, #e2e8f0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  color: var(--mco, #ff6600);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
 }
 
 /* ── 6. PIE DEL MODAL ── */

@@ -11,14 +11,14 @@
   },
   "comun": {
     "volver_inicio": "Volver al Inicio",
-    "distribuidor_oficial": "Distribuidor Oficial Autorizado",
-    "sede_oficial": "Sede Central Surquillo, Lima",
+    "distribuidor_oficial": "Consultorio Psicológico Oficial",
+    "sede_oficial": "Sede América · Villa El Salvador, Lima",
     "actualizado": "Última actualización:",
-    "garantia_seguridad": "Garantía de Seguridad y Balanza Calibrada",
-    "ayuda_titulo": "¿Necesitas atención o consultar un pedido?",
-    "ayuda_desc": "Nuestro equipo de atención al cliente en Surquillo está disponible de lunes a domingo.",
+    "garantia_seguridad": "Atención Profesional y Colegiatura C.Ps.P. 49425",
+    "ayuda_titulo": "¿Necesitas orientación o agendar una cita?",
+    "ayuda_desc": "La Lic. Sofía Reynaga y el equipo del consultorio están disponibles para responder tus consultas.",
     "btn_whatsapp": "Chatear por WhatsApp",
-    "btn_llamar": "Llamar a Central",
-    "btn_volver": "Ir al Catálogo"
+    "btn_llamar": "Llamar al Consultorio",
+    "btn_volver": "Ir a Especialidades"
   }
 }

@@ -1,11 +1,21 @@
 ---
 // src/feature/cliente/modulos/03-cuenta/Cuenta.astro
-// Módulo de Ficha de Cliente, Perfil, Facturación SUNAT, Seguridad y Preferencias
-// Diseño 100% consistente con 02-direccion · Split Layout 2 Columnas · Tokens witema.css
+// Módulo de Ficha de Cliente, Perfil, Facturación, Seguridad y Preferencias Multi-Giro
+// 100% Consistente · Split Layout 2 Columnas · Tokens witema.css
+import { configSemilla } from '@/negocio.js';
+
 interface Props {
   cliente?: any;
 }
 const { cliente = {} } = Astro.props;
+const term = configSemilla?.terminologia || {};
+const esServicios = configSemilla?.modeloNegocio === 'servicios_y_asesorias';
+const tituloModulo = esServicios ? 'Mi Ficha Fiscal y Cuenta del Contribuyente' : 'Mi Cuenta y Datos de Facturación';
+const subtituloModulo = esServicios 
+  ? 'Administra tus datos fiscales, número de RUC/DNI, clave de acceso y preferencias de asesoría tributaria.'
+  : 'Administra tus datos de contacto, facturación (RUC/DNI), clave de acceso y preferencias de despacho.';
+const rolCliente = term.rolClienteNombre || 'Cliente';
+const estadoBadge = esServicios ? 'Habido' : 'Activo';
 ---
 
 <div class="cl-cuenta-module" id="moduloCuenta">
@@ -13,26 +23,26 @@ const { cliente = {} } = Astro.props;
   <div class="ct-panel-head">
     <div class="ct-head-left">
       <div class="ct-panel-title">
-        <i class="fa-solid fa-user-gear"></i>
-        <span>Mi Perfil y Cuenta de Cliente</span>
+        <i class="fa-solid fa-id-card"></i>
+        <span>{tituloModulo}</span>
       </div>
       <span class="ct-panel-subtitle">
-        Administra tus datos personales, facturación SUNAT, clave de acceso y preferencias de entrega en Surquillo.
+        {subtituloModulo}
       </span>
     </div>
 
     <!-- CHIP COMPACTO DE IDENTIDAD (0ms Local-First) -->
     <div class="ct-head-identity">
       <div class="ct-avatar-pill" id="ctAvatarLetter">
-        <i class="fa-solid fa-user"></i>
+        <i class="fa-solid fa-user-check"></i>
       </div>
       <div class="ct-identity-meta">
-        <span class="ct-identity-name" id="ctHeroNombre">Vecino Gaswii</span>
+        <span class="ct-identity-name" id="ctHeroNombre">{rolCliente}</span>
         <span class="ct-handle-chip" id="ctHeroUsuario">@cargando</span>
       </div>
       <div class="ct-puntos-badge">
-        <i class="fa-solid fa-coins" style="font-size:0.7rem;"></i>
-        <span id="ctPuntosNum">0</span> pts
+        <i class="fa-solid fa-shield-halved" style="font-size:0.7rem;"></i>
+        <span id="ctPuntosNum">{estadoBadge}</span>
       </div>
     </div>
   </div>
@@ -46,7 +56,7 @@ const { cliente = {} } = Astro.props;
       <div class="ct-card-header">
         <div class="ct-card-title">
           <i class="fa-solid fa-id-card"></i>
-          <span>Datos Personales & Facturación SUNAT</span>
+          <span>Datos de la Cuenta & Identificación SUNAT</span>
         </div>
       </div>
 
@@ -81,30 +91,30 @@ const { cliente = {} } = Astro.props;
           </div>
         </div>
 
-        <!-- Fila 2: Nombres y Apellidos -->
+        <!-- Fila 2: Nombres y Apellidos / Razón Social -->
         <div class="ct-form-row">
           <div class="ct-form-group">
             <label class="ct-form-label" for="ctInputNombre">
-              <i class="fa-solid fa-user"></i> Nombres:
+              <i class="fa-solid fa-user"></i> Nombres / Titular:
             </label>
             <input 
               type="text" 
               class="ct-input" 
               id="ctInputNombre" 
-              placeholder="Tu nombre" 
+              placeholder="Tu nombre completo" 
               required 
             />
           </div>
 
           <div class="ct-form-group">
             <label class="ct-form-label" for="ctInputApellidos">
-              <i class="fa-regular fa-user"></i> Apellidos:
+              <i class="fa-regular fa-user"></i> Apellidos / Razón Social:
             </label>
             <input 
               type="text" 
               class="ct-input" 
               id="ctInputApellidos" 
-              placeholder="Tus apellidos" 
+              placeholder="Tus apellidos o empresa" 
             />
           </div>
         </div>
@@ -119,14 +129,14 @@ const { cliente = {} } = Astro.props;
               type="text" 
               class="ct-input" 
               id="ctInputAvatar" 
-              placeholder="https://imgwii.web.app/smile.avif" 
+              placeholder="/smile.avif" 
             />
             <div class="ct-sug-row">
-              <button type="button" class="ct-sug-chip" data-avatar-sug="https://imgwii.web.app/smile.avif">
-                <i class="fa-solid fa-circle-check" style="color:var(--cl-orange);"></i> Solgas (/smile.avif)
+              <button type="button" class="ct-sug-chip" data-avatar-sug="/smile.avif">
+                <i class="fa-solid fa-circle-check" style="color:var(--cl-orange);"></i> Avatar Oficial (smile.avif)
               </button>
-              <button type="button" class="ct-sug-chip" data-avatar-sug="https://api.dicebear.com/7.x/bottts/svg?seed=Solgas">
-                <i class="fa-solid fa-robot"></i> Bot Solgas
+              <button type="button" class="ct-sug-chip" data-avatar-sug="https://api.dicebear.com/7.x/bottts/svg?seed=Profesional">
+                <i class="fa-solid fa-user-tie"></i> Avatar Profesional
               </button>
             </div>
           </div>
@@ -139,13 +149,13 @@ const { cliente = {} } = Astro.props;
               type="text" 
               class="ct-input" 
               id="ctInputIniciales" 
-              placeholder="Ej: WT" 
+              placeholder="Ej: LC" 
               maxlength="3" 
-              style="text-transform: uppercase; font-weight: 700;"
+              style="text-transform: uppercase; font-weight: 700;" 
             />
             <div class="ct-sug-row">
               <button type="button" class="ct-sug-chip" id="btnAutoIniciales">
-                <i class="fa-solid fa-arrows-rotate"></i> Auto-generar con Nombres
+                <i class="fa-solid fa-arrows-rotate"></i> Auto-generar
               </button>
             </div>
           </div>
@@ -154,20 +164,20 @@ const { cliente = {} } = Astro.props;
         <!-- Fila 4: Celular / WhatsApp de Coordinación -->
         <div class="ct-form-group">
           <label class="ct-form-label" for="ctInputCelular">
-            <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> Teléfono Móvil / WhatsApp de Coordinación:
+            <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> WhatsApp de Notificaciones y Despacho:
           </label>
           <input 
             type="tel" 
             class="ct-input" 
             id="ctInputCelular" 
-            placeholder="Ej: 961 229 280" 
+            placeholder="Ej: 900 000 000" 
           />
         </div>
 
         <!-- SECCIÓN SUNAT: COMPROBANTES ELECTRÓNICOS -->
         <div class="ct-sunat-divider">
           <i class="fa-solid fa-file-invoice"></i>
-          <span>Comprobantes de Pago Electrónicos (SUNAT)</span>
+          <span>Datos de Facturación Electrónica (SUNAT)</span>
         </div>
 
         <div class="ct-form-row">
@@ -176,8 +186,8 @@ const { cliente = {} } = Astro.props;
               <i class="fa-solid fa-passport"></i> Tipo de Documento:
             </label>
             <select class="ct-select" id="ctSelectDocTipo">
-              <option value="DNI">DNI (Boleta Electrónica)</option>
-              <option value="RUC">RUC (Factura Comercial)</option>
+              <option value="RUC">RUC (Factura)</option>
+              <option value="DNI">DNI (Boleta)</option>
               <option value="CE">Carnet de Extranjería</option>
               <option value="PASAPORTE">Pasaporte</option>
             </select>
@@ -185,13 +195,13 @@ const { cliente = {} } = Astro.props;
 
           <div class="ct-form-group">
             <label class="ct-form-label" for="ctInputDocumento">
-              <i class="fa-solid fa-hashtag"></i> Número de Documento:
+              <i class="fa-solid fa-hashtag"></i> Número de Documento (RUC / DNI):
             </label>
             <input 
               type="text" 
               class="ct-input" 
               id="ctInputDocumento" 
-              placeholder="Ingresa el número" 
+              placeholder="Ej: 20601234567 o 10456789123" 
               maxlength="15" 
             />
           </div>
@@ -219,12 +229,12 @@ const { cliente = {} } = Astro.props;
               type="text" 
               class="ct-input" 
               id="ctInputDireccionFiscal" 
-              placeholder="Dirección fiscal SUNAT" 
+              placeholder="Dirección fiscal declarada en SUNAT" 
             />
           </div>
         </div>
 
-        <!-- Botón de Guardar Datos Naranja Solgas -->
+        <!-- Botón de Guardar Datos -->
         <div class="ct-form-actions">
           <button type="submit" class="ct-btn-save" id="btnGuardarPerfil">
             <i class="fa-solid fa-floppy-disk"></i>
@@ -235,10 +245,10 @@ const { cliente = {} } = Astro.props;
     </div>
 
     <!-- ========================================================
-         COLUMNA DERECHA: SEGURIDAD (ARRIBA) + PREFERENCIAS (ABAJO)
+         COLUMNA DERECHA: SEGURIDAD (ARRIBA) + PREFERENCIAS TRIBUTARIAS (ABAJO)
          ======================================================== -->
     <div class="ct-right-col">
-      <!-- TARJETA 1 (ARRIBA): SEGURIDAD & CLAVE DE ACCESO -->
+      <!-- TARJETA 1 (ARRIBA): SEGURIDAD Y ACCESO -->
       <div class="ct-card-section">
         <div class="ct-card-header">
           <div class="ct-card-title">
@@ -291,77 +301,90 @@ const { cliente = {} } = Astro.props;
         </form>
       </div>
 
-      <!-- TARJETA 2 (ABAJO): PREFERENCIAS DE ENTREGA EN SURQUILLO -->
+      <!-- TARJETA 2 (ABAJO): PREFERENCIAS DE ATENCIÓN Y DESPACHO -->
       <div class="ct-card-section">
         <div class="ct-card-header">
           <div class="ct-card-title">
             <i class="fa-solid fa-sliders"></i>
-            <span>Preferencias de Entrega en Surquillo</span>
+            <span>{esServicios ? 'Perfil Tributario & Preferencias de Atención' : 'Preferencias de Pedido & Despacho'}</span>
           </div>
         </div>
 
         <form id="formCuentaPreferencias">
-          <!-- Fila 1: Válvula habitual & Horario habitual en 2 columnas con wiSelect -->
+          <!-- Fila 1: Preferencia Especial & Modalidad habitual -->
           <div class="ct-form-row">
             <div class="ct-form-group">
-              <label class="ct-form-label" for="ctSelectValvula">
-                <i class="fa-solid fa-gear"></i> Tipo de Válvula de tu Balón:
+              <label class="ct-form-label" for="ctSelectRegimen">
+                <i class="fa-solid fa-sliders"></i> {term.campoEspecialCliente || 'Preferencia de Pedido'}:
               </label>
-              <select class="ct-select" id="ctSelectValvula">
-                <option value="premium">Solgas Premium (Clip-On)</option>
-                <option value="rosca">Válvula Rosca Tradicional</option>
+              <select class="ct-select" id="ctSelectRegimen">
+                {Array.isArray(configSemilla?.parametros?.tiposValvula) ? (
+                  configSemilla.parametros.tiposValvula.map((v: string) => (
+                    <option value={v}>{v}</option>
+                  ))
+                ) : Array.isArray(configSemilla?.parametros?.regimenesTributarios) ? (
+                  configSemilla.parametros.regimenesTributarios.map((r: string) => (
+                    <option value={r}>{r}</option>
+                  ))
+                ) : (
+                  <option value="estandar">Estándar</option>
+                )}
               </select>
             </div>
 
             <div class="ct-form-group">
               <label class="ct-form-label" for="ctSelectHorario">
-                <i class="fa-solid fa-clock"></i> Horario Habitual en Casa:
+                <i class="fa-solid fa-clock"></i> {esServicios ? 'Modalidad de Contacto:' : 'Modalidad de Despacho Habitual:'}
               </label>
               <select class="ct-select" id="ctSelectHorario">
-                <option value="mañana">Mañana (8am - 1pm)</option>
-                <option value="tarde">Tarde (1pm - 6pm)</option>
-                <option value="noche">Noche (6pm - 9pm)</option>
+                {Array.isArray(configSemilla?.parametros?.modalidades) ? (
+                  configSemilla.parametros.modalidades.map((m: string) => (
+                    <option value={m}>{m}</option>
+                  ))
+                ) : (
+                  <option value="delivery">Delivery Express a Domicilio</option>
+                )}
               </select>
             </div>
           </div>
 
-          <!-- Fila 2: Método de pago & Detalle de Piso/Acceso en 2 columnas -->
+          <!-- Fila 2: Método de pago & Giro / Referencia -->
           <div class="ct-form-row">
             <div class="ct-form-group">
               <label class="ct-form-label" for="ctSelectMetodoPago">
-                <i class="fa-solid fa-wallet"></i> Método de Pago Favorito:
+                <i class="fa-solid fa-wallet"></i> Medio de Pago Habitual:
               </label>
               <select class="ct-select" id="ctSelectMetodoPago">
                 <option value="yape">Yape / Plin</option>
-                <option value="pos">Tarjeta POS al Entregar</option>
-                <option value="efectivo">Efectivo Exacto</option>
+                <option value="efectivo">Efectivo contra entrega</option>
+                <option value="transferencia">Transferencia Bancaria</option>
               </select>
             </div>
 
             <div class="ct-form-group">
               <label class="ct-form-label" for="ctInputPisoAscensor">
-                <i class="fa-solid fa-stairs"></i> Piso / Ascensor / Acceso:
+                <i class="fa-solid fa-building-user"></i> {esServicios ? 'Actividad o Giro Comercial:' : 'Piso / Departamento / Referencia:'}
               </label>
               <input 
                 type="text" 
                 class="ct-input" 
                 id="ctInputPisoAscensor" 
-                placeholder="Ej: Piso 4 con ascensor" 
+                placeholder={esServicios ? "Ej: Servicios de TI, Restaurante..." : "Ej: Piso 3 con ascensor, timbre blanco..."} 
               />
             </div>
           </div>
 
-          <!-- Fila 3: Switches estilo Apple con verde esmeralda -->
+          <!-- Fila 3: Switches de Notificaciones -->
           <div class="ct-apple-row">
             <label class="ct-apple-card" for="ctSwitchTimbre">
               <div class="ct-apple-card-info">
                 <span class="ct-apple-title">
-                  <i class="fa-solid fa-bell-slash ct-bell-icon"></i> Timbre malogrado
+                  <i class="fa-solid fa-motorcycle ct-bell-icon"></i> {esServicios ? 'Alerta de Vencimiento' : 'Aviso de Motorizado en Ruta'}
                 </span>
-                <span class="ct-apple-desc">Tocar la puerta con fuerza</span>
+                <span class="ct-apple-desc">{esServicios ? 'Avisar según último dígito de RUC' : 'Recibir WhatsApp cuando salga el pedido'}</span>
               </div>
               <div class="ct-apple-switch">
-                <input type="checkbox" id="ctSwitchTimbre" />
+                <input type="checkbox" id="ctSwitchTimbre" checked />
                 <span class="ct-slider"></span>
               </div>
             </label>
@@ -369,9 +392,9 @@ const { cliente = {} } = Astro.props;
             <label class="ct-apple-card" for="ctSwitchLlamar">
               <div class="ct-apple-card-info">
                 <span class="ct-apple-title">
-                  <i class="fa-solid fa-phone-volume ct-phone-icon"></i> Llamar al llegar
+                  <i class="fa-solid fa-bell ct-phone-icon"></i> {esServicios ? 'Alerta Buzón SOL' : 'Recordatorio de Balón Seguro'}
                 </span>
-                <span class="ct-apple-desc">Confirmar 2 min antes</span>
+                <span class="ct-apple-desc">{esServicios ? 'Avisarme ante esquelas SUNAT' : 'Avisos preventivos de mantenimiento'}</span>
               </div>
               <div class="ct-apple-switch">
                 <input type="checkbox" id="ctSwitchLlamar" checked />
@@ -383,9 +406,9 @@ const { cliente = {} } = Astro.props;
           <label class="ct-apple-card" for="ctSwitchComprobante" style="margin-block: 0.6vh;">
             <div class="ct-apple-card-info">
               <span class="ct-apple-title">
-                <i class="fa-solid fa-receipt ct-receipt-icon"></i> Copia de Boleta / Factura por correo
+                <i class="fa-solid fa-file-pdf ct-receipt-icon"></i> Copia Digital del Comprobante
               </span>
-              <span class="ct-apple-desc">Recibe automáticamente el PDF y XML de tu comprobante en tu email</span>
+              <span class="ct-apple-desc">Recibe automáticamente el PDF de tu boleta o factura por WhatsApp o email</span>
             </div>
             <div class="ct-apple-switch">
               <input type="checkbox" id="ctSwitchComprobante" checked />

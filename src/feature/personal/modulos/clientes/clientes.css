@@ -1,5 +1,5 @@
 /* src/feature/personal/modulos/clientes/clientes.css */
-/* Estilos del Módulo Clientes (Directorio CRM Solgas Surquillo) */
+/* Estilos del Módulo Clientes (Directorio CRM) */
 /* 100% Adaptado a witema.css y @widev · 0 CSS inline */
 
 /* ── GRID DE KPIS SUPERIORES ── */
@@ -11,8 +11,8 @@
 }
 
 .cl-kpi-card {
-  background: var(--surface, #0e192c);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--surface, var(--surface, #ffffff));
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: var(--br_m, 12px);
   padding: 16px 18px;
   display: flex;
@@ -24,15 +24,15 @@
 
 .cl-kpi-card:hover {
   transform: translateY(-2px);
-  border-color: var(--brand-orange, #ff6600);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .cl-kpi-icon-wrap {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: var(--brand-orange-subtle, rgba(255, 102, 0, 0.12));
-  color: var(--brand-orange, #ff6600);
+  background: var(--mbg, rgba(255, 102, 0, 0.12));
+  color: var(--mco, var(--brand-primary, #ff6600));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,8 +84,8 @@
 
 /* ── TARJETA DEL DIRECTORIO ── */
 .cl-card {
-  background: var(--surface, #0e192c);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--surface, var(--surface, #ffffff));
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: var(--br_m, 12px);
   padding: 20px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
@@ -108,7 +108,7 @@
 
 .cl-filter-pill {
   background: var(--inp, #14223a);
-  border: 1px solid var(--brd, #21314b);
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   color: var(--tx2, #90a4c3);
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: 12px;
@@ -121,9 +121,9 @@
 
 .cl-filter-pill.active,
 .cl-filter-pill:hover {
-  background: var(--brand-orange-subtle, rgba(255, 102, 0, 0.12));
-  border-color: var(--brand-orange, #ff6600);
-  color: var(--brand-orange, #ff6600);
+  background: var(--mbg, rgba(255, 102, 0, 0.12));
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .cl-search-box {
@@ -142,7 +142,7 @@
 
 .cl-search-input {
   background: var(--inp, #14223a);
-  border: 1px solid var(--brd, #21314b);
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: 7px;
   padding: 7px 12px 7px 34px;
   font-size: 12.5px;
@@ -153,7 +153,7 @@
 }
 
 .cl-search-input:focus {
-  border-color: var(--brand-orange, #ff6600);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 /* ── TABLA DE CLIENTES ── */
@@ -174,19 +174,19 @@
   color: var(--tx2, #90a4c3);
   font-weight: 600;
   padding: 10px 12px;
-  border-bottom: 1px solid var(--brd, #21314b);
+  border-bottom: 1px solid var(--brd, var(--line, #e2e8f0));
   font-size: 11.5px;
   white-space: nowrap;
 }
 
 .cl-table td {
   padding: 10px 12px;
-  border-bottom: 1px solid var(--brd, #21314b);
+  border-bottom: 1px solid var(--brd, var(--line, #e2e8f0));
   vertical-align: middle;
 }
 
 .cl-table tr.selected td {
-  background: var(--brand-orange-subtle, rgba(255, 102, 0, 0.08));
+  background: var(--mbg, rgba(255, 102, 0, 0.08));
 }
 
 .cl-table tr:hover td {
@@ -201,11 +201,13 @@
 }
 
 .cl-user-avatar {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
   object-fit: cover;
-  border: 1px solid var(--brd, #21314b);
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
+  background: var(--inp, #14223a);
+  flex-shrink: 0;
 }
 
 .cl-user-meta {
@@ -266,7 +268,7 @@
 
 .cl-action-btn:hover {
   background: var(--raised, #14223a);
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .cl-action-btn.ws {
@@ -284,8 +286,8 @@
 }
 
 .cl-crm-card {
-  background: var(--surface, #0e192c);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--surface, var(--surface, #ffffff));
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: var(--br_m, 12px);
   padding: 22px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
@@ -296,16 +298,17 @@
   align-items: center;
   gap: 14px;
   padding-bottom: 16px;
-  border-bottom: 1px solid var(--brd, #21314b);
+  border-bottom: 1px solid var(--brd, var(--line, #e2e8f0));
   margin-bottom: 16px;
 }
 
 .cl-crm-avatar-lg {
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+  border-radius: 11px;
   object-fit: cover;
-  border: 2px solid var(--brand-orange, #ff6600);
+  border: none;
+  display: block;
 }
 
 .cl-crm-info-head {
@@ -346,7 +349,7 @@
 .cl-crm-stat-val {
   font-size: 14px;
   font-weight: 800;
-  color: var(--brand-orange, #ff6600);
+  color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .cl-crm-stat-lbl {
@@ -371,7 +374,7 @@
   justify-content: space-between;
   font-size: 12.5px;
   padding: 6px 0;
-  border-bottom: 1px dashed var(--brd, #21314b);
+  border-bottom: 1px dashed var(--brd, var(--line, #e2e8f0));
   color: var(--tx, #f3f6fc);
 }
 
@@ -381,7 +384,7 @@
 
 .cl-crm-address-box {
   background: var(--inp, #14223a);
-  border: 1px solid var(--brd, #21314b);
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: 8px;
   padding: 10px 12px;
   margin-top: 10px;
@@ -435,22 +438,22 @@
 
 .cl-crm-btn-call {
   background: var(--inp, #14223a);
-  border: 1px solid var(--brd, #21314b);
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   color: var(--tx, #f3f6fc);
 }
 
 .cl-crm-btn-call:hover {
-  border-color: var(--brand-orange, #ff6600);
-  color: var(--brand-orange, #ff6600);
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #ff6600));
 }
 
 .cl-crm-btn-sunat {
-  background: var(--brand-orange, #ff6600);
+  background: var(--mco, var(--brand-primary, #ff6600));
   color: #ffffff;
 }
 
 .cl-crm-btn-sunat:hover {
-  background: #e65c00;
+  background: var(--hv, #e65c00);
 }
 
 /* Modal Nuevo Cliente */
@@ -471,8 +474,8 @@
 }
 
 .cl-modal {
-  background: var(--surface, #0e192c);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--surface, var(--surface, #ffffff));
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
   border-radius: 12px;
   width: 100%;
   max-width: 520px;
@@ -486,7 +489,7 @@
   justify-content: space-between;
   margin-bottom: 18px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--brd, #21314b);
+  border-bottom: 1px solid var(--brd, var(--line, #e2e8f0));
 }
 
 .cl-modal-title {
@@ -534,4 +537,53 @@
   .cl-crm-wrap {
     position: static;
   }
+}
+
+
+/* Avatar Contable */
+.cl-user-avatar-tag {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--mbg, rgba(255, 102, 0, 0.12));
+  color: var(--mco, var(--brand-primary, #ff6600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
+  flex-shrink: 0;
+}
+
+.cl-crm-avatar-box {
+  width: 58px;
+  height: 58px;
+  border-radius: 12px;
+  background: var(--inp, #14223a);
+  color: var(--mco, var(--brand-primary, #ff6600));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: 800;
+  border: 1px solid var(--brd, var(--line, #e2e8f0));
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.cl-status-tag {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.cl-status-tag.al_dia {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+}
+.cl-status-tag.pendiente {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
 }

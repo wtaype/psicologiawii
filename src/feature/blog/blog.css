@@ -1,0 +1,1085 @@
+/* src/feature/blog/blog.css */
+/* Estilos Oficiales del Feature Blog Estilo Workwii */
+/* Integrado con witema, Poppins, Outfit, Alertas y Tabla de Contenidos TOC */
+
+/* ── BARRA DE PROGRESO DE LECTURA (EN BOTTOM, ESTILO WORKWII) ── */
+.po_progress_bar {
+  position: fixed;
+  top: auto;
+  bottom: 0;
+  left: 0;
+  height: 0.25vh;
+  min-height: 2px;
+  background: var(--brand-primary, var(--mco, #ff6600));
+  z-index: 99999;
+  width: 0%;
+  transition: width 0.1s ease-out;
+  box-shadow: 0 -1px 6px rgba(255, 102, 0, 0.4);
+}
+
+/* ── CONTENEDOR GENERAL (.page-container 85VW ESTILO GASWII) ── */
+.po_wrap {
+  width: 100%;
+  max-width: 85vw;
+  margin: 0 auto;
+  padding: 24px 0 60px;
+  box-sizing: border-box !important;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+}
+
+.po_layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: start;
+}
+
+.po_col_main {
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  min-width: 0;
+}
+
+.po_content {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.8vh;
+  padding: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── HERO DEL ARTÍCULO (IMAGEN CON BADGES) ── */
+.po_hero {
+  position: relative;
+  width: 100%;
+  border-radius: 0;
+  overflow: hidden;
+  background: #000;
+  margin-bottom: 0;
+  aspect-ratio: 1180 / 425;
+  flex-shrink: 0;
+}
+
+.po_hero_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.po_content:hover .po_hero_img {
+  transform: scale(1.02);
+}
+
+.po_hero_over {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 40%, rgba(0,0,0,0.75) 100%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 2.2vh 2.5vh;
+  box-sizing: border-box;
+}
+
+.po_back {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  text-decoration: none;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 1vh;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.po_back:hover {
+  background: var(--brand-primary, #ff6600);
+  border-color: var(--brand-primary, #ff6600);
+}
+
+.po_hero_badges {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.po_cat_badge {
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 1vh;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.po_dest_badge {
+  background: var(--brand-primary, #ff6600);
+  color: #ffffff;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 1vh;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.35);
+  transition: all 0.2s ease;
+}
+
+.po_dest_badge:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+.po_like_btn {
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 1vh;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.po_like_btn i {
+  color: #fe0149;
+  transition: transform 0.2s ease;
+}
+
+.po_like_btn:hover i {
+  transform: scale(1.2);
+}
+
+.po_like_btn.active {
+  background: #fe0149;
+  border-color: #fe0149;
+  color: #fff;
+}
+
+.po_like_btn.active i {
+  color: #fff;
+}
+
+/* ── CABECERA DEL POST (ESTILO WORKWII) ── */
+.po_header {
+  padding: 3vh 3.5vh 1.5vh 3.5vh;
+  margin-bottom: 0;
+}
+
+.po_titulo {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_l2);
+  font-weight: 800;
+  color: var(--tx1);
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  margin: 0 0 1.5vh 0;
+}
+
+.po_resumen {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m2);
+  color: var(--tx2);
+  line-height: 1.7;
+  background: var(--bg4);
+  border-left: 3.5px solid var(--mco);
+  border-radius: 0 1vh 1vh 0;
+  padding: 1.2vh 2vh;
+  margin: 0 0 1.8vh 0;
+  font-style: italic;
+}
+
+.po_meta {
+  display: flex;
+  align-items: center;
+  gap: 1.5vh;
+  flex-wrap: wrap;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s4);
+  color: var(--tx3);
+  padding-top: 1.5vh;
+  padding-bottom: 1.5vh;
+  border-top: 1px solid var(--brd);
+}
+
+.po_meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--tr_f);
+}
+
+.po_meta span:hover {
+  color: var(--mco);
+}
+
+.po_meta i {
+  color: var(--mco);
+}
+
+/* ── TABLA DE CONTENIDOS (TOC ESTILO WORKWII) ── */
+.po_toc_box {
+  background: var(--bg4);
+  border: 1px solid var(--brd);
+  border-left: 3.5px solid var(--mco);
+  border-radius: 1vh;
+  padding: 2vh 2.5vh;
+  margin: 1vh 3.5vh 2.5vh 3.5vh;
+}
+
+.po_toc_title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m2);
+  font-weight: 700;
+  color: var(--tx1);
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.po_toc_title i {
+  color: var(--mco);
+}
+
+.po_toc {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.po_toc_link {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m1);
+  color: var(--tx2);
+  text-decoration: none;
+  transition: all 0.18s ease;
+  display: inline-block;
+}
+
+.po_toc_link:hover {
+  color: var(--mco);
+  transform: translateX(4px);
+}
+
+/* ── CUERPO DEL POST (MARKDOWN ESTILIZADO CON OUTFIT Y --fz_ FLUIDO) ── */
+.po_contenido *:not(i):not(.fa):not(.fas):not(.far):not(.fab):not([class*="fa-"]):not(.po_titulo) {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+}
+
+.po_contenido {
+  padding: 1vh 3.5vh 3vh 3.5vh;
+  font-size: var(--fz_m3);
+  line-height: 1.85;
+  letter-spacing: -0.01em;
+  color: var(--tx2);
+}
+
+.po_contenido h2 {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_l1);
+  font-weight: 700;
+  color: var(--tx1);
+  margin: 3.5vh 0 1.8vh 0;
+  padding-bottom: 0.6vh;
+  border-bottom: 2px solid var(--bg5);
+  scroll-margin-top: 80px;
+}
+
+.po_contenido h3 {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m5);
+  font-weight: 700;
+  color: var(--mco);
+  margin: 3vh 0 1.2vh 0;
+  scroll-margin-top: 80px;
+}
+
+.po_contenido h4 {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m4);
+  font-weight: 700;
+  color: var(--tx1);
+  margin: 2.5vh 0 1vh 0;
+}
+
+.po_contenido p {
+  margin: 0 0 2.2vh 0;
+  font-size: var(--fz_m3);
+  line-height: 1.85;
+  color: var(--tx2);
+}
+
+.po_contenido a:not(.po_yt_link) {
+  color: var(--mco);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.po_contenido a:not(.po_yt_link):hover {
+  opacity: 0.85;
+}
+
+.po_contenido strong {
+  font-weight: 700;
+  color: var(--tx1);
+}
+
+/* ── BLOQUES DE CÓDIGO Y CÓDIGO EN LÍNEA ── */
+.po_pre {
+  background: var(--bg4);
+  border: 1px solid var(--brd);
+  border-left: 4px solid var(--mco);
+  border-radius: 1vh;
+  padding: 1.8vh 2.2vh;
+  margin: 2.5vh 0;
+  overflow-x: auto;
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-size: var(--fz_m1);
+  color: var(--tx1);
+  line-height: 1.6;
+}
+
+.po_code_block {
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  color: var(--tx1) !important;
+  font-family: inherit !important;
+  font-size: inherit !important;
+}
+
+.po_contenido code:not(.po_code_block) {
+  background: var(--bg4);
+  border: 1px solid var(--brd);
+  padding: 0.2vh 0.8vh;
+  border-radius: 0.6vh;
+  font-size: var(--fz_s3);
+  color: var(--mco);
+  font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+  font-weight: 600;
+}
+
+/* ── BOTÓN YOUTUBE MODAL ESTILO WORKWII ── */
+.po_yt_link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2vh;
+  padding: 1.4vh 2.8vh;
+  margin: 2.5vh auto;
+  background: color-mix(in srgb, var(--error) 10%, var(--wb));
+  border: 1.5px solid color-mix(in srgb, var(--error) 45%, transparent);
+  color: var(--tx1) !important;
+  font-weight: 700;
+  font-size: var(--fz_m2);
+  border-radius: 5vh;
+  text-decoration: none !important;
+  transition: all var(--tr_m);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
+.po_yt_link:hover {
+  transform: translateY(-2px);
+  background: color-mix(in srgb, var(--error) 16%, var(--wb));
+  border-color: var(--error);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--error) 25%, transparent);
+}
+
+.po_yt_link i {
+  color: #ff0000;
+  font-size: 1.35em;
+}
+
+/* ── FIGURAS E IMÁGENES CLIQUEABLES (MODAL PICASA LIGHTBOX) ── */
+.po_figure {
+  margin: 3.5vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
+
+.po_figure img,
+.po_contenido img {
+  width: 100%;
+  height: auto;
+  border-radius: 1.8vh;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+  cursor: zoom-in;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.po_figure img:hover,
+.po_contenido img:hover {
+  transform: scale(1.012);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+.po_figcaption {
+  font-size: var(--fz_s4);
+  color: var(--tx3);
+  margin-top: 1vh;
+  text-align: center;
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1.4;
+}
+
+.po_hr {
+  border: none;
+  border-top: 1px solid var(--brd);
+  margin: 3.5vh 0;
+}
+
+/* ── LISTAS ESTILO WORKWII ── */
+.po_contenido ul {
+  list-style: none;
+  padding: 0;
+  margin: 2vh 0 2.5vh 0;
+}
+
+.po_contenido ol {
+  list-style: decimal;
+  padding-left: 3.2vh;
+  margin: 2vh 0 2.5vh 0;
+}
+
+.po_contenido ul li {
+  position: relative;
+  padding-left: 2.8vh;
+  margin-bottom: 1.4vh;
+  line-height: 1.8;
+  font-size: var(--fz_m2);
+  color: var(--tx2);
+}
+
+.po_contenido ol li {
+  margin-bottom: 1.4vh;
+  line-height: 1.8;
+  font-size: var(--fz_m2);
+  color: var(--tx2);
+}
+
+.po_contenido ul li::before {
+  content: '\f004';
+  font-family: 'Font Awesome 6 Free', sans-serif;
+  font-weight: 900;
+  position: absolute;
+  left: 0;
+  top: 0.35vh;
+  font-size: var(--fz_s4);
+  color: var(--mco);
+  opacity: 0.85;
+}
+
+.po_contenido ul li:has(> .po_todo_check)::before,
+.po_contenido ul li:has(> input)::before {
+  display: none !important;
+}
+
+.po_contenido ul li:has(> .po_todo_check),
+.po_contenido ul li:has(> input) {
+  padding-left: 0 !important;
+}
+
+/* ── ALERTAS MARKDOWN (ESTILO WORKWII / GITHUB) ── */
+.po_alert {
+  border-radius: 0 1.2vh 1.2vh 0;
+  padding: 2vh 2.5vh;
+  margin: 3.2vh 0;
+  border-left: 4px solid var(--info);
+  background: color-mix(in srgb, var(--info) 8%, var(--wb));
+}
+
+.po_alert_title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m2);
+  font-weight: 700;
+  margin-bottom: 0.8vh;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.po_alert p {
+  margin: 0 !important;
+  font-size: var(--fz_m2);
+  line-height: 1.75;
+  color: var(--tx2);
+}
+
+/* Variantes de Alertas */
+.po_alert_note {
+  border-left-color: var(--info);
+  background: color-mix(in srgb, var(--info) 8%, var(--wb));
+}
+.po_alert_note .po_alert_title { color: var(--info); }
+
+.po_alert_tip {
+  border-left-color: var(--success);
+  background: color-mix(in srgb, var(--success) 8%, var(--wb));
+}
+.po_alert_tip .po_alert_title { color: var(--success); }
+
+.po_alert_warning {
+  border-left-color: var(--warning);
+  background: color-mix(in srgb, var(--warning) 8%, var(--wb));
+}
+.po_alert_warning .po_alert_title { color: var(--warning); }
+
+.po_alert_important,
+.po_alert_caution {
+  border-left-color: var(--error);
+  background: color-mix(in srgb, var(--error) 8%, var(--wb));
+}
+.po_alert_important .po_alert_title,
+.po_alert_caution .po_alert_title { color: var(--error); }
+
+/* ── TABLAS RESPONSIVAS PRO ── */
+.po_table_wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 3vh 0;
+  border-radius: 1.5vh;
+  border: 1px solid color-mix(in srgb, var(--mco) 25%, var(--brd));
+  background: var(--wb);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.02);
+}
+
+.po_table_wrap table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 500px;
+  margin: 0;
+}
+
+.po_table_wrap th {
+  background: color-mix(in srgb, var(--mco) 8%, var(--wb));
+  color: var(--mco);
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-weight: 700;
+  text-align: left;
+  padding: 1.6vh 2.2vh;
+  border-bottom: 2px solid color-mix(in srgb, var(--mco) 25%, var(--brd));
+  border-right: 1px solid color-mix(in srgb, var(--mco) 15%, var(--brd));
+  font-size: var(--fz_m2);
+}
+
+.po_table_wrap td {
+  padding: 1.4vh 2.2vh;
+  border-bottom: 1px solid color-mix(in srgb, var(--mco) 10%, var(--bg5));
+  border-right: 1px solid color-mix(in srgb, var(--mco) 10%, var(--bg5));
+  color: var(--tx2);
+  font-size: var(--fz_m1);
+  transition: background var(--tr_f);
+}
+
+.po_table_wrap th:last-child,
+.po_table_wrap td:last-child {
+  border-right: none;
+}
+
+.po_table_wrap tr:last-child td {
+  border-bottom: none;
+}
+
+.po_table_wrap tr:hover td {
+  background: color-mix(in srgb, var(--mco) 4%, var(--wb));
+}
+
+/* ── CHECKLISTS ── */
+.po_todo_check {
+  margin-right: 8px;
+  accent-color: var(--mco);
+  cursor: default;
+}
+
+/* ── NAVEGACIÓN ANTERIOR / SIGUIENTE (ESTILO WORKWII) ── */
+.po_pn_box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.8vh;
+  padding: 2.2vh 3.5vh;
+  border-top: 1px solid var(--brd);
+  background: var(--bg4);
+  margin: 0;
+}
+
+.po_pn_card {
+  background: var(--wb);
+  border: 1px solid var(--brd);
+  border-radius: 1.2vh;
+  padding: 1.4vh 1.8vh;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 1.4vh;
+  transition: all var(--tr_m);
+  min-width: 0;
+}
+
+.po_pn_card:hover {
+  border-color: var(--mco);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.po_pn_card.pn_next {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.po_pn_img img {
+  width: 58px;
+  height: 58px;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 0.8vh;
+  display: block;
+  flex-shrink: 0;
+}
+
+.po_pn_info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3vh;
+  min-width: 0;
+}
+
+.po_pn_lb {
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  color: var(--mco);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6vh;
+}
+
+.po_pn_tit {
+  font-size: var(--fz_m1);
+  font-weight: 600;
+  color: var(--tx1);
+  line-height: 1.35;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* ── BOTONES DE COMPARTIR Y LIKE DINÁMICO ── */
+.po_share {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.8vh 3.5vh;
+  border-top: 1px solid var(--brd);
+  background: var(--wb);
+  flex-wrap: wrap;
+  gap: 1.5vh;
+}
+
+.po_share > span {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m2);
+  font-weight: 700;
+  color: var(--tx1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8vh;
+}
+
+.po_share > span i {
+  color: var(--mco);
+}
+
+.po_share_btns {
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  flex-wrap: wrap;
+}
+
+.po_share_btns .po_like_btn {
+  background: var(--bg4);
+  color: var(--tx1);
+  border: 1px solid var(--brd);
+  border-radius: 2vh;
+  padding: 0.7vh 1.6vh;
+  height: 4.2vh;
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8vh;
+  font-size: var(--fz_s4);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--tr_m);
+}
+
+.po_share_btns .po_like_btn i {
+  color: var(--tx3);
+  transition: color var(--tr_f);
+}
+
+.po_share_btns .po_like_btn.active {
+  background: #fe0149;
+  border-color: #fe0149;
+  color: #fff;
+}
+
+.po_share_btns .po_like_btn.active i {
+  color: #fff;
+}
+
+.po_share_btn {
+  width: 4.2vh;
+  height: 4.2vh;
+  min-width: 36px;
+  min-height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--sc, var(--mco));
+  color: #ffffff !important;
+  border: none;
+  font-size: var(--fz_m2);
+  text-decoration: none;
+  cursor: pointer;
+  transition: all var(--tr_m);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.po_share_btn:hover {
+  transform: scale(1.12) translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  filter: brightness(1.1);
+}
+
+/* ── COMENTARIOS (TARJETA PROPIA ESTILO WORKWII) ── */
+.po_comments {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.8vh;
+  padding: 3vh 3.5vh;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.po_comments_title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ════ COLUMNA DERECHA: SIDEBAR (STICKY ESTILO WORKWII) ════ */
+.po_sidebar {
+  position: sticky;
+  top: 85px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8vh;
+  min-width: 0;
+}
+
+.po_side_card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.5vh;
+  padding: 2vh;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  transition: all 0.25s ease;
+}
+
+.po_side_card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+  transform: translateY(-2px);
+}
+
+.po_side_title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.po_side_title i {
+  color: var(--brand-primary, #ff6600);
+}
+
+/* Ficha del Autor */
+.po_autor_box {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.po_autor_av {
+  width: 44px;
+  height: 44px;
+  border-radius: 1vh;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.po_autor_av img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.po_autor_info strong {
+  display: block;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.po_autor_info span {
+  display: block;
+  font-size: 11.5px;
+  color: var(--muted);
+}
+
+/* Historias Relacionadas y Recientes */
+.po_relacionados {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.po_rel_card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 1vh;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  transition: all 0.18s ease;
+}
+
+.po_rel_card:hover {
+  border-color: var(--brand-primary, #ff6600);
+  transform: translateX(3px);
+}
+
+.po_rel_img {
+  width: 64px;
+  height: 48px;
+  border-radius: 0.6vh;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--surface);
+}
+
+.po_rel_img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.po_rel_info {
+  min-width: 0;
+  flex: 1;
+}
+
+.po_rel_cat {
+  display: block;
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--brand-primary, #ff6600);
+  margin-bottom: 2px;
+}
+
+.po_rel_info strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.po_rel_meta {
+  display: block;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-top: 3px;
+}
+
+/* Banner Promocional */
+.po_side_banner {
+  background: linear-gradient(135deg, rgba(255, 102, 0, 0.12), rgba(255, 152, 0, 0.05));
+  border: 1px dashed var(--brand-primary, #ff6600);
+  border-radius: 1.5vh;
+  padding: 22px 18px;
+  text-align: center;
+}
+
+.po_side_banner_icon {
+  font-size: 2rem;
+  color: var(--brand-primary, #ff6600);
+  margin-bottom: 10px;
+}
+
+.po_side_banner_title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 14.5px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.po_side_banner_desc {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 14px;
+}
+
+.po_side_banner_btn {
+  background: var(--brand-primary, #ff6600);
+  color: #fff;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 9px 18px;
+  border-radius: 1vh;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.po_side_banner_btn:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 1100px) {
+  .po_wrap {
+    max-width: 98vw;
+    padding: 1.5vh 1vh 4vh;
+  }
+  .po_layout {
+    grid-template-columns: 1fr 300px;
+    gap: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .po_wrap {
+    max-width: 100%;
+    padding: 1vh 1vh 4vh;
+  }
+  .po_layout {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .po_sidebar {
+    position: static;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .po_hero {
+    aspect-ratio: 16 / 8;
+  }
+}
+
+@media (max-width: 600px) {
+  .po_wrap {
+    padding: 0;
+  }
+  .po_content,
+  .po_comments {
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+  }
+  .po_sidebar {
+    grid-template-columns: 1fr;
+    padding: 0 12px;
+  }
+  .po_header,
+  .po_contenido,
+  .po_share {
+    padding-left: 2vh;
+    padding-right: 2vh;
+  }
+  .po_toc_box {
+    margin: 1.5vh 2vh 2.5vh 2vh;
+  }
+  .po_titulo {
+    font-size: 1.55rem;
+  }
+  .po_pn_box {
+    grid-template-columns: 1fr;
+    padding: 2vh;
+  }
+  .po_hero {
+    aspect-ratio: 16 / 9;
+  }
+}

@@ -2,8 +2,8 @@
 // seometa v10.1: Gestor dinámico de metaetiquetas SEO y esquemas JSON-LD (Schema.org) en el cliente
 
 import { app, linkweb } from '../../wii.js';
-const descri = 'Solgas Surquillo Distribuidor';
-const keywii = 'gas glp surquillo';
+const descri = 'Consultorio Psicológico América · Lic. Sofía Reynaga';
+const keywii = 'psicologia villa el salvador, psicoterapia individual, terapia parejas, talleres vivenciales, salud mental lima';
 
 const setTag = (id, val) => {
   if (typeof document === 'undefined') return;

@@ -1,13 +1,20 @@
 ---
 // src/feature/personal/modulos/clientes/Clientes.astro
-// Módulo de Clientes: Directorio CRM Inteligente (Solgas Surquillo)
-// 100% JS Nativo · Integrado con @widev, Firestore y smiles (rol: cliente) · 0 CSS Inline
+// Módulo de Clientes: Directorio CRM Autónomo & Universal
+// 100% JS Nativo · Integrado con @widev, Firestore ('clientes') · 0 CSS Inline
+import { configurarSistema } from '../../../../semillas/configurar.js';
 
 interface Props {
   esActivo?: boolean;
 }
 
 const { esActivo = false } = Astro.props;
+const term = configurarSistema.terminologia || {};
+const directorioTitulo = term.directorioTitulo || 'Directorio de Clientes & Empresas';
+const directorioSub = term.directorioSub || 'Gestión centralizada de clientes residenciales y comerciales con historial de pedidos y contacto directo.';
+const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributarios) && configurarSistema.parametros.regimenesTributarios.length > 0
+  ? configurarSistema.parametros.regimenesTributarios
+  : ['Estándar / General', 'Comercial / Empresa'];
 ---
 
 <section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-clientes" data-clientes-init="false">
@@ -16,11 +23,11 @@ const { esActivo = false } = Astro.props;
   <div class="ps-section-header">
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">
-        <i class="fa-solid fa-address-book sn-header-icon"></i>
-        Clientes · Directorio CRM Oficial
+        <i class="fa-solid fa-address-book sn-header-icon" style="color: var(--brand-primary, var(--mco, #ff6600));"></i>
+        {directorioTitulo}
       </h1>
       <p class="ps-section-sub">
-        Gestión de cartera recurrente de Surquillo, Miraflores y San Borja con métricas de consumo y WhatsApp directo.
+        {directorioSub}
       </p>
     </div>
     <div class="ps-header-actions">
@@ -34,41 +41,41 @@ const { esActivo = false } = Astro.props;
   <div class="cl-kpi-grid">
     <div class="cl-kpi-card">
       <div class="cl-kpi-icon-wrap">
-        <i class="fa-solid fa-users"></i>
+        <i class="fa-solid fa-briefcase"></i>
       </div>
       <div class="cl-kpi-data">
         <span class="cl-kpi-val" id="clKpiTotal">0</span>
-        <span class="cl-kpi-lbl">Total Clientes en Cartera</span>
+        <span class="cl-kpi-lbl">Total Clientes Registrados</span>
       </div>
     </div>
 
     <div class="cl-kpi-card">
       <div class="cl-kpi-icon-wrap cl-kpi-icon-vip">
-        <i class="fa-solid fa-crown"></i>
+        <i class="fa-solid fa-building"></i>
       </div>
       <div class="cl-kpi-data">
-        <span class="cl-kpi-val" id="clKpiVip">0</span>
-        <span class="cl-kpi-lbl">Clientes VIP Recurrentes</span>
+        <span class="cl-kpi-val" id="clKpiMype">0</span>
+        <span class="cl-kpi-lbl">Empresas & Negocios</span>
       </div>
     </div>
 
     <div class="cl-kpi-card">
       <div class="cl-kpi-icon-wrap cl-kpi-icon-green">
-        <i class="fa-solid fa-user-check"></i>
+        <i class="fa-solid fa-user"></i>
       </div>
       <div class="cl-kpi-data">
-        <span class="cl-kpi-val" id="clKpiNuevos">0</span>
-        <span class="cl-kpi-lbl">Nuevos este Mes</span>
+        <span class="cl-kpi-val" id="clKpiIndependientes">0</span>
+        <span class="cl-kpi-lbl">Clientes Residenciales</span>
       </div>
     </div>
 
     <div class="cl-kpi-card">
       <div class="cl-kpi-icon-wrap cl-kpi-icon-blue">
-        <i class="fa-solid fa-fire"></i>
+        <i class="fa-solid fa-coins"></i>
       </div>
       <div class="cl-kpi-data">
-        <span class="cl-kpi-val" id="clKpiConsumo">S/ 0.00</span>
-        <span class="cl-kpi-lbl">LTV Consumo Facturado</span>
+        <span class="cl-kpi-val" id="clKpiFacturacion">S/ 0.00</span>
+        <span class="cl-kpi-lbl">Consumo / Facturación</span>
       </div>
     </div>
   </div>
@@ -81,9 +88,9 @@ const { esActivo = false } = Astro.props;
       <div class="cl-toolbar">
         <div class="cl-filters-wrap" id="clFiltersWrap">
           <button type="button" class="cl-filter-pill active" data-filter="todos">Todos</button>
-          <button type="button" class="cl-filter-pill" data-filter="vip">VIP (≥5 pedidos)</button>
-          <button type="button" class="cl-filter-pill" data-filter="frecuente">Frecuentes</button>
-          <button type="button" class="cl-filter-pill" data-filter="nuevo">Nuevos</button>
+          <button type="button" class="cl-filter-pill" data-filter="mype">Empresas</button>
+          <button type="button" class="cl-filter-pill" data-filter="independiente">Residencial</button>
+          <button type="button" class="cl-filter-pill" data-filter="rer">Especial</button>
         </div>
 
         <div class="cl-search-box">
@@ -92,7 +99,7 @@ const { esActivo = false } = Astro.props;
             type="text" 
             id="clSearchInput" 
             class="cl-search-input" 
-            placeholder="Buscar por DNI, nombre, calle o cel..." 
+            placeholder="Buscar por documento, nombre o celular..." 
             autocomplete="off" 
           />
         </div>
@@ -102,11 +109,11 @@ const { esActivo = false } = Astro.props;
         <table class="cl-table">
           <thead>
             <tr>
-              <th>Cliente / Documento</th>
+              <th>Cliente / Razón Social</th>
               <th>Celular</th>
-              <th>Dirección Principal</th>
-              <th class="sn-text-center">Pedidos</th>
-              <th>Plan</th>
+              <th>Tipo / Régimen</th>
+              <th class="sn-text-center">Dígito</th>
+              <th class="sn-text-right">Monto Habitual</th>
               <th class="sn-text-right">Acción</th>
             </tr>
           </thead>
@@ -121,58 +128,69 @@ const { esActivo = false } = Astro.props;
     <div class="cl-crm-wrap">
       <div class="cl-crm-card">
         <div class="cl-crm-head">
-          <img src="https://imgwii.web.app/smile.avif" alt="Avatar" class="cl-crm-avatar-lg" id="clCrmAvatar" />
+          <div class="cl-crm-avatar-box" id="clCrmAvatarBox">
+            <img id="clCrmAvatarImg" class="cl-crm-avatar-lg" alt="Avatar cliente" src="/smile.avif" style="display:none;" />
+            <span id="clCrmAvatarLetter">E</span>
+          </div>
           <div class="cl-crm-info-head">
             <h2 class="cl-crm-title" id="clCrmNombre">Cargando...</h2>
-            <p class="cl-crm-subtitle" id="clCrmDoc">DNI: -</p>
+            <p class="cl-crm-subtitle" id="clCrmDoc">Doc: -</p>
           </div>
         </div>
 
         <div class="cl-crm-stats">
           <div class="cl-crm-stat-box">
-            <span class="cl-crm-stat-val" id="clCrmTotalPedidos">0 pedidos</span>
-            <span class="cl-crm-stat-lbl">Historial Total</span>
+            <span class="cl-crm-stat-val" id="clCrmRegimen">General</span>
+            <span class="cl-crm-stat-lbl">Categoría / Régimen</span>
           </div>
           <div class="cl-crm-stat-box">
-            <span class="cl-crm-stat-val" id="clCrmMontoConsumido">S/ 0.00</span>
-            <span class="cl-crm-stat-lbl">Volumen Comprado</span>
+            <span class="cl-crm-stat-val" id="clCrmHonorario">S/ 0.00</span>
+            <span class="cl-crm-stat-lbl">Monto Habitual</span>
           </div>
         </div>
 
         <div class="cl-crm-section-title">
-          <i class="fa-solid fa-sliders"></i> Preferencias del Cliente
+          <i class="fa-solid fa-file-invoice"></i> Información Comercial & Servicio
         </div>
 
         <div class="cl-crm-detail-row">
-          <span class="cl-crm-detail-lbl">Balón Habitual:</span>
-          <span id="clCrmBalonHabitual">Balón SOLGAS 10 kg</span>
+          <span class="cl-crm-detail-lbl">Servicio / Producto:</span>
+          <span id="clCrmServicio" style="font-weight:600;">Estándar</span>
         </div>
         <div class="cl-crm-detail-row">
-          <span class="cl-crm-detail-lbl">Método de Pago:</span>
-          <span id="clCrmPagoHabitual">Yape / Plin</span>
+          <span class="cl-crm-detail-lbl">Último Dígito Doc:</span>
+          <span id="clCrmDigitoRuc" style="font-weight:700; color:var(--brand-primary, var(--mco, #ff6600)); font-size:14px;">-</span>
         </div>
         <div class="cl-crm-detail-row">
-          <span class="cl-crm-detail-lbl">Último Despacho:</span>
-          <span id="clCrmUltimoPedido">Hoy</span>
+          <span class="cl-crm-detail-lbl">Estado:</span>
+          <span id="clCrmEstadoFiscal" class="cl-status-tag al-dia">Al Día</span>
+        </div>
+        <div class="cl-crm-detail-row">
+          <span class="cl-crm-detail-lbl">Cliente desde:</span>
+          <span id="clCrmFechaInicio">Ene 2026</span>
         </div>
 
         <div class="cl-crm-section-title sn-mt-14">
-          <i class="fa-solid fa-map-location-dot"></i> Dirección y Cobertura
+          <i class="fa-solid fa-map-location-dot"></i> Dirección de Entrega & Contacto
         </div>
 
-        <div id="clCrmAddressWrap">
-          <!-- Renderizado dinámico -->
+        <div class="cl-crm-address-box">
+          <div class="cl-crm-address-title">
+            <span id="clCrmDireccion">-</span>
+          </div>
+          <div class="cl-crm-address-sub" id="clCrmContacto">Contacto: -</div>
+          <div class="cl-crm-address-sub" id="clCrmObservaciones" style="font-style: italic; margin-top:4px;">Sin observaciones</div>
         </div>
 
         <div class="cl-crm-actions">
           <button type="button" class="cl-crm-btn cl-crm-btn-ws" id="btnCrmWs">
-            <i class="fa-brands fa-whatsapp"></i> Conversar por WhatsApp
+            <i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp
           </button>
           <button type="button" class="cl-crm-btn cl-crm-btn-call" id="btnCrmCall">
             <i class="fa-solid fa-phone"></i> Llamar al Celular
           </button>
           <button type="button" class="cl-crm-btn cl-crm-btn-sunat" id="btnCrmSunat">
-            <i class="fa-solid fa-file-invoice-dollar"></i> Emitir Comprobante SUNAT
+            <i class="fa-solid fa-receipt"></i> Emitir Comprobante
           </button>
         </div>
       </div>
@@ -185,7 +203,7 @@ const { esActivo = false } = Astro.props;
     <div class="cl-modal">
       <div class="cl-modal-head">
         <h3 class="cl-modal-title">
-          <i class="fa-solid fa-user-plus sn-title-icon"></i> Nuevo Cliente CRM
+          <i class="fa-solid fa-user-plus sn-title-icon"></i> Nuevo Cliente
         </h3>
         <button type="button" class="cl-modal-close" id="btnModalClose">
           <i class="fa-solid fa-xmark"></i>
@@ -198,35 +216,49 @@ const { esActivo = false } = Astro.props;
             <label class="sn-label" for="clModalDocTipo">Tipo Documento</label>
             <select id="clModalDocTipo" class="sn-select">
               <option value="DNI">DNI (Persona Natural)</option>
-              <option value="RUC">RUC (Empresa)</option>
-              <option value="CE">Carnet de Extranjería</option>
+              <option value="RUC">RUC (Empresa o Negocio)</option>
             </select>
           </div>
           <div class="sn-form-group">
             <label class="sn-label" for="clModalDoc">N° Documento *</label>
-            <input type="text" id="clModalDoc" class="sn-input" placeholder="71779978" required />
+            <input type="text" id="clModalDoc" class="sn-input" placeholder="Ej: 10203040" required />
           </div>
         </div>
 
         <div class="sn-form-group">
           <label class="sn-label" for="clModalNombre">Nombre Completo o Razón Social *</label>
-          <input type="text" id="clModalNombre" class="sn-input" placeholder="Ej. Ana Belén Flores" required />
+          <input type="text" id="clModalNombre" class="sn-input" placeholder="Ej. Juan Pérez o Empresa S.A.C." required />
         </div>
 
         <div class="cl-modal-row">
           <div class="sn-form-group">
-            <label class="sn-label" for="clModalCelular">Celular WhatsApp</label>
-            <input type="tel" id="clModalCelular" class="sn-input" placeholder="961229280" />
+            <label class="sn-label" for="clModalRegimen">Categoría / Régimen</label>
+            <select id="clModalRegimen" class="sn-select">
+              {regimenes.map((r: string) => (
+                <option value={r}>{r}</option>
+              ))}
+            </select>
           </div>
           <div class="sn-form-group">
-            <label class="sn-label" for="clModalBalon">Balón Habitual</label>
-            <input type="text" id="clModalBalon" class="sn-input" value="Balón SOLGAS Premium 10 kg" />
+            <label class="sn-label" for="clModalHonorario">Monto Estimado / Tarifa (S/)</label>
+            <input type="number" step="0.01" id="clModalHonorario" class="sn-input" value="" placeholder="0.00" />
+          </div>
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="clModalCelular">Celular WhatsApp *</label>
+            <input type="tel" id="clModalCelular" class="sn-input" placeholder="900000000" required />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="clModalEmail">Correo Electrónico</label>
+            <input type="email" id="clModalEmail" class="sn-input" placeholder="contacto@cliente.com" />
           </div>
         </div>
 
         <div class="sn-form-group">
-          <label class="sn-label" for="clModalDireccion">Dirección de Entrega</label>
-          <input type="text" id="clModalDireccion" class="sn-input" placeholder="Jr. Dante 260, Surquillo" />
+          <label class="sn-label" for="clModalDireccion">Dirección de Entrega / Domicilio</label>
+          <input type="text" id="clModalDireccion" class="sn-input" placeholder="Calle, número, departamento o referencia" />
         </div>
 
         <div class="cl-modal-actions">

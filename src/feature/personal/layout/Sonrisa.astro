@@ -1,8 +1,9 @@
 ---
 // src/feature/personal/layout/Sonrisa.astro
-// Layout Maestro para el Feature Personal (Dashboard del Dueño Gaswii Surquillo)
+// Layout Maestro para el Feature Personal (Panel de Gestión)
 import Header from '../components/Header.astro';
 import Sidebar from '../components/Sidebar.astro';
+import { datosNegocio } from '@/negocio.js';
 
 import witemaCss from '../../../core/wicss/witema.css?inline';
 import personalCss from '../personal.css?inline';
@@ -14,7 +15,7 @@ interface Props {
 }
 
 const { 
-  titulo = 'Dashboard del Dueño · Solgas Surquillo',
+  titulo = `Panel de Gestión${datosNegocio.nombreCorto ? ' · ' + datosNegocio.nombreCorto : ''}`,
   moduloActivo = 'dashboard',
   idioma = 'es' 
 } = Astro.props;
@@ -56,7 +57,7 @@ const {
 
       // 2. Anti-FOUC de Tema y Sidebar Colapsado
       document.documentElement.dataset.theme = localStorage.getItem('wiTema') || (matchMedia('(prefers-color-scheme: light)').matches ? 'luz' : 'futuro');
-      if (localStorage.getItem('gaswii_sidebar_collapsed') === 'true') {
+      if (localStorage.getItem('wi_sidebar_collapsed') === 'true') {
         document.documentElement.classList.add('is-collapsed');
       }
     } catch (e) {

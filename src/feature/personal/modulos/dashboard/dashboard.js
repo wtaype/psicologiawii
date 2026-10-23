@@ -1,78 +1,98 @@
 // src/feature/personal/modulos/dashboard/dashboard.js
-// Controlador Frontend Autónomo del Dashboard (Solgas Surquillo)
-// 100% JS Nativo · Integrado con dataNotepad.js y @widev
+// Controlador Frontend Autónomo del Dashboard: Universal & Reutilizable
+// 100% JS Nativo · Integrado con @widev, datosNegocio y LocalStorage
 
-import { obtenerNotas, guardarNotaData, toggleListoNotaData } from '../notepad/dataNotepad.js';
-import { Notificacion } from '@widev';
+import { getls } from '@widev';
 
 export function inicializarDashboard() {
   const panel = document.getElementById('panel-dashboard');
   if (!panel) return;
 
-  const formQuick = document.getElementById('formDashQuickNote');
-  const inputTitle = document.getElementById('inputDashQuickTitle');
-  const inputText = document.getElementById('inputDashQuickText');
-  const listWrap = document.getElementById('dashNotesList');
-  const countBadge = document.getElementById('dashNotesCount');
+  // 1. Saludo Horario Dinámico e Icono Día/Noche (100% Reutilizable y Universal)
+  function hidratarSaludoHorario() {
+    const greetingEl = document.getElementById('dbGreetingText');
+    const iconEl = document.getElementById('dbHeroTimeIcon');
+    const heroNameEl = document.getElementById('dbHeroUserName');
 
-  function renderQuickNotes() {
-    const notes = obtenerNotas();
-    if (countBadge) countBadge.textContent = `${notes.length} ${notes.length === 1 ? 'Nota' : 'Notas'}`;
-    if (!listWrap) return;
+    const hora = new Date().getHours();
+    let saludo = 'Buenas noches';
+    let iconoClase = 'fa-solid fa-moon';
+    let iconoColor = '#facc15';
 
-    if (notes.length === 0) {
-      listWrap.innerHTML = '<p style="text-align:center; color:var(--muted); font-size:var(--fz_s3); padding:16px 8px; margin:0;">Sin notas guardadas.</p>';
-      return;
+    if (hora >= 5 && hora < 12) {
+      saludo = 'Buenos días';
+      iconoClase = 'fa-solid fa-sun';
+      iconoColor = '#f59e0b';
+    } else if (hora >= 12 && hora < 19) {
+      saludo = 'Buenas tardes';
+      iconoClase = 'fa-solid fa-cloud-sun';
+      iconoColor = '#f97316';
     }
 
-    listWrap.innerHTML = notes.slice(0, 3).map(n => {
-      const isListo = Boolean(n.listo || n.done);
-      return `
-        <div class="db-note-item">
-          <div class="db-note-info">
-            <div class="db-note-title" style="${isListo ? 'text-decoration:line-through; opacity:0.6;' : ''}">
-              ${n.pin ? '<i class="fa-solid fa-thumbtack" style="color:var(--brand-orange); font-size:10px; margin-right:4px;"></i>' : ''}
-              ${n.titulo || 'Nota sin título'}
-            </div>
-            <div class="db-note-snippet">${n.resumen10 || (n.contenido || '').substring(0, 45)}…</div>
-          </div>
-          <button type="button" class="db-btn-toggle-note btn-dash-toggle" data-id="${n.id}" title="${isListo ? 'Marcar pendiente' : 'Marcar listo'}" style="color: ${isListo ? 'var(--green)' : 'var(--muted)'};">
-            <i class="fa-${isListo ? 'solid fa-circle-check' : 'regular fa-circle'}"></i>
-          </button>
-        </div>
-      `;
-    }).join('');
+    if (greetingEl) greetingEl.textContent = saludo;
+    if (iconEl) {
+      iconEl.className = iconoClase;
+      iconEl.style.color = iconoColor;
+    }
+
+    // Hidratar nombre de usuario desde wiSmile
+    try {
+      const userSmile = getls('wiSmile');
+      if (heroNameEl && (userSmile?.nombre || userSmile?.usuario)) {
+        heroNameEl.textContent = userSmile.nombre || userSmile.usuario;
+      }
+    } catch (e) {}
   }
 
-  // Delegación de eventos para toggle listo
-  listWrap?.addEventListener('click', (e) => {
-    const btn = e.target.closest('.btn-dash-toggle');
-    if (!btn) return;
-    const id = btn.getAttribute('data-id');
-    if (id) {
-      toggleListoNotaData(id);
-      renderQuickNotes();
-    }
-  });
+  // 2. Hidratación Dinámica de Métricas Vivas del Top 3 (Negocio, Productos, Galería)
+  function hidratarMetricasVivas() {
+    // A. Servicios y Precios
+    try {
+      const prodsGuardados = getls('wi_productos') || getls('gaswii_productos') || getls('wi_servicios');
+      if (Array.isArray(prodsGuardados) && prodsGuardados.length > 0) {
+        const countEl = document.getElementById('dbLiveServiciosCount');
+        const minEl = document.getElementById('dbLiveMinPrecio');
+        const maxEl = document.getElementById('dbLiveMaxPrecio');
 
-  formQuick?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const titulo = inputTitle?.value?.trim();
-    const texto = inputText?.value?.trim();
-    if (!titulo && !texto) return;
+        if (countEl) countEl.textContent = `${prodsGuardados.length} ${prodsGuardados.length === 1 ? 'ítem' : 'ítems'}`;
+        
+        const precios = prodsGuardados
+          .map(p => Number(p.precioPEN || p.precio || 0))
+          .filter(p => p > 0);
 
-    guardarNotaData({
-      titulo: titulo || 'Apunte rápido',
-      contenido: texto || '',
-      tag: 'Nota'
+        if (precios.length > 0) {
+          const min = Math.min(...precios).toFixed(2);
+          const max = Math.max(...precios).toFixed(2);
+          if (minEl) minEl.textContent = min;
+          if (maxEl) maxEl.textContent = max;
+        }
+      }
+    } catch (e) {}
+
+    // B. Galería de Imágenes Oficiales
+    try {
+      const fotosGuardadas = getls('wi_galeria_imagenes');
+      if (Array.isArray(fotosGuardadas) && fotosGuardadas.length > 0) {
+        const fotosActivas = fotosGuardadas.filter(f => f.estado !== 'eliminado');
+        const fotosEl = document.getElementById('dbLiveFotosCount');
+        if (fotosEl) fotosEl.textContent = `${fotosActivas.length} fotos`;
+      }
+    } catch (e) {}
+  }
+
+  // 3. Accesibilidad por teclado para las tarjetas con data-jump-to
+  panel.querySelectorAll('.db-tool-card[data-jump-to]').forEach(card => {
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        card.click();
+      }
     });
-
-    renderQuickNotes();
-    formQuick.reset();
-    Notificacion('Apunte registrado en Notepad', 'success', 2500);
   });
 
-  renderQuickNotes();
+  // Ejecución inicial
+  hidratarSaludoHorario();
+  hidratarMetricasVivas();
 }
 
 if (document.readyState === 'loading') {

@@ -1,11 +1,18 @@
 // src/feature/auth/components/ingresar.js
 // Formulario de inicio de sesión, plantillas localizadas y llamadas de autenticación bajo demanda
-// Solgas Surquillo (Gaswii)
+// Capa de Autenticación Universal
 
 import { wiSpin, Mensaje } from '../../../core/widev/widev.js';
 import { entrar } from '../sesion.js';
 import { t } from '../idioma/idioma.js';
 import { loadFirebaseAuth, loadFirebaseDb } from '../firebaseAuthLoader.js';
+import { datosNegocio, configurarSistema } from '@/negocio.js';
+
+export const getLogoFull = () => datosNegocio.logoFull || datosNegocio.logo || '/imgwii/logo_full.webp';
+export const getLogoSquare = () => datosNegocio.logo || '/imgwii/logo.webp';
+export const getRutaTerminos = () => configurarSistema?.rutas?.terminos || '/terminos';
+export const getColeccionUsuarios = () => configurarSistema?.colecciones?.usuarios || 'smiles';
+export const getAvatarDefault = () => datosNegocio?.avatarDefault || '/smile.avif';
 
 // Mapeo de errores Firebase — claves del JSON, sin exponer códigos internos
 export const mapearErrorAuth = (e) => {
@@ -37,7 +44,7 @@ export const tplLogin = () => {
   const txt = t();
   return `
   <div class="wilg_head">
-    <img src="/imgwii/logo_full.webp" alt="Solgas Surquillo" class="wilg_brand_logo" onerror="this.src='/favicon.ico'">
+    <img src="${getLogoFull()}" alt="Logo" class="wilg_brand_logo" onerror="this.src='/favicon.ico'">
     <h2>${txt.bienvenido_de_vuelta}</h2>
     <p>${txt.bienvenido_sub}</p>
   </div>
@@ -47,6 +54,10 @@ export const tplLogin = () => {
   <div class="wilg_or"><span>${txt.o_usa_email}</span></div>
   ${campo('envelope', 'text', 'email', txt.usuario_o_correo_ph, false, 'full')}
   ${campo('lock', 'password', 'password', txt.pass_ph, true, 'full')}
+  <label class="wilg_recordar_check">
+    <input type="checkbox" id="checkRecordarSesion" checked>
+    <span>${txt.recordar_sesion || 'Recordar mi sesión'}</span>
+  </label>
   <button type="button" id="Login" class="wilg_btn inactivo" disabled>
     <i class="fa-solid fa-right-to-bracket"></i> ${txt.btn_login}
   </button>
@@ -71,13 +82,13 @@ export const tplUsername = () => {
   const sugerenciaUser = (u?.email?.split('@')[0] || 'usuario').toLowerCase().replace(/[^a-z0-9_-]/g, '');
   return `
   <div class="wilg_head">
-    <img src="/imgwii/logo.webp" alt="Solgas Surquillo" class="wilg_brand_logo" onerror="this.src='/favicon.ico'">
+    <img src="${getLogoSquare()}" alt="Logo" class="wilg_brand_logo" onerror="this.src='/favicon.ico'">
     <h2>${txt.casi_listo}</h2>
     <p>${txt.casi_listo_sub}</p>
   </div>
   ${u ? `
   <div class="wilg_user_preview">
-    <strong>${u.displayName || 'Vecino Solgas'}</strong>
+    <strong>${u.displayName || 'Usuario'}</strong>
     <small>${u.email}</small>
   </div>` : ''}
   <div class="wilg_grupo">
@@ -86,7 +97,7 @@ export const tplUsername = () => {
   </div>
   <label class="wilg_terminos_check">
     <input type="checkbox" id="checkTerminosGoogle">
-    <span>${txt.acepto_terminos_1} <a href="/terminos" target="_blank" rel="noopener noreferrer">${txt.acepto_terminos_link}</a> ${txt.acepto_terminos_2}</span>
+    <span>${txt.acepto_terminos_1} <a href="${getRutaTerminos()}" target="_blank" rel="noopener noreferrer">${txt.acepto_terminos_link}</a> ${txt.acepto_terminos_2}</span>
   </label>
   <button type="button" id="CompletarGoogle" class="wilg_btn inactivo" disabled>
     <i class="fa-solid fa-rocket"></i> ${txt.completar_registro}
@@ -128,7 +139,7 @@ export const iniciarSesionOrdinaria = async (btn) => {
     // Resolver username → email solo si no contiene '@'
     if (!input.includes('@')) {
       const { db, query, collection, where, limit, getDocs } = await loadFirebaseDb();
-      const q = query(collection(db, 'smiles'), where('usuario', '==', input.toLowerCase()), limit(1));
+      const q = query(collection(db, getColeccionUsuarios()), where('usuario', '==', input.toLowerCase()), limit(1));
       const snap = await getDocs(q);
       if (snap.empty) throw { code: 'auth/user-not-found' };
       email = snap.docs[0].data().email;
@@ -139,14 +150,14 @@ export const iniciarSesionOrdinaria = async (btn) => {
 
     // Leer perfil de Firestore
     const { db, doc, getDoc, setDoc, serverTimestamp } = await loadFirebaseDb();
-    const docSnap = await getDoc(doc(db, 'smiles', user.uid));
-    const imgEmail = 'https://imgwii.web.app/smile.avif';
+    const docSnap = await getDoc(doc(db, getColeccionUsuarios(), user.uid));
+    const imgEmail = getAvatarDefault();
     const { avatar: calcIniciales } = await import('../../../core/widev/nombre.js');
     const profile = docSnap.exists()
       ? docSnap.data()
       : {
           uid: user.uid, email: user.email || email,
-          nombre: user.displayName || 'Vecino Solgas',
+          nombre: user.displayName || 'Usuario',
           usuario: email.split('@')[0],
           avatar: user.photoURL || imgEmail,
           iniciales: calcIniciales(user.displayName || email.split('@')[0]),
@@ -154,10 +165,11 @@ export const iniciarSesionOrdinaria = async (btn) => {
         };
 
     if (!docSnap.exists()) {
-      setDoc(doc(db, 'smiles', user.uid), { ...profile, creado: serverTimestamp(), actualizado: serverTimestamp() }).catch(() => {});
+      setDoc(doc(db, getColeccionUsuarios(), user.uid), { ...profile, creado: serverTimestamp(), actualizado: serverTimestamp() }).catch(() => {});
     }
 
-    entrar(profile);
+    const recordar = document.getElementById('checkRecordarSesion')?.checked ?? true;
+    entrar(profile, recordar);
   } catch (e) {
     console.error('Login error:', e);
     Mensaje(mapearErrorAuth(e), 'error');
@@ -175,12 +187,13 @@ export const iniciarGoogleSSO = async (btn, onNuevoUsuario) => {
     const user = res.user;
 
     const { db, doc, getDoc } = await loadFirebaseDb();
-    const docRef  = doc(db, 'smiles', user.uid);
+    const docRef  = doc(db, getColeccionUsuarios(), user.uid);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
       // ✅ Usuario recurrente: Entra directo sin fricción
-      entrar(docSnap.data());
+      const recordar = document.getElementById('checkRecordarSesion')?.checked ?? true;
+      entrar(docSnap.data(), recordar);
     } else {
       // 🚀 Usuario nuevo: Guardar referencia y solicitar que elija @usuario y acepte términos
       pendingGoogleUser = user;
@@ -233,20 +246,20 @@ export const completarRegistroGoogle = async (btn) => {
     const usernameLimpio = userInput.toLowerCase().replace(/[^a-z0-9_-]/g, '');
 
     // Comprobar unicidad de username
-    const q = query(collection(db, 'smiles'), where('usuario', '==', usernameLimpio), limit(1));
+    const q = query(collection(db, getColeccionUsuarios()), where('usuario', '==', usernameLimpio), limit(1));
     const snap = await getDocs(q);
     if (!snap.empty && snap.docs[0].id !== user.uid) {
       wiTip(userEl, txt.tip_user_exists, 'error', 2500);
       return;
     }
 
-    const docRef = doc(db, 'smiles', user.uid);
-    const imgEmail = 'https://imgwii.web.app/smile.avif';
+    const docRef = doc(db, getColeccionUsuarios(), user.uid);
+    const imgEmail = getAvatarDefault();
     const { avatar: calcIniciales } = await import('../../../core/widev/nombre.js');
     const iniciales = calcIniciales(user.displayName || usernameLimpio);
 
     const partes = (user.displayName || '').trim().split(/\s+/);
-    const nombre = partes[0] || 'Vecino Solgas';
+    const nombre = partes[0] || 'Usuario';
     const apellidos = partes.slice(1).join(' ');
 
     const profile = {

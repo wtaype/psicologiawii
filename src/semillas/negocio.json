@@ -1,0 +1,222 @@
+{
+  "id": "principal",
+  "principal": true,
+  "userId": "",
+  "creado": null,
+  "actualizado": null,
+  "moneda": "PEN",
+  "langPrincipal": "es",
+  "langs": ["es", "en"],
+
+  "identidad": {
+    "nombre": {
+      "es": "Consultorio Psicológico América",
+      "en": "America Psychological Clinic"
+    },
+    "nombreCorto": {
+      "es": "Psicología América",
+      "en": "America Psychology"
+    },
+    "especialista": "Lic. Sofia Reynaga Pachas",
+    "colegiatura": "49425",
+    "titulo": {
+      "es": "Licenciada en Psicología",
+      "en": "Licensed Psychologist"
+    },
+    "grado": {
+      "es": "Maestrista en Psicología Clínica",
+      "en": "Master's in Clinical Psychology"
+    },
+    "enfoques": {
+      "es": "Terapia Cognitivo-Conductual (TCC) • Terapia Contextual (ACT) • Sistémica • Humanista",
+      "en": "Cognitive Behavioral Therapy (CBT) • Acceptance and Commitment Therapy (ACT) • Systemic"
+    },
+    "bio": {
+      "es": "Psicóloga clínica y colegiada por el Colegio de Psicólogos del Perú (C.Ps.P. 49425), con maestría en Psicología Clínica y formación internacional en la Universidad de São Paulo (USP).",
+      "en": "Clinical psychologist licensed by the College of Psychologists of Peru (C.Ps.P. 49425), with a Master's degree in Clinical Psychology and international training at Universidade de São Paulo (USP)."
+    },
+    "lanzamientoFecha": "2020-03-15",
+    "logo": "/imgwii/logo.webp",
+    "logoFull": "/imgwii/logo_full.webp",
+    "imagenSede": "/imgwii/hero/psicologa-sofia-reynaga.webp"
+  },
+
+  "contacto": {
+    "celular": "+51 960 332 958",
+    "celularSecundario": "+51 960 332 958",
+    "telefonoFijo": "",
+    "whatsapp": "51960332958",
+    "email": "reynaga.psychologist@gmail.com",
+    "horario": {
+      "es": "Lunes a Sábado: 8:00 a.m. a 8:00 p.m. (Previa Cita)",
+      "en": "Monday to Saturday: 8:00 a.m. to 8:00 p.m. (By Appointment)"
+    }
+  },
+
+  "horarios": {
+    "semana": { "abre": "08:00", "cierra": "20:00" },
+    "sabado": { "abre": "08:00", "cierra": "20:00" }
+  },
+
+  "ubicacion": {
+    "direccion": "Av. 3 de Octubre con Micaela Bastidas - RUTA B / Sector 3, Grupo 26, Lote comercial 7",
+    "referencia": "Frente a Paradero 3 de Octubre",
+    "distrito": "Villa El Salvador",
+    "ciudad": "Lima",
+    "pais": "PE",
+    "codigoPostal": "15834",
+    "mapsUrl": "https://maps.app.goo.gl/g7MFEUi8B6xpSjpn8",
+    "coordenadas": {
+      "lat": -12.2084,
+      "lng": -76.9387
+    }
+  },
+
+  "sedes": [
+    {
+      "id": "lima",
+      "nombre": {
+        "es": "Consultorio Presencial en Lima",
+        "en": "In-Person Clinic in Lima"
+      },
+      "distrito": "Lima",
+      "modalidad": "Presencial",
+      "direccion": "Av. 3 de Octubre con Micaela Bastidas - RUTA B (Sede Principal Lima)",
+      "referencia": "Frente a Paradero 3 de Octubre",
+      "atencion": {
+        "es": "Lunes a Sábado: 8:00 a.m. a 8:00 p.m. (Previa Cita)",
+        "en": "Monday to Saturday: 8:00 a.m. to 8:00 p.m. (By Appointment)"
+      },
+      "mapsUrl": "https://maps.app.goo.gl/g7MFEUi8B6xpSjpn8",
+      "coordenadas": { "lat": -12.2084, "lng": -76.9387 },
+      "tag": {
+        "es": "Sede Presencial Lima",
+        "en": "In-Person Lima Clinic"
+      },
+      "activo": true
+    },
+    {
+      "id": "online",
+      "nombre": {
+        "es": "Atención Psicológica Online (Google Meet & Teams)",
+        "en": "Online Psychological Consultation (Google Meet & Teams)"
+      },
+      "distrito": "Online",
+      "modalidad": "Virtual",
+      "direccion": "Sesión Virtual HD vía Google Meet o Microsoft Teams",
+      "referencia": "Enlace privado y confidencial enviado tras confirmación de cita",
+      "atencion": {
+        "es": "Horarios Flexibles (Lunes a Sábado de 8:00 a.m. a 9:00 p.m.)",
+        "en": "Flexible Hours (Monday to Saturday 8:00 a.m. to 9:00 p.m.)"
+      },
+      "mapsUrl": "",
+      "coordenadas": { "lat": 0, "lng": 0 },
+      "tag": {
+        "es": "Google Meet & Teams",
+        "en": "Google Meet & Teams"
+      },
+      "activo": true
+    }
+  ],
+
+  "zonas": [
+    {
+      "id": "zona-online",
+      "distrito": "Terapia Online",
+      "tiempoMin": 0,
+      "tiempoMax": 2,
+      "unidad": "hrs",
+      "activo": true
+    },
+    {
+      "id": "zona-lima",
+      "distrito": "Lima Metropolitana",
+      "tiempoMin": 24,
+      "tiempoMax": 48,
+      "unidad": "hrs",
+      "activo": true
+    }
+  ],
+
+  "metricas": {
+    "pacientes": "+450",
+    "colegiatura": "49425",
+    "years": "+6 Años",
+    "confidencialidad": "100%",
+    "satisfaccion": "98%"
+  },
+
+  "hero": {
+    "titulo": {
+      "es": "¿Sientes que el estrés o la ansiedad te sobrepasan?",
+      "en": "Do you feel overwhelmed by stress or anxiety?"
+    },
+    "subtitulo": {
+      "es": "Un espacio clínico seguro, confidencial y sin juicios para comprender lo que sientes, recuperar la calma y construir herramientas prácticas basadas en evidencia científica con calidez humana.",
+      "en": "A safe, confidential and non-judgmental clinical space to understand what you feel, restore calm and build evidence-based practical tools with human warmth."
+    },
+    "badge": {
+      "es": "ESPACIO SEGURO Y CONFIDENCIAL",
+      "en": "SAFE & CONFIDENTIAL SPACE"
+    },
+    "imgHero": "/imgwii/Psychologist_listening_in_therapy.jpeg",
+    "driverTitulo": {
+      "es": "Primera Consulta y Evaluación",
+      "en": "First Consultation & Clinical Assessment"
+    },
+    "driverDesc": {
+      "es": "Sesión individual de 50 min presencial u online",
+      "en": "50 min individual session in-person or online"
+    },
+    "driverPrecio": 85.00
+  },
+
+  "redes": {
+    "whatsapp": "https://wa.me/51960332958",
+    "instagram": "https://instagram.com/psicologiaamerica",
+    "facebook": "https://facebook.com/psicologiaamerica",
+    "tiktok": "https://tiktok.com/@psicologiaamerica",
+    "linkedin": "https://linkedin.com/in/sofia-reynaga"
+  },
+
+  "seo": {
+    "titulo": {
+      "es": "Consultorio Psicología América en Lima y Online | Terapia para Ansiedad, Parejas y Evaluación",
+      "en": "Consultorio Psicología América in Lima & Online | Psychotherapy, Anxiety & Couples"
+    },
+    "descripcion": {
+      "es": "Consultorio Psicología América para tu atención con la Lic. Sofia Reynaga Pachas, egresada y colegiada C.Ps.P. 49425. Atención personalizada y especializada en Lima y Online para ansiedad, terapia de pareja y evaluación psicológica.",
+      "en": "Consultorio Psicología América for personalized clinical care with Lic. Sofia Reynaga Pachas, licensed C.Ps.P. 49425. Specialized attention in Lima and Online for anxiety, couples therapy and psychological assessment."
+    },
+    "keywords": {
+      "es": [
+        "consultorio psicologia america",
+        "psicologo en lima",
+        "psicologia online peru",
+        "consultorio psicologico lima",
+        "terapia psicologica online",
+        "terapia de pareja lima",
+        "psicologo para ansiedad lima",
+        "evaluacion psicologica clinica",
+        "lic sofia reynaga",
+        "cpsp 49425"
+      ],
+      "en": [
+        "consultorio psicologia america",
+        "psychologist in lima peru",
+        "online therapy peru",
+        "couples therapy lima",
+        "psychotherapy for anxiety lima",
+        "clinical psychologist lima"
+      ]
+    },
+    "imagen": {
+      "url": "/imgwii/Sofia.jpg",
+      "width": 1200,
+      "height": 630,
+      "type": "image/jpeg",
+      "alt": "Consultorio Psicología América - Lic. Sofía Reynaga en Lima y Online",
+      "caption": "Atención psicológica profesional en Lima y sesiones virtuales"
+    }
+  }
+}

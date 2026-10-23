@@ -1,6 +1,6 @@
 ---
 // src/feature/personal/modulos/ajustes/Ajustes.astro
-// Módulo de Ajustes: Configuración Global & Centro de Backup JSON (Solgas Surquillo)
+// Módulo de Ajustes: Preferencias del Sistema, Selector de Temas, Seguridad IP & Diagnóstico
 // 100% JS Nativo · Integrado con @widev · 0 CSS Inline
 
 interface Props {
@@ -16,101 +16,195 @@ const { esActivo = false } = Astro.props;
   <div class="ps-section-header">
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">
-        <i class="fa-solid fa-gear sn-header-icon"></i>
-        Ajustes · Configuración Global del Negocio
+        <i class="fa-solid fa-sliders sn-header-icon"></i>
+        Ajustes · Preferencias del Sistema & Navegador
       </h1>
       <p class="ps-section-sub">
-        Control maestro del estado de la sede, tiempos promedio de despacho, sonido de alertas y centro de respaldo JSON.
+        Personalización visual de interfaz, alertas del navegador, auditoría de seguridad de sesión y diagnóstico técnico.
       </p>
     </div>
     <div class="ps-header-actions">
       <button type="button" class="ps-btn ps-btn-primary" id="btnAjGuardar">
-        <i class="fa-solid fa-floppy-disk"></i> Guardar Ajustes
+        <i class="fa-solid fa-floppy-disk"></i> Guardar Preferencias
       </button>
     </div>
   </div>
 
-  <!-- SWITCH MAESTRO DE ESTADO DE LA SEDE -->
-  <div class="aj-master-switch-box sn-mb-14">
-    <div class="aj-switch-meta">
-      <span class="aj-switch-label" id="ajLabelTienda">🟢 Sede Abierta (Recibiendo pedidos web y delivery)</span>
-      <span class="aj-switch-sub">Si desactivas este switch, se mostrará un banner informativo indicando que la atención está fuera de horario.</span>
-    </div>
-    <label class="aj-toggle-switch">
-      <input type="checkbox" id="ajSwitchTienda" checked />
-      <span class="aj-slider"></span>
-    </label>
-  </div>
-
-  <!-- GRID DE TARJETAS DE CONFIGURACIÓN -->
-  <div class="aj-grid">
+  <!-- CONTENEDOR DE TARJETAS EN 2 FILAS (2 ARRIBA, 3 ABAJO) -->
+  <div class="aj-layout">
     
-    <!-- TARJETA 1: PARÁMETROS OPERATIVOS DE DELIVERY -->
-    <div class="aj-card">
-      <h2 class="aj-card-title">
-        <i class="fa-solid fa-motorcycle sn-title-icon"></i> Parámetros de Entrega y Sede
-      </h2>
-
-      <div class="sn-form-group">
-        <label class="sn-label" for="ajInpEta">Tiempo Estimado de Entrega Promedio (ETA en min)</label>
-        <input type="text" id="ajInpEta" class="sn-input" value="12–15" />
-      </div>
-
-      <div class="sn-form-group">
-        <label class="sn-label" for="ajInpCostoDelivery">Costo de Envío / Delivery (S/)</label>
-        <input type="number" step="0.5" id="ajInpCostoDelivery" class="sn-input" value="0.00" />
-      </div>
-
-      <div class="sn-form-group">
-        <label class="sn-label" for="ajInpTelefono">Teléfono Central de Emergencias</label>
-        <input type="tel" id="ajInpTelefono" class="sn-input" value="936 369 384" />
-      </div>
-
-      <div class="sn-form-group">
-        <label class="sn-label" for="ajInpDireccion">Dirección Física de la Sede</label>
-        <input type="text" id="ajInpDireccion" class="sn-input" value="Jr. Dante 260, Surquillo, Lima 15047" />
-      </div>
-    </div>
-
-    <!-- TARJETA 2: PREFERENCIAS DEL SISTEMA Y ALERTAS -->
-    <div class="aj-card">
-      <h2 class="aj-card-title">
-        <i class="fa-solid fa-bell sn-title-icon"></i> Alertas y Notificaciones Web
-      </h2>
-
-      <div class="aj-option-row">
-        <div class="aj-switch-meta">
-          <span class="aj-switch-label">Sonido de Campana en Nuevos Pedidos</span>
-          <span class="aj-switch-sub">Reproduce un timbre de alerta cuando entra un pedido express.</span>
-        </div>
-        <label class="aj-toggle-switch">
-          <input type="checkbox" id="ajSwitchSonido" checked />
-          <span class="aj-slider"></span>
-        </label>
-      </div>
-
-      <div class="aj-option-row">
-        <div class="aj-switch-meta">
-          <span class="aj-switch-label">Notificaciones del Navegador (Web Push)</span>
-          <span class="aj-switch-sub">Muestra alertas flotantes en pantalla aunque la pestaña no esté activa.</span>
-        </div>
-        <label class="aj-toggle-switch">
-          <input type="checkbox" id="ajSwitchPush" checked />
-          <span class="aj-slider"></span>
-        </label>
-      </div>
-
-      <!-- SECCIÓN DE BACKUP JSON COMPLETO -->
-      <div class="aj-backup-box sn-mt-14">
-        <i class="fa-solid fa-database aj-backup-icon"></i>
-        <h3 class="aj-backup-title">Copia de Seguridad del Sistema (JSON)</h3>
-        <p class="aj-backup-sub">
-          Descarga un archivo con todos los comprobantes emitidos, cartera de clientes, conductores y ajustes de la tienda en 1 clic.
+    <!-- FILA SUPERIOR: 2 CARDS -->
+    <div class="aj-row-top">
+      
+      <!-- TARJETA 1: APARIENCIA & SELECTOR DE TEMAS -->
+      <div class="aj-card">
+        <h2 class="aj-card-title">
+          <i class="fa-solid fa-palette sn-title-icon"></i> Apariencia & Selector de Temas
+        </h2>
+        <p class="aj-switch-sub">
+          Selecciona la apariencia visual que mejor se adapte a tu jornada de trabajo. El cambio se aplica en tiempo real sin recargar la página.
         </p>
-        <button type="button" class="aj-btn-download-json" id="btnAjBackupJson">
-          <i class="fa-solid fa-cloud-arrow-down"></i> Descargar Respaldo JSON
+
+        <div class="aj-theme-grid" id="ajThemeSelector">
+          <button type="button" class="aj-theme-card" data-tema="futuro">
+            <i class="fa-solid fa-moon aj-theme-icon"></i>
+            <span class="aj-theme-name">Futuro / Oscuro</span>
+            <span class="aj-theme-desc">Paleta nocturna profunda y descansada</span>
+          </button>
+
+          <button type="button" class="aj-theme-card" data-tema="luz">
+            <i class="fa-solid fa-sun aj-theme-icon"></i>
+            <span class="aj-theme-name">Luz / Claro</span>
+            <span class="aj-theme-desc">Modo diurno de alta claridad y contraste</span>
+          </button>
+
+          <button type="button" class="aj-theme-card" data-tema="sistema">
+            <i class="fa-solid fa-circle-half-stroke aj-theme-icon"></i>
+            <span class="aj-theme-name">Sistema / Auto</span>
+            <span class="aj-theme-desc">Sincroniza con la configuración de tu SO</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- TARJETA 2: ALERTAS Y NOTIFICACIONES WEB -->
+      <div class="aj-card">
+        <h2 class="aj-card-title">
+          <i class="fa-solid fa-bell sn-title-icon"></i> Alertas y Notificaciones Web
+        </h2>
+        <p class="aj-switch-sub">
+          Configura los canales de aviso sonoro y notificaciones push nativas del navegador para nuevos pedidos y consultas.
+        </p>
+
+        <div class="aj-option-row">
+          <div class="aj-switch-meta">
+            <span class="aj-switch-label">Sonido Acústico en Nuevos Pedidos</span>
+            <span class="aj-switch-sub">Reproduce una campana sutil cuando entra un nuevo pedido o mensaje.</span>
+          </div>
+          <label class="aj-toggle-switch">
+            <input type="checkbox" id="ajSwitchSonido" checked />
+            <span class="aj-slider"></span>
+          </label>
+        </div>
+
+        <div class="aj-option-row">
+          <div class="aj-switch-meta">
+            <span class="aj-switch-label">Notificaciones del Navegador (Web Push)</span>
+            <span class="aj-switch-sub">Muestra alertas flotantes en pantalla incluso si estás en otra pestaña.</span>
+          </div>
+          <label class="aj-toggle-switch">
+            <input type="checkbox" id="ajSwitchPush" checked />
+            <span class="aj-slider"></span>
+          </label>
+        </div>
+
+        <button type="button" class="aj-btn-test-notif" id="btnAjProbarNotif">
+          <i class="fa-solid fa-volume-high"></i> Probar Campana de Alerta
         </button>
       </div>
+
+    </div>
+
+    <!-- FILA INFERIOR: 3 CARDS -->
+    <div class="aj-row-bottom">
+      
+      <!-- TARJETA 3: SEGURIDAD & AUDITORÍA DE SESIÓN (IP PÚBLICA) -->
+      <div class="aj-card">
+        <h2 class="aj-card-title">
+          <i class="fa-solid fa-shield-halved sn-title-icon"></i> Seguridad & Sesión de Acceso
+        </h2>
+        <p class="aj-switch-sub">
+          Monitoreo de auditoría en vivo y verificación de IP del inicio de sesión actual para salvaguarda de tu cuenta.
+        </p>
+
+        <div class="aj-diag-list">
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-user-shield"></i> Usuario en Sesión</span>
+            <span class="aj-diag-val" id="ajSecUsuario">Detectando...</span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-network-wired"></i> IP Pública</span>
+            <span class="aj-badge-status aj-badge-ip" id="ajSecIp">
+              <i class="fa-solid fa-satellite-dish"></i> Consultando...
+            </span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-location-dot"></i> Ubicación</span>
+            <span class="aj-diag-val" id="ajSecUbicacion">Detectando...</span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-tower-broadcast"></i> Proveedor (ISP)</span>
+            <span class="aj-diag-val" id="ajSecIsp">Detectando...</span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-lock"></i> Protocolo SSL</span>
+            <span class="aj-badge-status aj-badge-online">
+              <i class="fa-solid fa-shield-check"></i> Cifrado TLS 1.3
+            </span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-clock-rotate-left"></i> Inicio de Sesión</span>
+            <span class="aj-diag-val" id="ajSecFecha">Sesión Activa</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TARJETA 4: DIAGNÓSTICO DEL SISTEMA Y NAVEGADOR (VISUAL / SOLO LECTURA) -->
+      <div class="aj-card">
+        <h2 class="aj-card-title">
+          <i class="fa-solid fa-desktop sn-title-icon"></i> Diagnóstico del Sistema & Navegador
+        </h2>
+        <p class="aj-switch-sub">
+          Parámetros técnicos de ejecución y compatibilidad en este dispositivo (solo lectura).
+        </p>
+
+        <div class="aj-diag-list">
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-compass"></i> Navegador</span>
+            <span class="aj-diag-val" id="ajDiagNavegador">Detectando...</span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-laptop"></i> Plataforma / SO</span>
+            <span class="aj-diag-val" id="ajDiagSO">Detectando...</span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-wifi"></i> Conexión a Internet</span>
+            <span class="aj-badge-status aj-badge-online" id="ajDiagConexion">
+              <i class="fa-solid fa-circle"></i> En línea
+            </span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-bolt"></i> Arquitectura</span>
+            <span class="aj-badge-status aj-badge-tech">Local-First (0ms Latencia)</span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-hard-drive"></i> Caché Local</span>
+            <span class="aj-diag-val" id="ajDiagCache">LocalStorage Activo</span>
+          </div>
+          <div class="aj-diag-row">
+            <span class="aj-diag-label"><i class="fa-solid fa-code-branch"></i> Versión del Núcleo</span>
+            <span class="aj-diag-val">Gaswii Suite v2.4</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TARJETA 5: COPIA DE SEGURIDAD DEL SISTEMA (JSON) -->
+      <div class="aj-card">
+        <h2 class="aj-card-title">
+          <i class="fa-solid fa-database sn-title-icon"></i> Copia de Seguridad del Sistema
+        </h2>
+
+        <div class="aj-backup-box">
+          <i class="fa-solid fa-cloud-arrow-down aj-backup-icon"></i>
+          <h3 class="aj-backup-title">Respaldo Universal JSON</h3>
+          <p class="aj-backup-sub">
+            Exporta todos tus datos de configuración, productos, clientes y comprobantes en un archivo JSON descargable. Descarga segura y no invasiva.
+          </p>
+          <button type="button" class="aj-btn-download-json" id="btnAjBackupJson">
+            <i class="fa-solid fa-file-arrow-down"></i> Descargar Respaldo JSON
+          </button>
+        </div>
+      </div>
+
     </div>
 
   </div>

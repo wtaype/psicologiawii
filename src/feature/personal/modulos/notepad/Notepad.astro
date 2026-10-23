@@ -13,7 +13,7 @@ const { esActivo = false } = Astro.props;
   <div class="ps-section-header">
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">Notepad de Gestión</h1>
-      <p class="ps-section-sub">Espacio amplio de anotaciones, bitácora de planta, acuerdos comerciales y recordatorios con sincronización en segundo plano.</p>
+      <p class="ps-section-sub">Espacio ágil de apuntes, notas operativas, acuerdos con clientes y recordatorios con sincronización en segundo plano.</p>
     </div>
     <div class="ps-header-actions">
       <button class="ps-btn ps-btn-secondary" id="btnNewNoteCanvas">
@@ -36,10 +36,10 @@ const { esActivo = false } = Astro.props;
         <div class="ps-tag-pill-group" id="tagPillGroup">
           <span class="ps-tag-pill active" data-tag="Nota"><i class="fa-solid fa-note-sticky"></i> Nota</span>
           <span class="ps-tag-pill" data-tag="Urgente"><i class="fa-solid fa-circle-exclamation"></i> Urgente</span>
-          <span class="ps-tag-pill" data-tag="Planta"><i class="fa-solid fa-industry"></i> Planta</span>
-          <span class="ps-tag-pill" data-tag="Pedidos"><i class="fa-solid fa-truck"></i> Pedidos</span>
+          <span class="ps-tag-pill" data-tag="SUNAT"><i class="fa-solid fa-file-invoice-dollar"></i> SUNAT</span>
+          <span class="ps-tag-pill" data-tag="Clientes"><i class="fa-solid fa-address-book"></i> Clientes</span>
+          <span class="ps-tag-pill" data-tag="Planillas"><i class="fa-solid fa-users-gear"></i> Planillas</span>
           <span class="ps-tag-pill" data-tag="Ideas"><i class="fa-solid fa-lightbulb"></i> Ideas</span>
-          <span class="ps-tag-pill" data-tag="SUNAT"><i class="fa-solid fa-file-invoice"></i> SUNAT</span>
         </div>
 
         <div style="display:flex; align-items:center; gap:12px;">
@@ -61,7 +61,7 @@ const { esActivo = false } = Astro.props;
       <textarea 
         id="notepadContent" 
         class="np-textarea notas-textarea" 
-        placeholder="Comienza a redactar aquí… Anota compromisos con clientes, pedidos especiales de balones 45kg, calibraciones de balanza Inacal o recordatorios de compras."
+        placeholder="Comienza a redactar aquí… Anota acuerdos con clientes, recordatorios diarios, notas operativas o pendientes."
       ></textarea>
 
       <div class="np-toolbar">

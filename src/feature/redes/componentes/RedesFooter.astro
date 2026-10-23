@@ -1,0 +1,43 @@
+---
+// src/feature/redes/componentes/RedesFooter.astro
+// Pie de la tarjeta de redes con pill de atención y enlaces mínimos legales (0ms)
+import { configurarSistema } from '../../../negocio.js';
+
+interface Props {
+  idioma?: string;
+  rutaTerminos?: string;
+  rutaPrivacidad?: string;
+  rutaInicio?: string;
+}
+
+const { 
+  idioma = 'es',
+  rutaTerminos = (idioma === 'en' ? (configurarSistema?.rutas?.terminos ? `/en${configurarSistema.rutas.terminos}` : '/en/terminos') : (configurarSistema?.rutas?.terminos || '/terminos')),
+  rutaPrivacidad = (idioma === 'en' ? (configurarSistema?.rutas?.privacidad ? `/en${configurarSistema.rutas.privacidad}` : '/en/privacidad') : (configurarSistema?.rutas?.privacidad || '/privacidad')),
+  rutaInicio = (idioma === 'en' ? '/en' : (configurarSistema?.rutas?.inicio || '/'))
+} = Astro.props;
+const esEn = idioma === 'en';
+---
+
+<footer class="redes-footer">
+  <!-- Pill Promocional Discreto -->
+  <div class="redes-pill-promo">
+    <span class="promo-emoji">✨</span>
+    <span>{esEn ? 'Personalized & Professional Support' : 'Atención Personalizada y Puntual'}</span>
+  </div>
+
+  <!-- Enlaces Legales Mínimos -->
+  <ul class="redes-links-legales">
+    <li>
+      <a href={rutaTerminos}>{esEn ? 'Terms' : 'Términos'}</a>
+    </li>
+    <li class="redes-separador" aria-hidden="true">•</li>
+    <li>
+      <a href={rutaPrivacidad}>{esEn ? 'Privacy' : 'Privacidad'}</a>
+    </li>
+    <li class="redes-separador" aria-hidden="true">•</li>
+    <li>
+      <a href={rutaInicio}>{esEn ? 'Home' : 'Inicio'}</a>
+    </li>
+  </ul>
+</footer>

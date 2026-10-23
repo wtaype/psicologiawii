@@ -6,11 +6,13 @@ import { savels, getls } from '@widev';
 import { db } from '@core/servicios/firebase.js';
 import { collection, doc, setDoc, getDocs, query, orderBy, limit, serverTimestamp } from 'firebase/firestore';
 import { getUsuarioActivo } from '../negocio/dataNegocio.js';
+import { datosNegocio } from '../../../../negocio.js';
+import correosSemilla from '@/semillas/correos.json';
 
-export const STORAGE_KEY = 'gaswii_correos_historial';
-export const STORAGE_KEY_AJUSTES = 'gaswii_correo_ajustes';
-export const STORAGE_KEY_RECIBIDOS = 'gaswii_correos_recibidos';
-export const STORAGE_KEY_BORRADORES = 'gaswii_correos_borradores';
+export const STORAGE_KEY = 'wi_correos_historial';
+export const STORAGE_KEY_AJUSTES = 'wi_correo_ajustes';
+export const STORAGE_KEY_RECIBIDOS = 'wi_correos_recibidos';
+export const STORAGE_KEY_BORRADORES = 'wi_correos_borradores';
 export const COLECCION_CORREOS = 'correos';
 
 // Memoria volátil en sesión
@@ -20,12 +22,22 @@ let _memoriaCorreos = null;
  * Obtiene los ajustes predeterminados de correo
  */
 export function obtenerAjustesCorreo() {
-  const guardado = getls(STORAGE_KEY_AJUSTES);
+  const guardado = getls(STORAGE_KEY_AJUSTES) || getls('minegocio_correo_ajustes');
+  const negEmail = datosNegocio.email || '';
+  const negDominio = negEmail.includes('@') ? negEmail.split('@')[1] : '';
+
+  const emailGuardado = guardado?.remitenteEmail;
+  const remitenteValido = emailGuardado || negEmail;
+
+  const responderAGuardado = guardado?.responderA;
+  const responderAValido = responderAGuardado || negEmail;
+
   return {
-    remitenteNombre: guardado?.remitenteNombre || 'Solgas Surquillo',
-    remitenteEmail: guardado?.remitenteEmail || 'pedidos@solgassurquillo.com',
-    responderA: guardado?.responderA || 'pedidos@solgassurquillo.com',
-    dominio: 'solgassurquillo.com'
+    remitenteNombre: guardado?.remitenteNombre || datosNegocio.nombreCorto || datosNegocio.nombre || '',
+    remitenteEmail: remitenteValido,
+    responderA: responderAValido,
+    dominio: negDominio,
+    workerUrl: guardado?.workerUrl || import.meta.env.PUBLIC_CORREO_WORKER || ''
   };
 }
 
@@ -81,16 +93,14 @@ export function limpiarEmail(str = '') {
  * "Nombre Remitente <email@dominio.com>"
  */
 export function formatearRemitente(nombre = '', email = '') {
-  const emailPuro = limpiarEmail(email) || 'pedidos@solgassurquillo.com';
-  const nombrePuro = (nombre || 'Solgas Surquillo').replace(/[<>]/g, '').trim();
+  let emailPuro = limpiarEmail(email);
+  if (!emailPuro) {
+    emailPuro = datosNegocio.contacto?.email || datosNegocio.email || '';
+  }
+  const nombreFallback = datosNegocio.nombreCorto || datosNegocio.nombre || '';
+  const nombrePuro = (nombre || nombreFallback).replace(/[<>]/g, '').trim();
 
-  // Asegurar que el dominio de salida coincida con el dominio autenticado
-  const dominioValido = 'solgassurquillo.com';
-  const emailFinal = emailPuro.toLowerCase().endsWith(`@${dominioValido}`)
-    ? emailPuro
-    : 'pedidos@solgassurquillo.com';
-
-  return `${nombrePuro} <${emailFinal}>`;
+  return `${nombrePuro} <${emailPuro}>`.trim();
 }
 
 /**
@@ -123,7 +133,7 @@ export function guardarCorreoLocal(correo) {
   savels(STORAGE_KEY, nuevoHistorial);
 
   if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('gaswii:correo-enviado', { detail: correo }));
+    window.dispatchEvent(new CustomEvent('wi:correo-enviado', { detail: correo }));
   }
 }
 
@@ -144,8 +154,11 @@ export async function enviarCorreo({
   responderA = ''
 } = {}) {
   const apiKey = getResendApiKey();
-  if (!apiKey) {
-    throw new Error('Falta la clave RESEND_API_KEY en las variables de entorno.');
+  const ajustes = obtenerAjustesCorreo();
+  const endpoint = ajustes.workerUrl || import.meta.env.PUBLIC_CORREO_WORKER || '';
+
+  if (!apiKey && !endpoint) {
+    throw new Error('Falta configurar RESEND_API_KEY o PUBLIC_CORREO_WORKER en las variables de entorno.');
   }
 
   if (!para) {
@@ -156,14 +169,13 @@ export async function enviarCorreo({
     throw new Error('El asunto del correo no puede estar vacío.');
   }
 
-  const ajustes = obtenerAjustesCorreo();
   const remitenteFinal = desde 
     ? (desde.includes('<') ? desde : `${ajustes.remitenteNombre} <${limpiarEmail(desde)}>`)
     : formatearRemitente(ajustes.remitenteNombre, ajustes.remitenteEmail);
 
   const responderAFinal = responderA 
     ? limpiarEmail(responderA) 
-    : (limpiarEmail(ajustes.responderA) || 'pedidos@solgassurquillo.com');
+    : (limpiarEmail(ajustes.responderA) || datosNegocio.email || '');
 
   // Limpiar y asegurar formato de los destinatarios
   const rawDestinatarios = Array.isArray(para)
@@ -207,14 +219,15 @@ export async function enviarCorreo({
 
   let respuestaResend = null;
   try {
-    // Conexión directa al Microservicio Autónomo de Cloudflare Worker
-    // Maneja CORS, llamadas seguras a Resend y es reutilizable para cualquier negocio
-    const endpoint = 'https://gaswii-correo.lourdesinformatica10.workers.dev/enviar';
+    const endpoint = ajustes.workerUrl || import.meta.env.PUBLIC_CORREO_WORKER || '';
+    if (!endpoint) {
+      throw new Error('Falta configurar la variable PUBLIC_CORREO_WORKER en las variables de entorno (.env).');
+    }
 
     const res = await fetch(endpoint, {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
+        ...(apiKey ? { 'Authorization': `Bearer ${apiKey}` } : {}),
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(payloadResend)
@@ -226,8 +239,6 @@ export async function enviarCorreo({
       let errorMsg = respuestaResend?.message || `Error en Resend HTTP ${res.status}`;
       if (errorMsg.includes('Invalid `from` field') || errorMsg.includes('Invalid `to` field')) {
         errorMsg = 'Formato de remitente o destinatario no válido. Se espera un correo limpio.';
-      } else if (errorMsg.includes('not verified')) {
-        errorMsg = 'El dominio de envío debe ser solgassurquillo.com (verificado en Resend).';
       }
       throw new Error(errorMsg);
     }
@@ -265,14 +276,14 @@ export async function enviarCorreo({
       pedidoId: pedidoId || '',
       clienteId: clienteId || ''
     },
-    autor: usuario.autor || 'Personal Solgas',
+    autor: usuario.autor || datosNegocio.identidad?.especialista || datosNegocio.identidad?.nombre || 'Administrador',
     userId: usuario.userId || '',
     email: usuario.email || '',
     fecha: formatearFechaLegible(ahora),
     creado: serverTimestamp()
   };
 
-  // 3. Guardar en caché local inmediatamente (0ms UI feedback)
+  // 3. Guardar en caché local inmediatamente
   guardarCorreoLocal({
     ...registroCorreo,
     creado: timestamp
@@ -321,59 +332,34 @@ export async function sincronizarCorreosDesdeFirestore() {
       return remotos;
     }
   } catch (err) {
-    console.warn('[dataCorreo] Error al leer historial de Firestore:', err?.message || err);
+    if (!err?.message?.includes('permission') && !err?.code?.includes('permission')) {
+      console.warn('[dataCorreo] Error al leer historial de Firestore:', err?.message || err);
+    }
   }
 
   return obtenerCorreos();
 }
 
-const RECIBIDOS_DEMO = [
-  {
-    id: 'rec_101',
-    carpeta: 'recibidos',
-    estado: 'recibido',
-    leido: false,
-    destinatario: { para: 'pedidos@solgassurquillo.com', nombre: 'Solgas Surquillo' },
-    remitente: { desde: 'Valeria Mendoza <valeria.mendoza@gmail.com>', responderA: 'valeria.mendoza@gmail.com' },
-    mensaje: {
-      asunto: '🔥 Consulta: Balón de 10kg con válvula click-on para Surquillo',
-      tipo: 'pedido',
-      resumen: 'Buenas tardes, quisiera saber si tienen disponible el balón de 10kg con válvula click-on para entrega en Jr. Dante hoy...',
-      html: '<div style="font-family: sans-serif; padding: 20px; line-height: 1.6; color: #1e293b;"><h2 style="color: #ff6a00; margin-top: 0;">Consulta de Balón 10kg - Surquillo</h2><p>Buenas tardes Solgas Surquillo,</p><p>He visto en su página web que ofrecen entrega en 15-20 minutos con verificación de balanza digital.</p><p>Quisiera confirmar si tienen stock del <strong>Balón SOLGAS Premium 10 kg con válvula Click-On (S/ 65.00)</strong> para despachar hoy a las 5:00 p.m. a <strong>Jr. Dante 260, Dpto 301, Surquillo</strong>.</p><p>Pagaría con Yape contra entrega. Quedo atenta a su confirmación.</p><p>Saludos cordiales,<br/><strong>Valeria Mendoza</strong><br/>📱 987 654 321</p></div>'
-    },
-    fecha: 'Hoy, 02:45 p. m.'
-  },
-  {
-    id: 'rec_102',
-    carpeta: 'recibidos',
-    estado: 'recibido',
-    leido: false,
-    destinatario: { para: 'pedidos@solgassurquillo.com', nombre: 'Solgas Surquillo' },
-    remitente: { desde: 'Restaurante El Rincón Criollo <administracion@rinconcriollo.pe>', responderA: 'administracion@rinconcriollo.pe' },
-    mensaje: {
-      asunto: '📄 Solicitud de Factura Electrónica por 2x Balones 45kg',
-      tipo: 'comprobante',
-      resumen: 'Estimados, adjuntamos datos de nuestra empresa para la emisión de la factura de los 2 balones industriales de 45kg...',
-      html: '<div style="font-family: sans-serif; padding: 20px; line-height: 1.6; color: #1e293b;"><h2 style="color: #ff6a00; margin-top: 0;">Solicitud de Factura Comercial</h2><p>Estimados amigos de Solgas Surquillo,</p><p>Por favor emitir la factura correspondiente al suministro de gas de esta semana:</p><ul><li><strong>Razón Social:</strong> Inversiones Gastronómicas El Rincón Criollo S.A.C.</li><li><strong>RUC:</strong> 20554897123</li><li><strong>Dirección:</strong> Av. Angamos Este 1240, Surquillo</li><li><strong>Pedido:</strong> 2x Balones Solgas 45 kg (Total S/ 460.00)</li></ul><p>Enviar el PDF y XML a este correo para el área contable. Muchas gracias.</p><p>Atentamente,<br/><strong>Gerencia de Operaciones</strong></p></div>'
-    },
-    fecha: 'Ayer, 06:10 p. m.'
-  },
-  {
-    id: 'rec_103',
-    carpeta: 'recibidos',
-    estado: 'recibido',
-    leido: true,
-    destinatario: { para: 'pedidos@solgassurquillo.com', nombre: 'Solgas Surquillo' },
-    remitente: { desde: 'OSINERGMIN Notificaciones <notificaciones@osinergmin.gob.pe>', responderA: 'notificaciones@osinergmin.gob.pe' },
-    mensaje: {
-      asunto: '🛡️ Certificación de Distribuidor Autorizado Reg. 208492 Conforme',
-      tipo: 'general',
-      resumen: 'Notificación oficial de cumplimiento de estándares de seguridad y balanza calibrada para el local de Jr. Dante 260...',
-      html: '<div style="font-family: sans-serif; padding: 20px; line-height: 1.6; color: #1e293b;"><h2 style="color: #0284c7; margin-top: 0;">Notificación Oficial OSINERGMIN</h2><p>Estimado Distribuidor Autorizado Solgas (Reg. 208492),</p><p>Se deja constancia del registro conforme de la inspección técnica realizada en el local de <strong>Jr. Dante 260, Surquillo</strong>.</p><p>Se verificó el cumplimiento de las condiciones de seguridad en cilindros de GLP, precintos termocontraíbles inviolables y control de pesaje digital.</p><p>Atentamente,<br/><strong>Organismo Supervisor de la Inversión en Energía y Minería (OSINERGMIN)</strong></p></div>'
-    },
-    fecha: '23 Sep, 11:20 a. m.'
-  }
-];
+const RECIBIDOS_DEMO = Array.isArray(correosSemilla?.recibidos) && correosSemilla.recibidos.length > 0
+  ? correosSemilla.recibidos
+  : [];
+
+/**
+ * Obtiene las plantillas configuradas para el negocio
+ */
+export function obtenerPlantillasDisponibles() {
+  return Array.isArray(correosSemilla?.plantillas) ? correosSemilla.plantillas : [];
+}
+
+/**
+ * Obtiene el encabezado y subtítulo del módulo de correos
+ */
+export function obtenerMetadatosCorreo() {
+  return {
+    titulo: correosSemilla?.titulo || 'Centro de Correo & Notificaciones',
+    subtitulo: correosSemilla?.subtitulo || 'Gestor oficial institucional de notificaciones, comprobantes y plantillas.'
+  };
+}
 
 /**
  * Obtiene la lista de correos recibidos (inbox)
@@ -459,4 +445,3 @@ export function eliminarCorreoPorCarpeta(id, carpeta = 'enviados') {
   savels(STORAGE_KEY, filtrados);
   return filtrados;
 }
-

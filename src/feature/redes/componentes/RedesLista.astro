@@ -1,0 +1,142 @@
+---
+// src/feature/redes/componentes/RedesLista.astro
+// Contenedor inteligente de botones de canales oficiales (0ms de latencia)
+// 100% Desacoplado: Orden y canales desde configurar.js + Firestore vivo
+import RedesCard from './RedesCard.astro';
+import { datosNegocio, getCanalesRedes } from '../../../negocio.js';
+
+interface Props {
+  idioma?: string;
+  negocioOverride?: any;
+  redesOverride?: any;
+}
+
+const { idioma = 'es', negocioOverride = null, redesOverride = null } = Astro.props;
+const esEn = idioma === 'en';
+
+const negocioActivo = negocioOverride || datosNegocio;
+const redes = redesOverride || negocioActivo.redes || {};
+const wsNumero = negocioActivo.whatsappLimpio || negocioActivo.whatsapp || '';
+const wsMensaje = negocioActivo.getWhatsappMensaje 
+  ? negocioActivo.getWhatsappMensaje(idioma) 
+  : (negocioActivo.whatsappMensaje || '¡Hola! Te contacto desde tu página oficial.');
+const webUrl = redes.web || redes.webOficial || '/';
+
+function normalizarUrlRed(urlOrHandle = '', tipo = '') {
+  if (!urlOrHandle || typeof urlOrHandle !== 'string') return '';
+  const val = urlOrHandle.trim();
+  if (!val) return '';
+  if (val.startsWith('http://') || val.startsWith('https://')) return val;
+
+  const handle = val.replace(/^[@/]+/, '');
+  switch (tipo) {
+    case 'youtube': return `https://youtube.com/@${handle}`;
+    case 'facebook': return `https://facebook.com/${handle}`;
+    case 'instagram': return `https://instagram.com/${handle}`;
+    case 'tiktok': return `https://tiktok.com/@${handle}`;
+    case 'linkedin': return `https://linkedin.com/in/${handle}`;
+    case 'twitter': return `https://x.com/${handle}`;
+    case 'web': return `https://${handle}`;
+    default: return val;
+  }
+}
+
+function resolverUrl(id) {
+  switch (id) {
+    case 'whatsapp':
+      return redes.canalWhatsapp || (wsNumero ? `https://wa.me/${wsNumero}?text=${encodeURIComponent(wsMensaje)}` : '');
+    case 'web':
+      return webUrl && webUrl !== '/' ? (webUrl.startsWith('http') ? webUrl : `https://${webUrl}`) : (esEn ? '/en' : '/');
+    case 'linkedin':
+      return normalizarUrlRed(redes.linkedin || redes.linkedinUser, 'linkedin');
+    case 'facebook':
+      return normalizarUrlRed(redes.facebook || redes.facebookUser, 'facebook');
+    case 'instagram':
+      return normalizarUrlRed(redes.instagram || redes.instagramUser, 'instagram');
+    case 'tiktok':
+      return normalizarUrlRed(redes.tiktok || redes.tiktokUser, 'tiktok');
+    case 'youtube':
+      return normalizarUrlRed(redes.youtube || redes.youtubeUser, 'youtube');
+    case 'twitter':
+      return normalizarUrlRed(redes.twitter || redes.twitterUser, 'twitter');
+    default:
+      return normalizarUrlRed(redes[id], id);
+  }
+}
+
+const subtitulos = {
+  whatsapp: esEn ? 'Direct assistance & inquiries' : 'Atención directa y consultas',
+  linkedin: esEn ? 'Professional career & profile' : 'Trayectoria y perfil profesional',
+  web: esEn ? 'Official corporate portal' : 'Portal corporativo y sedes',
+  facebook: esEn ? 'Official page & community' : 'Página oficial y comunidad',
+  instagram: esEn ? 'Stories, photos & updates' : 'Historias, fotos y actualidad',
+  tiktok: esEn ? 'Short videos & insights' : 'Videos informativos y tips',
+  youtube: esEn ? 'Content channel & tutorials' : 'Canal de contenido y tutoriales',
+  twitter: esEn ? 'Announcements & updates' : 'Comunicados y noticias'
+};
+
+const badgesEn = {
+  Directo: 'Direct',
+  Profesional: 'Career',
+  'Portal Web': 'Web Portal',
+  Página: 'Page',
+  Social: 'Social',
+  Videos: 'Videos',
+  Canal: 'Channel',
+  Noticias: 'News',
+  Oficial: 'Official'
+};
+
+// 1. Obtener canales maestros configurados en configurar.js
+const canalesMaestros = getCanalesRedes();
+
+// 2. Resolver URLs y visibilidad Smart Render
+const listaCanales = canalesMaestros.map(c => {
+  const href = resolverUrl(c.id);
+  const esWebInterna = c.id === 'web' && (href === '/' || href === '/en' || href === '/en/');
+  const tieneContenido = Boolean(href && (!esWebInterna || redes.web));
+
+  return {
+    id: c.id,
+    icono: c.icono,
+    titulo: c.nombre,
+    subtitulo: subtitulos[c.id] || (esEn ? 'Official channel' : 'Canal oficial'),
+    badge: esEn ? (badgesEn[c.badge] || c.badge) : c.badge,
+    href: href || '#',
+    target: (c.id === 'web' && esWebInterna) ? '_self' : '_blank',
+    dataNegocioWs: c.id === 'whatsapp' && !redes.canalWhatsapp && Boolean(wsNumero),
+    mostrar: tieneContenido
+  };
+});
+
+// 3. Respetar orden de Backoffice (si el dueño lo modificó) o mantener el orden de configurar.js
+const ordenCustom = Array.isArray(negocioActivo.redesOrden) && negocioActivo.redesOrden.length > 0
+  ? negocioActivo.redesOrden
+  : [];
+
+let canalesOrdenados = [...listaCanales];
+if (ordenCustom.length > 0) {
+  const ordenFinal = ['whatsapp', ...ordenCustom.filter(id => id !== 'whatsapp')];
+  canalesOrdenados.sort((a, b) => {
+    const idxA = ordenFinal.indexOf(a.id);
+    const idxB = ordenFinal.indexOf(b.id);
+    return (idxA === -1 ? 999 : idxA) - (idxB === -1 ? 999 : idxB);
+  });
+}
+---
+
+<div class="redes-lista" role="navigation" aria-label={esEn ? 'Official links' : 'Enlaces oficiales'}>
+  {canalesOrdenados.map((canal) => (
+    <RedesCard
+      href={canal.href}
+      redId={canal.id}
+      icono={canal.icono}
+      titulo={canal.titulo}
+      subtitulo={canal.subtitulo}
+      badge={canal.badge}
+      target={canal.target}
+      dataNegocioWs={canal.dataNegocioWs}
+      style={canal.mostrar ? undefined : "display: none;"}
+    />
+  ))}
+</div>

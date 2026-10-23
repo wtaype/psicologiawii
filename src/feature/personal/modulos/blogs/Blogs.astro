@@ -1,0 +1,417 @@
+---
+// src/feature/personal/modulos/blogs/Blogs.astro
+// Módulo Oficial de Blogs en Personal Backoffice
+// Redactor Amplio por Defecto + Tab de Publicaciones
+import { datosNegocio } from '@/negocio.js';
+import blogCss from '../../../blog/blog.css?inline';
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = true } = Astro.props;
+---
+
+<!-- Inyección de estilos de lectura del Feature Blog para Vista Previa 100% fiel -->
+<style is:global set:html={blogCss}></style>
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-blogs">
+  <div class="bl-admin-shell">
+    
+    <!-- 1. BARRA SUPERIOR DE PESTAÑAS (REDACTOR POR DEFECTO) -->
+    <div class="bl-main-tabs-bar">
+      <div class="bl-tabs-nav">
+        <button type="button" class="bl-tab-btn active" id="blBtnTabRedactor">
+          <i class="fa-solid fa-file-pen"></i> Redactor de Publicación
+        </button>
+        <button type="button" class="bl-tab-btn" id="blBtnTabPublicaciones">
+          <i class="fa-solid fa-table-list"></i> Publicaciones
+        </button>
+      </div>
+
+      <div class="bl-tabs-actions" id="blTabsActions">
+        <button type="submit" form="blFormEditor" class="bl-btn-submit" id="blBtnSubmitPost">
+          <i class="fa-solid fa-paper-plane"></i> Publicar
+        </button>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- 2. PESTAÑA 1: REDACTOR DE CONTENIDO (ACTIVO POR DEFECTO)   -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div id="blViewRedactor" style="display: block;">
+      <form id="blFormEditor" autocomplete="off">
+        <input type="hidden" id="blInputId" value="" />
+
+        <div class="bl-editor-layout">
+          
+          <!-- COLUMNA PRINCIPAL DE REDACCIÓN (70%) -->
+          <div class="bl-editor-col-main">
+            
+            <!-- Título y Slug -->
+            <div class="bl-card">
+              <div class="bl-card-title">
+                <span><i class="fa-solid fa-heading"></i> Título del Artículo (H1 SEO)</span>
+                <span class="bl-counter-badge" id="blCntTitulo">0/60</span>
+              </div>
+              <input 
+                type="text" 
+                id="blInputTitulo" 
+                class="bl-input bl-title-input" 
+                placeholder="Escribe un título que enganche... (Ej: ¿Cómo comprobar el peso exacto?)" 
+                maxlength="60" 
+                required 
+              />
+              
+              <div class="bl-slug-box">
+                <i class="fa-solid fa-link bl-slug-icon"></i>
+                <input 
+                  type="text" 
+                  id="blInputSlug" 
+                  class="bl-slug-input" 
+                  placeholder="slug-del-articulo (ej: como-comprobar-peso-exacto)" 
+                  spellcheck="false" 
+                  required 
+                />
+              </div>
+            </div>
+
+            <!-- Resumen y Palabras Clave (SEO) -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+              <div class="bl-card">
+                <div class="bl-card-title">
+                  <span><i class="fa-solid fa-align-left"></i> Resumen de Lectura</span>
+                  <span class="bl-counter-badge" id="blCntResumen">0/200</span>
+                </div>
+                <textarea 
+                  id="blInputResumen" 
+                  class="bl-textarea" 
+                  rows="3" 
+                  placeholder="Descripción breve para Google y redes sociales (100 a 200 caracteres)..." 
+                  maxlength="200"
+                ></textarea>
+              </div>
+
+              <div class="bl-card">
+                <div class="bl-card-title">
+                  <span><i class="fa-solid fa-key"></i> Palabras Clave (SEO)</span>
+                  <span class="bl-counter-badge" id="blCntKeywords">0/160</span>
+                </div>
+                <textarea 
+                  id="blInputKeywords" 
+                  class="bl-textarea" 
+                  rows="3" 
+                  placeholder="Keywords separadas por comas (Ej: calidad, servicio oficial, asesoría)..." 
+                  maxlength="160"
+                ></textarea>
+              </div>
+            </div>
+
+            <!-- Redactor Markdown y Vista Previa en Vivo -->
+            <div class="bl-card">
+              <div class="bl-subtabs-head">
+                <div class="bl-card-title" style="margin-bottom:0;">
+                  <span><i class="fa-solid fa-keyboard"></i> Contenido del Artículo</span>
+                </div>
+                <div class="bl-subtabs-nav">
+                  <button type="button" class="bl-subtab-btn active" id="blSubtabWrite">
+                    <i class="fa-solid fa-pen-nib"></i> Editor Markdown
+                  </button>
+                  <button type="button" class="bl-subtab-btn" id="blSubtabPreview">
+                    <i class="fa-solid fa-eye"></i> Vista Previa en Vivo
+                  </button>
+                </div>
+              </div>
+
+              <!-- Panel Escritura -->
+              <div id="blPanelWrite" style="display: block;">
+                <!-- Barra de Herramientas Markdown -->
+                <div class="bl-toolbar">
+                  <button type="button" class="bl-tool" data-cmd="bold" title="Negrita"><strong>B</strong></button>
+                  <button type="button" class="bl-tool" data-cmd="italic" title="Cursiva"><em>I</em></button>
+                  <div class="bl-tool-sep"></div>
+                  <button type="button" class="bl-tool" data-cmd="h2" title="Título H2">H2</button>
+                  <button type="button" class="bl-tool" data-cmd="h3" title="Subtítulo H3">H3</button>
+                  <div class="bl-tool-sep"></div>
+                  <button type="button" class="bl-tool" data-cmd="link" title="Enlace"><i class="fa-solid fa-link"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="quote" title="Cita"><i class="fa-solid fa-quote-left"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="code" title="Código"><i class="fa-solid fa-code"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="table" title="Tabla"><i class="fa-solid fa-table"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="image" title="Imagen"><i class="fa-solid fa-image"></i></button>
+                  <div class="bl-tool-sep"></div>
+                  <button type="button" class="bl-tool" data-cmd="note" title="Alerta Azul: Nota"><i class="fa-solid fa-circle-info" style="color:#0284c7;"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="tip" title="Alerta Verde: Consejo"><i class="fa-solid fa-lightbulb" style="color:#10b981;"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="warning" title="Alerta Naranja: Advertencia"><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i></button>
+                </div>
+
+                <textarea 
+                  id="blInputContenido" 
+                  class="bl-textarea bl-textarea-content" 
+                  placeholder="Escribe tu artículo en formato Markdown..." 
+                  required
+                ></textarea>
+
+                <div class="bl-editor-footer">
+                  <span id="blLivePalabras"><i class="fa-solid fa-font"></i> 0 palabras</span>
+                  <span id="blLiveLectura"><i class="fa-solid fa-clock"></i> 0 min de lectura</span>
+                </div>
+              </div>
+
+              <!-- Panel Vista Previa (Comparte estilos del feature blog con po_contenido) -->
+              <div id="blPanelPreview" style="display: none;">
+                <div class="bl-preview-box po_contenido" id="blPreviewBody">
+                  <p style="color:var(--muted); font-style:italic;">Escribe contenido en el editor para previsualizar aquí en tiempo real...</p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- COLUMNA LATERAL DE CONFIGURACIÓN Y METADATOS (30%) -->
+          <div class="bl-editor-col-side">
+            
+            <!-- 1. Botones de Acción Rápida: Cargar y Nuevo -->
+            <div class="bl-card bl-top-actions-card">
+              <div class="bl-actions-duo">
+                <button type="button" class="bl-btn-action" id="blBtnCargarMd" title="Cargar archivo Markdown (.md)">
+                  <i class="fa-solid fa-file-arrow-up"></i> Cargar
+                </button>
+                <button type="button" class="bl-btn-action" id="blBtnNuevoPost" title="Nuevo borrador / limpiar formulario">
+                  <i class="fa-solid fa-plus"></i> Nuevo
+                </button>
+                <input type="file" id="blInputFileMd" accept=".md,.markdown,.txt" style="display:none;" />
+              </div>
+            </div>
+
+            <!-- 2. Idioma & Enlace Bilingüe con wiSelect -->
+            <div class="bl-card">
+              <div class="bl-card-title">
+                <span><i class="fa-solid fa-language"></i> Idioma & Enlace Bilingüe</span>
+              </div>
+              
+              <div style="margin-bottom: 12px;">
+                <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Idioma del Artículo:</label>
+                <select id="blSelectLang" class="bl-select">
+                  <option value="es" selected>Español (ES)</option>
+                  <option value="en">English (EN)</option>
+                </select>
+              </div>
+
+              <div>
+                <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Vincular con Post Hermano (langId):</label>
+                <select id="blSelectLangId" class="bl-select">
+                  <option value="">-- Ninguno (Post Base Original) --</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- 3. Categoría y Tags -->
+            <div class="bl-card">
+              <div class="bl-card-title">
+                <span><i class="fa-solid fa-folder"></i> Categoría</span>
+              </div>
+              <input 
+                type="text" 
+                id="blInputCategoria" 
+                class="bl-input" 
+                placeholder="Ej: Seguridad & Peso" 
+                value="Seguridad & Peso" 
+                required 
+              />
+
+              <div style="margin-top: 14px;">
+                <div class="bl-card-title" style="margin-bottom:6px;">
+                  <span><i class="fa-solid fa-tags"></i> Etiquetas (Tags)</span>
+                </div>
+                <input 
+                  type="text" 
+                  id="blInputTagsText" 
+                  class="bl-input" 
+                  placeholder="Escribe un tag y presiona Enter..." 
+                />
+                <div class="bl-tags-box" id="blBoxTagsChips"></div>
+              </div>
+            </div>
+
+            <!-- 4. Imágenes del Artículo con Previsualización Abajo y Enlace Externo -->
+            <div class="bl-card">
+              <div class="bl-card-title">
+                <span><i class="fa-solid fa-images"></i> Imágenes del Artículo</span>
+              </div>
+
+              <!-- Imagen Miniatura / Card -->
+              <div class="bl-img-field-group">
+                <div class="bl-img-field-header">
+                  <label class="bl-img-label">Miniatura / Card (334x208px):</label>
+                  <a id="blLinkVerImagen" href="/smile.avif" target="_blank" rel="noopener noreferrer" class="bl-img-link-open" title="Abrir imagen en nueva pestaña">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver imagen
+                  </a>
+                </div>
+                <input 
+                  type="text" 
+                  id="blInputImagen" 
+                  class="bl-input" 
+                  value="/smile.avif" 
+                  required 
+                />
+                <!-- Vista previa abajo -->
+                <div class="bl-img-preview-box">
+                  <img id="blPreviewThumb" src="/smile.avif" alt="Miniatura" loading="lazy" />
+                  <div class="bl-img-preview-overlay">
+                    <a id="blLinkVerImagenOverlay" href="/smile.avif" target="_blank" rel="noopener noreferrer" class="bl-img-preview-btn">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir en nueva pestaña
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Cabecera Panorámica -->
+              <div class="bl-img-field-group" style="margin-bottom:0;">
+                <div class="bl-img-field-header">
+                  <label class="bl-img-label">Cabecera Panorámica (1200x450px):</label>
+                  <a id="blLinkVerImagenTop" href="/smile.avif" target="_blank" rel="noopener noreferrer" class="bl-img-link-open" title="Abrir cabecera en nueva pestaña">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver cabecera
+                  </a>
+                </div>
+                <input 
+                  type="text" 
+                  id="blInputImagenTop" 
+                  class="bl-input" 
+                  value="/smile.avif" 
+                />
+                <!-- Vista previa abajo -->
+                <div class="bl-img-preview-box panoramic">
+                  <img id="blPreviewThumbTop" src="/smile.avif" alt="Cabecera Panorámica" loading="lazy" />
+                  <div class="bl-img-preview-overlay">
+                    <a id="blLinkVerImagenTopOverlay" href="/smile.avif" target="_blank" rel="noopener noreferrer" class="bl-img-preview-btn">
+                      <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir en nueva pestaña
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- 5. Autor & Estado de Publicación -->
+            <div class="bl-card">
+              <div class="bl-card-title">
+                <span><i class="fa-solid fa-user-pen"></i> Autor & Estado</span>
+              </div>
+
+              <div style="margin-bottom: 14px;">
+                <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Ingresar Autor:</label>
+                <input 
+                  type="text" 
+                  id="blInputAutor" 
+                  class="bl-input" 
+                  placeholder="Ej: Redacción Oficial" 
+                  value={datosNegocio.identidad?.nombreCorto || datosNegocio.nombre || 'Redacción'} 
+                  required
+                />
+              </div>
+
+              <div class="bl-switch-row">
+                <span>Estado del Artículo (Activo)</span>
+                <label class="bl-ios-switch">
+                  <input type="checkbox" id="blCheckActivo" checked />
+                  <span class="bl-ios-slider"></span>
+                </label>
+              </div>
+
+              <div class="bl-switch-row">
+                <span>Destacar Artículo (Pin)</span>
+                <label class="bl-ios-switch">
+                  <input type="checkbox" id="blCheckPin" />
+                  <span class="bl-ios-slider"></span>
+                </label>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+      </form>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- 3. PESTAÑA 2: PUBLICACIONES (TABLA ORGANIZADA)             -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <div id="blViewPublicaciones" style="display: none;">
+      
+      <!-- Barra de Búsqueda y Filtros -->
+      <div class="bl-filter-bar">
+        <div class="bl-filter-left">
+          <div style="position:relative; width:100%;">
+            <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:12px;"></i>
+            <input 
+              type="text" 
+              id="blSearchInput" 
+              class="bl-input" 
+              placeholder="Buscar por título, slug, categoría o tags..." 
+              style="padding-left:34px;" 
+            />
+          </div>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+          <div class="bl-filter-pills">
+            <button type="button" class="bl-pill-btn active" data-filter-lang="todos">Todos</button>
+            <button type="button" class="bl-pill-btn" data-filter-lang="es">Español (ES)</button>
+            <button type="button" class="bl-pill-btn" data-filter-lang="en">English (EN)</button>
+          </div>
+
+          <select id="blSelectCategoriaFilter" class="bl-select" style="width:auto; padding:6px 12px; font-size:12px;">
+            <option value="todas">Todas las categorías</option>
+            <option value="Seguridad & Peso">Seguridad & Peso</option>
+            <option value="Instalación & Hogar">Instalación & Hogar</option>
+            <option value="Safety & Weight">Safety & Weight</option>
+            <option value="Safety & Installation">Safety & Installation</option>
+          </select>
+
+          <button type="button" class="bl-pill-btn" id="blBtnSyncSemillas" title="Recargar artículos desde blogs.json">
+            <i class="fa-solid fa-arrows-rotate"></i> Sincronizar JSON
+          </button>
+
+          <button type="button" class="bl-pill-btn" id="blBtnDescargarSemilla" title="Descargar blogs.json actualizado con todos los cambios">
+            <i class="fa-solid fa-download"></i> Descargar Semilla
+          </button>
+
+          <a href="/blog" target="_blank" rel="noopener noreferrer" class="bl-pill-btn" title="Ver catálogo público de blogs">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver /blog
+          </a>
+
+          <span id="blTableTotalBadge" class="bl-table-count-badge">0 publicaciones</span>
+        </div>
+      </div>
+
+      <!-- Tabla Organizada de Publicaciones -->
+      <div class="bl-table-container">
+        <div class="bl-table-responsive">
+          <table class="bl-table">
+            <thead>
+              <tr>
+                <th style="width:40%;">Artículo / Publicación</th>
+                <th style="width:14%;">Idioma & Vínculo</th>
+                <th style="width:16%;">Categoría</th>
+                <th style="width:12%;">Publicado</th>
+                <th style="width:8%;">Estado</th>
+                <th style="width:10%; text-align:right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="blTablePublicacionesBody">
+              <!-- Filas inyectadas dinámicamente por blogs.js -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script>
+  import { inicializarBlogs } from './blogs.js';
+  inicializarBlogs();
+</script>

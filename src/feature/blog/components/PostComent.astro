@@ -1,0 +1,115 @@
+---
+// src/feature/blog/components/PostComent.astro
+// Módulo de Comentarios e Interacción con Carga Perezosa WPO (IntersectionObserver 300px)
+import { getBlogI18n } from '../idioma/idioma.js';
+
+interface Props {
+  slug: string;
+  titulo: string;
+  lang?: string;
+}
+
+const { slug, titulo, lang = 'es' } = Astro.props;
+const t = getBlogI18n(lang);
+---
+
+<div id="wi_comments" class="po_comments" data-slug={slug} data-title={titulo} data-lang={lang}>
+  <div class="po_comments_title">
+    <i class="fa-solid fa-comments" style="color:var(--mco);"></i> {t.comments}
+  </div>
+  
+  <div id="comments_box" style="padding: 1vh 0; font-size: var(--fz_m1); color: var(--tx2); text-align: center;">
+    <p style="margin-bottom: 2vh; line-height: 1.6;">
+      {lang === 'en' 
+        ? 'Share your experience, ask a question about LPG safety, or leave a review for our technical team.' 
+        : 'Comparte tu experiencia, realiza una consulta sobre seguridad de gas GLP o deja un comentario para nuestro equipo técnico.'}
+    </p>
+    <div id="disqus_thread"></div>
+  </div>
+</div>
+
+<script>
+  let disqusObserver: IntersectionObserver | null = null;
+  let disqusLoaded = false;
+  let loadDisqusRef: any = null;
+
+  const initDisqus = () => {
+    const commentsContainer = document.getElementById('wi_comments');
+    if (!commentsContainer) return;
+
+    const slug = commentsContainer.getAttribute('data-slug');
+    const title = commentsContainer.getAttribute('data-title');
+    if (!slug) return;
+
+    disqusLoaded = false;
+    loadDisqusRef = () => {
+      if (disqusLoaded) return;
+      disqusLoaded = true;
+
+      if (disqusObserver) {
+        disqusObserver.disconnect();
+        disqusObserver = null;
+      }
+
+      commentsContainer.removeEventListener('mouseenter', loadDisqusRef);
+      commentsContainer.removeEventListener('touchstart', loadDisqusRef);
+
+      const dCfg = function (this: any) {
+        this.page.url = window.location.href;
+        this.page.identifier = slug;
+        this.page.title = title || '';
+      };
+
+      const win = window as any;
+      if (win.DISQUS) {
+        win.DISQUS.reset({ reload: true, config: dCfg });
+      } else {
+        win.disqus_config = dCfg;
+        const script = document.createElement('script');
+        script.src = 'https://solgassurquillo.disqus.com/embed.js';
+        script.setAttribute('data-timestamp', String(+new Date()));
+        script.async = true;
+        document.body.appendChild(script);
+      }
+    };
+
+    // 1. Carga inteligente cuando el usuario está a 300px de llegar al contenedor
+    if ('IntersectionObserver' in window) {
+      disqusObserver = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            loadDisqusRef();
+          }
+        });
+      }, { rootMargin: '300px' });
+      disqusObserver.observe(commentsContainer);
+    } else {
+      loadDisqusRef();
+    }
+
+    // 2. Carga anticipada si el usuario pasa el mouse o toca la zona de comentarios
+    commentsContainer.addEventListener('mouseenter', loadDisqusRef, { once: true });
+    commentsContainer.addEventListener('touchstart', loadDisqusRef, { once: true, passive: true } as any);
+  };
+
+  const cleanupDisqus = () => {
+    if (disqusObserver) {
+      disqusObserver.disconnect();
+      disqusObserver = null;
+    }
+    const commentsEl = document.getElementById('wi_comments');
+    if (commentsEl && loadDisqusRef) {
+      commentsEl.removeEventListener('mouseenter', loadDisqusRef);
+      commentsEl.removeEventListener('touchstart', loadDisqusRef);
+    }
+    document.querySelectorAll('script[src*="disqus.com"]').forEach(s => s.remove());
+    document.querySelectorAll('iframe[src*="disqus.com"]').forEach(i => i.remove());
+    const thread = document.getElementById('disqus_thread');
+    if (thread) thread.innerHTML = '';
+    const win = window as any;
+    delete win.DISQUS;
+  };
+
+  document.addEventListener('astro:page-load', initDisqus);
+  document.addEventListener('astro:before-preparation', cleanupDisqus);
+</script>

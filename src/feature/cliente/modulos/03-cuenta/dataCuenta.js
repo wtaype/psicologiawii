@@ -1,6 +1,6 @@
 // src/feature/cliente/modulos/03-cuenta/dataCuenta.js
-// Capa de Datos Local-First de Mi Cuenta · Solgas Surquillo
-// Esquema canónico 100% alineado con smiles.md y feature/auth
+// Capa de Datos Local-First de Mi Cuenta · Ecosistema Wii
+// Esquema canónico 100% alineado con smiles y feature/auth (0ms)
 // En smiles/{uid} se guarda estrictamente uid (sin userId) y avatar + iniciales
 
 import { getls, savels, avatar as calcIniciales } from '@widev';
@@ -9,11 +9,11 @@ import { getls, savels, avatar as calcIniciales } from '@widev';
  * Obtiene el perfil completo desde la caché smart wiSmile (0ms)
  */
 export function obtenerCuentaLocal() {
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   if (!user) return null;
 
   const uid = user.uid || user.userId || '';
-  const nombre = user.nombre || 'Vecino';
+  const nombre = user.nombre || 'Cliente';
   const apellidos = user.apellidos || '';
   const usuario = user.usuario || user.email?.split('@')[0] || 'usuario';
   const nombreCompleto = [nombre, apellidos].filter(Boolean).join(' ') || usuario;
@@ -25,7 +25,7 @@ export function obtenerCuentaLocal() {
     nombre,
     apellidos,
     celular: user.celular || '',
-    avatar: user.avatar || user.foto || 'https://imgwii.web.app/smile.avif',
+    avatar: (!user.avatar && !user.foto) || (user.avatar && user.avatar.includes('smile.webp')) ? '/smile.avif' : (user.avatar || user.foto),
     iniciales: user.iniciales || calcIniciales(nombreCompleto),
     rol: user.rol || 'cliente',
     plan: user.plan || 'estandar',
@@ -37,9 +37,9 @@ export function obtenerCuentaLocal() {
     razonSocial: user.razonSocial || '',
     direccionFiscal: user.direccionFiscal || '',
     preferencias: {
-      tipoValvula: user.preferencias?.tipoValvula || 'premium',
-      horarioHabitual: user.preferencias?.horarioHabitual || 'mañana',
-      metodoPago: user.preferencias?.metodoPago || 'yape',
+      regimenTributario: user.preferencias?.regimenTributario || user.preferencias?.tipoValvula || 'estandar',
+      horarioHabitual: user.preferencias?.horarioHabitual || 'online-tarde',
+      metodoPago: user.preferencias?.metodoPago || 'bcp',
       timbreMalogrado: Boolean(user.preferencias?.timbreMalogrado),
       llamarAlLlegar: Boolean(user.preferencias?.llamarAlLlegar ?? true),
       pisoAscensor: user.preferencias?.pisoAscensor || '',
@@ -54,7 +54,7 @@ export function obtenerCuentaLocal() {
  * (Solo uid, sin userId en smiles)
  */
 export async function guardarPerfil(datos = {}) {
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   if (!user) throw new Error('No hay sesión de usuario activa.');
 
   const uid = user.uid || user.userId;
@@ -74,14 +74,14 @@ export async function guardarPerfil(datos = {}) {
   // Avatar e Iniciales personalizables
   if (datos.avatar !== undefined && datos.avatar.trim()) {
     user.avatar = datos.avatar.trim();
-  } else if (!user.avatar) {
-    user.avatar = 'https://imgwii.web.app/smile.avif';
+  } else if (!user.avatar || user.avatar.includes('smile.webp')) {
+    user.avatar = '/smile.avif';
   }
 
   if (datos.iniciales !== undefined && datos.iniciales.trim()) {
     user.iniciales = datos.iniciales.trim().toUpperCase().slice(0, 3);
   } else {
-    const nombreCompleto = [user.nombre, user.apellidos].filter(Boolean).join(' ') || user.usuario || 'Gaswii';
+    const nombreCompleto = [user.nombre, user.apellidos].filter(Boolean).join(' ') || user.usuario || 'Cliente';
     user.iniciales = calcIniciales(nombreCompleto);
   }
   delete user.foto; // Reemplazado definitivamente por avatar e iniciales
@@ -89,7 +89,7 @@ export async function guardarPerfil(datos = {}) {
   // Guardar en caché wiSmile (0ms)
   savels('wiSmile', user, 144);
   if (typeof window !== 'undefined') {
-    window.__GASWII_USER__ = user;
+    window.__WI_USER__ = user;
     const topName = document.getElementById('topbarUserName');
     if (topName) topName.textContent = user.nombre || user.usuario;
     const topAvatar = document.getElementById('topbarAvatarLetter');
@@ -116,9 +116,9 @@ export async function guardarPerfil(datos = {}) {
         actualizado: serverTimestamp()
       }, { merge: true });
 
-      console.log(`[Gaswii Cuenta] ✅ Perfil sincronizado en smiles/${uid} (sin userId redundante)`);
+      console.log(`[Cuenta Wii] ✅ Perfil sincronizado en smiles/${uid} (sin userId redundante)`);
     } catch (err) {
-      console.error('[Gaswii Cuenta] ❌ Error al guardar en Firestore:', err);
+      console.error('[Cuenta Wii] ❌ Error al guardar en Firestore:', err);
     }
   })();
 
@@ -126,10 +126,10 @@ export async function guardarPerfil(datos = {}) {
 }
 
 /**
- * Guarda las preferencias operativas de entrega de gas
+ * Guarda las preferencias operativas del cliente
  */
 export async function guardarPreferencias(prefs = {}) {
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   if (!user) throw new Error('No hay sesión de usuario activa.');
 
   const uid = user.uid || user.userId;
@@ -143,7 +143,7 @@ export async function guardarPreferencias(prefs = {}) {
   // Guardar local
   savels('wiSmile', user, 144);
   if (typeof window !== 'undefined') {
-    window.__GASWII_USER__ = user;
+    window.__WI_USER__ = user;
   }
 
   // Sincronizar en Firestore smiles/{uid}
@@ -157,9 +157,9 @@ export async function guardarPreferencias(prefs = {}) {
         actualizado: serverTimestamp()
       }, { merge: true });
 
-      console.log(`[Gaswii Cuenta] ✅ Preferencias sincronizadas en smiles/${uid}`);
+      console.log(`[Cuenta Wii] ✅ Preferencias sincronizadas en smiles/${uid}`);
     } catch (err) {
-      console.error('[Gaswii Cuenta] ❌ Error al guardar preferencias:', err);
+      console.error('[Cuenta Wii] ❌ Error al guardar preferencias:', err);
     }
   })();
 
@@ -200,7 +200,7 @@ export async function actualizarPassword(nuevaPassword) {
  * Envía un correo oficial de restablecimiento de contraseña
  */
 export async function enviarResetPassword() {
-  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__GASWII_USER__ : null);
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   if (!user?.email) throw new Error('No hay un correo electrónico registrado.');
 
   const { auth } = await import('@core/servicios/firebase.js');

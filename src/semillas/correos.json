@@ -1,0 +1,62 @@
+{
+  "titulo": "Centro de Correo & Notificaciones Clínicas",
+  "subtitulo": "Gestor oficial institucional: Bandeja de entrada, enviados, borradores y plantillas con Live Preview de confirmaciones de citas, recibos de honorarios y talleres.",
+  "plantillas": [
+    {
+      "id": "cita",
+      "nombre": "Confirmación de Cita Psicológica",
+      "icono": "fa-solid fa-calendar-check",
+      "categoria": "cita",
+      "asuntoDefecto": "🗓️ Tu cita psicológica está confirmada · Consultorio Psicológico América",
+      "descripcion": "Notificación inmediata al paciente con detalle de la especialidad, fecha, hora, modalidad y recomendaciones."
+    },
+    {
+      "id": "comprobante",
+      "nombre": "Recibo por Honorarios / Boleta",
+      "icono": "fa-solid fa-file-invoice-dollar",
+      "categoria": "comprobante",
+      "asuntoDefecto": "🧾 Tu Recibo por Honorarios Electrónico (RHE) · Lic. Sofia Reynaga",
+      "descripcion": "Envío formal de comprobante SUNAT con validez legal para fines personales o seguros de salud."
+    },
+    {
+      "id": "taller",
+      "nombre": "Confirmación de Taller Vivencial",
+      "icono": "fa-solid fa-people-group",
+      "categoria": "taller",
+      "asuntoDefecto": "🌱 Inscripción confirmada a Taller Vivencial · Consultorio Psicológico América",
+      "descripcion": "Detalles de participación en talleres grupales, dinámica vivencial y lista de materiales recomendados."
+    },
+    {
+      "id": "libre",
+      "nombre": "Comunicado / Seguimiento Libre",
+      "icono": "fa-solid fa-envelope-open-text",
+      "categoria": "libre",
+      "asuntoDefecto": "🌸 Mensaje de Acompañamiento Terapéutico · Lic. Sofia Reynaga",
+      "descripcion": "Redacción libre con diseño institucional y pie de firma profesional de la especialista."
+    }
+  ],
+  "recibidos": [
+    {
+      "id": "rec_101",
+      "carpeta": "recibidos",
+      "estado": "recibido",
+      "de": "Camila Valdivia <cvaldivia.psico@gmail.com>",
+      "asunto": "Consulta sobre terapia individual y horarios disponibles los sábados",
+      "fecha": "Hoy, 10:15 am",
+      "leido": false,
+      "tag": "Cita",
+      "mensaje": "Estimada Lic. Sofia, buenas tardes. Desearía consultar sobre la posibilidad de agendar una primera sesión de evaluación psicológica individual en horario de sábado por la mañana. Quedo atenta a los requisitos y disponibilidad. Muchas gracias."
+    },
+    {
+      "id": "rec_102",
+      "carpeta": "recibidos",
+      "estado": "recibido",
+      "de": "Carlos Paredes <cparedes.ing@hotmail.com>",
+      "asunto": "Inscripción para el Taller de Inteligencia Emocional",
+      "fecha": "Ayer, 04:30 pm",
+      "leido": true,
+      "tag": "Taller",
+      "mensaje": "Buenas tardes Lic. Reynaga, le escribo para confirmar si aún quedan cupos para el taller de Inteligencia Emocional y Gestión del Estrés del próximo mes. Me gustaría participar. Saludos cordiales."
+    }
+  ]
+}

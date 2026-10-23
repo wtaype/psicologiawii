@@ -1,0 +1,432 @@
+/* src/feature/personal/modulos/ayuda/ayuda.css */
+/* Estilos del Módulo Ayuda: Sistema de Tickets y Ficha Profesional */
+/* 100% Adaptado a tokens de witema.css: variables --fz_*, --r_*, colores del sistema y Poppins */
+
+/* ── LAYOUT DIVIDIDO (FORMULARIO 55% / HISTORIAL 45%) ── */
+.ay-split-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(320px, 1fr);
+  gap: 2vh;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .ay-split-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── TARJETAS CONTENEDORAS ── */
+.ay-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r_l, 1.5vh);
+  padding: 2.2vh;
+  box-shadow: 0 0.8vh 2.5vh rgba(7, 22, 38, 0.05);
+}
+
+.ay-card-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m4);
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 1.6vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.2vh;
+}
+
+.ay-card-title-left {
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+}
+
+.ay-card-title-left i {
+  color: var(--mco, var(--brand-primary, #ff6600));
+}
+
+/* ── BANNER INFORMATIVO DE TELEMETRÍA ── */
+.ay-info-banner {
+  background: var(--mbg, rgba(255, 102, 0, 0.08));
+  border: 1px solid var(--border-card, rgba(255, 102, 0, 0.25));
+  border-radius: var(--r_m, 1vh);
+  padding: 1.4vh 1.8vh;
+  margin-bottom: 2vh;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2vh;
+}
+
+.ay-info-icon {
+  color: var(--mco, var(--brand-primary, #ff6600));
+  font-size: var(--fz_m4);
+  margin-top: 0.2vh;
+  flex-shrink: 0;
+}
+
+.ay-info-text {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s4);
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.ay-info-highlight {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── FORMULARIO DE TICKET ── */
+.ay-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5vh;
+  margin-bottom: 1.5vh;
+}
+
+@media (max-width: 576px) {
+  .ay-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.ay-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6vh;
+  margin-bottom: 1.6vh;
+}
+
+.ay-label {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s4);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.ay-input,
+.ay-select,
+.ay-textarea {
+  width: 100%;
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r_s, 0.8vh);
+  padding: 1vh 1.4vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_m);
+  color: var(--ink);
+  outline: none;
+  transition: border-color var(--tr_f), box-shadow var(--tr_f);
+  box-sizing: border-box;
+}
+
+.ay-input:focus,
+.ay-select:focus,
+.ay-textarea:focus {
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+  box-shadow: 0 0 0 0.3vh var(--mbg, rgba(255, 102, 0, 0.2));
+}
+
+.ay-textarea {
+  min-height: 12vh;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.ay-form-help {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_s2);
+  color: var(--muted);
+  margin-top: 0.4vh;
+}
+
+/* ── BOTÓN DE ENVÍO ── */
+.ay-btn-submit {
+  width: 100%;
+  background: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--white, #ffffff);
+  border: none;
+  border-radius: var(--r_m, 1vh);
+  padding: 1.3vh 2vh;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_m1);
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1vh;
+  transition: all var(--tr_f);
+  box-shadow: var(--shadow-hover, 0 0.8vh 2vh rgba(255, 102, 0, 0.25));
+}
+
+.ay-btn-submit:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-0.2vh);
+}
+
+.ay-btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ── HISTORIAL DE TICKETS ── */
+.ay-historial-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 0.4vh;
+}
+
+.ay-ticket-item {
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r_m, 1vh);
+  padding: 1.4vh 1.6vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+  transition: border-color var(--tr_f);
+}
+
+.ay-ticket-item:hover {
+  border-color: var(--mco, var(--brand-primary, #ff6600));
+}
+
+.ay-ticket-item-top {
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  justify-content: space-between;
+}
+
+.ay-ticket-code {
+  font-family: monospace;
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(255, 102, 0, 0.12));
+  padding: 0.2vh 0.8vh;
+  border-radius: var(--r_xs, 0.5vh);
+}
+
+.ay-ticket-date {
+  font-size: var(--fz_s2);
+  color: var(--muted);
+  margin-left: auto;
+}
+
+.ay-ticket-subject {
+  font-size: var(--fz_m);
+  font-weight: 700;
+  color: var(--ink);
+  line-height: 1.35;
+}
+
+.ay-ticket-cat {
+  font-size: var(--fz_s3);
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  gap: 0.6vh;
+}
+
+.ay-ticket-desc {
+  font-size: var(--fz_s3);
+  color: var(--muted);
+  line-height: 1.45;
+  white-space: pre-wrap;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  padding: 1vh 1.2vh;
+  border-radius: var(--r_s, 0.8vh);
+}
+
+.ay-ticket-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.8vh;
+  border-top: 1px solid var(--line);
+  font-size: var(--fz_s2);
+  color: var(--muted);
+}
+
+.ay-ticket-status {
+  color: var(--success, #16a34a);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5vh;
+}
+
+/* ── BADGES DE PRIORIDAD ── */
+.ay-badge {
+  font-size: var(--fz_s1);
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.3vh 0.8vh;
+  border-radius: var(--r_xs, 0.5vh);
+}
+
+.ay-badge-success { background: rgba(22, 163, 74, 0.15); color: var(--success, #16a34a); }
+.ay-badge-info { background: rgba(2, 132, 199, 0.15); color: var(--info, #0284c7); }
+.ay-badge-warning { background: rgba(245, 158, 11, 0.15); color: var(--warning, #f59e0b); }
+.ay-badge-danger { background: rgba(239, 68, 68, 0.15); color: var(--error, #ef4444); }
+
+.ay-count-pill {
+  font-size: var(--fz_s2);
+  background: var(--mbg, rgba(255, 102, 0, 0.15));
+  color: var(--mco, var(--brand-primary, #ff6600));
+  padding: 0.3vh 0.9vh;
+  border-radius: var(--r_full, 9999px);
+}
+
+/* ── EMPTY STATE ── */
+.ay-empty-state {
+  text-align: center;
+  padding: 5vh 2vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+}
+
+.ay-empty-icon {
+  font-size: 4vh;
+  color: var(--line);
+  margin-bottom: 0.8vh;
+}
+
+.ay-empty-title {
+  font-size: var(--fz_m1);
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0;
+}
+
+.ay-empty-sub {
+  font-size: var(--fz_s3);
+  color: var(--muted);
+  max-width: 280px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* ── FICHA PROFESIONAL DEL SOFTWARE (MÁS ABAJO, DESDE WII.JS) ── */
+.ay-software-section {
+  margin-top: 3vh;
+}
+
+.ay-software-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r_l, 1.5vh);
+  padding: 2.2vh 2.6vh;
+  box-shadow: 0 0.8vh 2.5vh rgba(7, 22, 38, 0.05);
+}
+
+.ay-software-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1vh;
+  margin-bottom: 1.8vh;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 1.2vh;
+}
+
+.ay-software-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m3);
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 1vh;
+  margin: 0;
+}
+
+.ay-software-title i {
+  color: var(--mco, var(--brand-primary, #ff6600));
+}
+
+.ay-software-tag {
+  font-size: var(--fz_s2);
+  font-weight: 700;
+  text-transform: uppercase;
+  background: var(--mbg, rgba(255, 102, 0, 0.12));
+  color: var(--mco, var(--brand-primary, #ff6600));
+  padding: 0.3vh 1vh;
+  border-radius: var(--r_full, 9999px);
+  border: 1px solid var(--border-card, rgba(255, 102, 0, 0.25));
+}
+
+.ay-software-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.6vh;
+  margin-bottom: 1.8vh;
+}
+
+.ay-software-item {
+  background: var(--raised);
+  border: 1px solid var(--line);
+  border-radius: var(--r_m, 1vh);
+  padding: 1.2vh 1.6vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4vh;
+}
+
+.ay-software-item-label {
+  font-size: var(--fz_s2);
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+}
+
+.ay-software-item-val {
+  font-size: var(--fz_m);
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.8vh;
+}
+
+.ay-software-item-sub {
+  font-size: var(--fz_s1);
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.ay-software-link {
+  color: var(--mco, var(--brand-primary, #ff6600));
+  text-decoration: none;
+  transition: filter var(--tr_f);
+}
+
+.ay-software-link:hover {
+  text-decoration: underline;
+  filter: brightness(1.2);
+}
+
+.ay-software-note {
+  font-size: var(--fz_s3);
+  color: var(--muted);
+  line-height: 1.5;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: var(--r_s, 0.8vh);
+  padding: 1.2vh 1.6vh;
+  border-left: 0.4vh solid var(--mco, var(--brand-primary, #ff6600));
+  margin: 0;
+}

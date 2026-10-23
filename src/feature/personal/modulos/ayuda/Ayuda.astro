@@ -1,0 +1,177 @@
+---
+// src/feature/personal/modulos/ayuda/Ayuda.astro
+// Módulo de Ayuda: Mesa de Ayuda y Generador de Tickets de Soporte
+// 100% JS Nativo · Integrado con @widev y Resend API · 0 CSS Inline
+
+import { datosNegocio, configurarSistema } from '@/negocio.js';
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = false } = Astro.props;
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-ayuda" data-ayuda-init="false">
+  
+  <!-- CABECERA SUPERIOR STICKY -->
+  <div class="ps-section-header">
+    <div class="ps-section-title-wrap">
+      <h1 class="ps-section-title">
+        <i class="fa-solid fa-headset sn-header-icon"></i>
+        Ayuda · Soporte Técnico & Generador de Tickets
+      </h1>
+      <p class="ps-section-sub">
+        Genera reportes de incidencias técnicas o dudas operativas. Tu solicitud se despacha inmediatamente a soporte oficial (<strong class="sn-text-gold">{datosNegocio.email || 'soporte oficial'}</strong>) incluyendo telemetría de diagnóstico.
+      </p>
+    </div>
+  </div>
+
+  <!-- BANNER INFORMATIVO -->
+  <div class="ay-info-banner">
+    <i class="fa-solid fa-circle-info ay-info-icon"></i>
+    <p class="ay-info-text">
+      <span class="ay-info-highlight">Diagnóstico Automático:</span> Al enviar un ticket, el sistema adjunta de forma segura especificaciones de tu entorno (navegador, resolución, usuario activo, hora oficial y módulo actual) para que el equipo resuelva el incidente a la máxima brevedad.
+    </p>
+  </div>
+
+  <!-- LAYOUT DIVIDIDO (FORMULARIO 55% / HISTORIAL 45%) -->
+  <div class="ay-split-layout">
+    
+    <!-- COLUMNA 1: FORMULARIO GENERADOR DE TICKETS -->
+    <div class="ay-card">
+      <h2 class="ay-card-title">
+        <span class="ay-card-title-left">
+          <i class="fa-solid fa-pen-to-square"></i> Crear Nuevo Ticket
+        </span>
+      </h2>
+
+      <form id="formNuevoTicket" novalidate>
+        
+        <div class="ay-form-group">
+          <label class="ay-label" for="tkAsunto">Asunto o Título del Problema *</label>
+          <input 
+            type="text" 
+            id="tkAsunto" 
+            class="ay-input" 
+            placeholder="Ej: Inconsistencia al sincronizar con SUNAT..." 
+            required 
+          />
+        </div>
+
+        <div class="ay-form-grid">
+          <div class="ay-form-group">
+            <label class="ay-label" for="tkCategoria">Categoría *</label>
+            <select id="tkCategoria" class="ay-select">
+              <option value="Error del Sistema">Error del Sistema</option>
+              <option value="Sincronización SUNAT">Sincronización SUNAT</option>
+              <option value="Carga de Archivos / R2">Carga de Archivos / R2</option>
+              <option value="Gestión de Clientes">Gestión de Clientes</option>
+              <option value="Solicitud de Mejora">Solicitud de Mejora</option>
+              <option value="Consulta General">Consulta General</option>
+            </select>
+          </div>
+
+          <div class="ay-form-group">
+            <label class="ay-label" for="tkPrioridad">Prioridad *</label>
+            <select id="tkPrioridad" class="ay-select">
+              <option value="Baja">Baja (Sin impacto operativo)</option>
+              <option value="Media" selected>Media (Normal)</option>
+              <option value="Alta">Alta (Impacta módulo activo)</option>
+              <option value="Urgente">Urgente (Bloqueo crítico)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="ay-form-group">
+          <label class="ay-label" for="tkDescripcion">Descripción Detallada *</label>
+          <textarea 
+            id="tkDescripcion" 
+            class="ay-textarea" 
+            placeholder="Explica qué estabas haciendo, el comportamiento esperado y qué error o resultado obtuviste..." 
+            required
+          ></textarea>
+          <span class="ay-form-help">Mínimo 10 caracteres. Proporciona tantos detalles como sea posible.</span>
+        </div>
+
+        <button type="submit" class="ay-btn-submit" id="btnEnviarTicket">
+          <i class="fa-solid fa-paper-plane"></i> Despachar Ticket a Soporte
+        </button>
+      </form>
+    </div>
+
+    <!-- COLUMNA 2: HISTORIAL DE TICKETS ENVIADOS -->
+    <div class="ay-card">
+      <h2 class="ay-card-title">
+        <span class="ay-card-title-left">
+          <i class="fa-solid fa-clock-rotate-left"></i> Historial de Tickets
+        </span>
+        <span class="ay-count-pill" id="ayudaHistorialCount">0</span>
+      </h2>
+
+      <div class="ay-historial-wrap" id="ayudaHistorialLista">
+        <!-- Renderizado dinámico desde ayuda.js -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SECCIÓN INFORMATIVA DEL SOFTWARE (FINES PROFESIONALES DESDE WII.JS) -->
+  <!-- SECCIÓN INFORMATIVA DEL SOFTWARE -->
+  <div class="ay-software-section">
+    <div class="ay-software-card">
+      <div class="ay-software-header">
+        <h3 class="ay-software-title">
+          <i class="fa-solid fa-certificate"></i>
+          Información del Software · Entorno de Uso Profesional
+        </h3>
+        <span class="ay-software-tag">Edición Corporativa v{configurarSistema.version || '2.0.0'}</span>
+      </div>
+
+      <div class="ay-software-grid">
+        <div class="ay-software-item">
+          <span class="ay-software-item-label">Plataforma</span>
+          <span class="ay-software-item-val">{datosNegocio.nombreCorto || datosNegocio.nombre}</span>
+          <span class="ay-software-item-sub">ID: {configurarSistema.id}</span>
+        </div>
+
+        <div class="ay-software-item">
+          <span class="ay-software-item-label">Versión de Compilación</span>
+          <span class="ay-software-item-val">v{configurarSistema.version || '2.0.0'} Pro</span>
+          <span class="ay-software-item-sub">Build Code: {configurarSistema.versionCode} · Astro 6 SSG</span>
+        </div>
+
+        <div class="ay-software-item">
+          <span class="ay-software-item-label">Arquitectura</span>
+          <span class="ay-software-item-val">
+            <i class="fa-solid fa-bolt"></i> Local-First 0ms
+          </span>
+          <span class="ay-software-item-sub">Ecosistema Modular Wii</span>
+        </div>
+
+        <div class="ay-software-item">
+          <span class="ay-software-item-label">Portal Oficial</span>
+          <span class="ay-software-item-val">
+            <a href="/" target="_blank" rel="noopener noreferrer" class="ay-software-link">
+              Web Oficial <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7em;"></i>
+            </a>
+          </span>
+          <span class="ay-software-item-sub">
+            Sede {datosNegocio.distritoSede || 'Principal'}
+          </span>
+        </div>
+      </div>
+
+      <p class="ay-software-note">
+        <strong>Aviso de Confidencialidad y Uso Profesional:</strong> Esta herramienta está diseñada y optimizada para la gestión de {datosNegocio.nombre}. Opera bajo arquitectura Local-First de alta velocidad con respaldo en la nube.
+      </p>
+    </div>
+  </div>
+
+</section>
+
+<script>
+  import { inicializarModuloAyuda } from './ayuda.js';
+  inicializarModuloAyuda();
+  document.addEventListener('astro:page-load', inicializarModuloAyuda);
+</script>

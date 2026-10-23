@@ -1,0 +1,547 @@
+---
+// src/feature/blog/components/BlogCatalog.astro
+// 🌟 Catálogo Público de Artículos de Blog (Estilo Workwii Pro)
+// 100% Reactivo, Bilingüe, con Buscador y Filtro por Categorías
+
+interface Props {
+  posts: any[];
+  idioma?: 'es' | 'en';
+}
+
+const { posts = [], idioma = 'es' } = Astro.props;
+
+const esEn = idioma === 'en';
+const t = {
+  badge: esEn ? 'Official Knowledge Base' : 'Base de Conocimiento Oficial',
+  titulo: esEn ? 'Blog & Official Guides' : 'Blog & Consejos Oficiales',
+  subtitulo: esEn 
+    ? 'Guides, efficiency tips, safety protocols and news verified by our certified technical team.' 
+    : 'Guías, consejos de rendimiento, seguridad comprobada y novedades verificadas por nuestro equipo técnico.',
+  placeholder: esEn ? 'Search articles by title, tag, or topic...' : 'Buscar artículos por título, etiqueta o tema...',
+  todos: esEn ? 'All' : 'Todos',
+  leerMas: esEn ? 'Read article' : 'Leer artículo',
+  vistas: esEn ? 'views' : 'vistas',
+  tiempo: esEn ? 'read' : 'lectura',
+  sinResultados: esEn ? 'No articles match your search.' : 'No se encontraron artículos con ese criterio.',
+  limpiarFiltro: esEn ? 'Clear filters' : 'Limpiar filtros'
+};
+
+// Categorías únicas
+const categorias = Array.from(new Set(posts.map(p => p.categoria).filter(Boolean)));
+---
+
+<div class="bl_catalog_wrap">
+  <!-- 1. Hero del Catálogo -->
+  <header class="bl_catalog_header">
+    <span class="bl_hero_badge">
+      <i class="fa-solid fa-newspaper"></i> {t.badge}
+    </span>
+    <h1 class="bl_hero_title">{t.titulo}</h1>
+    <p class="bl_hero_desc">{t.subtitulo}</p>
+  </header>
+
+  <!-- 2. Barra de Búsqueda y Filtros -->
+  <div class="bl_controls_bar">
+    <!-- Buscador -->
+    <div class="bl_search_box">
+      <i class="fa-solid fa-magnifying-glass bl_search_icon"></i>
+      <input 
+        type="search" 
+        id="blSearchInput" 
+        placeholder={t.placeholder} 
+        autocomplete="off" 
+        class="bl_search_input"
+      />
+      <button type="button" id="blSearchClear" class="bl_search_clear" aria-label="Limpiar búsqueda" style="display: none;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+
+    <!-- Filtros de Categorías -->
+    <div class="bl_categories_scroll" id="blCategoryPills">
+      <button type="button" class="bl_cat_pill active" data-cat="all">
+        <i class="fa-solid fa-layer-group"></i> <span>{t.todos}</span> <span class="bl_cat_count">({posts.length})</span>
+      </button>
+      {categorias.map((cat: any) => {
+        const count = posts.filter(p => p.categoria === cat).length;
+        return (
+          <button type="button" class="bl_cat_pill" data-cat={cat}>
+            <span>{cat}</span> <span class="bl_cat_count">({count})</span>
+          </button>
+        );
+      })}
+    </div>
+  </div>
+
+  <!-- 3. Grilla de Artículos -->
+  <div class="bl_grid" id="blPostsGrid">
+    {posts.map((post: any) => {
+      const href = esEn ? `/en/${post.slug}` : `/${post.slug}`;
+      const fecha = post.publicado || new Date(post.creado || Date.now()).toISOString().split('T')[0];
+      return (
+        <article class="bl_card" data-cat={post.categoria} data-titulo={(post.titulo || '').toLowerCase()} data-desc={(post.descripcion || '').toLowerCase()}>
+          <a href={href} class="bl_card_cover_link" title={post.titulo}>
+            <div class="bl_card_img_wrap">
+              <img 
+                src={post.imagenTop || post.imagen || '/imgwii/02-solgas-surquillo-balanza.webp'} 
+                alt={post.metaSEO?.alt || post.titulo} 
+                class="bl_card_img"
+                loading="lazy"
+              />
+              <div class="bl_card_badges">
+                <span class="bl_badge_cat">
+                  <i class="fa-solid fa-tag"></i> {post.categoria || 'General'}
+                </span>
+                {post.pin && (
+                  <span class="bl_badge_pin" title="Artículo Destacado">
+                    <i class="fa-solid fa-thumbtack"></i>
+                  </span>
+                )}
+              </div>
+            </div>
+          </a>
+
+          <div class="bl_card_body">
+            <div class="bl_card_meta_top">
+              <span><i class="fa-regular fa-calendar"></i> {fecha}</span>
+              <span><i class="fa-regular fa-clock"></i> {post.lecturaTM || '5 min'}</span>
+            </div>
+
+            <h2 class="bl_card_title">
+              <a href={href} class="bl_title_link">{post.titulo}</a>
+            </h2>
+
+            <p class="bl_card_desc">{post.descripcion}</p>
+
+            <div class="bl_card_footer">
+              <div class="bl_author_mini">
+                <i class="fa-solid fa-user-shield"></i> <span>{post.autor || 'Equipo Técnico'}</span>
+              </div>
+              <a href={href} class="bl_btn_leer">
+                <span>{t.leerMas}</span> <i class="fa-solid fa-arrow-right"></i>
+              </a>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+
+  <!-- 4. Estado Vacío -->
+  <div class="bl_empty_state" id="blEmptyState" style="display: none;">
+    <div class="bl_empty_icon">
+      <i class="fa-regular fa-folder-open"></i>
+    </div>
+    <h3 class="bl_empty_title">{t.sinResultados}</h3>
+    <button type="button" id="blBtnReset" class="bl_btn_reset">
+      <i class="fa-solid fa-rotate-left"></i> {t.limpiarFiltro}
+    </button>
+  </div>
+</div>
+
+<style>
+  .bl_catalog_wrap {
+    width: 100%;
+    max-width: 85vw;
+    margin: 0 auto;
+    padding: 4vh 0 8vh;
+    font-family: var(--ff_P, 'Poppins', sans-serif);
+    box-sizing: border-box;
+  }
+
+  /* Header */
+  .bl_catalog_header {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 4vh;
+  }
+  .bl_hero_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 102, 0, 0.1);
+    color: var(--brand-primary, #ff6600);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: var(--fz_s3, 0.8rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 1.5vh;
+  }
+  .bl_hero_title {
+    font-family: var(--ff_O, 'Outfit', sans-serif);
+    font-size: clamp(2rem, 4vw, 2.8rem);
+    font-weight: 800;
+    color: var(--tx1, #111827);
+    line-height: 1.2;
+    margin: 0 0 1.5vh 0;
+  }
+  .bl_hero_desc {
+    font-size: var(--fz_m2, 1rem);
+    color: var(--tx3, #6b7280);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  /* Controls Bar */
+  .bl_controls_bar {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    margin-bottom: 4vh;
+  }
+  .bl_search_box {
+    position: relative;
+    max-width: 600px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .bl_search_icon {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--tx3, #9ca3af);
+    font-size: 1rem;
+    pointer-events: none;
+  }
+  .bl_search_input {
+    width: 100%;
+    padding: 12px 44px 12px 46px;
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--line, #e5e7eb);
+    border-radius: 50px;
+    font-family: inherit;
+    font-size: var(--fz_m3, 0.95rem);
+    color: var(--tx1, #111827);
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+  }
+  .bl_search_input:focus {
+    border-color: var(--brand-primary, #ff6600);
+    box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+  }
+  .bl_search_clear {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: var(--tx3, #9ca3af);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .bl_search_clear:hover {
+    color: var(--tx1, #111827);
+  }
+
+  /* Category Pills */
+  .bl_categories_scroll {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .bl_cat_pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--line, #e5e7eb);
+    border-radius: 30px;
+    font-family: inherit;
+    font-size: var(--fz_s3, 0.85rem);
+    font-weight: 600;
+    color: var(--tx2, #4b5563);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .bl_cat_pill:hover {
+    background: var(--line, #f3f4f6);
+    color: var(--tx1, #111827);
+  }
+  .bl_cat_pill.active {
+    background: var(--brand-primary, #ff6600);
+    border-color: var(--brand-primary, #ff6600);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(255, 102, 0, 0.25);
+  }
+  .bl_cat_count {
+    opacity: 0.75;
+    font-size: 0.75rem;
+  }
+
+  /* Grid & Cards */
+  .bl_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 30px;
+  }
+  .bl_card {
+    background: var(--surface, #ffffff);
+    border: 1px solid var(--line, #e5e7eb);
+    border-radius: 1.6vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  }
+  .bl_card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.08);
+    border-color: var(--line-focus, #d1d5db);
+  }
+  .bl_card_cover_link {
+    display: block;
+    text-decoration: none;
+    overflow: hidden;
+  }
+  .bl_card_img_wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: #111827;
+    overflow: hidden;
+  }
+  .bl_card_img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  .bl_card:hover .bl_card_img {
+    transform: scale(1.04);
+  }
+  .bl_card_badges {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    right: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    pointer-events: none;
+  }
+  .bl_badge_cat {
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+  }
+  .bl_badge_pin {
+    background: var(--brand-primary, #ff6600);
+    color: #ffffff;
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+
+  .bl_card_body {
+    padding: 22px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+  .bl_card_meta_top {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 0.8rem;
+    color: var(--tx3, #9ca3af);
+    margin-bottom: 12px;
+  }
+  .bl_card_title {
+    font-family: var(--ff_O, 'Outfit', sans-serif);
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 0 0 10px 0;
+  }
+  .bl_title_link {
+    color: var(--tx1, #111827);
+    text-decoration: none;
+    transition: color 0.15s ease;
+  }
+  .bl_title_link:hover {
+    color: var(--brand-primary, #ff6600);
+  }
+  .bl_card_desc {
+    font-size: 0.9rem;
+    color: var(--tx2, #4b5563);
+    line-height: 1.55;
+    margin: 0 0 20px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1;
+  }
+  .bl_card_footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 16px;
+    border-top: 1px solid var(--line, #f3f4f6);
+    margin-top: auto;
+  }
+  .bl_author_mini {
+    font-size: 0.8rem;
+    color: var(--tx3, #6b7280);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .bl_btn_leer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--brand-primary, #ff6600);
+    text-decoration: none;
+    transition: transform 0.15s ease;
+  }
+  .bl_btn_leer:hover {
+    transform: translateX(3px);
+  }
+
+  /* Empty State */
+  .bl_empty_state {
+    text-align: center;
+    padding: 8vh 20px;
+    background: var(--surface, #ffffff);
+    border: 1px dashed var(--line, #e5e7eb);
+    border-radius: 1.6vh;
+    margin-top: 2vh;
+  }
+  .bl_empty_icon {
+    font-size: 3rem;
+    color: var(--brand-primary, #ff6600);
+    opacity: 0.4;
+    margin-bottom: 1.5vh;
+  }
+  .bl_empty_title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--tx1, #111827);
+    margin: 0 0 2vh 0;
+  }
+  .bl_btn_reset {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 22px;
+    background: var(--brand-primary, #ff6600);
+    color: #ffffff;
+    border: none;
+    border-radius: 30px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .bl_catalog_wrap {
+      max-width: 92vw;
+      padding-top: 2vh;
+    }
+    .bl_grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script is:inline>
+  (function() {
+    const searchInput = document.getElementById('blSearchInput');
+    const searchClear = document.getElementById('blSearchClear');
+    const categoryPills = document.querySelectorAll('.bl_cat_pill');
+    const cards = document.querySelectorAll('.bl_card');
+    const emptyState = document.getElementById('blEmptyState');
+    const btnReset = document.getElementById('blBtnReset');
+
+    let activeCat = 'all';
+    let searchQuery = '';
+
+    function filterPosts() {
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-cat') || '';
+        const titulo = card.getAttribute('data-titulo') || '';
+        const desc = card.getAttribute('data-desc') || '';
+
+        const matchCat = activeCat === 'all' || cat.toLowerCase() === activeCat.toLowerCase();
+        const matchSearch = !searchQuery || titulo.includes(searchQuery) || desc.includes(searchQuery);
+
+        if (matchCat && matchSearch) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (emptyState) {
+        emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+      }
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', (e) => {
+        searchQuery = (e.target.value || '').trim().toLowerCase();
+        if (searchClear) {
+          searchClear.style.display = searchQuery ? 'block' : 'none';
+        }
+        filterPosts();
+      });
+    }
+
+    if (searchClear) {
+      searchClear.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        searchQuery = '';
+        searchClear.style.display = 'none';
+        filterPosts();
+      });
+    }
+
+    categoryPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        categoryPills.forEach(p => p.classList.remove('active'));
+        pill.classList.add('active');
+        activeCat = pill.getAttribute('data-cat') || 'all';
+        filterPosts();
+      });
+    });
+
+    if (btnReset) {
+      btnReset.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        searchQuery = '';
+        if (searchClear) searchClear.style.display = 'none';
+        activeCat = 'all';
+        categoryPills.forEach(p => p.classList.toggle('active', p.getAttribute('data-cat') === 'all'));
+        filterPosts();
+      });
+    }
+
+    // Escuchar actualizaciones en caliente desde /personal
+    window.addEventListener('wi:blogs-actualizado', (e) => {
+      console.log('[BlogCatalog] Blogs actualizados en cliente');
+    });
+  })();
+</script>

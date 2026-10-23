@@ -1,6 +1,6 @@
 // src/feature/auth/visualLogin.js
 // Controlador de eventos del DOM y orquestador visual bajo demanda
-// Solgas Surquillo (Gaswii)
+// Capa de Autenticación Universal
 
 import './login.css';
 import { wiTip } from '../../core/widev/widev.js';

@@ -1,0 +1,582 @@
+/* src/feature/personal/modulos/whatsapp/tabs/canales.css */
+/* Estilos Oficiales de la Pestaña 1: Ajustes / Canales Web */
+/* Layout Porcentual (60% / 40%) con Selector de Canales y Simulador de Smartphone en Vivo */
+
+.wa-canales-shell {
+  display: grid;
+  grid-template-columns: 60% calc(40% - 24px);
+  gap: 24px;
+  align-items: start;
+  width: 100%;
+}
+
+/* ── COLUMNA IZQUIERDA (60%): CONFIGURADOR DE CANALES WEB ── */
+.wa-canales-main-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.2vh;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.wa-canales-section-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--tx, var(--ink, #071626));
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wa-canales-section-title i {
+  color: #25d366;
+  font-size: 1.25rem;
+}
+
+/* ── 1. SELECTOR SUPERIOR DE CANALES (BOTONES VERDES ACTIVOS) ── */
+.wa-channel-selector-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.wa-channel-sel-card {
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 1vh;
+  padding: 14px 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+}
+
+.wa-channel-sel-card:hover {
+  border-color: #25d366;
+  background: rgba(37, 211, 102, 0.08);
+  transform: translateY(-2px);
+}
+
+.wa-channel-sel-card.active {
+  border-color: #25d366;
+  background: rgba(37, 211, 102, 0.12);
+  box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.35);
+}
+
+.wa-channel-sel-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--tx, var(--ink, #071626));
+}
+
+.wa-channel-sel-head i {
+  color: #25d366;
+  font-size: 1rem;
+}
+
+.wa-channel-sel-desc {
+  font-size: 0.78rem;
+  color: var(--tx2, var(--muted, #475569));
+  line-height: 1.4;
+}
+
+/* ── 2. CAJA DE EDICIÓN DEL CANAL ACTIVO ── */
+.wa-active-channel-box {
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 1.2vh;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.wa-channel-header-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.wa-channel-badge-pill {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+/* Chips de Etiquetas Dinámicas */
+.wa-tags-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wa-tags-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--tx2, var(--muted, #475569));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wa-tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.wa-tag-chip {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--tx, var(--ink, #071626));
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 0.9vh;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.15s ease;
+}
+
+.wa-tag-chip:hover {
+  background: rgba(37, 211, 102, 0.12);
+  border-color: #25d366;
+  color: #128c7e;
+  transform: translateY(-1px);
+}
+
+.wa-tag-chip i {
+  font-size: 0.72rem;
+  color: #25d366;
+}
+
+/* Textarea del Canal */
+.wa-textarea-box {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.wa-channel-textarea {
+  width: 100%;
+  min-height: 140px;
+  border: 1px solid var(--line);
+  border-radius: 1.2vh;
+  background: var(--surface);
+  color: var(--tx, var(--ink, #071626));
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.96rem;
+  line-height: 1.6;
+  padding: 14px 16px;
+  resize: vertical;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.wa-channel-textarea:focus {
+  border-color: #25d366;
+  box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.18);
+}
+
+.wa-textarea-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.wa-counter-badge {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.wa-counter-badge.optimal {
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.wa-counter-badge.warning {
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
+.wa-counter-badge.danger {
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* ── 3. VARIABLES DE PRUEBA EN VIVO ── */
+.wa-test-vars-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1.2vh;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wa-test-vars-header {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--tx2, var(--muted, #475569));
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.wa-test-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.wa-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.wa-field-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--tx, var(--ink, #071626));
+}
+
+.wa-field-input,
+.wa-field-select {
+  border: 1px solid var(--line);
+  background: var(--canvas);
+  border-radius: 0.9vh;
+  padding: 8px 12px;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.88rem;
+  color: var(--tx, var(--ink, #071626));
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.wa-field-input:focus,
+.wa-field-select:focus {
+  border-color: #25d366;
+}
+
+/* ── 4. NÚMERO OFICIAL DE RECEPCIÓN ── */
+.wa-tel-config-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: var(--canvas);
+  border: 1px solid var(--line);
+  border-radius: 1.2vh;
+  padding: 14px 18px;
+  flex-wrap: wrap;
+}
+
+.wa-tel-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.wa-tel-meta i {
+  color: #25d366;
+  font-size: 1.3rem;
+}
+
+.wa-tel-meta h5 {
+  margin: 0;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--tx, var(--ink, #071626));
+}
+
+.wa-tel-meta p {
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: var(--tx2, var(--muted, #475569));
+}
+
+.wa-tel-input-box {
+  display: inline-flex;
+  align-items: center;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1vh;
+  padding: 6px 14px;
+  gap: 8px;
+}
+
+.wa-tel-prefix {
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #25d366;
+}
+
+.wa-tel-input {
+  border: none;
+  background: transparent;
+  color: var(--tx, var(--ink, #071626));
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  width: 140px;
+  outline: none;
+}
+
+/* ── COLUMNA DERECHA (40%): SIMULADOR SMARTPHONE EN VIVO ── */
+.wa-phone-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  position: sticky;
+  top: 90px;
+  width: 100%;
+}
+
+.wa-phone-frame {
+  width: 100%;
+  max-width: 380px;
+  background: #0c1317;
+  border: 10px solid #1f2c34;
+  border-radius: 38px;
+  overflow: hidden;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  min-height: 540px;
+}
+
+.wa-phone-notch-bar {
+  background: #1f2c34;
+  padding: 10px 18px 6px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #8696a0;
+  font-weight: 600;
+}
+
+.wa-chat-header {
+  background: #1f2c34;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.wa-chat-sender-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wa-chat-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #fff;
+}
+
+.wa-chat-sender-name {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: #e9edef;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wa-chat-verified-icon {
+  color: #25d366;
+  font-size: 12px;
+}
+
+.wa-chat-sender-sub {
+  font-size: 10.5px;
+  color: #8696a0;
+}
+
+.wa-chat-body {
+  flex: 1;
+  background: #0b141a url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png') repeat;
+  background-size: 280px;
+  padding: 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-height: 350px;
+}
+
+.wa-chat-date-pill {
+  align-self: center;
+  background: #182229;
+  color: #8696a0;
+  font-size: 10.5px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.wa-chat-bubble-out {
+  align-self: flex-end;
+  background: #005c4b;
+  color: #e9edef;
+  font-size: 13px;
+  line-height: 1.45;
+  padding: 10px 12px 8px;
+  border-radius: 9px 0px 9px 9px;
+  max-width: 90%;
+  word-break: break-word;
+  white-space: pre-wrap;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+  position: relative;
+}
+
+/* Negritas reales de WhatsApp en la burbuja de chat (sin asteriscos) */
+.wa-chat-bubble-out strong,
+.wa-chat-bubble-out strong.wa-bold-text {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.wa-chat-bubble-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 5px;
+  font-size: 10.5px;
+  color: #8696a0;
+  margin-top: 5px;
+}
+
+.wa-chat-ticks {
+  color: #53bdeb;
+  font-size: 12px;
+}
+
+.wa-chat-fake-footer {
+  background: #1f2c34;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wa-chat-fake-input {
+  flex: 1;
+  background: #2a3942;
+  border-radius: 20px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  color: #8696a0;
+}
+
+.wa-chat-mic-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #00a884;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+}
+
+/* ── BOTONES DE DISPARO DIRECTO ── */
+.wa-phone-actions {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.wa-btn-open-ws {
+  flex: 1;
+  background: #25d366;
+  border: none;
+  color: #ffffff;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  padding: 11px 16px;
+  border-radius: 1vh;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.38);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+
+.wa-btn-open-ws:hover {
+  transform: translateY(-1px);
+  background: #20ba59;
+}
+
+.wa-btn-copy {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--tx, var(--ink, #071626));
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 11px 16px;
+  border-radius: 1vh;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.15s ease;
+}
+
+.wa-btn-copy:hover {
+  border-color: #25d366;
+  color: #25d366;
+}
+
+@media (max-width: 1024px) {
+  .wa-canales-shell {
+    grid-template-columns: 1fr;
+  }
+  .wa-phone-container {
+    position: static;
+  }
+}

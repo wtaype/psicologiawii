@@ -1,7 +1,8 @@
 ---
 // src/feature/personal/modulos/personal/Personal.astro
-// Módulo de Personal: Equipo Operativo & Gestión de Flota (Solgas Surquillo)
-// 100% JS Nativo · Integrado con @widev y smiles (rol: personal) · 0 CSS Inline
+// Módulo de Personal: Equipo Profesional & Especialistas
+// 100% JS Nativo · Integrado con @widev y Firestore ('personal') · 0 CSS Inline
+import { datosNegocio } from '@/negocio.js';
 
 interface Props {
   esActivo?: boolean;
@@ -16,16 +17,16 @@ const { esActivo = false } = Astro.props;
   <div class="ps-section-header">
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">
-        <i class="fa-solid fa-users sn-header-icon"></i>
-        Personal · Equipo Operativo & Flota
+        <i class="fa-solid fa-users sn-header-icon" style="color: var(--brand-primary, var(--mco, #ff6600));"></i>
+        Equipo de Trabajo & Colaboradores
       </h1>
       <p class="ps-section-sub">
-        Control de conductores motorizados, vehículos de reparto asignados y estado de turno en tiempo real.
+        Gestión de administradores, técnicos de despacho, colaboradores y soporte de operaciones.
       </p>
     </div>
     <div class="ps-header-actions">
       <button type="button" class="ps-btn ps-btn-primary" id="btnNuevoPersonal">
-        <i class="fa-solid fa-user-plus"></i> Registrar Personal
+        <i class="fa-solid fa-user-plus"></i> Registrar Colaborador
       </button>
     </div>
   </div>
@@ -34,56 +35,56 @@ const { esActivo = false } = Astro.props;
   <div class="pe-kpi-grid">
     <div class="pe-kpi-card">
       <div class="pe-kpi-icon-wrap">
-        <i class="fa-solid fa-id-badge"></i>
+        <i class="fa-solid fa-users"></i>
       </div>
       <div class="pe-kpi-data">
         <span class="pe-kpi-val" id="peKpiTotal">0</span>
-        <span class="pe-kpi-lbl">Total Conductores</span>
+        <span class="pe-kpi-lbl">Total Colaboradores</span>
       </div>
     </div>
 
     <div class="pe-kpi-card">
       <div class="pe-kpi-icon-wrap pe-kpi-icon-amber">
-        <i class="fa-solid fa-motorcycle"></i>
+        <i class="fa-solid fa-award"></i>
       </div>
       <div class="pe-kpi-data">
-        <span class="pe-kpi-val" id="peKpiEnRuta">0</span>
-        <span class="pe-kpi-lbl">En Ruta de Reparto</span>
+        <span class="pe-kpi-val" id="peKpiColegiados">0</span>
+        <span class="pe-kpi-lbl">Activos / Habilitados</span>
       </div>
     </div>
 
     <div class="pe-kpi-card">
       <div class="pe-kpi-icon-wrap pe-kpi-icon-green">
-        <i class="fa-solid fa-store"></i>
+        <i class="fa-solid fa-briefcase"></i>
       </div>
       <div class="pe-kpi-data">
-        <span class="pe-kpi-val" id="peKpiDisponibles">0</span>
-        <span class="pe-kpi-lbl">Disponibles en Base</span>
+        <span class="pe-kpi-val" id="peKpiAsistentes">0</span>
+        <span class="pe-kpi-lbl">Equipo Operativo</span>
       </div>
     </div>
 
     <div class="pe-kpi-card">
       <div class="pe-kpi-icon-wrap pe-kpi-icon-blue">
-        <i class="fa-solid fa-box-open"></i>
+        <i class="fa-solid fa-calendar-check"></i>
       </div>
       <div class="pe-kpi-data">
-        <span class="pe-kpi-val" id="peKpiEntregas">0</span>
-        <span class="pe-kpi-lbl">Entregas Realizadas Hoy</span>
+        <span class="pe-kpi-val" id="peKpiTrayectoria">15+ años</span>
+        <span class="pe-kpi-lbl">Experiencia Combinada</span>
       </div>
     </div>
   </div>
 
-  <!-- GRID DE TARJETAS DE CHOFERES -->
+  <!-- GRID DE TARJETAS DE PERSONAL -->
   <div class="pe-drivers-grid" id="peDriversGrid">
     <!-- Render dinámico desde personalMod.js -->
   </div>
 
-  <!-- MODAL: REGISTRAR NUEVO PERSONAL -->
+  <!-- MODAL: REGISTRAR NUEVO COLABORADOR -->
   <div class="cl-modal-overlay" id="peModalOverlay">
     <div class="cl-modal">
       <div class="cl-modal-head">
         <h3 class="cl-modal-title">
-          <i class="fa-solid fa-user-plus sn-title-icon"></i> Registrar Personal Operativo
+          <i class="fa-solid fa-user-plus sn-title-icon"></i> Registrar Colaborador en el Negocio
         </h3>
         <button type="button" class="cl-modal-close" id="btnPeModalClose">
           <i class="fa-solid fa-xmark"></i>
@@ -91,55 +92,165 @@ const { esActivo = false } = Astro.props;
       </div>
 
       <form id="formPePersonal" class="cl-modal-form">
-        <div class="sn-form-group">
-          <label class="sn-label" for="peModalNombre">Nombres y Apellidos *</label>
-          <input type="text" id="peModalNombre" class="sn-input" placeholder="Ej. Roberto Gómez Silva" required />
-        </div>
-
         <div class="cl-modal-row">
           <div class="sn-form-group">
-            <label class="sn-label" for="peModalCelular">Celular WhatsApp</label>
-            <input type="tel" id="peModalCelular" class="sn-input" placeholder="936369384" />
+            <label class="sn-label" for="peModalNombre">Nombres *</label>
+            <input type="text" id="peModalNombre" class="sn-input" placeholder="Ej. Juan Carlos" required />
           </div>
           <div class="sn-form-group">
-            <label class="sn-label" for="peModalDoc">DNI</label>
-            <input type="text" id="peModalDoc" class="sn-input" placeholder="71779978" />
+            <label class="sn-label" for="peModalApellidos">Apellidos *</label>
+            <input type="text" id="peModalApellidos" class="sn-input" placeholder="Ej. Mendoza Castro" required />
           </div>
         </div>
 
         <div class="cl-modal-row">
           <div class="sn-form-group">
-            <label class="sn-label" for="peModalCargo">Cargo</label>
-            <select id="peModalCargo" class="sn-select">
-              <option value="Repartidor Motorizado">Repartidor Motorizado</option>
-              <option value="Conductor de Furgón">Conductor de Furgón</option>
-              <option value="Técnico de Instalación">Técnico de Instalación</option>
-            </select>
+            <label class="sn-label" for="peModalCargo">Cargo / Función</label>
+            <input type="text" id="peModalCargo" class="sn-input" placeholder="Ej: Administrador, Operador, Asistente" autocomplete="off" />
           </div>
           <div class="sn-form-group">
-            <label class="sn-label" for="peModalVehiculo">Vehículo Asignado</label>
-            <select id="peModalVehiculo" class="sn-select">
-              <option value="Moto de Carga GLP">Moto de Carga GLP</option>
-              <option value="Furgón Hyundai Porter">Furgón Hyundai Porter</option>
-              <option value="Unidad Asistencia Técnica">Unidad Asistencia Técnica</option>
+            <label class="sn-label" for="peModalRol">Rol de Sistema *</label>
+            <select id="peModalRol" class="sn-input">
+              <option value="personal">Personal (Operaciones / Atención)</option>
+              <option value="gestor">Gestor (Administración / Finanzas)</option>
             </select>
           </div>
         </div>
 
         <div class="cl-modal-row">
           <div class="sn-form-group">
-            <label class="sn-label" for="peModalPlaca">N° de Placa</label>
-            <input type="text" id="peModalPlaca" class="sn-input" placeholder="6741-4B" />
+            <label class="sn-label" for="peModalDni">DNI / Documento</label>
+            <input type="text" id="peModalDni" class="sn-input" placeholder="Ej. 70809010" />
           </div>
           <div class="sn-form-group">
-            <label class="sn-label" for="peModalCuadrante">Cuadrante Principal</label>
-            <input type="text" id="peModalCuadrante" class="sn-input" placeholder="Surquillo Centro" />
+            <label class="sn-label" for="peModalCelular">Celular WhatsApp *</label>
+            <input type="tel" id="peModalCelular" class="sn-input" placeholder="+51 900 000 000" required />
+          </div>
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="peModalCumpleanos">Fecha de Cumpleaños</label>
+            <input type="date" id="peModalCumpleanos" class="sn-input" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="peModalFechaIngreso">Fecha de Ingreso</label>
+            <input type="date" id="peModalFechaIngreso" class="sn-input" />
           </div>
         </div>
 
         <div class="cl-modal-actions">
           <button type="submit" class="ps-btn ps-btn-primary" id="btnPeModalGuardar">
-            <i class="fa-solid fa-check"></i> Guardar Conductor
+            <i class="fa-solid fa-check"></i> Guardar Colaborador
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: EDITAR COLABORADOR & CONTROL DE ESTADO -->
+  <div class="cl-modal-overlay" id="peModalEditarOverlay">
+    <div class="cl-modal pe-modal-editar">
+      <div class="cl-modal-head">
+        <h3 class="cl-modal-title">
+          <i class="fa-solid fa-user-pen sn-title-icon" style="color: var(--brand-primary, #ff6600);"></i>
+          Editar Colaborador
+        </h3>
+        <button type="button" class="cl-modal-close" id="btnPeEditClose" aria-label="Cerrar modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <form id="formPeEditar" class="pe-edit-form">
+        <input type="hidden" id="peEditId" />
+        <input type="hidden" id="peEditActivo" value="true" />
+
+        <!-- HERO Y TOGGLE DE ESTADO (HABILITAR / DESHABILITAR) -->
+        <div class="pe-edit-hero">
+          <div class="pe-edit-avatar-wrap">
+            <img src="/smile.avif" alt="Avatar colaborador" id="peEditAvatarImg" class="pe-edit-avatar" />
+          </div>
+          <div class="pe-edit-hero-meta">
+            <h4 class="pe-edit-nombre-title" id="peEditNombreTitle">Colaborador</h4>
+            <span class="pe-edit-tag" id="peEditUsuarioTag">@usuario</span>
+          </div>
+          <div class="pe-edit-status-box">
+            <span class="pe-edit-status-lbl">Estado Operativo:</span>
+            <div class="pe-status-toggle-group">
+              <button type="button" class="pe-status-pill-btn active-btn" id="btnEstadoHabilitar" title="Habilitar colaborador">
+                <i class="fa-solid fa-circle-check"></i> Habilitado
+              </button>
+              <button type="button" class="pe-status-pill-btn" id="btnEstadoInhabilitar" title="Inhabilitar colaborador">
+                <i class="fa-solid fa-circle-xmark"></i> Inactivo
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- FORMULARIO DE CAMPOS EDITABLES -->
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="peEditNombre">Nombres *</label>
+            <input type="text" id="peEditNombre" class="sn-input" placeholder="Nombres" required />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="peEditApellidos">Apellidos</label>
+            <input type="text" id="peEditApellidos" class="sn-input" placeholder="Apellidos" />
+          </div>
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="peEditCargo">Cargo / Función</label>
+            <input type="text" id="peEditCargo" class="sn-input" placeholder="Técnico Despachador" autocomplete="off" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="peEditRol">Rol de Sistema *</label>
+            <select id="peEditRol" class="sn-input">
+              <option value="personal">Personal (Técnico / Operaciones)</option>
+              <option value="gestor">Gestor (Administración / Operaciones)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="peEditDni">DNI / Documento</label>
+            <input type="text" id="peEditDni" class="sn-input" placeholder="Ej. 70809010" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="peEditCelular">Celular WhatsApp</label>
+            <input type="tel" id="peEditCelular" class="sn-input" placeholder="+51 900 000 000" />
+          </div>
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group">
+            <label class="sn-label" for="peEditEmail">Correo Electrónico</label>
+            <input type="email" id="peEditEmail" class="sn-input" placeholder="correo@ejemplo.com" />
+          </div>
+          <div class="sn-form-group">
+            <label class="sn-label" for="peEditCumpleanos">Fecha de Cumpleaños</label>
+            <input type="date" id="peEditCumpleanos" class="sn-input" />
+          </div>
+        </div>
+
+        <div class="cl-modal-row">
+          <div class="sn-form-group" style="width: 100%;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2px;">
+              <label class="sn-label" for="peEditFechaIngreso" style="margin-bottom:0;">Fecha de Ingreso</label>
+              <span class="pe-antiguedad-badge" id="peEditAntiguedadBadge">Indica fecha</span>
+            </div>
+            <input type="date" id="peEditFechaIngreso" class="sn-input" />
+          </div>
+        </div>
+
+        <div class="cl-modal-actions pe-edit-actions">
+          <button type="button" class="ps-btn ps-btn-secondary" id="btnPeEditCancelar">
+            Cancelar
+          </button>
+          <button type="submit" class="ps-btn ps-btn-primary" id="btnPeEditGuardar">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
           </button>
         </div>
       </form>

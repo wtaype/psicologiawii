@@ -8,7 +8,10 @@ interface Props {
 }
 
 const { moduloActivo = 'dashboard' } = Astro.props;
-const listaModulos = getModulosActivos();
+const todosModulos = getModulosActivos();
+const listaModulos = todosModulos.filter(m => m.id !== 'ayuda' && m.id !== 'aprender');
+const moduloAyuda = todosModulos.find(m => m.id === 'ayuda');
+const moduloAprender = todosModulos.find(m => m.id === 'aprender');
 ---
 
 <aside class="ps-sidebar" id="sidebarMenu">
@@ -34,16 +37,40 @@ const listaModulos = getModulosActivos();
         >
           <i class={m.icono}></i>
           <span class="ps-nav-text">{m.nombre}</span>
-          {m.badge && <span class="ps-nav-badge">{m.badge}</span>}
+          {m.badge && (
+            <span class="ps-nav-badge" id={`navBadge_${m.id}`} data-badge-target={m.id}>
+              {m.badge}
+            </span>
+          )}
         </button>
       );
     })}
   </nav>
 
-  <!-- Pie con Botón Colapsar -->
+  <!-- Pie con Botones Ayuda, Aprender y Botón Colapsar -->
   <div class="ps-sidebar-footer">
+    {moduloAyuda && (
+      <button 
+        class={`ps-nav-item ${moduloActivo === 'ayuda' ? 'active' : ''}`} 
+        data-panel-target="ayuda"
+        title="Ayuda y Soporte Técnico"
+      >
+        <i class={moduloAyuda.icono}></i>
+        <span class="ps-nav-text">{moduloAyuda.nombre}</span>
+      </button>
+    )}
+    {moduloAprender && (
+      <button 
+        class={`ps-nav-item ${moduloActivo === 'aprender' ? 'active' : ''}`} 
+        data-panel-target="aprender"
+        title="Aprender y Documentación del Sistema"
+      >
+        <i class={moduloAprender.icono}></i>
+        <span class="ps-nav-text">{moduloAprender.nombre}</span>
+      </button>
+    )}
     <button class="ps-btn-collapse" id="btnCollapseSidebar" title="Colapsar menú lateral">
-      <i class="fa-solid fa-arrow-left-long" id="iconCollapse"></i>
+      <i class="fa-solid fa-angles-left" id="iconCollapse"></i>
       <span id="labelCollapse">Colapsar</span>
     </button>
   </div>

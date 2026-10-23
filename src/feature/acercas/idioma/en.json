@@ -11,14 +11,14 @@
   },
   "comun": {
     "volver_inicio": "Back to Home",
-    "distribuidor_oficial": "Official Authorized Distributor",
-    "sede_oficial": "Headquarters in Surquillo, Lima",
+    "distribuidor_oficial": "Official Psychological Clinic",
+    "sede_oficial": "America Clinic · Villa El Salvador, Lima",
     "actualizado": "Last updated:",
-    "garantia_seguridad": "Safety Guarantee & Calibrated Scale",
-    "ayuda_titulo": "Need assistance or order inquiry?",
-    "ayuda_desc": "Our customer support team in Surquillo is available Monday to Sunday.",
+    "garantia_seguridad": "Professional Care & Board Certification C.Ps.P. 49425",
+    "ayuda_titulo": "Need guidance or want to book an appointment?",
+    "ayuda_desc": "Lic. Sofia Reynaga and the clinic team are available to answer your questions.",
     "btn_whatsapp": "Chat via WhatsApp",
-    "btn_llamar": "Call Hotline",
-    "btn_volver": "View Catalog"
+    "btn_llamar": "Call Clinic",
+    "btn_volver": "View Specialties"
   }
 }

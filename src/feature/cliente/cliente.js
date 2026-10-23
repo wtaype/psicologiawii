@@ -1,7 +1,4 @@
-// src/feature/cliente/cliente.js
-// Orquestador maestro del feature/cliente
-// Control de paneles, navegación sidebar y dock móvil, temas, sesión y dropdowns
-import { getls, avatar } from '@widev';
+import { getls, savels, avatar, wiTema } from '@widev';
 import { salir } from '../auth/sesion.js';
 import { inicializarPedidos } from './modulos/01-pedidos/pedidos.js';
 import { inicializarDirecciones, renderizarDirecciones } from './modulos/02-direccion/direccion.js';
@@ -61,7 +58,7 @@ export function cambiarModulo(nuevoModulo, updateUrl = true) {
 }
 
 function inicializarSesionUI() {
-  const user = getls('wiSmile') || window.__GASWII_USER__;
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
   if (!user || (!user.uid && !user.usuario && !user.nombre)) {
     salir();
     return;
@@ -76,7 +73,7 @@ function inicializarSesionUI() {
   const nombreMostrar = user.nombre || user.usuario || 'Cliente';
   if (nameElem) nameElem.textContent = nombreMostrar;
   if (avatarElem) avatarElem.textContent = avatar(nombreMostrar);
-  if (planElem) planElem.textContent = user.plan === 'vip' ? 'Cliente VIP' : (user.plan ? `Plan ${user.plan}` : 'Cliente Solgas');
+  if (planElem) planElem.textContent = user.plan === 'vip' ? 'Cliente MYPE' : (user.plan ? `Plan ${user.plan}` : 'Contribuyente');
   if (ddName) ddName.textContent = user.nombreCompleto || user.nombre || user.usuario || 'Mi Perfil';
   if (ddMail) ddMail.textContent = user.email || user.celular || '';
 
@@ -121,20 +118,23 @@ function inicializarDropdowns() {
 }
 
 function inicializarTemaYSidebar() {
-  // Conmutador de tema
+  // Conmutador de tema universal con wiTema
   const btnTheme = document.getElementById('btnThemeToggle');
   btnTheme?.addEventListener('click', () => {
-    const cur = document.documentElement.dataset.theme;
-    const next = cur === 'luz' ? 'futuro' : 'luz';
-    document.documentElement.dataset.theme = next;
-    localStorage.setItem('gaswii_theme_cliente', next);
+    wiTema.toggle();
   });
 
-  // Botón colapsar sidebar
+  // Botón colapsar sidebar idéntico a personal
   const btnCollapse = document.getElementById('btnCollapseSidebar');
+  const iconCollapse = document.getElementById('iconCollapse');
+  const labelCollapse = document.getElementById('labelCollapse');
   btnCollapse?.addEventListener('click', () => {
     const isCollapsed = document.documentElement.classList.toggle('is-collapsed');
-    localStorage.setItem('gaswii_sidebar_cliente', isCollapsed ? 'true' : 'false');
+    savels('wi_sidebar_collapsed', isCollapsed);
+    if (iconCollapse && labelCollapse) {
+      iconCollapse.className = isCollapsed ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left';
+      labelCollapse.textContent = isCollapsed ? 'Expandir' : 'Colapsar';
+    }
   });
 }
 
@@ -163,22 +163,7 @@ function inicializarNavegacion() {
 }
 
 function inicializarBuscador() {
-  const btnSearchMobile = document.getElementById('btnSearchMobile');
-  const mobileBar = document.getElementById('mobileSearchBar');
-  const btnCloseMobile = document.getElementById('btnCloseMobileSearch');
   const inputDesktop = document.getElementById('clSearchInput');
-  const inputMobile = document.getElementById('clSearchInputMobile');
-
-  btnSearchMobile?.addEventListener('click', () => {
-    mobileBar?.classList.add('open');
-    inputMobile?.focus();
-  });
-
-  btnCloseMobile?.addEventListener('click', () => {
-    mobileBar?.classList.remove('open');
-    if (inputMobile) inputMobile.value = '';
-    buscarGlobal('');
-  });
 
   function filtrarProductos(query) {
     const q = query.trim().toLowerCase();
@@ -205,10 +190,6 @@ function inicializarBuscador() {
   }
 
   inputDesktop?.addEventListener('input', (e) => {
-    buscarGlobal(e.target.value);
-  });
-
-  inputMobile?.addEventListener('input', (e) => {
     buscarGlobal(e.target.value);
   });
 }

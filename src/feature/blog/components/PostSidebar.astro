@@ -1,0 +1,111 @@
+---
+// src/feature/blog/components/PostSidebar.astro
+// Barra Lateral del Artículo: Ficha de Autor, Últimas Historias y Relacionados
+import { getBlogI18n } from '../idioma/idioma.js';
+import { datosNegocio } from '../../../negocio.js';
+
+interface Props {
+  post: any;
+  latest?: any[];
+  related?: any[];
+  lang?: string;
+}
+
+const { post, latest = [], related = [], lang = 'es' } = Astro.props;
+const t = getBlogI18n(lang);
+
+const formatShortDate = (dateVal: any) => {
+  if (!dateVal) return '';
+  const d = new Date(dateVal);
+  const locale = lang === 'en' ? 'en-US' : 'es-PE';
+  return d.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
+const prefix = lang === 'en' ? '/en/' : '/';
+---
+
+<aside class="po_sidebar">
+  <!-- 1. Tarjeta del Autor -->
+  <div class="po_side_card">
+    <div class="po_side_title">
+      <i class="fa-solid fa-user-pen"></i> {t.meta_author}
+    </div>
+    <div class="po_autor_box">
+      <div class="po_autor_av">
+        <img src="/smile.avif" alt={post.autor || datosNegocio.nombre} />
+      </div>
+      <div class="po_autor_info">
+        <strong>{post.autor || datosNegocio.nombreCorto || datosNegocio.nombre}</strong>
+        <span>{t.brand_badge} <i class="fa-solid fa-shield-check" style="color:var(--brand-primary, #ff6600);"></i></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Últimas Historias -->
+  {latest.length > 0 && (
+    <div class="po_side_card">
+      <div class="po_side_title">
+        <i class="fa-solid fa-clock"></i> {t.latest_stories}
+      </div>
+      <div class="po_relacionados">
+        {latest.map((r: any) => (
+          <a href={`${prefix}${r.slug || r.id}`} class="po_rel_card" title={r.titulo}>
+            <div class="po_rel_img">
+              <img src={r.imagen || '/imgwii/02-solgas-surquillo-balanza.webp'} alt={r.titulo} loading="lazy" />
+            </div>
+            <div class="po_rel_info">
+              <span class="po_rel_cat">{r.categoria}</span>
+              <strong>{r.titulo}</strong>
+              <span class="po_rel_meta">
+                <i class="fa-solid fa-calendar-days"></i> {r.publicado || formatShortDate(r.creado)} · <i class="fa-solid fa-eye"></i> {r.vistas || 0} · <i class="fa-solid fa-heart" style="color:#fe0149;"></i> {r.likes || 0}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <!-- 3. Artículos Relacionados -->
+  {related.length > 0 && (
+    <div class="po_side_card">
+      <div class="po_side_title">
+        <i class="fa-solid fa-tags"></i> {t.related_stories}
+      </div>
+      <div class="po_relacionados">
+        {related.map((r: any) => (
+          <a href={`${prefix}${r.slug || r.id}`} class="po_rel_card" title={r.titulo}>
+            <div class="po_rel_img">
+              <img src={r.imagen || '/imgwii/03-solgas-surquillo-instalacion.webp'} alt={r.titulo} loading="lazy" />
+            </div>
+            <div class="po_rel_info">
+              <span class="po_rel_cat">{r.categoria}</span>
+              <strong>{r.titulo}</strong>
+              <span class="po_rel_meta">
+                <i class="fa-solid fa-calendar-days"></i> {r.publicado || formatShortDate(r.creado)} · <i class="fa-solid fa-eye"></i> {r.vistas || 0}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  )}
+
+  <!-- 4. Banner Institucional Gaswii / Delivery SOS -->
+  <div class="po_side_banner">
+    <div class="po_side_banner_icon">
+      <i class="fa-solid fa-truck-fast"></i>
+    </div>
+    <div class="po_side_banner_title">
+      {lang === 'en' ? 'Cooking Gas Delivery 15 Min' : 'Delivery de Gas en 15 Minutos'}
+    </div>
+    <p class="po_side_banner_desc">
+      {lang === 'en' 
+        ? 'Verified weight with calibrated digital scale right at your door. Certified Solgas safety.' 
+        : 'Pesaje verificado con balanza digital en la puerta de tu hogar. Balones 100% sellados de planta.'}
+    </p>
+    <a href={datosNegocio.linkWhatsapp} target="_blank" rel="noopener noreferrer" class="po_side_banner_btn">
+      <i class="fa-brands fa-whatsapp"></i> {lang === 'en' ? 'Order by WhatsApp' : 'Pedir Balón Ahora'}
+    </a>
+  </div>
+</aside>

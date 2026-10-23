@@ -1,6 +1,6 @@
 // src/feature/auth/components/registrar.js
 // Plantilla de registro, sanitizacion, validaciones y creacion de cuenta bajo demanda
-// Solgas Surquillo (Gaswii)
+// Capa de Autenticación Universal
 
 import { wiSpin, Mensaje, wiTip, wiRateLimit } from '../../../core/widev/widev.js';
 import { entrar } from '../sesion.js';
@@ -8,6 +8,12 @@ import { campo, mapearErrorAuth } from './ingresar.js';
 import { t } from '../idioma/idioma.js';
 import { camposRegistro } from '../data/campos.js';
 import { loadFirebaseAuth, loadFirebaseDb } from '../firebaseAuthLoader.js';
+import { datosNegocio, configurarSistema } from '@/negocio.js';
+
+const getLogoFull = () => datosNegocio.logoFull || datosNegocio.logo || '/imgwii/logo_full.webp';
+const getRutaTerminos = () => configurarSistema?.rutas?.terminos || '/terminos';
+const getColeccionUsuarios = () => configurarSistema?.colecciones?.usuarios || 'smiles';
+const getAvatarDefault = () => datosNegocio?.avatarDefault || '/smile.avif';
 
 // --- SANITIZACIÓN ESTRICTA ---
 export const sanName      = v => v.replace(/[<>="'`;/\\$}{]/g, '').replace(/\s{2,}/g, ' ');
@@ -38,7 +44,7 @@ export const tplRegistrar = () => {
   const inputs = camposRegistro.map(c => campo(c.ico, c.tipo, c.id, txt[c.key_ph], c.ojo, c.col)).join('');
   return `
   <div class="wilg_head">
-    <img src="/imgwii/logo_full.webp" alt="Solgas Surquillo" class="wilg_brand_logo" onerror="this.src='/favicon.ico'">
+    <img src="${getLogoFull()}" alt="Logo" class="wilg_brand_logo" onerror="this.src='/favicon.ico'">
     <h2>${txt.registro_titulo}</h2>
     <p>${txt.registro_sub}</p>
   </div>
@@ -49,7 +55,7 @@ export const tplRegistrar = () => {
   <div class="wilg_grid">${inputs}</div>
   <label class="wilg_terminos_check">
     <input type="checkbox" id="checkTerminosRegistro">
-    <span>${txt.acepto_terminos_1} <a href="/terminos" target="_blank" rel="noopener noreferrer">${txt.acepto_terminos_link}</a> ${txt.acepto_terminos_2}</span>
+    <span>${txt.acepto_terminos_1} <a href="${getRutaTerminos()}" target="_blank" rel="noopener noreferrer">${txt.acepto_terminos_link}</a> ${txt.acepto_terminos_2}</span>
   </label>
   <button type="button" id="Registrar" class="wilg_btn inactivo" disabled>
     <i class="fa-solid fa-user-plus"></i> ${txt.btn_registro}
@@ -100,7 +106,7 @@ export const checkUsuarioDisponible = debounce(async (el) => {
   }
   try {
     const { db, collection, query, where, limit, getDocs } = await loadFirebaseDb();
-    const snap = await getDocs(query(collection(db, 'smiles'), where('usuario', '==', val), limit(1)));
+    const snap = await getDocs(query(collection(db, getColeccionUsuarios()), where('usuario', '==', val), limit(1)));
     const ok = snap.empty;
     el.dataset.ok = ok ? 'true' : 'false';
     if (ok) {
@@ -127,7 +133,7 @@ export const checkEmailDisponible = debounce(async (el) => {
   }
   try {
     const { db, collection, query, where, limit, getDocs } = await loadFirebaseDb();
-    const snap = await getDocs(query(collection(db, 'smiles'), where('email', '==', val), limit(1)));
+    const snap = await getDocs(query(collection(db, getColeccionUsuarios()), where('email', '==', val), limit(1)));
     const ok = snap.empty;
     el.dataset.ok = ok ? 'true' : 'false';
     if (ok) {
@@ -222,7 +228,7 @@ export const registrarUsuario = async (btn) => {
     const { db, doc, setDoc, serverTimestamp } = await loadFirebaseDb();
     const { user } = await createUserWithEmailAndPassword(auth, datos.regEmail, datos.regPassword);
 
-    const imgEmail = 'https://imgwii.web.app/smile.avif';
+    const imgEmail = getAvatarDefault();
     const { avatar: calcIniciales } = await import('../../../core/widev/nombre.js');
     const nombreCompleto = `${datos.regNombre} ${datos.regApellidos}`.trim();
     const iniciales = calcIniciales(nombreCompleto || datos.regUsuario);
@@ -249,7 +255,7 @@ export const registrarUsuario = async (btn) => {
     // updateProfile y setDoc en paralelo
     await Promise.all([
       updateProfile(user, { displayName: nombreCompleto }),
-      setDoc(doc(db, 'smiles', user.uid), { ...profile, creado: serverTimestamp(), actualizado: serverTimestamp() })
+      setDoc(doc(db, getColeccionUsuarios(), user.uid), { ...profile, creado: serverTimestamp(), actualizado: serverTimestamp() })
     ]);
 
     entrar(profile);

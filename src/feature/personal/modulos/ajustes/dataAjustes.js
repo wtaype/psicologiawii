@@ -1,22 +1,23 @@
 // src/feature/personal/modulos/ajustes/dataAjustes.js
-// Gestor de Configuración General del Sistema y Backup (Solgas Surquillo)
-// 100% JS Nativo · Integrado con @widev
+// Gestor Canónico de Configuración General del Sistema y Backup Universal
+// 100% JS Nativo · Integrado con @widev y Semillas Oficiales
 
 import { getls, savels } from '@widev';
+import { datosNegocio } from '@/negocio.js';
+import negocioSemilla from '../../../../semillas/negocio.json';
+import productosSemilla from '../../../../semillas/productos.json';
 
-const STORAGE_KEY = 'gaswii_ajustes_sistema';
+export const STORAGE_KEY = 'wi_ajustes_sistema';
 
 const AJUSTES_DEFAULT = {
   tiendaAbierta: true,
-  mensajeCerrado: 'Estamos fuera de horario. Nuestro horario de entrega es de 6:00 AM a 10:00 PM.',
-  etaMinutos: '12–15',
-  costoDelivery: 0.00,
+  mensajeCerrado: 'Estamos fuera de horario de oficina. Revisa nuestros horarios de atención disponibles.',
+  etaMinutos: '15–30',
+  costoDelivery: 80.00,
   sonidoPedidos: true,
   notificacionesWebPush: true,
   temaPorDefecto: 'futuro',
-  sidebarColapsado: false,
-  telefonoContacto: '936 369 384',
-  direccionSede: 'Jr. Dante 260, Surquillo, Lima 15047'
+  sidebarColapsado: false
 };
 
 export function obtenerAjustes() {
@@ -38,16 +39,66 @@ export function guardarAjustes(nuevosAjustes) {
 export function generarBackupCompletoJson() {
   const backup = {
     fechaExportacion: new Date().toISOString(),
-    version: '1.0.0',
-    sede: 'Solgas Surquillo (Jr. Dante 260)',
+    version: '2.0.0',
+    negocio: datosNegocio.nombre || 'Mi Negocio',
+    sede: datosNegocio.direccionSede || '',
     ajustes: obtenerAjustes(),
-    comprobantes: getls('gaswii_sunat_comprobantes') || [],
-    clientes: getls('gaswii_crm_clientes') || [],
-    personal: getls('gaswii_equipo_personal') || [],
-    entradas: getls('gaswii_entradas_blog') || [],
-    galeria: getls('gaswii_galeria_media') || [],
-    paginas: getls('gaswii_paginas_institucionales') || []
+    comprobantes: getls('wi_sunat_comprobantes') || [],
+    clientes: getls('wi_crm_clientes') || [],
+    personal: getls('wi_equipo_personal') || [],
+    blogs: getls('wi_blogs_data') || [],
+    galeria: getls('wi_galeria_media') || []
   };
 
   return JSON.stringify(backup, null, 2);
+}
+
+/**
+ * ⚡ Siembra / Restaura Firestore y LocalStorage desde las semillas locales
+ * Ejecutable 100% desde el frontend para pruebas visuales inmediatas.
+ */
+export async function sembrarDesdeSemillasFrontend() {
+  // 1. Sincronizar en caché local (0ms)
+  try {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('wi_negocio', JSON.stringify(negocioSemilla));
+      localStorage.setItem('wi_productos', JSON.stringify(productosSemilla));
+      localStorage.setItem('wi_servicios', JSON.stringify(productosSemilla));
+    }
+  } catch (e) {}
+
+  // 2. Sincronizar en Firestore
+  try {
+    const { db } = await import('@core/servicios/firebase.js');
+    if (db) {
+      const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
+
+      // Sembrar Negocio Principal
+      await setDoc(doc(db, 'negocio', 'principal'), {
+        ...negocioSemilla,
+        actualizado: serverTimestamp()
+      }, { merge: true });
+
+      // Sembrar Catálogo de Productos
+      if (Array.isArray(productosSemilla)) {
+        for (const prod of productosSemilla) {
+          if (prod.id) {
+            await setDoc(doc(db, 'productos', prod.id), {
+              ...prod,
+              actualizado: serverTimestamp()
+            }, { merge: true });
+          }
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[dataAjustes] Siembra Firestore parcial o sin red:', err);
+  }
+
+  // 3. Notificar reactivamente a la UI viva
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('wi:negocio-actualizado', { detail: negocioSemilla }));
+  }
+
+  return true;
 }

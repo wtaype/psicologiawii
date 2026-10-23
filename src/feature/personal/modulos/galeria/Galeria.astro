@@ -1,6 +1,6 @@
 ---
 // src/feature/personal/modulos/galeria/Galeria.astro
-// Módulo de Galería: Gestor de Medios Cloudflare R2 (Solgas Surquillo)
+// Módulo de Galería: Gestor de Medios & Fotos Oficiales
 // 100% JS Nativo · Integrado con @widev y r2Storage.js · 0 CSS Inline
 
 interface Props {
@@ -16,11 +16,11 @@ const { esActivo = false } = Astro.props;
   <div class="ps-section-header">
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">
-        <i class="fa-solid fa-images sn-header-icon"></i>
-        Galería · Bucket Cloudflare R2 (gaswii-media)
+        <i class="fa-solid fa-images sn-header-icon" style="color: var(--mco, var(--brand-primary, #ff6600));"></i>
+        Galería · Banco de Medios & Fotos Oficiales
       </h1>
       <p class="ps-section-sub">
-        Gestión de imágenes de balones, marca y fotos de la sede Dante 260 con CDN oficial y optimización WebP.
+        Gestión de imágenes de la sede, equipo, certificaciones y material institucional con CDN optimizado WebP.
       </p>
     </div>
     <div class="ps-header-actions">
@@ -32,17 +32,16 @@ const { esActivo = false } = Astro.props;
 
   <!-- TOOLBAR Y FILTROS -->
   <div class="gl-toolbar">
+    <!-- Filtros dinámicos en cascada desde galeria.json -->
     <div class="gl-filters" id="glFiltersWrap">
       <button type="button" class="gl-filter-pill active" data-cat="todas">Todas</button>
-      <button type="button" class="gl-filter-pill" data-cat="balones">Balones GLP</button>
-      <button type="button" class="gl-filter-pill" data-cat="sede">Sede Dante</button>
-      <button type="button" class="gl-filter-pill" data-cat="delivery">Reparto y Flota</button>
-      <button type="button" class="gl-filter-pill" data-cat="accesorios">Accesorios</button>
-      <button type="button" class="gl-filter-pill" data-cat="banners">Banners</button>
     </div>
 
     <div class="gl-toolbar-right">
-      <span class="gl-stats-badge" id="glStatsBadge">6 archivos · Cloudflare R2</span>
+      <button type="button" class="gl-btn-sync" id="btnGlSync" title="Sincronizar galería con Cloudflare R2 y Firestore">
+        <i class="fa-solid fa-arrows-rotate"></i> Sincronizar
+      </button>
+      <span class="gl-stats-badge" id="glStatsBadge">Galería Multimedia</span>
     </div>
   </div>
 
@@ -51,54 +50,209 @@ const { esActivo = false } = Astro.props;
     <!-- Render dinámico desde galeria.js -->
   </div>
 
-  <!-- MODAL DE SUBIDA DIRECTA A CLOUDFLARE R2 -->
+  <!-- MODAL DE SUBIDA DIRECTA A GRAN ESCALA (SPLIT 90vw x 90vh) -->
   <div class="gl-modal-overlay" id="glModalSubida">
-    <div class="gl-modal">
+    <div class="gl-modal gl-modal-xl">
       <div class="cl-modal-head">
         <h3 class="cl-modal-title">
-          <i class="fa-solid fa-cloud-arrow-up sn-title-icon"></i> Subir a Cloudflare R2
+          <i class="fa-solid fa-cloud-arrow-up sn-title-icon"></i> Subir Fotografía a la Galería
         </h3>
         <button type="button" class="cl-modal-close" id="btnGlModalClose">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <form id="formGlSubida" class="cl-modal-form">
-        <input type="file" id="glFileInput" accept="image/*" style="display:none;" />
-        
-        <div class="gl-dropzone" id="glDropzone">
-          <i class="fa-solid fa-cloud-arrow-up gl-dropzone-icon"></i>
-          <div class="gl-dropzone-txt">Arrastra tu imagen aquí o haz clic para buscar</div>
-          <div class="gl-dropzone-sub">Formatos recomendados: WebP, PNG, JPG (Máx. 5 MB)</div>
+      <div class="gl-edit-split-container">
+        <!-- COLUMNA IZQUIERDA: PREVIEW EN VIVO Y DROPZONE AMPLIO (70-75%) -->
+        <div class="gl-edit-stage-column">
+          <!-- ESTADO VACÍO (DROPZONE INTERACTIVO) -->
+          <div class="gl-dropzone-stage" id="glUploadEmptyState">
+            <div class="gl-dropzone-inner" id="glDropzone">
+              <i class="fa-solid fa-cloud-arrow-up gl-dropzone-icon"></i>
+              <div class="gl-dropzone-txt">Arrastra y suelta tu fotografía aquí</div>
+              <div class="gl-dropzone-sub">o haz clic en cualquier parte de este recuadro para examinar</div>
+              <div class="gl-dropzone-formats">
+                <span class="gl-format-chip">WebP</span>
+                <span class="gl-format-chip">PNG</span>
+                <span class="gl-format-chip">JPG</span>
+                <span class="gl-format-chip">JPEG</span>
+              </div>
+              <button type="button" class="ps-btn ps-btn-secondary gl-btn-browse" id="btnGlBrowseFile">
+                <i class="fa-regular fa-folder-open"></i> Explorar Archivos
+              </button>
+            </div>
+          </div>
+
+          <!-- ESTADO CON IMAGEN SELECCIONADA (VISTA PREVIA REAL A GRAN ESCALA) -->
+          <div class="gl-upload-preview-wrap" id="glUploadPreviewState" style="display: none;">
+            <div class="gl-edit-stage-wrap">
+              <img src="" alt="Vista previa del archivo" id="glUploadPreviewImg" class="gl-edit-stage-img" />
+              <div class="gl-edit-stage-badges">
+                <button type="button" class="gl-btn-change-file" id="btnGlChangeFile" title="Cambiar fotografía">
+                  <i class="fa-solid fa-arrows-rotate"></i> Cambiar imagen
+                </button>
+              </div>
+            </div>
+            <div class="gl-edit-stage-footer">
+              <span class="gl-edit-storage-badge is-cloud" id="glUploadStorageBadge">
+                <i class="fa-solid fa-cloud"></i> Listo para Cloudflare R2 & Firestore
+              </span>
+              <span class="gl-edit-meta-pill" id="glUploadPeso">-- KB · Original</span>
+              <span class="gl-edit-meta-pill" id="glUploadDimensiones">-- x -- px</span>
+            </div>
+          </div>
         </div>
 
-        <div class="sn-form-group">
-          <label class="sn-label" for="glSelectCategoria">Categoría de Archivo</label>
-          <select id="glSelectCategoria" class="sn-select">
-            <option value="balones">Balones GLP</option>
-            <option value="sede">Sede Dante</option>
-            <option value="delivery">Reparto y Flota</option>
-            <option value="accesorios">Accesorios</option>
-            <option value="banners">Banners</option>
-          </select>
+        <!-- COLUMNA DERECHA: FORMULARIO DE INFORMACIÓN & METADATOS (25-30%) -->
+        <div class="gl-edit-info-column">
+          <form id="formGlSubida" class="gl-edit-form">
+            <input type="file" id="glFileInput" accept="image/*" style="display:none;" />
+
+            <div class="sn-form-group">
+              <label class="sn-label" for="glInpTitulo">Título Descriptivo</label>
+              <input type="text" id="glInpTitulo" class="sn-input" placeholder="Ej. Fachada Principal Sede Central" required />
+            </div>
+
+            <div class="sn-form-group">
+              <label class="sn-label" for="glSelectCategoria">Categoría de Archivo</label>
+              <select id="glSelectCategoria" class="sn-select">
+                <option value="especialista">Especialista</option>
+                <option value="sede">Sede Presencial</option>
+                <option value="servicios">Servicios</option>
+                <option value="asesorias">Asesorías</option>
+                <option value="institucional">Institucional</option>
+                <option value="otros">Otros</option>
+              </select>
+            </div>
+
+            <div class="sn-form-group">
+              <label class="sn-label" for="glInpAlt">Texto Alternativo (ALT) para Google SEO</label>
+              <textarea id="glInpAlt" class="sn-input" rows="3" placeholder="Texto descriptivo para buscadores e indexación SEO..."></textarea>
+            </div>
+
+            <div class="gl-edit-pin-group">
+              <label class="gl-edit-pin-label" for="glInpPinSubida">
+                <input type="checkbox" id="glInpPinSubida" class="gl-edit-pin-checkbox" />
+                <span class="gl-edit-pin-text">
+                  <i class="fa-solid fa-thumbtack"></i> Fijar al inicio de la Galería (Pin Destacado)
+                </span>
+              </label>
+            </div>
+
+            <div class="gl-edit-audit-card">
+              <div class="gl-edit-audit-item">
+                <span class="gl-audit-label"><i class="fa-solid fa-cloud-arrow-up"></i> Destino:</span>
+                <span class="gl-audit-value">Cloudflare R2 Storage</span>
+              </div>
+              <div class="gl-edit-audit-item">
+                <span class="gl-audit-label"><i class="fa-solid fa-database"></i> Metadatos:</span>
+                <span class="gl-audit-value">Firestore Database</span>
+              </div>
+              <div class="gl-edit-audit-item">
+                <span class="gl-audit-label"><i class="fa-solid fa-bolt"></i> Rendimiento:</span>
+                <span class="gl-audit-value">CDN Caché Global</span>
+              </div>
+            </div>
+
+            <div class="cl-modal-actions">
+              <button type="button" class="ps-btn ps-btn-secondary" id="btnGlCancelSubida">
+                Cancelar
+              </button>
+              <button type="submit" class="ps-btn ps-btn-primary" id="btnGlSubmitSubida">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Subir Imagen
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE EDICIÓN DE IMAGEN A GRAN ESCALA (SPLIT 90vw x 90vh) -->
+  <div class="gl-modal-overlay" id="glModalEditar">
+    <div class="gl-modal gl-modal-xl">
+      <div class="cl-modal-head">
+        <h3 class="cl-modal-title">
+          <i class="fa-solid fa-pen-to-square sn-title-icon"></i> Editar Detalles de Imagen
+        </h3>
+        <button type="button" class="cl-modal-close" id="btnGlModalEditClose">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <div class="gl-edit-split-container">
+        <!-- COLUMNA IZQUIERDA: GRAN VISTA DE IMAGEN (70-75%) -->
+        <div class="gl-edit-stage-column">
+          <div class="gl-edit-stage-wrap">
+            <img src="" alt="Vista previa en alta resolución" id="glEditPreviewImg" class="gl-edit-stage-img" />
+            <div class="gl-edit-stage-badges" id="glEditStageBadges"></div>
+          </div>
+          <div class="gl-edit-stage-footer">
+            <span class="gl-edit-storage-badge" id="glEditStorageBadge">
+              <i class="fa-solid fa-cloud"></i> Cloudflare R2 & Firestore
+            </span>
+            <span class="gl-edit-meta-pill" id="glEditPeso">38 KB · WebP</span>
+            <span class="gl-edit-meta-pill" id="glEditDimensiones">800x1000</span>
+          </div>
         </div>
 
-        <div class="sn-form-group">
-          <label class="sn-label" for="glInpTitulo">Título o Nombre Descriptivo</label>
-          <input type="text" id="glInpTitulo" class="sn-input" placeholder="Ej. Balón 10kg Premium con precinto" />
-        </div>
+        <!-- COLUMNA DERECHA: FORMULARIO DE INFORMACIÓN & CONTROL (25-30%) -->
+        <div class="gl-edit-info-column">
+          <form id="formGlEditar" class="gl-edit-form">
+            <input type="hidden" id="glEditInpId" />
 
-        <div class="sn-form-group">
-          <label class="sn-label" for="glInpAlt">Texto Alternativo (ALT) para Google SEO</label>
-          <input type="text" id="glInpAlt" class="sn-input" placeholder="Ej. Balón de gas Solgas 10 kg en Surquillo" />
-        </div>
+            <div class="sn-form-group">
+              <label class="sn-label" for="glEditInpTitulo">Título Descriptivo</label>
+              <input type="text" id="glEditInpTitulo" class="sn-input" placeholder="Título de la imagen..." required />
+            </div>
 
-        <div class="cl-modal-actions">
-          <button type="submit" class="ps-btn ps-btn-primary" id="btnGlSubmitSubida">
-            <i class="fa-solid fa-upload"></i> Subir a R2
-          </button>
+            <div class="sn-form-group">
+              <label class="sn-label" for="glEditSelectCategoria">Categoría de Archivo</label>
+              <select id="glEditSelectCategoria" class="sn-select">
+                <!-- Se llena dinámicamente desde galeria.json + otros -->
+              </select>
+            </div>
+
+            <div class="sn-form-group">
+              <label class="sn-label" for="glEditInpAlt">Texto Alternativo (ALT) para Google SEO</label>
+              <textarea id="glEditInpAlt" class="sn-input" rows="3" placeholder="Texto descriptivo para buscadores..."></textarea>
+            </div>
+
+            <div class="gl-edit-pin-group">
+              <label class="gl-edit-pin-label" for="glEditInpPin">
+                <input type="checkbox" id="glEditInpPin" class="gl-edit-pin-checkbox" />
+                <span class="gl-edit-pin-text">
+                  <i class="fa-solid fa-thumbtack"></i> Fijar al inicio de la Galería (Pin Destacado)
+                </span>
+              </label>
+            </div>
+
+            <div class="gl-edit-audit-card">
+              <div class="gl-edit-audit-item">
+                <span class="gl-audit-label"><i class="fa-regular fa-calendar"></i> Fecha subida:</span>
+                <span class="gl-audit-value" id="glEditFecha">2026-10-11</span>
+              </div>
+              <div class="gl-edit-audit-item">
+                <span class="gl-audit-label"><i class="fa-solid fa-clock-rotate-left"></i> Modificado:</span>
+                <span class="gl-audit-value" id="glEditActualizado">Reciente</span>
+              </div>
+              <div class="gl-edit-audit-item">
+                <span class="gl-audit-label"><i class="fa-regular fa-user"></i> Subido por:</span>
+                <span class="gl-audit-value" id="glEditUsuario">Admin</span>
+              </div>
+            </div>
+
+            <div class="cl-modal-actions">
+              <button type="button" class="ps-btn ps-btn-secondary" id="btnGlCancelEdit">
+                Cancelar
+              </button>
+              <button type="submit" class="ps-btn ps-btn-primary" id="btnGlSubmitEdit">
+                <i class="fa-solid fa-floppy-disk"></i> Guardar Cambios
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
+      </div>
     </div>
   </div>
 

@@ -305,6 +305,27 @@
   color: var(--accent);
 }
 
+/* CHECKBOX RECORDAR SESIÓN */
+.wilg_recordar_check {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: var(--fz_s3);
+  color: var(--tx2);
+  cursor: pointer;
+  user-select: none;
+  padding: 0.15rem 0.2rem 0.35rem;
+  width: 100%;
+}
+
+.wilg_recordar_check input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  accent-color: var(--mco);
+  cursor: pointer;
+}
+
 /* PREVIEW USUARIO GOOGLE */
 .wilg_user_preview {
   display: flex;

@@ -59,7 +59,9 @@ export const seo = {
 export function getMeta(ruta = '/', idioma = 'es') {
   const clave = ruta === '/' || ruta === '/en' ? 'inicio' : ruta.replace(/^\/(en\/)?/, '');
   const data = seo[clave] ? seo[clave][idioma] : seo.inicio[idioma];
-  const urlBase = (app.linkweb || 'https://psicologiawii.com').replace(/\/$/, '');
+  const urlBase = (typeof window !== 'undefined' && window.location?.origin 
+    ? window.location.origin 
+    : (app.linkweb || 'https://psicologiawii.web.app')).replace(/\/$/, '');
   const canonical = `${urlBase}${ruta}`;
 
   const title = data.title || datosNegocio.nombre;
@@ -110,7 +112,9 @@ export function getMeta(ruta = '/', idioma = 'es') {
  * Genera el marcado de datos estructurados Schema.org JSON-LD para Google Rich Snippets
  */
 export function getJsonLd(ruta = '/', idioma = 'es') {
-  const urlBase = (app.linkweb || 'https://psicologiawii.com').replace(/\/$/, '');
+  const urlBase = (typeof window !== 'undefined' && window.location?.origin 
+    ? window.location.origin 
+    : (app.linkweb || 'https://psicologiawii.web.app')).replace(/\/$/, '');
   const isEn = idioma === 'en';
   const canonical = `${urlBase}${ruta}`;
   const data = seo.inicio[idioma] || SEO_INICIO.es;

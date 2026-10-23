@@ -1,0 +1,284 @@
+---
+// src/feature/blog/components/PostPage.astro
+// Componente de Lectura Principal del Artículo de Blog
+// Optimizado al estándar Workwii: Galería Picasa v2.2, Modal YouTube, Tipografía fluida witema y WPO
+import { getBlogI18n } from '../idioma/idioma.js';
+import { mdToHtml, wiSanihtml, extraerHeadings } from '../lib/procesarmd.js';
+import PostComent from './PostComent.astro';
+import blogCss from '../blog.css?inline';
+
+interface Props {
+  post: any;
+  headings?: { text: string; id: string; depth: number }[];
+  prevPost?: any;
+  nextPost?: any;
+  lang?: string;
+  translationSlug?: string | null;
+}
+
+const { post, headings: propHeadings, prevPost, nextPost, lang = 'es', translationSlug } = Astro.props;
+const t = getBlogI18n(lang);
+
+// Procesar el contenido Markdown a HTML
+const rawMarkdown = post.contenidoMD || post.contenido || '';
+const htmlContent = wiSanihtml(mdToHtml(rawMarkdown, lang));
+
+// Calcular headings para TOC si no vienen calculados
+const headings = propHeadings && propHeadings.length > 0 ? propHeadings : extraerHeadings(rawMarkdown);
+
+const prefix = lang === 'en' ? '/en/blog' : '/blog';
+
+const postSlug = post.slug || post.id;
+const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
+---
+
+<!-- Inyección limpia de estilos del Blog (0 peticiones bloqueantes) -->
+<style is:global set:html={blogCss}></style>
+
+<!-- Barra de progreso de lectura en el viewport (en el fondo, estilo Workwii) -->
+<div class="po_progress_bar" id="po_progress"></div>
+
+<div class="po_wrap page-container" data-slug={postSlug} data-lang={lang} data-id={post.id} data-translation-slug={translationSlug || ''}>
+  <div class="po_layout">
+    
+    <!-- COLUMNA PRINCIPAL DE LECTURA (IZQUIERDA) -->
+    <div class="po_col_main">
+      <article class="po_content">
+        
+        <!-- 1. Hero del Post con Badges Interactivos -->
+        <div class="po_hero">
+          <img 
+            src={post.imagenTop || post.imagen || '/imgwii/02-solgas-surquillo-balanza.webp'} 
+            alt={post.metaSEO?.alt || post.titulo} 
+            class="po_hero_img"
+            loading="eager"
+            fetchpriority="high"
+          />
+          <div class="po_hero_over">
+            <a href={prefix} class="po_back" title={t.nav_back}>
+              <i class="fa-solid fa-arrow-left"></i> {t.nav_back}
+            </a>
+
+            <div class="po_hero_badges">
+              <span class="po_cat_badge">
+                <i class="fa-solid fa-tag"></i> {post.categoria}
+              </span>
+              
+              {post.pin && (
+                <span class="po_dest_badge" title={t.pin}>
+                  <i class="fa-solid fa-thumbtack"></i> {t.pin}
+                </span>
+              )}
+
+              <button type="button" class="po_like_btn po_like_sync" title={t.meta_likes}>
+                <i class="fa-solid fa-heart"></i> <span class="po_likes_count_text">{post.likes || 0}</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Cabecera del Artículo -->
+        <header class="po_header">
+          <h1 class="po_titulo">{post.titulo}</h1>
+          
+          {post.descripcion && (
+            <p class="po_resumen">{post.descripcion}</p>
+          )}
+
+          <div class="po_meta">
+            <span><i class="fa-solid fa-user-pen"></i> {post.autor}</span>
+            <span><i class="fa-solid fa-calendar-days"></i> {post.publicado || '2026-10-15'}</span>
+            <span><i class="fa-solid fa-clock"></i> {post.lecturaTM || '5 min'}</span>
+            <span><i class="fa-solid fa-eye"></i> {post.vistas || 0} {t.meta_views.toLowerCase()}</span>
+            <button type="button" class="po_like_btn po_like_sync" style="background:transparent; border:none; padding:0; color:inherit; font-size:inherit;" title={t.meta_likes}>
+              <i class="fa-solid fa-heart" style="color:#fe0149;"></i> <span class="po_likes_count_text">{post.likes || 0}</span> {t.meta_likes.toLowerCase()}
+            </button>
+          </div>
+        </header>
+
+        <!-- 3. Tabla de Contenidos (TOC) Generada en Servidor -->
+        {headings && headings.length > 0 && (
+          <nav class="po_toc_box" aria-label={t.toc_title}>
+            <div class="po_toc_title">
+              <i class="fa-solid fa-list-ul"></i> {t.toc_title}
+            </div>
+            <ul class="po_toc">
+              {headings.map(h => (
+                <li style={{ paddingLeft: h.depth === 3 ? '16px' : '0' }}>
+                  <a href={`#${h.id}`} class="po_toc_link">{h.text}</a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        )}
+
+        <!-- 4. Cuerpo del Artículo en Markdown Sanitizado -->
+        <div class="po_contenido" set:html={htmlContent}></div>
+
+        <!-- 5. Navegación Anterior / Siguiente (Tarjetas estilo Workwii) -->
+        {(prevPost || nextPost) && (
+          <div class="po_pn_box">
+            {prevPost ? (
+              <a href={`${prefix}${prevPost.slug || prevPost.id}`} class="po_pn_card pn_prev" title={prevPost.titulo}>
+                <div class="po_pn_img">
+                  <img src={prevPost.imagen || '/imgwii/02-solgas-surquillo-balanza.webp'} alt="" loading="lazy" />
+                </div>
+                <div class="po_pn_info">
+                  <span class="po_pn_lb"><i class="fa-solid fa-arrow-left"></i> {t.prev_post}</span>
+                  <strong class="po_pn_tit">{prevPost.titulo}</strong>
+                </div>
+              </a>
+            ) : (<div></div>)}
+
+            {nextPost ? (
+              <a href={`${prefix}${nextPost.slug || nextPost.id}`} class="po_pn_card pn_next" title={nextPost.titulo}>
+                <div class="po_pn_info">
+                  <span class="po_pn_lb">{t.next_post} <i class="fa-solid fa-arrow-right"></i></span>
+                  <strong class="po_pn_tit">{nextPost.titulo}</strong>
+                </div>
+                <div class="po_pn_img">
+                  <img src={nextPost.imagen || '/imgwii/03-solgas-surquillo-instalacion.webp'} alt="" loading="lazy" />
+                </div>
+              </a>
+            ) : (<div></div>)}
+          </div>
+        )}
+
+        <!-- 6. Botones para Compartir y Like Dinámico -->
+        <div class="po_share">
+          <span><i class="fa-solid fa-share-nodes"></i> {t.share}</span>
+          <div class="po_share_btns">
+            <button type="button" class="po_like_btn po_like_sync" title={t.meta_likes}>
+              <i class="fa-solid fa-heart"></i> <span class="po_likes_count_text">{post.likes || 0}</span>
+            </button>
+            <a 
+              href={`https://wa.me/?text=${encodeURIComponent(post.titulo + ' ' + shareUrl)}`} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="po_share_btn" 
+              style="--sc:#25D366;"
+              title="WhatsApp"
+            >
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <a 
+              href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="po_share_btn" 
+              style="--sc:#1877F2;"
+              title="Facebook"
+            >
+              <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <button type="button" class="po_share_btn po_copy" style="--sc:var(--mco);" title={t.copy_link}>
+              <i class="fa-solid fa-link"></i>
+            </button>
+          </div>
+        </div>
+
+      </article>
+
+      <!-- 7. Comentarios de la Comunidad con Carga Diferida (IntersectionObserver) -->
+      <PostComent slug={postSlug} titulo={post.titulo} lang={lang} />
+    </div>
+
+    <!-- COLUMNA LATERAL (DERECHA) -->
+    <slot name="sidebar" />
+
+  </div>
+</div>
+
+<script>
+  import { initModalImgs, cleanupModalImgs } from '../lib/modalimgs.js';
+  import { initYtModal, cleanupYtModal } from '../lib/modalyt.js';
+  import { wicopy } from '../../../core/widev/widev.js';
+  import { wiInit } from '../../../core/widev/wiinit.js';
+
+  let scrollListener: any = null;
+
+  const initPost = () => {
+    const postEl = document.querySelector('.po_wrap') as HTMLElement;
+    if (!postEl) return;
+    const slug = postEl.dataset.slug;
+    if (!slug) return;
+
+    // 0. Sincronizar Switcher de Idioma del Header con el post traducido (estilo Workwii)
+    const tSlug = postEl.dataset.translationSlug;
+    const pLang = postEl.dataset.lang || 'es';
+    if (tSlug) {
+      document.querySelectorAll('.header-pill-group').forEach((group: any) => {
+        if (pLang === 'es') {
+          const btnEn = group.querySelector('[data-lang="en"]');
+          if (btnEn) btnEn.setAttribute('href', `/en/${tSlug}`);
+        } else {
+          const btnEs = group.querySelector('[data-lang="es"]');
+          if (btnEs) btnEs.setAttribute('href', `/${tSlug}`);
+        }
+      });
+    }
+
+    // 1. Galería Lightbox Picasa v2.2 y Modal YouTube
+    initModalImgs('.po_contenido');
+    initYtModal();
+
+    // 2. Barra de progreso de lectura en bottom
+    const progress = document.getElementById('po_progress');
+    if (progress) {
+      scrollListener = () => {
+        const total = document.documentElement.scrollHeight - window.innerHeight;
+        progress.style.width = total > 0 ? `${(window.scrollY / total) * 100}%` : '0%';
+      };
+      window.addEventListener('scroll', scrollListener, { passive: true });
+      scrollListener();
+    }
+
+    // 3. Sistema de likes optimistas sincronizado
+    const likeKey = `wi_like_${slug}`;
+    const hasLiked = localStorage.getItem(likeKey);
+    if (hasLiked) {
+      document.querySelectorAll('.po_like_sync').forEach((btn: any) => btn.classList.add('active'));
+    }
+
+    document.querySelectorAll('.po_like_sync').forEach((btn: any) => {
+      btn.addEventListener('click', () => {
+        const currentlyLiked = localStorage.getItem(likeKey);
+        const diff = currentlyLiked ? -1 : 1;
+
+        if (currentlyLiked) {
+          localStorage.removeItem(likeKey);
+          document.querySelectorAll('.po_like_sync').forEach((b: any) => b.classList.remove('active'));
+        } else {
+          localStorage.setItem(likeKey, '1');
+          document.querySelectorAll('.po_like_sync').forEach((b: any) => b.classList.add('active'));
+        }
+
+        document.querySelectorAll('.po_likes_count_text').forEach((el: any) => {
+          const cur = parseInt(el.textContent || '0', 10) || 0;
+          el.textContent = String(Math.max(0, cur + diff));
+        });
+      });
+    });
+
+    // 4. Copiar enlace con wicopy
+    document.querySelectorAll('.po_copy').forEach((btn: any) => {
+      btn.addEventListener('click', () => {
+        const currentLang = postEl.dataset.lang || 'es';
+        const msg = currentLang === 'en' ? 'Link copied! 🔗' : '¡Enlace copiado! 🔗';
+        wicopy(window.location.href, btn, msg);
+      });
+    });
+  };
+
+  const cleanupPost = () => {
+    if (scrollListener) {
+      window.removeEventListener('scroll', scrollListener);
+      scrollListener = null;
+    }
+    cleanupModalImgs();
+    cleanupYtModal();
+  };
+
+  wiInit(initPost);
+  document.addEventListener('astro:before-preparation', cleanupPost);
+</script>

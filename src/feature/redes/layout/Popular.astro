@@ -1,0 +1,91 @@
+---
+// src/feature/redes/layout/Popular.astro
+// Layout Maestro Independiente para el Feature Redes (Bio-Link / Linktree)
+// 100% en Español, Cero Header institucional, Cero Footer institucional, Cero Dependencias pesadas
+import { datosNegocio } from '../../../negocio.js';
+import witemaCss from '../../../core/wicss/witema.css?inline';
+import redesCss from '../redes.css?inline';
+
+interface Props {
+  titulo?: string;
+  descripcion?: string;
+  idioma?: string;
+  negocioOverride?: any;
+}
+
+const { 
+  idioma = 'es',
+  negocioOverride = null
+} = Astro.props;
+
+const negocioActivo = negocioOverride || datosNegocio;
+const titulo = Astro.props.titulo || `Redes Oficiales · ${negocioActivo.nombre} | Enlaces`;
+const descripcion = Astro.props.descripcion || negocioActivo.subtitulo || `Canales verificados y enlaces oficiales de ${negocioActivo.nombre}.`;
+
+const webUrl = negocioActivo.redes?.web || '';
+const siteUrl = Astro.site?.toString().replace(/\/$/, '') || (webUrl ? (webUrl.startsWith('http') ? webUrl : `https://${webUrl}`) : '');
+const canonical = siteUrl 
+  ? (idioma === 'en' ? `${siteUrl}/en/redes` : `${siteUrl}/redes`) 
+  : (idioma === 'en' ? '/en/redes' : '/redes');
+
+const ogImgRel = negocioActivo.fotoEspecialista || negocioActivo.identidad?.imagenSede || negocioActivo.hero?.imagen || negocioActivo.logo || '/imgwii/hero.webp';
+const ogImage = ogImgRel.startsWith('http') ? ogImgRel : (siteUrl ? `${siteUrl}${ogImgRel.startsWith('/') ? '' : '/'}${ogImgRel}` : ogImgRel);
+---
+
+<!DOCTYPE html>
+<html lang={idioma} data-theme="luz" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+  <title>{titulo}</title>
+  <meta name="description" content={descripcion} />
+  <link rel="canonical" href={canonical} />
+
+  <!-- Rastreadores y Miniaturas -->
+  <meta name="robots" content="index, follow, max-image-preview:large" />
+
+  <!-- OpenGraph Enriquecido para WhatsApp, Facebook, TikTok e Instagram -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content={negocioActivo.nombre} />
+  <meta property="og:title" content={titulo} />
+  <meta property="og:description" content={descripcion} />
+  <meta property="og:image" content={ogImage} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:locale" content={idioma === 'en' ? 'en_US' : 'es_PE'} />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={titulo} />
+  <meta name="twitter:description" content={descripcion} />
+  <meta name="twitter:image" content={ogImage} />
+
+  <!-- Precarga de Tipografías Locales -->
+  <link rel="preload" href="/google/Outfit-700.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+  <link rel="preload" href="/google/Poppins-400.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
+
+  <link rel="stylesheet" href="/google/fonts.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css" />
+
+  <!-- Anti-FOUC Inmediato y Reactividad de Tema (0ms) -->
+  <script is:inline>
+    try {
+      document.documentElement.dataset.theme = localStorage.getItem('wiTema') || (matchMedia('(prefers-color-scheme: light)').matches ? 'luz' : 'futuro');
+    } catch(e) {}
+  </script>
+
+  <!-- Estilos Inlined sin runtime (witema + redes) -->
+  <style is:global set:html={witemaCss}></style>
+  <style is:global set:html={redesCss}></style>
+</head>
+
+<body>
+  <!-- Contenido Central Autónomo -->
+  <slot />
+
+  <!-- Script Cliente del Feature Redes -->
+  <script>
+    import '../redes.js';
+  </script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 /* src/feature/personal/modulos/correo/plantillas/plantillas.css */
-/* Estilos Madre Universales para Correos de Solgas Surquillo / Gaswii */
+/* Estilos Universales para Plantillas de Correo HTML */
 /* Compatibles con Gmail, Microsoft Outlook, Apple Mail y Clientes Móviles */
 
 body {
@@ -28,7 +28,7 @@ table {
 .email-header {
   background: #ffffff;
   padding: 20px 28px;
-  border-bottom: 2px solid #ff6a00;
+  border-bottom: 2px solid var(--mco, #ff6600);
 }
 
 .email-body {
@@ -48,7 +48,7 @@ table {
 
 .btn-action {
   display: inline-block;
-  background: #ff6a00;
+  background: var(--mco, #ff6600);
   color: #ffffff !important;
   text-decoration: none;
   font-weight: 700;

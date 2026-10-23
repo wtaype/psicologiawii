@@ -1,7 +1,7 @@
 ---
 // src/feature/cliente/modulos/02-direccion/Direccion.astro
-// Módulo de Gestión de Direcciones de Entrega · Solgas Surquillo
-// Formulario ultra rápido y directo + Lista interactiva en dos columnas
+// Módulo de Gestión de Domicilio Fiscal y Establecimientos Anexos · Ecosistema Wii
+// Formulario ultra rápido y directo + Lista interactiva en dos columnas (0ms)
 import { datosNegocio } from '@/negocio.js';
 
 interface Props {
@@ -9,27 +9,28 @@ interface Props {
 }
 
 const { cliente = {} } = Astro.props;
-const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.length > 0 
+const distritosCobertura = Array.isArray(datosNegocio.distritos) && datosNegocio.distritos.length > 0 
   ? datosNegocio.distritos 
-  : [
-      { id: 'surquillo', nombre: 'Surquillo', eta: '12–15 min' },
-      { id: 'miraflores', nombre: 'Miraflores', eta: '15–20 min' },
-      { id: 'san-isidro', nombre: 'San Isidro', eta: '20–25 min' },
-      { id: 'san-borja', nombre: 'San Borja', eta: '18–22 min' },
-      { id: 'barranco', nombre: 'Barranco', eta: '20–25 min' },
-      { id: 'surco', nombre: 'Santiago de Surco', eta: '22–28 min' }
-    ];
+  : (Array.isArray(datosNegocio.sedes) && datosNegocio.sedes.length > 0
+      ? datosNegocio.sedes.map(s => ({ 
+          id: s.id || s.nombre?.toLowerCase().replace(/\s+/g, '-'), 
+          nombre: s.nombre, 
+          eta: s.modalidad || 'Sede Operativa' 
+        }))
+      : [
+          { id: 'principal', nombre: datosNegocio.distritoSede || 'Sede Principal', eta: 'Sede Central' }
+        ]);
 ---
 
 <div class="cl-direccion-module" id="moduloDireccion">
   <!-- CABECERA DEL MÓDULO -->
   <div class="cd-panel-head">
     <div class="cd-panel-title">
-      <i class="fa-solid fa-map-location-dot"></i>
-      <span>Mis Direcciones de Entrega</span>
+      <i class="fa-solid fa-building"></i>
+      <span>Domicilio Fiscal & Sedes del Contribuyente</span>
     </div>
     <span class="cd-panel-subtitle">
-      Gestiona tus puntos de entrega para pedidos rápidos de gas con delivery oficial inmediato en Surquillo y zonas aledañas.
+      Registra tu domicilio fiscal declarado ante SUNAT o establecimientos anexos de tu empresa para la emisión correcta de facturas y declaraciones.
     </span>
   </div>
 
@@ -42,29 +43,29 @@ const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.leng
       <div class="cd-card-header">
         <div class="cd-card-title" id="cdEditorTitle">
           <i class="fa-solid fa-circle-plus" id="cdEditorIcon"></i>
-          <span id="cdEditorTitleText">Registrar Dirección</span>
+          <span id="cdEditorTitleText">Registrar Domicilio Fiscal</span>
         </div>
       </div>
 
       <form id="cdFormDireccion" autocomplete="off">
         <input type="hidden" id="cdFormId" value="" />
 
-        <!-- 1. BOTONES DIRECTOS DE TIPO DE LUGAR (SIN LABEL NI INPUT DE TEXTO) -->
-        <div class="cd-chips-row" id="cdChipsRow" role="radiogroup" aria-label="Tipo de Lugar">
-          <button type="button" class="cd-chip-btn active" data-alias="Casa">
-            <i class="fa-solid fa-house"></i> <span>Casa</span>
-          </button>
-          <button type="button" class="cd-chip-btn" data-alias="Trabajo">
-            <i class="fa-solid fa-briefcase"></i> <span>Trabajo</span>
-          </button>
-          <button type="button" class="cd-chip-btn" data-alias="Empresa">
-            <i class="fa-solid fa-building"></i> <span>Empresa</span>
+        <!-- 1. BOTONES DIRECTOS DE TIPO DE LUGAR -->
+        <div class="cd-chips-row" id="cdChipsRow" role="radiogroup" aria-label="Tipo de Establecimiento">
+          <button type="button" class="cd-chip-btn active" data-alias="Fiscal">
+            <i class="fa-solid fa-building-columns"></i> <span>Fiscal</span>
           </button>
           <button type="button" class="cd-chip-btn" data-alias="Oficina">
-            <i class="fa-solid fa-desktop"></i> <span>Oficina</span>
+            <i class="fa-solid fa-briefcase"></i> <span>Oficina</span>
           </button>
-          <button type="button" class="cd-chip-btn" data-alias="Otros">
-            <i class="fa-solid fa-location-dot"></i> <span>Otros</span>
+          <button type="button" class="cd-chip-btn" data-alias="Local">
+            <i class="fa-solid fa-store"></i> <span>Local</span>
+          </button>
+          <button type="button" class="cd-chip-btn" data-alias="Almacén">
+            <i class="fa-solid fa-warehouse"></i> <span>Almacén</span>
+          </button>
+          <button type="button" class="cd-chip-btn" data-alias="Personal">
+            <i class="fa-solid fa-house"></i> <span>Personal</span>
           </button>
         </div>
 
@@ -78,20 +79,20 @@ const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.leng
               type="text" 
               class="cd-input" 
               id="cdFormCalle" 
-              placeholder="Ej: Calle Dante 261" 
+              placeholder="Ej: Jr. Dante 260 / Av. Principal" 
               required 
             />
           </div>
 
           <div class="cd-form-group">
             <label class="cd-form-label" for="cdFormDpto">
-              <i class="fa-solid fa-door-open"></i> Dep / Int / Piso:
+              <i class="fa-solid fa-door-open"></i> Ofic / Dpto / Piso / Mz:
             </label>
             <input 
               type="text" 
               class="cd-input" 
               id="cdFormDpto" 
-              placeholder="Ej: Dpto 301, Piso 2" 
+              placeholder="Ej: Of. 302, Piso 3" 
             />
           </div>
         </div>
@@ -100,16 +101,12 @@ const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.leng
         <div class="cd-form-row">
           <div class="cd-form-group">
             <label class="cd-form-label" for="cdFormDistrito">
-              <i class="fa-solid fa-map"></i> Distrito de Despacho:
+              <i class="fa-solid fa-city"></i> Distrito / Ciudad:
             </label>
-            <select class="cd-select" id="cdFormDistrito">
-              {distritosCobertura.map((dist: any) => (
-                <option 
-                  value={dist.nombre} 
-                  selected={dist.nombre === 'Surquillo'}
-                  data-eta={dist.eta || '15–20 min'}
-                >
-                  {dist.nombre}
+            <select class="cd-select" id="cdFormDistrito" required>
+              {distritosCobertura.map(d => (
+                <option value={d.nombre} data-eta={d.eta || 'Atención'}>
+                  {d.nombre}
                 </option>
               ))}
             </select>
@@ -117,38 +114,39 @@ const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.leng
 
           <div class="cd-form-group">
             <label class="cd-form-label" for="cdFormCelular">
-              <i class="fa-solid fa-phone"></i> Celular / Telf Contacto:
+              <i class="fa-solid fa-phone"></i> Celular de Contacto:
             </label>
             <input 
               type="tel" 
               class="cd-input" 
               id="cdFormCelular" 
-              placeholder="Ej: 961 229 280" 
+              placeholder="Ej: 900 000 000" 
+              value={cliente.celular || ''} 
             />
           </div>
         </div>
 
-        <!-- 4. REFERENCIAS SOLITO EN TEXTAREA -->
+        <!-- 4. REFERENCIAS EN TEXTAREA -->
         <div class="cd-form-group">
           <label class="cd-form-label" for="cdFormReferencia">
-            <i class="fa-solid fa-circle-info"></i> Referencia para el Repartidor:
+            <i class="fa-solid fa-circle-info"></i> Referencia de Ubicación o Notificación:
           </label>
           <textarea 
             class="cd-textarea" 
             id="cdFormReferencia" 
-            placeholder="Ej: Frente al parque, rejas negras, timbrar dos veces..."
+            placeholder="Ej: Cruce con Av. Angamos, edificio empresarial, portería..."
           ></textarea>
         </div>
 
-        <!-- 5. DOS COLUMNAS ESTILO APPLE: SWITCH PRINCIPAL + TIEMPO APROX -->
+        <!-- 5. DOS COLUMNAS ESTILO APPLE: SWITCH PRINCIPAL + CONDICIÓN SUNAT -->
         <div class="cd-apple-row">
           <!-- CARD APPLE: DIRECCIÓN PRINCIPAL -->
           <label class="cd-apple-card cd-apple-clickable" for="cdFormPrincipal">
             <div class="cd-apple-card-info">
               <span class="cd-apple-title">
-                <i class="fa-solid fa-star cd-star-icon"></i> Principal
+                <i class="fa-solid fa-star cd-star-icon"></i> Domicilio Principal
               </span>
-              <span class="cd-apple-desc">Predeterminar dirección</span>
+              <span class="cd-apple-desc">Fijar como principal en declaraciones</span>
             </div>
             <div class="cd-apple-switch">
               <input type="checkbox" id="cdFormPrincipal" checked />
@@ -156,16 +154,16 @@ const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.leng
             </div>
           </label>
 
-          <!-- CARD APPLE: TIEMPO ESTIMADO DINÁMICO -->
+          <!-- CARD APPLE: TIEMPO ESTIMADO DE ENTREGA -->
           <div class="cd-apple-card cd-apple-static">
             <div class="cd-apple-card-info">
               <span class="cd-apple-title">
-                <i class="fa-solid fa-truck-fast cd-truck-icon"></i> Tiempo Aprox.
+                <i class="fa-solid fa-motorcycle cd-truck-icon"></i> Tiempo de Entrega Estimado
               </span>
-              <span class="cd-apple-desc">Entrega estimada</span>
+              <span class="cd-apple-desc">Despacho express a tu zona</span>
             </div>
             <div class="cd-apple-badge-eta" id="cdTiempoAproxBadge">
-              12–15 min
+              15 - 20 min
             </div>
           </div>
         </div>
@@ -189,7 +187,7 @@ const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.leng
       <div class="cd-card-header">
         <div class="cd-card-title">
           <i class="fa-solid fa-list-check"></i>
-          <span>Mis Direcciones Guardadas</span>
+          <span>Mis Domicilios y Sedes</span>
         </div>
         <span class="cd-badge-count" id="cdBadgeCount">0</span>
       </div>
@@ -202,7 +200,7 @@ const distritosCobertura = datosNegocio.distritos && datosNegocio.distritos.leng
           class="cd-search-input" 
           id="cdSearchDir" 
           placeholder="Buscar por alias, calle o distrito..." 
-          autocomplete="off"
+          autocomplete="off" 
         />
       </div>
 

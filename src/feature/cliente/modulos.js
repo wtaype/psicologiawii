@@ -1,18 +1,13 @@
 // src/feature/cliente/modulos.js
-// Registro y configuración central de módulos para el Feature Cliente (Solgas Surquillo)
-// Permite activar/desactivar módulos y definir el módulo por defecto desde un único lugar
+// Registro y configuración desacoplada del Portal de Clientes
+// Gobernado dinámicamente por src/semillas/configurar.js (0ms)
+import { configurarCliente, getModulosCliente } from '@/negocio.js';
 
-export const moduloDefecto = 'pedidos';
-
-export const modulos = [
-  { id: 'pedidos',   nombre: 'Pedir gas',    icono: 'fa-solid fa-bolt',             activo: true },
-  { id: 'direccion', nombre: 'Direcciones',  icono: 'fa-solid fa-map-location-dot', activo: true, badge: '2' },
-  { id: 'cuenta',    nombre: 'Mi cuenta',    icono: 'fa-solid fa-user-gear',        activo: true },
-  { id: 'soporte',   nombre: 'Soporte',      icono: 'fa-solid fa-headset',          activo: true }
-];
+export const moduloDefecto = configurarCliente.moduloDefecto || 'pedidos';
+export const modulos = configurarCliente.modulos || [];
 
 // Obtener solo los módulos habilitados para el sidebar y navegación
-export const getModulosActivos = () => modulos.filter(m => m.activo);
+export const getModulosActivos = () => getModulosCliente();
 
 // Obtener el módulo por defecto
 export const getModuloDefecto = () => moduloDefecto;

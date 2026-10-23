@@ -1,5 +1,5 @@
 /* ============================================================ */
-/* 🎨 ESTILOS BASE DEL SHELL CLIENTE (GASWII SOLGAS SURQUILLO)   */
+/* 🎨 ESTILOS BASE DEL SHELL CLIENTE · ECOSISTEMA WII           */
 /*    100% Apoyado en variables y tokens de witema.css          */
 /* ============================================================ */
 
@@ -7,8 +7,8 @@
   --side-w: 230px;
   --side-collapsed-w: 68px;
   --topbar-h: clamp(54px, 6.8vh, 62px);
-  --cl-orange: var(--brand-orange, #ff6600);
-  --cl-orange-hover: var(--brand-orange-hover, #e05a00);
+  --cl-orange: var(--brand-primary, var(--mco, #9e7b4f));
+  --cl-orange-hover: var(--mco-dark, #82633c);
   --cl-emerald: #10b981;
   --cl-wa: var(--wa-green, #25d366);
   --cl-wa-hover: #1ebe57;
@@ -57,12 +57,24 @@ body {
   gap: 12px;
   text-decoration: none;
   color: inherit;
+  min-width: 0;
+}
+
+.cl-brand-picture {
+  display: inline-flex;
+  align-items: center;
+  height: 100%;
+  flex-shrink: 0;
 }
 
 .cl-logo {
-  height: clamp(30px, 4.2vh, 38px);
+  height: 38px;
+  max-height: 38px;
   width: auto;
   object-fit: contain;
+  border-radius: 1.2vh;
+  box-sizing: border-box !important;
+  flex-shrink: 0;
 }
 
 .cl-brand-info {
@@ -124,7 +136,7 @@ body {
 }
 .cl-search-input:focus {
   border-color: var(--cl-orange);
-  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+  box-shadow: 0 0 0 3px rgba(158, 123, 79, 0.15);
   background: var(--surface);
 }
 
@@ -250,7 +262,7 @@ body {
 .cl-user-chip-btn:hover,
 .cl-user-chip-btn.active {
   border-color: var(--cl-orange);
-  background: rgba(255, 102, 0, 0.08);
+  background: rgba(158, 123, 79, 0.08);
 }
 
 .cl-avatar-sm {
@@ -325,14 +337,14 @@ body {
   text-align: left;
 }
 .cl-dd-item:hover {
-  background: rgba(255, 102, 0, 0.1);
+  background: rgba(158, 123, 79, 0.1);
   color: var(--cl-orange);
 }
 .cl-dd-item i { width: 16px; text-align: center; font-size: 0.85rem; color: var(--muted); }
 .cl-dd-item:hover i { color: var(--cl-orange); }
 
 .cl-dd-item.destacado {
-  background: rgba(255, 102, 0, 0.12);
+  background: rgba(158, 123, 79, 0.12);
   color: var(--cl-orange);
   font-weight: 700;
 }
@@ -397,12 +409,12 @@ html.is-collapsed .cl-sidebar { width: var(--side-collapsed-w); }
 }
 
 .cl-nav-item:hover {
-  background: rgba(255, 102, 0, 0.08);
+  background: rgba(158, 123, 79, 0.08);
   color: var(--ink);
 }
 
 .cl-nav-item.active {
-  background: rgba(255, 102, 0, 0.14);
+  background: rgba(158, 123, 79, 0.14);
   color: var(--cl-orange);
   font-weight: 700;
 }
@@ -424,29 +436,61 @@ html.is-collapsed .cl-sidebar { width: var(--side-collapsed-w); }
   border-radius: 999px;
 }
 
+html.is-collapsed .cl-nav-item {
+  justify-content: center;
+  padding: 9px 0;
+  gap: 0;
+}
+
 html.is-collapsed .cl-nav-text,
 html.is-collapsed .cl-nav-badge,
-html.is-collapsed #lblCollapseCliente { display: none; }
+html.is-collapsed #labelCollapse,
+html.is-collapsed #lblCollapseCliente { 
+  display: none !important; 
+}
 
+.cl-sidebar-footer,
 .cl-sidebar-foot {
-  padding-top: 10px;
+  padding: 10px;
   border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: var(--surface);
 }
 
 .cl-btn-collapse {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  gap: 10px;
   width: 100%;
-  padding: 7px 10px;
-  background: transparent;
-  border: 1px solid var(--line);
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: none;
+  border: 1px solid transparent;
   color: var(--muted);
   cursor: pointer;
-  font-size: 0.78rem;
-  font-weight: 600;
+  font-size: var(--fz_s4, 0.8rem);
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.cl-btn-collapse:hover {
+  background: var(--raised);
+  color: var(--ink);
+  border-color: var(--line);
+}
+
+.cl-btn-collapse i {
+  font-size: 13px;
+  width: 18px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+html.is-collapsed .cl-btn-collapse {
+  justify-content: center;
+  padding: 8px 0;
 }
 
 /* ============================================================
@@ -480,17 +524,18 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
 .cl-mobile-nav { display: none; }
 
 @media (max-width: 960px) {
-  /* Ocultar subtítulo de sede en móvil para máxima comodidad */
-  .cl-brand-sub {
+  /* Ocultar texto brand en móvil para mostrar solo logoFull completo */
+  .cl-brand-info {
     display: none !important;
+  }
+  .cl-logo {
+    height: 36px !important;
+    max-height: 36px !important;
   }
 
-  /* Buscador: alternar input web por icono móvil super pro */
+  /* Ocultar input buscador de escritorio en móvil */
   .cl-search-box {
     display: none !important;
-  }
-  .cl-btn-search-mobile {
-    display: grid !important;
   }
 
   .cl-main-shell {
@@ -510,7 +555,7 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
     background: rgba(15, 23, 42, 0.94);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-top: 1.5px solid rgba(255, 102, 0, 0.35);
+    border-top: 1.5px solid rgba(158, 123, 79, 0.35);
     z-index: 95;
     padding: 0 16px;
     align-items: center;
@@ -520,7 +565,7 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
 
   [data-theme="luz"] .cl-mobile-cart-bar {
     background: rgba(255, 255, 255, 0.96);
-    border-top: 1.5px solid rgba(255, 102, 0, 0.3);
+    border-top: 1.5px solid rgba(158, 123, 79, 0.3);
     box-shadow: 0 -4px 16px rgba(0,0,0,0.09);
   }
 
