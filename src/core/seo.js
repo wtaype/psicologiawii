@@ -32,15 +32,21 @@ export const SEO_IMAGEN = {
   },
   get alt() {
     const raw = datosNegocio.seo?.imagen;
-    if (typeof raw === 'object' && raw?.alt) return raw.alt;
-    return datosNegocio.nombre;
+    const v = (typeof raw === 'object' && raw?.alt) ? raw.alt : (datosNegocio.seo?.imagenAlt || datosNegocio.nombre);
+    if (typeof v === 'object' && v !== null) {
+      return v.es || v.en || Object.values(v)[0] || 'Consultorio Psicológico América';
+    }
+    return String(v || 'Consultorio Psicológico América');
   },
   get caption() {
     const raw = datosNegocio.seo?.imagen;
-    if (typeof raw === 'object' && raw?.caption) return raw.caption;
-    return datosNegocio.bio;
+    const v = (typeof raw === 'object' && raw?.caption) ? raw.caption : (datosNegocio.seo?.imagenCaption || datosNegocio.bio);
+    if (typeof v === 'object' && v !== null) {
+      return v.es || v.en || Object.values(v)[0] || 'Atención psicológica profesional y confidencial';
+    }
+    return String(v || 'Atención psicológica profesional y confidencial');
   }
-};
+};;
 
 export function resolverImagenUrl(imgUrl, urlBase = '') {
   const base = (urlBase || (app.linkweb || 'https://consultorioamerica.com')).replace(/\/$/, '');
@@ -115,7 +121,15 @@ export function getMeta(ruta = '/', idioma = 'es') {
     ogImageWidth: SEO_IMAGEN.width,
     ogImageHeight: SEO_IMAGEN.height,
     ogImageType: SEO_IMAGEN.type,
-    ogImageAlt: SEO_IMAGEN.alt,
+    ogImageAlt: (() => {
+    const rawAlt = (typeof datosNegocio.seo?.imagen === 'object' && datosNegocio.seo?.imagen?.alt) 
+      ? datosNegocio.seo.imagen.alt 
+      : (datosNegocio.seo?.imagenAlt || SEO_IMAGEN.alt);
+    if (typeof rawAlt === 'object' && rawAlt !== null) {
+      return rawAlt[idioma] || rawAlt.es || rawAlt.en || 'Consultorio Psicológico América';
+    }
+    return String(rawAlt || 'Consultorio Psicológico América');
+  })(),
     ogUrl: canonical,
     twitterCard: 'summary_large_image',
     twitterTitle: title,
@@ -152,11 +166,13 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
   const seoData = datosNegocio.seo || {};
   const schemaData = seoData.schema || {};
 
-  // Rango de precios calculado dinámicamente de las tarifas
+  // Rango de precios calculado dinámicamente de las tarifas y catálogo de servicios
   const tarifas = datosNegocio.tarifas || {};
-  const preciosArray = [tarifas.consultaBase, tarifas.consultaPresencial, tarifas.paquete10Sesiones, tarifas.descarteDiagnostico].filter(p => typeof p === 'number' && !isNaN(p) && p > 0);
-  const minPrecio = preciosArray.length > 0 ? Math.min(...preciosArray) : 0;
-  const maxPrecio = preciosArray.length > 0 ? Math.max(...preciosArray) : 0;
+  const preciosTarifas = [tarifas.consultaBase, tarifas.consultaPresencial, tarifas.paquete10Sesiones, tarifas.descarteDiagnostico].filter(p => typeof p === 'number' && !isNaN(p) && p > 0);
+  const preciosServicios = (datosNegocio.servicios || []).map(s => Number(s.precioPEN ?? s.precio ?? 0)).filter(p => !isNaN(p) && p > 0);
+  const todosPrecios = [...preciosTarifas, ...preciosServicios];
+  const minPrecio = todosPrecios.length > 0 ? Math.min(...todosPrecios) : 85;
+  const maxPrecio = todosPrecios.length > 0 ? Math.max(...todosPrecios) : 680;
   const priceRange = schemaData.rangoPrecios || `S/ ${minPrecio} - S/ ${maxPrecio}`;
 
   // Horarios de apertura dinámicos
@@ -210,7 +226,7 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
           contentUrl: resolverImagenUrl(SEO_IMAGEN.url, urlBase),
           width: SEO_IMAGEN.width,
           height: SEO_IMAGEN.height,
-          caption: SEO_IMAGEN.caption
+          caption: typeof SEO_IMAGEN.caption === 'object' ? (SEO_IMAGEN.caption[idioma] || SEO_IMAGEN.caption.es || 'Consultorio Psicológico América') : String(SEO_IMAGEN.caption || 'Consultorio Psicológico América')
         }
       },
       // 1. Entidad Clínica Psicológica / MedicalBusiness
@@ -231,7 +247,7 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
           streetAddress: datosNegocio.direccionSede,
           addressLocality: datosNegocio.distritoSede,
           addressRegion: datosNegocio.ciudad,
-          postalCode: datosNegocio.codigoPostal || '',
+          postalCode: datosNegocio.codigoPostal || '15834',
           addressCountry: datosNegocio.pais
         },
         geo: {

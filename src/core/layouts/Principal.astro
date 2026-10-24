@@ -166,12 +166,22 @@ const jsonLd = getJsonLd(ruta, idioma);
       document.getElementById('drawerBackdrop')?.classList.remove('active');
     };
 
-    // Carga Inteligente de Interactividad (wiSmart: touchstart, scroll, click, mousemove)
+    // Carga Inteligente de Interactividad y Analítica (wiSmart: touchstart, scroll, click, mousemove)
     wiSmart({
       js: [
         async () => {
           const { initInicioInteractivo } = await import('../../feature/inicio/lib/inicioInteractivo.js');
           initInicioInteractivo();
+        },
+        () => {
+          // Cloudflare Web Analytics Inteligente (Diferido bajo primera interacción)
+          if (!document.querySelector('script[src*="cloudflareinsights"]')) {
+            const s = document.createElement('script');
+            s.type = 'module';
+            s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+            s.setAttribute('data-cf-beacon', '{"token": "11bd3bc6de9e41459a38550fcd97e522"}');
+            document.body.appendChild(s);
+          }
         }
       ]
     });

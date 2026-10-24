@@ -149,22 +149,3 @@ const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.hor
 </footer>
 
 <CookiesBanner idioma={idioma} />
-
-<!-- Cloudflare Web Analytics Inteligente (Diferido con wiSmart bajo interacción) -->
-<script>
-  import { wiSmart } from '@widev';
-
-  wiSmart({
-    js: [
-      () => {
-        if (!document.querySelector('script[src*="cloudflareinsights"]')) {
-          const s = document.createElement('script');
-          s.type = 'module';
-          s.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-          s.setAttribute('data-cf-beacon', '{"token": "11bd3bc6de9e41459a38550fcd97e522"}');
-          document.body.appendChild(s);
-        }
-      }
-    ]
-  });
-</script>

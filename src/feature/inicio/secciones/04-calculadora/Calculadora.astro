@@ -12,6 +12,12 @@ interface Props {
 }
 
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const getTxt = (v: any, lang: string) => {
+  if (!v) return '';
+  if (typeof v === 'string') return v;
+  if (typeof v === 'object') return v[lang] || v.es || v.en || '';
+  return String(v);
+};
 const t = resolverIdioma({ es, en }, idioma);
 
 const todosServicios = await consultarProductosFirestoreFresco();
@@ -82,10 +88,12 @@ const defaultWsLink = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent
             </label>
             <select id="calcModalidad" class="calc-select-tamano">
               {sedes.map((sede: any) => {
-                const atencion = idioma === 'en' ? (sede.atencionEn || sede.atencion) : sede.atencion;
+                const nombreSede = getTxt(sede.nombre, idioma) || sede.distrito || 'Sede Principal';
+                const atencion = getTxt(sede.atencion, idioma) || (idioma === 'en' ? 'By appointment' : 'Previa cita');
+                const valId = typeof sede.id === 'string' ? sede.id : (getTxt(sede.nombre, 'es') || 'sede');
                 return (
-                  <option value={sede.id || sede.nombre}>
-                    Presencial - {sede.nombre} ({atencion})
+                  <option value={valId}>
+                    {idioma === 'en' ? 'In-person' : 'Presencial'} - {nombreSede} ({atencion})
                   </option>
                 );
               })}
