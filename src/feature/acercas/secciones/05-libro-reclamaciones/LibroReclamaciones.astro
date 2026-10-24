@@ -126,7 +126,7 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
 
             <div class="reclamos-field-box">
               <label for="reclamoTelefono">{t.lbl_telefono}</label>
-              <input type="tel" id="reclamoTelefono" name="telefono" required placeholder="Ej. 936369384" class="reclamos-input" />
+              <input type="tel" id="reclamoTelefono" name="telefono" required placeholder={datosNegocio.telefonoMostrado || "Ej. 960332958"} class="reclamos-input" />
             </div>
 
             <div class="reclamos-field-box">
@@ -136,7 +136,7 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
 
             <div class="reclamos-field-box reclamos-input-full">
               <label for="reclamoDireccion">{t.lbl_direccion}</label>
-              <input type="text" id="reclamoDireccion" name="direccion" required placeholder="Ej. Av. Angamos 1234 Dpto 301, Surquillo" class="reclamos-input" />
+              <input type="text" id="reclamoDireccion" name="direccion" required placeholder="Ej. Av. 3 de Octubre, Villa El Salvador, Lima" class="reclamos-input" />
             </div>
 
             <div class="reclamos-field-box reclamos-input-full">

@@ -21,9 +21,9 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
 const itemsStorage = [
   { clave: t.clave_1_nombre, desc: t.clave_1_desc, tipo: 'UI / Theme', duracion: t.duracion_permanente },
   { clave: t.clave_2_nombre, desc: t.clave_2_desc, tipo: 'Auth / VIP', duracion: t.duracion_permanente },
-  { clave: t.clave_3_nombre, desc: t.clave_3_desc, tipo: 'Delivery / GPS', duracion: t.duracion_permanente },
+  { clave: t.clave_3_nombre, desc: t.clave_3_desc, tipo: 'Sede / Modalidad', duracion: t.duracion_permanente },
   { clave: t.clave_4_nombre, desc: t.clave_4_desc, tipo: 'Cache / Speed', duracion: t.duracion_sesion },
-  { clave: t.clave_5_nombre, desc: t.clave_5_desc, tipo: 'Helpdesk', duracion: t.duracion_sesion }
+  { clave: t.clave_5_nombre, desc: t.clave_5_desc, tipo: 'Soporte / Citas', duracion: t.duracion_sesion }
 ];
 ---
 
@@ -89,9 +89,15 @@ const itemsStorage = [
           <i class="fa-solid fa-sliders color-primary" style="margin-right: 0.4rem;"></i>
           {t.como_controlar_titulo}
         </h3>
-        <p style="font-family: 'Poppins', sans-serif; font-size: 0.94rem; color: var(--text-muted); line-height: 1.7; margin: 0;">
+        <p style="font-family: 'Poppins', sans-serif; font-size: 0.94rem; color: var(--text-muted); line-height: 1.7; margin: 0 0 1.25rem 0;">
           {t.como_controlar_desc}
         </p>
+        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+          <button type="button" id="btn_reset_cookies" class="cookies-control-btn">
+            <i class="fa-solid fa-cookie-bite"></i>
+            <span>{idioma === 'en' ? 'Reset Cookie Preferences' : 'Restablecer Preferencias de Cookies'}</span>
+          </button>
+        </div>
       </article>
 
       <!-- Banner de Asistencia Directa Padre -->
@@ -111,3 +117,13 @@ const itemsStorage = [
 
   </div>
 </div>
+
+<script>
+  document.getElementById('btn_reset_cookies')?.addEventListener('click', () => {
+    try {
+      localStorage.removeItem('cookiesPrivacidad');
+      alert('Tus preferencias de cookies han sido restablecidas exitosamente.');
+      window.location.reload();
+    } catch(e) {}
+  });
+</script>

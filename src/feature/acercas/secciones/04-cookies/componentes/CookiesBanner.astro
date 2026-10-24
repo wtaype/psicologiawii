@@ -1,0 +1,270 @@
+---
+// src/feature/acercas/secciones/04-cookies/componentes/CookiesBanner.astro
+// Banner Flotante de Consentimiento Local-First · Consultorio Psicológico América
+// 0ms bloqueo en FCP · 100% Variables de witema.css
+import { buildRuta, type Idioma } from '@/core/idioma/idioma';
+import es from '../idioma/es.json';
+import en from '../idioma/en.json';
+
+interface Props {
+  idioma?: Idioma;
+}
+
+const { idioma = 'es' } = Astro.props;
+const DICCIONARIOS: Record<string, typeof es> = { es, en };
+const t = DICCIONARIOS[idioma] || DICCIONARIOS.es;
+const cookiesUrl = buildRuta('/cookies', idioma);
+---
+
+<aside 
+  class="cookiess" 
+  id="cookiess" 
+  role="region" 
+  aria-live="polite" 
+  aria-label={t.aria_banner || 'Consentimiento de cookies y privacidad'} 
+  aria-describedby="cookiess-desc"
+>
+  <p class="cookiess_txt" id="cookiess-desc">
+    <i class="fa-solid fa-cookie-bite cookiess_ico" aria-hidden="true"></i>
+    <span>{t.banner_mensaje || 'Usamos cookies para mejorar tu experiencia y ofrecerte un servicio de atención psicológica confidencial y transparente'}</span>
+    <a 
+      href={cookiesUrl} 
+      class="cookiess_link"
+      aria-label={t.aria_mas_info || 'Más información sobre cookies'}
+    >
+      {t.banner_mas_info || 'más info.'}
+    </a>
+  </p>
+  <div class="cookiess_btns">
+    <button 
+      type="button" 
+      class="cookiess_aceptar" 
+      id="ck_aceptar"
+      aria-label={t.aria_aceptar || 'Aceptar cookies y continuar'}
+    >
+      <i class="fa-solid fa-check" aria-hidden="true"></i> {t.banner_aceptar || 'Aceptar'}
+    </button>
+    <button 
+      type="button" 
+      class="cookiess_rechazar" 
+      id="ck_rechazar"
+      aria-label={t.aria_rechazar || 'Rechazar cookies opcionales'}
+    >
+      {t.banner_rechazar || 'Rechazar'}
+    </button>
+  </div>
+</aside>
+
+<style>
+  .cookiess {
+    position: fixed;
+    bottom: 2.5vh;
+    right: 2.5vw;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    background: var(--bg-card, var(--surface, rgba(255, 255, 255, 0.95)));
+    border: 1px solid var(--border, var(--brd, rgba(16, 67, 86, 0.15)));
+    border-radius: var(--r_l, 1.2rem);
+    padding: 0.9rem 1.3rem;
+    box-shadow: 0 12px 35px -6px rgba(0, 0, 0, 0.22), 0 0 1px 1px rgba(0, 0, 0, 0.04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    max-width: min(92vw, 680px);
+    width: max-content;
+    transform: translateY(140%);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+    font-family: var(--ff_P, 'Poppins', sans-serif);
+  }
+
+  :global([data-theme="futuro"]) .cookiess {
+    background: var(--bg-card, rgba(15, 23, 42, 0.94));
+    border-color: var(--border, rgba(255, 255, 255, 0.14));
+    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.65);
+  }
+
+  .cookiess.cookiess_show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .cookiess_ico {
+    color: var(--color-gold, #f59e0b);
+    font-size: 1.25rem;
+    margin-right: 0.4rem;
+    flex-shrink: 0;
+  }
+
+  .cookiess_txt {
+    font-size: 0.85rem;
+    color: var(--text-main, var(--tx, #0f2735));
+    margin: 0;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  :global([data-theme="futuro"]) .cookiess_txt {
+    color: var(--text-main, rgba(255, 255, 255, 0.9));
+  }
+
+  .cookiess_link {
+    display: inline-flex;
+    color: var(--color-brand-blue, var(--brand-sky, #0284c7));
+    font-weight: 600;
+    text-decoration: underline;
+    margin-left: 0.35rem;
+    transition: color var(--tr_f, 0.15s ease);
+  }
+
+  .cookiess_link:hover {
+    color: var(--color-primary, #104356);
+  }
+
+  :global([data-theme="futuro"]) .cookiess_link:hover {
+    color: #ffffff;
+  }
+
+  .cookiess_btns {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-shrink: 0;
+  }
+
+  .cookiess_aceptar,
+  .cookiess_rechazar {
+    padding: 0.55rem 1.15rem;
+    border-radius: var(--r_s, 0.8vh);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--tr_m, 0.25s cubic-bezier(0.16, 1, 0.3, 1));
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .cookiess_aceptar {
+    background: var(--color-gold, #c59b63);
+    color: #ffffff;
+    border: none;
+    box-shadow: 0 4px 14px -2px rgba(197, 155, 99, 0.45);
+  }
+
+  .cookiess_aceptar:hover {
+    transform: scale(1.04);
+    opacity: 0.95;
+    box-shadow: 0 6px 18px -2px rgba(197, 155, 99, 0.6);
+  }
+
+  .cookiess_rechazar {
+    background: var(--bg-surface-elevated, rgba(0, 0, 0, 0.05));
+    color: var(--text-muted, var(--tx2, #475569));
+    border: 1px solid var(--border, var(--brd, rgba(0, 0, 0, 0.12)));
+  }
+
+  :global([data-theme="futuro"]) .cookiess_rechazar {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.75);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  .cookiess_rechazar:hover {
+    background: var(--bg-card-hover, rgba(0, 0, 0, 0.09));
+    color: var(--text-bright, #000000);
+  }
+
+  :global([data-theme="futuro"]) .cookiess_rechazar:hover {
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+  }
+
+  @media (max-width: 768px) {
+    .cookiess {
+      left: 3vw;
+      right: 3vw;
+      bottom: 2vh;
+      max-width: 94vw;
+      width: auto;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.85rem;
+      padding: 1.1rem;
+    }
+
+    .cookiess_btns {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    .cookiess_aceptar,
+    .cookiess_rechazar {
+      flex: 1;
+      justify-content: center;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  const CK_KEY = 'cookiesPrivacidad';
+
+  const initCookiesBanner = () => {
+    const banner = document.getElementById('cookiess');
+    if (!banner) return;
+
+    try {
+      if (localStorage.getItem(CK_KEY) !== null) {
+        banner.remove();
+        return;
+      }
+    } catch (e) {
+      banner.remove();
+      return;
+    }
+
+    // Retardo suave de 800ms para priorizar Core Web Vitals
+    setTimeout(() => {
+      try {
+        if (localStorage.getItem(CK_KEY) !== null) {
+          banner.remove();
+          return;
+        }
+      } catch (e) {}
+      banner.classList.add('cookiess_show');
+    }, 800);
+  };
+
+  const handleAction = (val: boolean) => {
+    const banner = document.getElementById('cookiess');
+    if (!banner) return;
+    try {
+      localStorage.setItem(CK_KEY, JSON.stringify(val));
+    } catch (e) {}
+    banner.classList.remove('cookiess_show');
+    setTimeout(() => banner.remove(), 400);
+  };
+
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+    if (target.closest('#ck_aceptar')) {
+      handleAction(true);
+    } else if (target.closest('#ck_rechazar')) {
+      handleAction(false);
+    }
+  });
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initCookiesBanner);
+  } else {
+    initCookiesBanner();
+  }
+
+  document.addEventListener('astro:page-load', initCookiesBanner);
+</script>

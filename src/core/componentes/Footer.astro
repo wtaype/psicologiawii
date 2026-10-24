@@ -3,6 +3,7 @@
 // 10. FOOTER INSTITUCIONAL UX/UI - Consultorio Psicológico América
 import { datosNegocio } from '../../negocio.js';
 import { getI18n, buildRuta, type Idioma } from '../idioma/idioma';
+import CookiesBanner from '../../feature/acercas/secciones/04-cookies/componentes/CookiesBanner.astro';
 
 interface Props {
   idioma?: Idioma;
@@ -146,3 +147,5 @@ const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.hor
 
   </div>
 </footer>
+
+<CookiesBanner idioma={idioma} />

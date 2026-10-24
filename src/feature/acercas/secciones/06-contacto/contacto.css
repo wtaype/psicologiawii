@@ -1,6 +1,7 @@
 /* ==========================================================================
-   SECCIÓN 06-CONTACTO (CSS HIJO) - GASWII
-   Canales de contacto, tarjetas táctiles y cobertura distrital
+   SECCIÓN 06-CONTACTO (CSS HIJO) - CONSULTORIO PSICOLÓGICO AMÉRICA
+   Canales de atención directa, mapa y sedes autorizadas
+   100% Cascada de Variables witema.css
    ========================================================================== */
 
 .contacto-container {
@@ -8,150 +9,138 @@
   margin: 0 auto;
 }
 
-.contacto-cards-grid {
+.contacto-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1.5rem;
-  margin-bottom: 4vh;
+  margin-bottom: 3.5vh;
 }
 
 @media (max-width: 768px) {
-  .contacto-cards-grid {
+  .contacto-grid {
     grid-template-columns: 1fr;
   }
 }
 
 .contacto-channel-card {
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
-  border-radius: 1.25rem;
-  padding: 2rem;
-  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  gap: 1.4rem;
-  transition: all 0.25s ease;
-}
-
-.contacto-channel-card:hover {
-  border-color: var(--cl-orange, #ea580c);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px -4px rgba(234, 88, 12, 0.1);
-}
-
-.contacto-channel-top {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-card, var(--border));
+  border-radius: var(--r_l, 1.25rem);
+  padding: 1.8rem 2rem;
   display: flex;
   align-items: flex-start;
   gap: 1.2rem;
+  text-decoration: none;
+  box-shadow: 0 3px 14px -2px rgba(0, 0, 0, 0.03);
+  transition: all var(--tr_m, 0.25s ease);
+}
+
+.contacto-channel-card:hover {
+  border-color: var(--border-accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px -4px rgba(16, 67, 86, 0.12);
 }
 
 .contacto-channel-icon {
   width: 52px;
   height: 52px;
-  border-radius: 1rem;
+  border-radius: var(--r_m, 1rem);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 1.5rem;
   flex-shrink: 0;
+  background: var(--mbg);
+  border: 1px solid var(--border-accent);
 }
 
-.contacto-channel-icon.orange {
-  background: rgba(234, 88, 12, 0.1);
-  color: var(--cl-orange, #ea580c);
+.contacto-channel-icon.primary {
+  color: var(--color-primary);
 }
 
-.contacto-channel-icon.green {
-  background: rgba(5, 150, 105, 0.1);
-  color: var(--cl-emerald, #059669);
+.contacto-channel-icon.emerald {
+  color: var(--color-emerald);
 }
 
 .contacto-channel-icon.blue {
-  background: rgba(2, 43, 73, 0.08);
-  color: var(--cl-navy, #022b49);
+  color: var(--color-brand-blue, var(--color-primary));
 }
 
 .contacto-channel-icon.gold {
-  background: rgba(245, 158, 11, 0.1);
-  color: #d97706;
+  color: var(--color-gold);
 }
 
-.contacto-channel-title {
-  font-family: 'Outfit', sans-serif;
+.contacto-channel-content h3 {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--text-bright, #0f172a);
-  margin-bottom: 0.3rem;
+  color: var(--text-bright);
+  margin-bottom: 0.25rem;
 }
 
-.contacto-channel-main-val {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--cl-orange, #ea580c);
-  margin-bottom: 0.4rem;
-  display: block;
+.contacto-channel-val {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-bottom: 0.35rem;
 }
 
 .contacto-channel-desc {
-  font-family: 'Poppins', sans-serif;
   font-size: 0.88rem;
-  color: var(--text-muted, #64748b);
+  color: var(--text-muted);
   line-height: 1.5;
   margin: 0;
 }
 
-.contacto-actions-row {
-  display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-/* Distritos Cobertura Box */
-.contacto-distritos-box {
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
-  border-radius: 1.25rem;
+/* Ficha de Sede y Cobertura */
+.contacto-mapa-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-card, var(--border));
+  border-radius: var(--r_l, 1.25rem);
   padding: 2rem;
-  margin-bottom: 4vh;
+  margin-bottom: 3.5vh;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
 }
 
-.contacto-distritos-box h3 {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
+.contacto-mapa-box h3 {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.3rem;
   font-weight: 700;
-  color: var(--text-bright, #0f172a);
-  margin-bottom: 1.2rem;
+  color: var(--text-bright);
+  margin-bottom: 1.5rem;
   display: flex;
   align-items: center;
   gap: 0.6rem;
 }
 
-.contacto-distritos-chips {
-  display: flex;
+.contacto-distritos-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.8rem;
-  flex-wrap: wrap;
+  margin-top: 1.2rem;
 }
 
-.contacto-distrito-chip {
-  display: inline-flex;
+@media (max-width: 768px) {
+  .contacto-distritos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.contacto-distrito-badge {
+  display: flex;
   align-items: center;
-  gap: 0.6rem;
-  padding: 0.6rem 1.1rem;
-  border-radius: 999px;
-  background: rgba(2, 43, 73, 0.05);
-  border: 1px solid rgba(2, 43, 73, 0.12);
-  font-family: 'Poppins', sans-serif;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: var(--r_s, 0.75rem);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
   font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--text-bright, #0f172a);
+  color: var(--text-bright);
 }
 
-.contacto-distrito-chip span.time {
-  font-size: 0.78rem;
-  color: var(--cl-orange, #ea580c);
-  background: rgba(234, 88, 12, 0.1);
-  padding: 0.15rem 0.5rem;
-  border-radius: 999px;
+.contacto-distrito-badge .time {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-primary);
 }

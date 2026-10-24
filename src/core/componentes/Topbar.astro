@@ -1,6 +1,7 @@
 ---
 // src/core/componentes/Topbar.astro
 // 1. TOP BAR OFICIAL - Consultorio Psicológico América
+// Diseño institucional de alta serenidad: Colegiatura C.Ps.P., Sedes y Central Telefónica con Gradiente Witema
 import { datosNegocio } from '../../negocio.js';
 import { getI18n, type Idioma } from '../idioma/idioma';
 
@@ -10,25 +11,52 @@ interface Props {
 
 const { idioma = 'es' } = Astro.props;
 const t = getI18n(idioma).topbar;
+
+const telefonoLlamada = datosNegocio.telefonoLimpio || '51960332958';
+const telefonoFormato = datosNegocio.telefonoMostrado || '+51 960 332 958';
+const tooltipLlamada = `${t.llamar_titulo || 'Llamar a Consultorio'}: ${telefonoFormato}`;
 ---
 
-<div class="topbar-main">
+<aside class="topbar-main" aria-label="Información institucional y contacto">
   <div class="page-container topbar-content">
+    
+    <!-- Grupo Izquierdo: Colegiatura Oficial y Sedes Clínicas -->
     <div class="topbar-group">
-      <span class="topbar-auth-pill">
-        <i class="fa-solid fa-certificate"></i> <span>{datosNegocio.registroColegio}</span>
+      <span class="topbar-auth-pill" title={datosNegocio.registroColegio || 'C.Ps.P. Nº 49425 · Colegiada y Habilitada'}>
+        <i class="fa-solid fa-award"></i>
+        <span>{datosNegocio.registroColegio}</span>
       </span>
-      <span class="desktop-only">
-        {t.sede_label} • {t.despacho_label}
-      </span>
+      <div class="topbar-location-wrap desktop-only">
+        <span class="topbar-meta-item">
+          <i class="fa-solid fa-location-dot"></i>
+          <span>{t.sede_label}</span>
+        </span>
+        <span class="topbar-meta-sep">•</span>
+        <span class="topbar-meta-item">
+          <i class="fa-solid fa-laptop-medical"></i>
+          <span>{t.despacho_label}</span>
+        </span>
+      </div>
     </div>
+
+    <!-- Grupo Derecho: Previa Cita y Central Telefónica con Gradiente (Número protegido) -->
     <div class="topbar-group-right">
-      <span class="desktop-only"><i class="fa-solid fa-calendar-check"></i> <span>Previa Cita</span></span>
-      <a href={`tel:${datosNegocio.telefonoLimpio}`} class="topbar-phone-link" title={t.llamar_titulo} data-negocio-tel-link>
-        <i class="fa-solid fa-phone"></i> 
-        <span class="desktop-only" data-negocio-tel-text>{datosNegocio.telefonoMostrado}</span>
-        <span class="mobile-only">{t.llamar_movil}</span>
+      <span class="topbar-pill-subtle desktop-only">
+        <i class="fa-regular fa-calendar-check"></i>
+        <span>{t.previa_cita || 'Previa Cita'}</span>
+      </span>
+      <a 
+        href={`tel:${telefonoLlamada}`} 
+        class="topbar-phone-link" 
+        title={tooltipLlamada}
+        aria-label={tooltipLlamada}
+        data-negocio-tel-link
+      >
+        <i class="fa-solid fa-phone-volume"></i> 
+        <span class="desktop-only">{t.central_telefonica || 'Central Telefónica'}</span>
+        <span class="mobile-only">{t.llamar_movil || 'Llamar'}</span>
       </a>
     </div>
+
   </div>
-</div>
+</aside>

@@ -539,8 +539,20 @@ const zonas = Array.isArray(raw.zonas) && raw.zonas.length > 0 ? raw.zonas : (Ar
 
             <!-- 2. Correo Electrónico Oficial -->
             <div class="ng-field">
-              <label class="ng-label" for="ngInputEmail">Correo Electrónico Oficial</label>
-              <input type="email" id="ngInputEmail" class="ng-input" placeholder={cont.email || n.email || ""} />
+              <label class="ng-label" for="ngInputEmail">
+                <span>Correo Electrónico Oficial (Dirección / Legal)</span>
+                <span class="ng-label-hint">Para avisos oficiales y SUNAT</span>
+              </label>
+              <input type="email" id="ngInputEmail" class="ng-input" placeholder={cont.email || cont.correo || n.email || ""} />
+            </div>
+
+            <!-- 2.1 Correo de Atención a Pacientes -->
+            <div class="ng-field">
+              <label class="ng-label" for="ngInputCorreoPacientes">
+                <span>Correo de Pacientes (Atención & Consultas)</span>
+                <span class="ng-label-hint">Consultas, citas y expedientes</span>
+              </label>
+              <input type="email" id="ngInputCorreoPacientes" class="ng-input" placeholder={cont.correoPacientes || cont.emailPacientes || n.correoPacientes || "Ej. americacentropsicologicointegr@gmail.com"} />
             </div>
 
             <!-- 3. Celular Principal -->
@@ -559,6 +571,15 @@ const zonas = Array.isArray(raw.zonas) && raw.zonas.length > 0 ? raw.zonas : (Ar
                 <span class="ng-label-hint">Línea de respaldo o guardia</span>
               </label>
               <input type="tel" id="ngInputTelefonoSecundario" class="ng-input" placeholder={cont.celularSecundario || cont.telefonoSecundario || ""} />
+            </div>
+
+            <!-- 4.1 Celular Personal (Privado) -->
+            <div class="ng-field">
+              <label class="ng-label" for="ngInputCelularPersonal">
+                <span>Celular Personal (Privado)</span>
+                <span class="ng-label-hint">Contacto directo o emergencias</span>
+              </label>
+              <input type="tel" id="ngInputCelularPersonal" class="ng-input" placeholder={cont.celularPersonal || n.celularPersonal || "Ej. +51 900 000 000"} />
             </div>
 
             <!-- 5. Teléfono Fijo -->

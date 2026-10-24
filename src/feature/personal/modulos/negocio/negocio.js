@@ -145,8 +145,10 @@ export function inicializarNegocio() {
   const inputTelefono = document.getElementById('ngInputTelefono');
   const inputTelefonoFijo = document.getElementById('ngInputTelefonoFijo');
   const inputTelefonoSecundario = document.getElementById('ngInputTelefonoSecundario');
+  const inputCelularPersonal = document.getElementById('ngInputCelularPersonal');
   const inputWhatsapp = document.getElementById('ngInputWhatsapp');
   const inputEmail = document.getElementById('ngInputEmail');
+  const inputCorreoPacientes = document.getElementById('ngInputCorreoPacientes');
   const ngHorarioSemanaAbre = document.getElementById('ngHorarioSemanaAbre');
   const ngHorarioSemanaCierra = document.getElementById('ngHorarioSemanaCierra');
   const ngHorarioSabadoAbre = document.getElementById('ngHorarioSabadoAbre');
@@ -1294,11 +1296,13 @@ export function inicializarNegocio() {
     if (inputTelefono) inputTelefono.value = cfg.contacto?.celular || cfg.contacto?.telefono || '';
     if (inputTelefonoFijo) inputTelefonoFijo.value = cfg.contacto?.telefonoFijo || '';
     if (inputTelefonoSecundario) inputTelefonoSecundario.value = cfg.contacto?.celularSecundario || cfg.contacto?.telefonoSecundario || '';
+    if (inputCelularPersonal) inputCelularPersonal.value = cfg.contacto?.celularPersonal || '';
     if (inputWhatsapp) {
       inputWhatsapp.value = soloDigitos(cfg.contacto?.whatsapp || '');
       if (hintWhatsappFormato) hintWhatsappFormato.textContent = inputWhatsapp.value || '';
     }
-    if (inputEmail) inputEmail.value = cfg.contacto?.email || '';
+    if (inputEmail) inputEmail.value = cfg.contacto?.email || cfg.contacto?.correo || '';
+    if (inputCorreoPacientes) inputCorreoPacientes.value = cfg.contacto?.correoPacientes || cfg.contacto?.emailPacientes || '';
 
     if (ngHorarioSemanaAbre) ngHorarioSemanaAbre.value = cfg.horarios?.semana?.abre || '';
     if (ngHorarioSemanaCierra) ngHorarioSemanaCierra.value = cfg.horarios?.semana?.cierra || '';
@@ -1530,10 +1534,14 @@ export function inicializarNegocio() {
         paisCode: paisCodeSel,
         celular: rawTel || cont.celular || cont.telefono || '+51 960 332 958',
         celularSecundario: inputTelefonoSecundario?.value?.trim() || cont.celularSecundario || cont.telefonoSecundario || '+51 960 332 958',
+        celularPersonal: (inputCelularPersonal?.value !== undefined ? inputCelularPersonal.value.trim() : (cont.celularPersonal || '')),
         telefono: rawTel || cont.celular || cont.telefono || '+51 960 332 958',
         telefonoFijo: inputTelefonoFijo?.value?.trim() || cont.telefonoFijo || '',
         whatsapp: rawWs || (rawTel ? `${paisCodeSel}${soloDigitos(rawTel)}` : (cont.whatsapp || '51960332958')),
         email: (inputEmail?.value || '').trim() || cont.email || 'reynaga.psychologist@gmail.com',
+        correo: (inputEmail?.value || '').trim() || cont.email || 'reynaga.psychologist@gmail.com',
+        correoPacientes: (inputCorreoPacientes?.value !== undefined ? inputCorreoPacientes.value.trim() : (cont.correoPacientes || '')),
+        emailPacientes: (inputCorreoPacientes?.value !== undefined ? inputCorreoPacientes.value.trim() : (cont.correoPacientes || '')),
         horario: {
           es: (typeof cont.horario === 'object' ? cont.horario?.es : cont.horario) || 'Lunes a Sábado: 8:00 a.m. a 8:00 p.m. (Previa Cita)',
           en: (typeof cont.horario === 'object' ? cont.horario?.en : cont.horarioEn) || 'Monday to Saturday: 8:00 a.m. to 8:00 p.m. (By Appointment)'

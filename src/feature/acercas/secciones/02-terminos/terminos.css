@@ -1,6 +1,7 @@
 /* ==========================================================================
-   SECCIÓN 02-TERMINOS (CSS HIJO) - GASWII
-   Acordeones y tarjetas de términos y condiciones de servicio
+   SECCIÓN 02-TERMINOS (CSS HIJO) - CONSULTORIO PSICOLÓGICO AMÉRICA
+   Términos y condiciones clínicas bajo normativa de salud y ética C.Ps.P.
+   100% Cascada de Variables witema.css
    ========================================================================== */
 
 .terminos-container {
@@ -9,21 +10,21 @@
 }
 
 .terminos-notice-banner {
-  background: rgba(234, 88, 12, 0.08);
-  border: 1px solid rgba(234, 88, 12, 0.25);
-  border-radius: 1rem;
+  background: var(--mbg);
+  border: 1px solid var(--border-accent, rgba(16, 67, 86, 0.2));
+  border-radius: var(--r_l, 1rem);
   padding: 1.2rem 1.6rem;
   display: flex;
   align-items: center;
   gap: 1rem;
   margin-bottom: 3.5vh;
   font-size: 0.92rem;
-  color: var(--text-bright, #0f172a);
+  color: var(--text-bright);
 }
 
 .terminos-notice-banner i {
   font-size: 1.4rem;
-  color: var(--cl-orange, #ea580c);
+  color: var(--color-primary);
   flex-shrink: 0;
 }
 
@@ -34,18 +35,18 @@
 }
 
 .terminos-clause-card {
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
-  border-radius: 1.15rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-card, var(--border));
+  border-radius: var(--r_l, 1.15rem);
   padding: 1.6rem 2rem;
-  box-shadow: 0 3px 12px -2px rgba(0, 0, 0, 0.03);
-  transition: all 0.25s ease;
+  box-shadow: 0 3px 12px -2px rgba(0, 0, 0, 0.04);
+  transition: all var(--tr_m, 0.25s ease);
 }
 
 .terminos-clause-card:hover {
-  border-color: rgba(234, 88, 12, 0.35);
+  border-color: var(--border-accent);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px -4px rgba(234, 88, 12, 0.08);
+  box-shadow: 0 8px 24px -4px rgba(16, 67, 86, 0.12);
 }
 
 .terminos-clause-header {
@@ -58,30 +59,31 @@
 .terminos-clause-num {
   width: 38px;
   height: 38px;
-  border-radius: 50%;
-  background: rgba(234, 88, 12, 0.1);
-  color: var(--cl-orange, #ea580c);
+  border-radius: var(--r_full, 50%);
+  background: var(--mbg);
+  color: var(--color-primary);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 1rem;
   font-weight: 700;
   flex-shrink: 0;
+  border: 1px solid var(--border-accent);
 }
 
 .terminos-clause-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--text-bright, #0f172a);
+  color: var(--text-bright);
   margin: 0;
 }
 
 .terminos-clause-body {
-  font-family: 'Poppins', sans-serif;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: 0.94rem;
-  color: var(--text-muted, #64748b);
+  color: var(--text-muted);
   line-height: 1.7;
   padding-left: 3.4rem;
   margin: 0;

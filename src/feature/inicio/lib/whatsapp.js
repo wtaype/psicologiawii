@@ -29,7 +29,7 @@ export function obtenerNumeroWhatsApp() {
       }
     } catch (e) {}
   }
-  return datosNegocio.whatsapp || '51936369384';
+  return datosNegocio.whatsapp || datosNegocio.whatsappLimpio || '51960332958';
 }
 
 /**

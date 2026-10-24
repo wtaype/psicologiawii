@@ -24,5 +24,13 @@
   "duracion_permanente": "Persistent (Until sign-out or browser cache clear)",
   "duracion_sesion": "Local Persistent",
   "como_controlar_titulo": "How can you control or delete these items?",
-  "como_controlar_desc": "You can clear local site data anytime through your browser's privacy settings (Chrome, Edge, Safari, Firefox), or simply by clicking 'Sign Out' in your user profile."
+  "como_controlar_desc": "You can clear local site data anytime through your browser's privacy settings (Chrome, Edge, Safari, Firefox), or simply by clicking 'Sign Out' in your user profile.",
+  "banner_mensaje": "We use cookies to enhance your experience and provide confidential, transparent psychological care",
+  "banner_mas_info": "more info.",
+  "banner_aceptar": "Accept",
+  "banner_rechazar": "Decline",
+  "aria_banner": "Cookies and privacy consent",
+  "aria_mas_info": "More information about cookies and privacy policy",
+  "aria_aceptar": "Accept cookies and continue",
+  "aria_rechazar": "Decline optional cookies"
 }

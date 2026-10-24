@@ -28,6 +28,14 @@ for (const code of Object.keys(IDIOMAS)) {
 
 const baseHash = idioma === 'es' ? (ruta !== '/' ? '/' : '') : `/${idioma}`;
 const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.horario;
+
+const wsNumeroDrawer = datosNegocio.whatsappLimpio || '51960332958';
+const wsMsgDrawer = encodeURIComponent(
+  idioma === 'en'
+    ? 'Hello Lic. Sofia, I would like guidance on which psychological service is most suitable for my case.'
+    : 'Hola Lic. Sofía, me gustaría recibir orientación sobre qué servicio psicológico es el más adecuado para mi caso.'
+);
+const whatsappDirectLink = `https://wa.me/${wsNumeroDrawer}?text=${wsMsgDrawer}`;
 ---
 
 <!-- BACKDROP PARA DRAWER MÓVIL -->
@@ -93,7 +101,7 @@ const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.hor
     </div>
 
     <!-- Botón Agendar Cita Móvil -->
-    <a href={`https://wa.me/${datosNegocio.whatsappNumero}?text=${encodeURIComponent(datosNegocio.whatsappMensaje)}`} target="_blank" rel="noopener noreferrer" onclick="window.cerrarDrawer && window.cerrarDrawer()" class="btn-whatsapp w-full justify-center">
+    <a href={whatsappDirectLink} data-negocio-ws-link target="_blank" rel="noopener noreferrer" onclick="window.cerrarDrawer && window.cerrarDrawer()" class="btn-whatsapp w-full justify-center">
       <i class="fa-brands fa-whatsapp"></i> <span>{t.pedir}</span>
     </a>
 

@@ -83,13 +83,13 @@ export function renderizarWhatsappHtml(texto = '') {
  * @param {string} texto - Mensaje final a enviar
  * @param {string|number} telefono - Teléfono con o sin prefijo 51
  */
-export function construirUrlWhatsapp(texto = '', telefono = '51936369384') {
+export function construirUrlWhatsapp(texto = '', telefono = '51960332958') {
   const raw = String(telefono || '').replace(/\D/g, '');
   let numFinal = raw;
   if (raw.length === 9) {
     numFinal = `51${raw}`;
   } else if (!raw) {
-    numFinal = '51936369384';
+    numFinal = '51960332958';
   }
   return `https://wa.me/${numFinal}?text=${encodeURIComponent(texto)}`;
 }

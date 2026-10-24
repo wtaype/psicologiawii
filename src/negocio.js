@@ -92,6 +92,7 @@ export function normalizarConfig(c = {}) {
 
   const cel = cfg.contacto?.celular || cfg.contacto?.telefono || base.contacto?.celular || base.contacto?.telefono || '+51 960 332 958';
   const celSec = cfg.contacto?.celularSecundario || base.contacto?.celularSecundario || '+51 960 332 958';
+  const celPersonal = cfg.contacto?.celularPersonal ?? base.contacto?.celularPersonal ?? '';
   const telFijo = cfg.contacto?.telefonoFijo ?? base.contacto?.telefonoFijo ?? '';
   const celLimpio = String(cel).replace(/\D/g, '');
 
@@ -127,12 +128,16 @@ export function normalizarConfig(c = {}) {
     contacto: {
       celular: cel,
       celularSecundario: celSec,
+      celularPersonal: celPersonal,
       telefonoFijo: telFijo,
       telefono: cel,
       telefonoLimpio: celLimpio,
       whatsapp: cfg.contacto?.whatsapp || base.contacto?.whatsapp || '51960332958',
       whatsappLimpio: (cfg.contacto?.whatsapp || base.contacto?.whatsapp || '51960332958').replace(/\D/g, ''),
-      email: cfg.contacto?.email || base.contacto?.email || 'reynaga.psychologist@gmail.com',
+      email: cfg.contacto?.email || cfg.contacto?.correo || base.contacto?.email || 'reynaga.psychologist@gmail.com',
+      correo: cfg.contacto?.correo || cfg.contacto?.email || base.contacto?.email || 'reynaga.psychologist@gmail.com',
+      correoPacientes: cfg.contacto?.correoPacientes ?? cfg.contacto?.emailPacientes ?? base.contacto?.correoPacientes ?? '',
+      emailPacientes: cfg.contacto?.correoPacientes ?? cfg.contacto?.emailPacientes ?? base.contacto?.correoPacientes ?? '',
       horario: toMap(cfg.contacto?.horario || base.contacto?.horario, 'Lunes a Sábado: 8:00 a.m. a 8:00 p.m. (Previa Cita)', 'Monday to Saturday: 8:00 a.m. to 8:00 p.m. (By Appointment)')
     },
     ubicacion: {
@@ -173,7 +178,35 @@ export function normalizarConfig(c = {}) {
       semana: { abre: '08:00', cierra: '20:00' },
       sabado: { abre: '08:00', cierra: '20:00' }
     },
-    seo: cfg.seo || base.seo || null
+    seo: (() => {
+      const rawSeo = cfg.seo || base.seo || {};
+      let seoImagen = rawSeo.imagen;
+      if (typeof seoImagen === 'string' && seoImagen.trim()) {
+        const urlStr = seoImagen.trim();
+        seoImagen = {
+          url: urlStr,
+          width: 1200,
+          height: 630,
+          type: urlStr.endsWith('.webp') ? 'image/webp' : (urlStr.endsWith('.png') ? 'image/png' : 'image/jpeg'),
+          alt: typeof rawSeo.imagenAlt === 'string' ? rawSeo.imagenAlt : (rawSeo.imagenAlt?.es || cfg.identidad?.nombreComercial || 'Consultorio Psicológico América'),
+          caption: typeof rawSeo.imagenCaption === 'string' ? rawSeo.imagenCaption : (rawSeo.imagenCaption?.es || cfg.identidad?.slogan || 'Atención psicológica profesional y confidencial')
+        };
+      } else if (!seoImagen || typeof seoImagen !== 'object' || !seoImagen.url) {
+        const fallbackImg = cfg.identidad?.imagenSede || base.identidad?.imagenSede || '/imgwii/sofia_reynaga.webp';
+        seoImagen = {
+          url: fallbackImg,
+          width: 1200,
+          height: 630,
+          type: fallbackImg.endsWith('.webp') ? 'image/webp' : 'image/jpeg',
+          alt: cfg.identidad?.nombreComercial || 'Consultorio Psicológico América',
+          caption: cfg.identidad?.slogan || 'Atención psicológica profesional y confidencial'
+        };
+      }
+      return {
+        ...rawSeo,
+        imagen: seoImagen
+      };
+    })()
   };
 }
 
@@ -389,6 +422,7 @@ export const datosNegocio = {
   get telefonoRaw() { return this.telefonoLimpio; },
   get whatsapp() { return this.raw.contacto?.whatsapp || '51960332958'; },
   get whatsappLimpio() { return this.raw.contacto?.whatsappLimpio || '51960332958'; },
+  get whatsappNumero() { return this.whatsappLimpio; },
   get whatsappMensaje() { return typeof this.raw.contacto?.whatsappMensaje === 'object' ? (this.raw.contacto?.whatsappMensaje?.es || '') : (this.raw.contacto?.whatsappMensaje || ''); },
   get whatsappMensajeEn() {
     const m = this.raw.contacto?.whatsappMensaje;
@@ -397,7 +431,13 @@ export const datosNegocio = {
   getWhatsappMensaje(idioma = 'es') {
     return idioma === 'en' ? this.whatsappMensajeEn : this.whatsappMensaje;
   },
-  get email() { return this.raw.contacto?.email || 'reynaga.psychologist@gmail.com'; },
+  get email() { return this.raw.contacto?.email || this.raw.contacto?.correo || 'reynaga.psychologist@gmail.com'; },
+  get correo() { return this.email; },
+  get correoPacientes() { return this.raw.contacto?.correoPacientes || this.raw.contacto?.emailPacientes || ''; },
+  get emailPacientes() { return this.correoPacientes; },
+  get emailAtencion() { return this.correoPacientes || this.email; },
+  get celularPersonal() { return this.raw.contacto?.celularPersonal || ''; },
+  get celularPersonalLimpio() { return String(this.celularPersonal).replace(/\D/g, ''); },
   get direccionSede() { return this.raw.ubicacion?.direccion || ''; },
   get distritoSede() { return this.raw.ubicacion?.distrito || 'Villa El Salvador'; },
   get ciudad() { return this.raw.ubicacion?.ciudad || 'Lima'; },

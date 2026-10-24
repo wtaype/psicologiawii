@@ -136,17 +136,21 @@ const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.hor
       <!-- Distritos de Cobertura -->
       <section class="contacto-distritos-box">
         <h3>
-          <i class="fa-solid fa-motorcycle color-primary"></i>
+          <i class="fa-solid fa-location-dot color-primary"></i>
           {t.distritos_titulo}
         </h3>
         <div class="contacto-distritos-chips">
-          {datosNegocio.distritos.map((dist: any) => (
-            <div class="contacto-distrito-chip">
-              <i class="fa-solid fa-check color-emerald"></i>
-              <span>{dist.nombre}</span>
-              <span class="time">{dist.tiempo}</span>
-            </div>
-          ))}
+          {datosNegocio.sedes.map((sede: any) => {
+            const nombreSede = typeof sede.nombre === 'object' ? (sede.nombre[idioma] || sede.nombre.es) : (sede.nombre || sede.distrito);
+            const mod = sede.modalidad || (sede.id === 'online' ? 'Virtual' : 'Presencial');
+            return (
+              <div class="contacto-distrito-chip">
+                <i class={sede.id === 'online' ? "fa-solid fa-laptop color-emerald" : "fa-solid fa-location-dot color-primary"}></i>
+                <span>{nombreSede}</span>
+                <span class="time">{mod}</span>
+              </div>
+            );
+          })}
         </div>
       </section>
 

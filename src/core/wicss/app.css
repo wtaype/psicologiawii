@@ -415,11 +415,16 @@ img {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box !important;
-  background: var(--topbar-bg);
+  background: var(--topbar-bg, linear-gradient(90deg, #104356 0%, #1e5e75 50%, #104356 100%));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 0.2vh 0.8vh rgba(10, 45, 58, 0.22);
   color: #ffffff;
-  font-size: clamp(0.72rem, 0.78vw, 0.85rem);
-  font-weight: 700;
-  padding: 0.7vh 0;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(0.72rem, 0.78vw, 0.84rem);
+  font-weight: 600;
+  padding: 0.8vh 0;
+  position: relative;
+  z-index: 1001;
 }
 
 .topbar-content {
@@ -429,44 +434,121 @@ img {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.8vw;
+  gap: 1vw;
 }
 
 .topbar-group {
   display: flex;
   align-items: center;
-  gap: 0.8vw;
+  gap: 0.9vw;
   flex-wrap: wrap;
 }
 
 .topbar-auth-pill {
-  background: rgba(0, 0, 0, 0.28);
-  padding: 0.2vh 0.6vw;
-  border-radius: 0.5vh;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  padding: 0.35vh 0.75vw;
+  border-radius: 1vh;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  color: #ffffff;
+  box-shadow: 0 0.2vh 0.6vh rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.topbar-auth-pill i {
+  color: var(--accent, #38bdf8);
+  font-size: 0.9em;
+}
+
+.topbar-location-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6vw;
+}
+
+.topbar-meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 500;
+  font-size: clamp(0.72rem, 0.78vw, 0.82rem);
+}
+
+.topbar-meta-item i {
+  color: var(--brand-sky, #38bdf8);
+  opacity: 0.9;
+  font-size: 0.85em;
+}
+
+.topbar-meta-sep {
+  color: rgba(255, 255, 255, 0.38);
+  font-size: 0.75em;
 }
 
 .topbar-group-right {
   display: flex;
   align-items: center;
-  gap: 1.2vw;
-  flex-wrap: wrap;
+  gap: 0.8vw;
+}
+
+.topbar-pill-subtle {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.35vh 0.7vw;
+  border-radius: 1vh;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 600;
+  font-size: clamp(0.72rem, 0.78vw, 0.82rem);
+}
+
+.topbar-pill-subtle i {
+  color: var(--brand-sky, #38bdf8);
 }
 
 .topbar-phone-link {
-  color: #ffffff;
-  text-decoration: underline;
-  font-weight: 800;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.28) 0%, rgba(16, 67, 86, 0.72) 100%);
+  border: 1px solid rgba(56, 189, 248, 0.45);
+  color: #ffffff !important;
+  text-decoration: none !important;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: clamp(0.72rem, 0.78vw, 0.82rem);
+  font-weight: 700;
+  padding: 0.4vh 0.95vw;
+  border-radius: 1vh;
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.45rem;
+  box-shadow: 0 0.2vh 0.8vh rgba(0, 0, 0, 0.16);
+  transition: all var(--tr_m, 0.25s ease);
+  cursor: pointer;
+  letter-spacing: 0.015em;
+}
+
+.topbar-phone-link i {
+  color: var(--brand-sky, #38bdf8);
+  font-size: 0.85em;
+  transition: transform var(--tr_f, 0.15s ease);
 }
 
 .topbar-phone-link:hover {
-  color: #ffe4cc;
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.48) 0%, rgba(30, 94, 117, 0.92) 100%);
+  border-color: rgba(56, 189, 248, 0.75);
+  color: #ffffff !important;
+  transform: translateY(-0.15vh);
+  box-shadow: 0 0.5vh 1.4vh rgba(56, 189, 248, 0.3);
+}
+
+.topbar-phone-link:hover i {
+  transform: scale(1.15) rotate(-5deg);
 }
 
 /* 10. HEADER STICKY OFICIAL */
@@ -1569,13 +1651,16 @@ img {
     justify-content: space-between !important;
   }
   .topbar-auth-pill {
-    font-size: 0.72rem;
-    padding: 0.2vh 0.5rem;
+    font-size: clamp(0.66rem, 2.4vw, 0.72rem);
+    padding: 0.3vh 0.55rem;
     white-space: nowrap;
+    border-radius: 1vh;
   }
   .topbar-phone-link {
-    font-size: 0.75rem;
+    font-size: clamp(0.68rem, 2.5vw, 0.75rem);
+    padding: 0.35vh 0.65rem;
     white-space: nowrap;
+    border-radius: 1vh;
   }
   .header-brand-title {
     display: none !important;

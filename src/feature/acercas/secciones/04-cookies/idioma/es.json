@@ -24,5 +24,13 @@
   "duracion_permanente": "Permanente (Hasta que el usuario cierre sesión o limpie datos)",
   "duracion_sesion": "Persistente local",
   "como_controlar_titulo": "¿Cómo puedes controlar o borrar estos datos?",
-  "como_controlar_desc": "Puedes limpiar en cualquier momento el almacenamiento de este sitio desde las opciones de privacidad de tu navegador (Chrome, Edge, Safari, Firefox), o usando la consola de usuario al cerrar sesión."
+  "como_controlar_desc": "Puedes limpiar en cualquier momento el almacenamiento de este sitio desde las opciones de privacidad de tu navegador (Chrome, Edge, Safari, Firefox), o usando la consola de usuario al cerrar sesión.",
+  "banner_mensaje": "Usamos cookies para mejorar tu experiencia y ofrecerte un servicio de atención psicológica confidencial y transparente",
+  "banner_mas_info": "más info.",
+  "banner_aceptar": "Aceptar",
+  "banner_rechazar": "Rechazar",
+  "aria_banner": "Consentimiento de cookies y privacidad",
+  "aria_mas_info": "Más información sobre la política de cookies y privacidad",
+  "aria_aceptar": "Aceptar cookies y continuar",
+  "aria_rechazar": "Rechazar cookies opcionales"
 }

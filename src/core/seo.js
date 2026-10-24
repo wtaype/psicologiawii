@@ -10,13 +10,44 @@ import { datosNegocio } from '../negocio.js';
 // 1. ASSET CANÓNICO DE IMAGEN PARA GOOGLE SERP Y REDES SOCIALES
 // ==========================================
 export const SEO_IMAGEN = {
-  get url() { return datosNegocio.seo?.imagen?.url || ''; },
-  get width() { return datosNegocio.seo?.imagen?.width || 1200; },
-  get height() { return datosNegocio.seo?.imagen?.height || 630; },
-  get type() { return datosNegocio.seo?.imagen?.type || 'image/jpeg'; },
-  get alt() { return datosNegocio.seo?.imagen?.alt || datosNegocio.nombre; },
-  get caption() { return datosNegocio.seo?.imagen?.caption || datosNegocio.bio; }
+  get url() {
+    const raw = datosNegocio.seo?.imagen;
+    if (typeof raw === 'string' && raw.trim()) return raw.trim();
+    if (raw && typeof raw === 'object' && raw.url) return raw.url;
+    return datosNegocio.fotoEspecialista || '/imgwii/sofia_reynaga.webp';
+  },
+  get width() {
+    const raw = datosNegocio.seo?.imagen;
+    return (typeof raw === 'object' && raw?.width) || 1200;
+  },
+  get height() {
+    const raw = datosNegocio.seo?.imagen;
+    return (typeof raw === 'object' && raw?.height) || 630;
+  },
+  get type() {
+    const u = this.url;
+    if (u.endsWith('.webp')) return 'image/webp';
+    if (u.endsWith('.png')) return 'image/png';
+    return 'image/jpeg';
+  },
+  get alt() {
+    const raw = datosNegocio.seo?.imagen;
+    if (typeof raw === 'object' && raw?.alt) return raw.alt;
+    return datosNegocio.nombre;
+  },
+  get caption() {
+    const raw = datosNegocio.seo?.imagen;
+    if (typeof raw === 'object' && raw?.caption) return raw.caption;
+    return datosNegocio.bio;
+  }
 };
+
+export function resolverImagenUrl(imgUrl, urlBase = '') {
+  const base = (urlBase || (app.linkweb || 'https://consultorioamerica.com')).replace(/\/$/, '');
+  const url = (imgUrl || SEO_IMAGEN.url || '/imgwii/sofia_reynaga.webp').trim();
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `${base}${url.startsWith('/') ? '' : '/'}${url}`;
+}
 
 // ==========================================
 // 2. METADATOS CANÓNICOS DINÁMICOS DE INICIO (PÁGINA PRINCIPAL)
@@ -71,9 +102,7 @@ export function getMeta(ruta = '/', idioma = 'es') {
     : [];
   const keywords = keywordsList.join(', ');
 
-  const imgCanonical = SEO_IMAGEN.url.startsWith('http') 
-    ? SEO_IMAGEN.url 
-    : `${urlBase}${SEO_IMAGEN.url}`;
+  const imgCanonical = resolverImagenUrl(SEO_IMAGEN.url, urlBase);
 
   return {
     title,
@@ -177,8 +206,8 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
         primaryImageOfPage: {
           '@type': 'ImageObject',
           '@id': `${urlBase}/#primaryimage`,
-          url: `${urlBase}${SEO_IMAGEN.url}`,
-          contentUrl: `${urlBase}${SEO_IMAGEN.url}`,
+          url: resolverImagenUrl(SEO_IMAGEN.url, urlBase),
+          contentUrl: resolverImagenUrl(SEO_IMAGEN.url, urlBase),
           width: SEO_IMAGEN.width,
           height: SEO_IMAGEN.height,
           caption: SEO_IMAGEN.caption
@@ -192,7 +221,7 @@ export function getJsonLd(ruta = '/', idioma = 'es') {
         description: clinicDesc,
         url: urlBase,
         telephone: datosNegocio.telefonoMostrado,
-        image: `${urlBase}${SEO_IMAGEN.url}`,
+        image: resolverImagenUrl(SEO_IMAGEN.url, urlBase),
         priceRange: priceRange,
         paymentAccepted: paymentAccepted,
         currenciesAccepted: datosNegocio.moneda || 'PEN',

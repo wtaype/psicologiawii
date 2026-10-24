@@ -15,7 +15,11 @@
       "origen": "tarjeta_servicio",
       "descripcion": "Mensaje generado al hacer clic en 'Agendar Sesión' en cualquier especialidad.",
       "formatoMensaje": "¡Hola Lic. Sofia Reynaga! 👋 He visto en su página web el servicio de *{servicio}* (S/ {precio}). Quisiera consultar por horarios disponibles para una sesión, ¿podría brindarme información por favor?",
-      "variablesPermitidas": ["servicio", "precio", "modalidad"],
+      "variablesPermitidas": [
+        "servicio",
+        "precio",
+        "modalidad"
+      ],
       "userId": "",
       "creado": "2026-10-01T10:00:00Z",
       "actualizado": "2026-10-23T20:00:00Z"
@@ -26,7 +30,11 @@
       "origen": "tarjeta_taller",
       "descripcion": "Mensaje enviado al reservar cupo en un taller de desarrollo personal.",
       "formatoMensaje": "¡Hola Lic. Sofia Reynaga! 👋 Deseo inscribirme en el *{taller}*. Quisiera conocer las próximas fechas y cupos disponibles, por favor.",
-      "variablesPermitidas": ["taller", "duracion", "publico"],
+      "variablesPermitidas": [
+        "taller",
+        "duracion",
+        "publico"
+      ],
       "userId": "",
       "creado": "2026-10-01T10:00:00Z",
       "actualizado": "2026-10-23T20:00:00Z"
@@ -37,7 +45,12 @@
       "origen": "calculadora_paquetes",
       "descripcion": "Mensaje enviado desde la calculadora de sesiones.",
       "formatoMensaje": "¡Hola Lic. Sofia Reynaga! 👋 Realicé una cotización en su web:\n👤 Servicio: *{servicio}*\n📅 Sesiones: *{cantidad}*\n💳 Inversión Total: *S/ {total}*\n📍 Modalidad: *{modalidad}*\n¿Podríamos coordinar las fechas de las sesiones por favor?",
-      "variablesPermitidas": ["servicio", "cantidad", "total", "modalidad"],
+      "variablesPermitidas": [
+        "servicio",
+        "cantidad",
+        "total",
+        "modalidad"
+      ],
       "userId": "",
       "creado": "2026-10-01T10:00:00Z",
       "actualizado": "2026-10-23T20:00:00Z"
@@ -47,7 +60,7 @@
       "nombre": "Consulta General (Header / Hero)",
       "origen": "header_hero",
       "descripcion": "Mensaje de saludo general para pacientes que consultan desde el menú o redes.",
-      "formatoMensaje": "¡Hola Lic. Sofia Reynaga! Deseo solicitar información para agendar una consulta psicológica en su consultorio.",
+      "formatoMensaje": "Hola Lic. Sofía, me gustaría recibir orientación sobre qué servicio psicológico es el más adecuado para mi caso.",
       "variablesPermitidas": [],
       "userId": "",
       "creado": "2026-10-01T10:00:00Z",

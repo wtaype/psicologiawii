@@ -1,6 +1,7 @@
 /* ==========================================================================
-   SECCIÓN 08-FEEDBACK (CSS HIJO) - GASWII
-   Selector táctil de estrellas y chips interactivos de calidad
+   SECCIÓN 08-FEEDBACK (CSS HIJO) - CONSULTORIO PSICOLÓGICO AMÉRICA
+   Encuesta de satisfacción clínica y evaluación ética
+   100% Cascada de Variables witema.css
    ========================================================================== */
 
 .feedback-container {
@@ -8,154 +9,148 @@
   margin: 0 auto;
 }
 
-.feedback-box {
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
-  border-radius: 1.5rem;
-  padding: 2.5rem;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.04);
-  margin-bottom: 4vh;
+.feedback-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-card, var(--border));
+  border-radius: var(--r_l, 1.25rem);
+  padding: 2.2rem;
+  margin-bottom: 3.5vh;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.04);
 }
 
-/* Selector de Estrellas */
-.feedback-stars-wrapper {
+.feedback-card-head {
   text-align: center;
-  padding: 1.5rem 0 2rem;
-  border-bottom: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.08));
   margin-bottom: 2rem;
 }
 
-.feedback-stars-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.25rem;
+.feedback-card-head h3 {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 1.35rem;
   font-weight: 700;
-  color: var(--text-bright, #0f172a);
-  margin-bottom: 1.2rem;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
 }
 
+.feedback-card-head p {
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.94rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Selector de Estrellas de Satisfacción */
 .feedback-stars-row {
-  display: inline-flex;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.8rem;
-  font-size: 2.4rem;
-  cursor: pointer;
+  margin: 1.5rem 0 2rem;
 }
 
 .feedback-star-btn {
   background: none;
   border: none;
-  font-size: 2.5rem;
-  color: #cbd5e1;
   cursor: pointer;
-  padding: 0 0.2rem;
-  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s ease;
+  font-size: 2.2rem;
+  color: var(--border);
+  transition: transform var(--tr_m, 0.2s ease), color var(--tr_m, 0.2s ease);
+  padding: 0.2rem;
 }
 
 .feedback-star-btn:hover,
 .feedback-star-btn.active {
-  color: #f59e0b;
-  transform: scale(1.18);
+  color: var(--color-gold);
+  transform: scale(1.15);
 }
 
-.feedback-star-label {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.15rem;
+.feedback-rating-label {
+  text-align: center;
+  font-size: 1rem;
   font-weight: 700;
-  color: #d97706;
-  margin-top: 0.8rem;
-  min-height: 28px;
+  color: var(--color-gold);
+  min-height: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 
-/* Motivos / Chips de Calidad */
-.feedback-motivos-section {
+/* Áreas de Comentarios y Recomendación */
+.feedback-textarea-group {
+  margin-bottom: 1.5rem;
+}
+
+.feedback-textarea-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.feedback-textarea-group textarea {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  border-radius: var(--r_s, 0.75rem);
+  border: 1px solid var(--border);
+  background: var(--bg-surface);
+  color: var(--text-bright);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.92rem;
+  outline: none;
+  min-height: 110px;
+  resize: vertical;
+  transition: border-color var(--tr_m, 0.2s ease);
+}
+
+.feedback-textarea-group textarea:focus {
+  border-color: var(--border-accent);
+  box-shadow: 0 0 0 3px rgba(16, 67, 86, 0.12);
+}
+
+.feedback-rec-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.8rem;
   margin-bottom: 2rem;
 }
 
-.feedback-motivos-title {
-  font-family: 'Outfit', sans-serif;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--text-bright, #0f172a);
-  margin-bottom: 1rem;
-}
-
-.feedback-motivos-grid {
-  display: flex;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.feedback-motivo-chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1.2rem;
-  border-radius: 999px;
-  background: var(--bg-surface, #ffffff);
-  border: 1px solid var(--border-subtle, rgba(0, 0, 0, 0.15));
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 500;
-  color: var(--text-bright, #0f172a);
-  cursor: pointer;
-  user-select: none;
-  transition: all 0.2s ease;
-}
-
-.feedback-motivo-chip:hover {
-  border-color: var(--cl-orange, #ea580c);
-  background: rgba(234, 88, 12, 0.05);
-}
-
-.feedback-motivo-chip.selected {
-  background: rgba(234, 88, 12, 0.12);
-  border-color: var(--cl-orange, #ea580c);
-  color: var(--cl-orange, #ea580c);
-  font-weight: 600;
-}
-
-/* Formulario Campos */
-.feedback-fields-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.2rem;
-  margin-top: 1.5rem;
-}
-
 @media (max-width: 640px) {
-  .feedback-fields-grid {
+  .feedback-rec-grid {
     grid-template-columns: 1fr;
   }
 }
 
-.feedback-field-full {
-  grid-column: 1 / -1;
-}
-
-/* Caja de Éxito */
-.feedback-success-card {
-  display: none;
+.feedback-rec-card {
+  border: 1px solid var(--border);
+  border-radius: var(--r_s, 0.8rem);
+  padding: 0.9rem;
   text-align: center;
-  padding: 3rem 2rem;
-  background: var(--bg-surface, #ffffff);
-  border: 2px solid var(--cl-emerald, #059669);
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 30px -5px rgba(5, 150, 105, 0.15);
-  margin-bottom: 4vh;
+  cursor: pointer;
+  background: var(--bg-surface);
+  transition: all var(--tr_m, 0.2s ease);
 }
 
-.feedback-success-card.visible {
-  display: block;
+.feedback-rec-card:hover {
+  border-color: var(--border-accent);
 }
 
-.feedback-success-icon {
-  width: 70px;
-  height: 70px;
-  border-radius: 50%;
-  background: rgba(5, 150, 105, 0.1);
-  color: var(--cl-emerald, #059669);
-  font-size: 2.2rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 1.5rem;
+.feedback-rec-card.active {
+  border-color: var(--color-primary);
+  background: var(--mbg);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+/* Comprobante de Agradecimiento */
+.feedback-success-card {
+  background: var(--bg-surface);
+  border: 2px solid var(--color-emerald);
+  border-radius: var(--r_l, 1.25rem);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  box-shadow: 0 8px 30px -6px rgba(0, 0, 0, 0.08);
+}
+
+.feedback-success-card i {
+  font-size: 3.5rem;
+  color: var(--color-emerald);
+  margin-bottom: 1rem;
 }

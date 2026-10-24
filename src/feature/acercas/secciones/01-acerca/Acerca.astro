@@ -18,15 +18,15 @@ interface Props {
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
 const t = resolverIdiomaSeccion({ es, en }, idioma);
 
-const anos = String(datosNegocio.experienciaAnos || 26);
+const anos = String(datosNegocio.experienciaAnos || 6);
 const distritosNum = String(datosNegocio.distritos.length || 7);
 const telLimpio = datosNegocio.telefonoLimpio;
 const telMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
 const wsNumero = datosNegocio.whatsapp;
 const wsMsg = encodeURIComponent(
   idioma === 'en'
-    ? `Hello ${datosNegocio.nombre}, I would like to learn more about your official distribution service.`
-    : `Hola ${datosNegocio.nombre}, deseo conocer más sobre su garantía y servicio de distribución oficial.`
+    ? `Hello ${datosNegocio.nombre}, I would like to learn more about your psychological therapy and consultation services.`
+    : `Hola ${datosNegocio.nombre}, deseo solicitar información sobre sus servicios de atención psicológica y consultas clínicas.`
 );
 const wsLink = `https://wa.me/${wsNumero}?text=${wsMsg}`;
 ---
@@ -175,9 +175,9 @@ const wsLink = `https://wa.me/${wsNumero}?text=${wsMsg}`;
       </div>
       <div class="acerca-valores-list">
         <span class="acerca-valor-chip"><i class="fa-solid fa-shield-halved"></i> {t.valor_1}</span>
-        <span class="acerca-valor-chip"><i class="fa-solid fa-hand-holding-dollar"></i> {t.valor_2}</span>
-        <span class="acerca-valor-chip"><i class="fa-solid fa-stopwatch"></i> {t.valor_3}</span>
-        <span class="acerca-valor-chip"><i class="fa-solid fa-people-carry-box"></i> {t.valor_4}</span>
+        <span class="acerca-valor-chip"><i class="fa-solid fa-flask"></i> {t.valor_2}</span>
+        <span class="acerca-valor-chip"><i class="fa-solid fa-lock"></i> {t.valor_3}</span>
+        <span class="acerca-valor-chip"><i class="fa-solid fa-hand-holding-heart"></i> {t.valor_4}</span>
       </div>
     </div>
 

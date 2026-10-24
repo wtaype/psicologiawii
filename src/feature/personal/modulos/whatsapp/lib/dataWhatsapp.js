@@ -88,7 +88,7 @@ export function obtenerTelefonoOficial() {
   if (col.telefonoOficial) {
     return String(col.telefonoOficial).replace(/\D/g, '');
   }
-  return String(datosNegocio?.whatsapp || '51936369384').replace(/\D/g, '');
+  return String(datosNegocio?.whatsapp || datosNegocio?.whatsappLimpio || '51960332958').replace(/\D/g, '');
 }
 
 /**

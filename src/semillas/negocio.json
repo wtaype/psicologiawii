@@ -9,8 +9,10 @@
   "actualizado": "2026-10-23T20:00:00Z",
   "moneda": "PEN",
   "langPrincipal": "es",
-  "langs": ["es", "en"],
-
+  "langs": [
+    "es",
+    "en"
+  ],
   "identidad": {
     "nombre": {
       "es": "Consultorio Psicológico América",
@@ -43,24 +45,31 @@
     "logoFull": "/imgwii/logo_full.webp",
     "imagenSede": "/imgwii/hero/psicologa-sofia-reynaga.webp"
   },
-
   "contacto": {
     "celular": "+51 960 332 958",
     "celularSecundario": "+51 960 332 958",
+    "celularPersonal": "",
     "telefonoFijo": "",
     "whatsapp": "51960332958",
     "email": "reynaga.psychologist@gmail.com",
     "horario": {
       "es": "Lunes a Sábado: 8:00 a.m. a 8:00 p.m. (Previa Cita)",
       "en": "Monday to Saturday: 8:00 a.m. to 8:00 p.m. (By Appointment)"
+    },
+    "correo": "reynaga.psychologist@gmail.com",
+    "correoPacientes": "",
+    "emailPacientes": ""
+  },
+  "horarios": {
+    "semana": {
+      "abre": "08:00",
+      "cierra": "20:00"
+    },
+    "sabado": {
+      "abre": "08:00",
+      "cierra": "20:00"
     }
   },
-
-  "horarios": {
-    "semana": { "abre": "08:00", "cierra": "20:00" },
-    "sabado": { "abre": "08:00", "cierra": "20:00" }
-  },
-
   "ubicacion": {
     "direccion": "Av. 3 de Octubre con Micaela Bastidas - RUTA B / Sector 3, Grupo 26, Lote comercial 7",
     "referencia": "Frente a Paradero 3 de Octubre",
@@ -74,7 +83,6 @@
       "lng": -76.9387
     }
   },
-
   "sedes": [
     {
       "id": "lima",
@@ -91,7 +99,10 @@
         "en": "Monday to Saturday: 8:00 a.m. to 8:00 p.m. (By Appointment)"
       },
       "mapsUrl": "https://maps.app.goo.gl/g7MFEUi8B6xpSjpn8",
-      "coordenadas": { "lat": -12.2084, "lng": -76.9387 },
+      "coordenadas": {
+        "lat": -12.2084,
+        "lng": -76.9387
+      },
       "tag": {
         "es": "Sede Presencial Lima",
         "en": "In-Person Lima Clinic"
@@ -113,7 +124,10 @@
         "en": "Flexible Hours (Monday to Saturday 8:00 a.m. to 9:00 p.m.)"
       },
       "mapsUrl": "",
-      "coordenadas": { "lat": 0, "lng": 0 },
+      "coordenadas": {
+        "lat": 0,
+        "lng": 0
+      },
       "tag": {
         "es": "Google Meet & Teams",
         "en": "Google Meet & Teams"
@@ -121,7 +135,6 @@
       "activo": true
     }
   ],
-
   "zonas": [
     {
       "id": "zona-online",
@@ -140,7 +153,6 @@
       "activo": true
     }
   ],
-
   "metricas": {
     "pacientes": "+450",
     "colegiatura": "49425",
@@ -148,7 +160,6 @@
     "confidencialidad": "100%",
     "satisfaccion": "98%"
   },
-
   "hero": {
     "titulo": {
       "es": "¿Sientes que el estrés o la ansiedad te sobrepasan?",
@@ -171,9 +182,8 @@
       "es": "Sesión individual de 50 min presencial u online",
       "en": "50 min individual session in-person or online"
     },
-    "driverPrecio": 85.00
+    "driverPrecio": 85
   },
-
   "redes": {
     "whatsapp": "https://wa.me/51960332958",
     "instagram": "https://instagram.com/psicologiaamerica",
@@ -181,7 +191,6 @@
     "tiktok": "https://tiktok.com/@psicologiaamerica",
     "linkedin": "https://linkedin.com/in/sofia-reynaga"
   },
-
   "seo": {
     "titulo": {
       "es": "Consultorio Psicología América en Lima y Online | Terapia para Ansiedad, Parejas y Evaluación",

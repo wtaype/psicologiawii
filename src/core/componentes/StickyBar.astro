@@ -10,6 +10,13 @@ interface Props {
 
 const { idioma = 'es' } = Astro.props;
 const t = getI18n(idioma).nav;
+const wsNumero = datosNegocio.whatsappLimpio || '51960332958';
+const wsMensaje = encodeURIComponent(
+  idioma === 'en'
+    ? 'Hello Lic. Sofia, I would like guidance on which psychological service is most suitable for my case.'
+    : 'Hola Lic. Sofía, me gustaría recibir orientación sobre qué servicio psicológico es el más adecuado para mi caso.'
+);
+const wsLink = `https://wa.me/${wsNumero}?text=${wsMensaje}`;
 ---
 
 <div class="mobile-sticky-bar">
@@ -17,17 +24,18 @@ const t = getI18n(idioma).nav;
     type="button" 
     onclick="window.abrirModalTest && window.abrirModalTest()" 
     class="btn-test sticky-btn-test" 
-    title="Orientación Psicológica - Me siento triste"
+    title="Hacer un test"
   >
-    <i class="fa-solid fa-heart-pulse"></i> <span>{t.sticky_test}</span>
+    <i class="fa-solid fa-heart-pulse"></i> <span>Test</span>
   </button>
-  <button 
-    type="button" 
-    onclick="window.abrirModalAgendar && window.abrirModalAgendar()" 
+  <a 
+    href={wsLink}
+    target="_blank"
+    rel="noopener noreferrer"
     class="btn-whatsapp sticky-btn-order" 
-    title="Agendar por WhatsApp"
-    style="cursor: pointer; border: none;"
+    title="WhatsApp"
+    data-negocio-ws-link
   >
-    <i class="fa-brands fa-whatsapp"></i> <span>{t.sticky_pedir}</span>
-  </button>
+    <i class="fa-brands fa-whatsapp"></i> <span>WhatsApp</span>
+  </a>
 </div>

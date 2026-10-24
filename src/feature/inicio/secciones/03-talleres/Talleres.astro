@@ -18,7 +18,7 @@ const t = resolverIdioma({ es, en }, idioma);
 // Consulta fresca directa de servicios y talleres (Firestore o Fallback Canónico infoServicios.json)
 const todos = await consultarProductosFirestoreFresco();
 const talleresActivos = todos.filter((p: any) => p.tipo === 'taller' && p.activo !== false);
-const whatsappNumero = datosNegocio.whatsappLimpio;
+const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
 ---
 
 <style is:global set:html={talleresCss}></style>

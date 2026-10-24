@@ -56,7 +56,7 @@ export function hidratarNegocioEnDOM(datos) {
     document.querySelectorAll('a[href*="wa.me/"]').forEach(a => {
       try {
         const urlActual = a.getAttribute('href') || '';
-        const regexWa = /wa\.me\/\d+/;
+        const regexWa = /wa\.me\/(?:\d+|undefined)/;
         if (regexWa.test(urlActual)) {
           a.setAttribute('href', urlActual.replace(regexWa, `wa.me/${wsLimpio}`));
         }
@@ -350,7 +350,7 @@ export function iniciarSincronizacionNegocio() {
   if (typeof window === 'undefined') return;
 
   try {
-    const rawLocal = localStorage.getItem('wi_negocio') || localStorage.getItem('gaswii_negocio') || localStorage.getItem('minegocio');
+    const rawLocal = localStorage.getItem('wi_negocio');
     if (rawLocal) {
       const parsed = JSON.parse(rawLocal);
       const data = parsed?.value || parsed;

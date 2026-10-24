@@ -18,7 +18,7 @@ const t = resolverIdioma({ es, en }, idioma);
 // Consulta fresca directa de servicios (Firestore o Fallback Canónico infoServicios.json)
 const todos = await consultarProductosFirestoreFresco();
 const serviciosActivos = todos.filter((p: any) => (!p.tipo || p.tipo === 'psicologia') && p.activo !== false);
-const whatsappNumero = datosNegocio.whatsappLimpio;
+const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
 ---
 
 <style is:global set:html={serviciosCss}></style>

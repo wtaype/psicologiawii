@@ -31,6 +31,13 @@ for (const code of Object.keys(IDIOMAS)) {
 
 const baseHash = idioma === 'es' ? '' : `/${idioma}`;
 const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
+const wsNumeroHeader = datosNegocio.whatsappLimpio || '51960332958';
+const wsMsgHeader = encodeURIComponent(
+  idioma === 'en'
+    ? 'Hello Lic. Sofia, I would like guidance on which psychological service is most suitable for my case.'
+    : 'Hola Lic. Sofía, me gustaría recibir orientación sobre qué servicio psicológico es el más adecuado para mi caso.'
+);
+const whatsappDirectLink = `https://wa.me/${wsNumeroHeader}?text=${wsMsgHeader}`;
 ---
 
 <header class="header-main">
@@ -356,17 +363,19 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
         })();
       </script>
 
-      <!-- Botón AGENDAR CITA (Abre Modal Agendar) -->
+      <!-- Botón AGENDAR CITA (Directo a WhatsApp sin modal) -->
       {!esPersonal && (
-        <button 
-          type="button" 
-          onclick="window.abrirModalAgendar && window.abrirModalAgendar()" 
+        <a 
+          href={whatsappDirectLink}
+          target="_blank"
+          rel="noopener noreferrer"
           class="header-btn-order desktop-only" 
           title="Agendar Consulta por WhatsApp"
-          style="display: inline-flex; cursor: pointer; border: none;"
+          style="display: inline-flex; cursor: pointer; text-decoration: none;"
+          data-negocio-ws-link
         >
           <i class="fa-brands fa-whatsapp"></i> <span>{t.pedir}</span>
-        </button>
+        </a>
       )}
 
       <!-- Botón Hamburguesa Móvil -->

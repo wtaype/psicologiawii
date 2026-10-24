@@ -157,16 +157,16 @@ const partesTitulo = formatearTituloHero(heroTitulo);
             <span>{t.btn_wsp_main}</span>
           </button>
 
-          <!-- CTA 2: Me siento triste -->
+          <!-- CTA 2: Hacer un test -->
           <button 
             type="button" 
             onclick="window.abrirModalTest && window.abrirModalTest()" 
             class="btn-test hero-btn-cta"
             id="btnHeroTest"
-            title="Orientación Psicológica Inmediata"
+            title={idioma === 'en' ? 'Take a test' : 'Hacer un test'}
           >
             <i class="fa-regular fa-compass hero-btn-icon"></i>
-            <span>{t.btn_test_main}</span>
+            <span>{idioma === 'en' ? 'Take a test' : 'Hacer un test'}</span>
           </button>
         </div>
 
