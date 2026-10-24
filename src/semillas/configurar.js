@@ -140,7 +140,10 @@ export const configurarPersonal = {
     { id: 'paginas',   nombre: 'Páginas',     icono: 'file-lines',          activo: true },
     { id: 'personal',  nombre: 'Equipo',      icono: 'users',               activo: true },
     { id: 'perfil',    nombre: 'Mi perfil',   icono: 'user-gear',           activo: true },
-    { id: 'ajustes',   nombre: 'Ajustes',     icono: 'gear',                activo: true }
+    { id: 'ajustes',   nombre: 'Ajustes',     icono: 'gear',                activo: true },
+
+    { id: 'ayuda',     nombre: 'Ayuda',       icono: 'headset',             activo: true },
+    { id: 'aprender',  nombre: 'Aprender',    icono: 'graduation-cap',      activo: true }
   ]
 };
 
@@ -148,12 +151,13 @@ export const configurarPersonal = {
 // 3. MÓDULOS DE CLIENTE (Portal del Paciente)
 // =============================================================================
 export const configurarCliente = {
-  moduloDefecto: 'pedidos',
+  moduloDefecto: 'sesiones',
   modulos: [
-    { id: 'pedidos',   nombre: 'Agendar cita', icono: 'calendar-check',     activo: true },
-    { id: 'direccion', nombre: 'Modalidad',    icono: 'location-dot',       activo: true },
-    { id: 'cuenta',    nombre: 'Mi cuenta',    icono: 'user-gear',          activo: true },
-    { id: 'soporte',   nombre: 'Orientación',  icono: 'headset',            activo: true }
+    { id: 'sesiones', nombre: 'Mis Sesiones', icono: 'calendar-days', activo: true },
+    { id: 'pedidos',  nombre: 'Agendar Cita', icono: 'calendar-plus', activo: true },
+    { id: 'recursos', nombre: 'Mis Recursos', icono: 'book-medical', activo: true, badge: '4' },
+    { id: 'cuenta',   nombre: 'Mi Ficha',     icono: 'id-card-clip', activo: true },
+    { id: 'soporte',  nombre: 'Soporte',      icono: 'headset',      activo: true }
   ]
 };
 

@@ -35,7 +35,7 @@
   gap: 8px;
 }
 .cd-panel-title i {
-  color: var(--cl-orange);
+  color: var(--accent);
 }
 
 .cd-panel-subtitle {
@@ -85,7 +85,7 @@
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: clamp(0.95rem, 1.1vw, 1.15rem);
   font-weight: 800;
-  color: var(--cl-orange);
+  color: var(--accent);
   display: flex;
   align-items: center;
   gap: 9px;
@@ -115,13 +115,13 @@
   transition: all 0.15s;
 }
 .cd-chip-btn:hover {
-  border-color: var(--cl-orange);
+  border-color: var(--accent);
   color: var(--ink);
 }
 .cd-chip-btn.active {
-  background: rgba(255, 102, 0, 0.15);
-  border-color: var(--cl-orange);
-  color: var(--cl-orange);
+  background: var(--brand-soft);
+  border-color: var(--accent);
+  color: var(--accent);
   font-weight: 700;
 }
 
@@ -143,7 +143,7 @@
   margin-bottom: 2px;
 }
 .cd-form-label i {
-  color: var(--cl-orange);
+  color: var(--accent);
   font-size: 0.76rem;
 }
 
@@ -174,8 +174,8 @@
 .cd-input:focus,
 .cd-select:focus,
 .cd-textarea:focus {
-  border-color: var(--cl-orange);
-  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--brand-soft);
   background: var(--surface);
 }
 
@@ -211,8 +211,8 @@
   user-select: none;
 }
 .cd-apple-card.cd-apple-clickable:hover {
-  border-color: rgba(255, 102, 0, 0.4);
-  background: rgba(255, 102, 0, 0.03);
+  border-color: var(--border_accent);
+  background: var(--brand-soft);
 }
 
 .cd-apple-card-info {
@@ -310,7 +310,7 @@
 .cd-btn-save {
   flex: 1;
   padding: 12px 20px;
-  background: var(--cl-orange);
+  background: var(--accent);
   border: none;
   border-radius: 9px;
   color: #fff;
@@ -323,10 +323,10 @@
   justify-content: center;
   gap: 8px;
   transition: all 0.18s;
-  box-shadow: 0 3px 12px rgba(255, 102, 0, 0.35);
+  box-shadow: 0 3px 12px rgba(16, 67, 86, 0.3);
 }
 .cd-btn-save:hover {
-  background: var(--cl-orange-hover);
+  background: var(--accent-hover);
   transform: translateY(-1px);
 }
 
@@ -364,9 +364,9 @@
 }
 
 .cd-badge-count {
-  background: rgba(255, 102, 0, 0.15);
-  color: var(--cl-orange);
-  border: 1px solid rgba(255, 102, 0, 0.3);
+  background: var(--brand-soft);
+  color: var(--accent);
+  border: 1px solid var(--border_accent);
   padding: 3px 10px;
   border-radius: 999px;
   font-size: 0.72rem;
@@ -393,8 +393,8 @@
   transition: all 0.15s;
 }
 .cd-search-input:focus {
-  border-color: var(--cl-orange);
-  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--brand-soft);
 }
 .cd-search-icon {
   position: absolute;
@@ -429,7 +429,7 @@
 }
 
 .cd-dir-item:hover {
-  border-color: rgba(255, 102, 0, 0.4);
+  border-color: var(--border_accent);
   transform: translateY(-1px);
 }
 
@@ -455,7 +455,7 @@
   gap: 6px;
 }
 .cd-dir-item-alias i {
-  color: var(--cl-orange);
+  color: var(--accent);
 }
 
 .cd-dir-item-badge-principal {
@@ -491,7 +491,7 @@
   border: 1px solid var(--line);
   padding: 1px 6px;
   border-radius: 4px;
-  color: var(--cl-orange);
+  color: var(--accent);
   font-weight: 700;
   font-size: 0.68rem;
 }
@@ -513,7 +513,7 @@
   font-size: 0.68rem;
 }
 .cd-dir-item-celular i {
-  color: var(--cl-orange);
+  color: var(--accent);
   font-size: 0.65rem;
 }
 
@@ -527,7 +527,7 @@
 }
 .cd-dir-item-ref i {
   font-size: 0.68rem;
-  color: var(--cl-orange);
+  color: var(--accent);
   margin-top: 3px;
 }
 
@@ -560,8 +560,8 @@
   transition: all 0.15s;
 }
 .cd-btn-action:hover {
-  border-color: var(--cl-orange);
-  color: var(--cl-orange);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 .cd-btn-action.danger:hover {
   border-color: #ef4444;
@@ -604,8 +604,8 @@
   width: 54px;
   height: 54px;
   border-radius: 50%;
-  background: rgba(255, 102, 0, 0.12);
-  color: var(--cl-orange);
+  background: var(--brand-soft);
+  color: var(--accent);
   display: grid;
   place-items: center;
   font-size: 1.5rem;

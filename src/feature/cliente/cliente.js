@@ -1,59 +1,69 @@
+// src/feature/cliente/cliente.js
+// Controlador Maestro del Portal del Paciente · Consultorio Psicológico América
 import { getls, savels, avatar, wiTema } from '@widev';
 import { salir } from '../auth/sesion.js';
+import { inicializarSesiones } from './modulos/00-sesiones/sesiones.js';
 import { inicializarPedidos } from './modulos/01-pedidos/pedidos.js';
+import { inicializarRecursos } from './modulos/05-recursos/recursos.js';
 import { inicializarDirecciones, renderizarDirecciones } from './modulos/02-direccion/direccion.js';
 import { inicializarCuenta } from './modulos/03-cuenta/cuenta.js';
 import { inicializarSoporte } from './modulos/04-soporte/soporte.js';
-import { esModuloValido, moduloDefecto } from './modulos.js';
+import { esModuloValido, moduloDefecto, normalizarModulo } from './modulos.js';
 
 function resolverModuloDesdeURL() {
   const parts = location.pathname.split('/').filter(Boolean);
   const cIdx = parts.indexOf('cliente');
   const param = cIdx >= 0 && parts[cIdx + 1];
-  return (param && esModuloValido(param)) ? param : moduloDefecto;
+  const normalizado = normalizarModulo(param);
+  return (normalizado && esModuloValido(normalizado)) ? normalizado : moduloDefecto;
 }
 
 let moduloActivo = moduloDefecto;
 
 export function cambiarModulo(nuevoModulo, updateUrl = true) {
-  if (!esModuloValido(nuevoModulo)) return;
-  moduloActivo = nuevoModulo;
+  const modNormalizado = normalizarModulo(nuevoModulo);
+  if (!esModuloValido(modNormalizado)) return;
+  moduloActivo = modNormalizado;
 
   // 1. Alternar Paneles
   document.querySelectorAll('.cl-panel').forEach(panel => {
-    panel.classList.toggle('active', panel.id === `panel-${nuevoModulo}`);
+    panel.classList.toggle('active', panel.id === `panel-${modNormalizado}`);
   });
 
   // 2. Alternar items activos en Sidebar
   document.querySelectorAll('.cl-nav-item').forEach(item => {
-    item.classList.toggle('active', item.dataset.panelTarget === nuevoModulo);
+    item.classList.toggle('active', item.dataset.panelTarget === modNormalizado);
   });
 
   // 3. Alternar items activos en Dock Móvil
   document.querySelectorAll('.cl-m-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.panelTarget === nuevoModulo);
+    btn.classList.toggle('active', btn.dataset.panelTarget === modNormalizado);
   });
 
-  // 4. Sincronizar URL de forma profesional con pushState
+  // 4. Sincronizar URL con pushState
   if (updateUrl && history.pushState) {
-    const newPath = nuevoModulo === moduloDefecto ? '/cliente' : `/cliente/${nuevoModulo}`;
+    const newPath = modNormalizado === moduloDefecto ? '/cliente' : `/cliente/${modNormalizado}`;
     if (location.pathname !== newPath) {
-      history.pushState({ modulo: nuevoModulo }, '', newPath);
+      history.pushState({ modulo: modNormalizado }, '', newPath);
     }
   }
 
   // 5. Inicializar módulo específico
-  if (nuevoModulo === 'pedidos') {
+  if (modNormalizado === 'sesiones') {
+    inicializarSesiones(cambiarModulo);
+  } else if (modNormalizado === 'pedidos') {
     inicializarPedidos();
-  } else if (nuevoModulo === 'direccion') {
+  } else if (modNormalizado === 'recursos') {
+    inicializarRecursos();
+  } else if (modNormalizado === 'direccion') {
     inicializarDirecciones();
-  } else if (nuevoModulo === 'cuenta') {
+  } else if (modNormalizado === 'cuenta') {
     inicializarCuenta();
-  } else if (nuevoModulo === 'soporte') {
+  } else if (modNormalizado === 'soporte') {
     inicializarSoporte();
   }
 
-  // 6. Scroll al inicio si está en móvil
+  // 6. Scroll al inicio
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -70,10 +80,10 @@ function inicializarSesionUI() {
   const ddName = document.getElementById('dropdownUserFullName');
   const ddMail = document.getElementById('dropdownUserEmail');
 
-  const nombreMostrar = user.nombre || user.usuario || 'Cliente';
+  const nombreMostrar = user.nombre || user.usuario || 'Paciente';
   if (nameElem) nameElem.textContent = nombreMostrar;
   if (avatarElem) avatarElem.textContent = avatar(nombreMostrar);
-  if (planElem) planElem.textContent = user.plan === 'vip' ? 'Cliente MYPE' : (user.plan ? `Plan ${user.plan}` : 'Contribuyente');
+  if (planElem) planElem.textContent = 'Paciente Activo';
   if (ddName) ddName.textContent = user.nombreCompleto || user.nombre || user.usuario || 'Mi Perfil';
   if (ddMail) ddMail.textContent = user.email || user.celular || '';
 
@@ -103,15 +113,14 @@ function inicializarDropdowns() {
     }
   });
 
-  // Enlaces de salto directo desde el dropdown
+  // Enlaces de salto en dropdown
   document.querySelectorAll('[data-jump-to]').forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.jumpTo;
       if (target) {
+        cambiarModulo(target);
         menuUser?.classList.remove('open');
         btnUser?.classList.remove('active');
-        btnUser?.setAttribute('aria-expanded', 'false');
-        cambiarModulo(target);
       }
     });
   });
@@ -124,7 +133,7 @@ function inicializarTemaYSidebar() {
     wiTema.toggle();
   });
 
-  // Botón colapsar sidebar idéntico a personal
+  // Botón colapsar sidebar
   const btnCollapse = document.getElementById('btnCollapseSidebar');
   const iconCollapse = document.getElementById('iconCollapse');
   const labelCollapse = document.getElementById('labelCollapse');
@@ -165,23 +174,23 @@ function inicializarNavegacion() {
 function inicializarBuscador() {
   const inputDesktop = document.getElementById('clSearchInput');
 
-  function filtrarProductos(query) {
+  function filtrarEspecialidades(query) {
     const q = query.trim().toLowerCase();
-    const cards = document.querySelectorAll('#listaProductosCards .cl-h-card');
+    const cards = document.querySelectorAll('#listaEspecialidadesAgendar .ag-service-card');
     cards.forEach(card => {
       const nombre = (card.dataset.nombre || '').toLowerCase();
       const corto = (card.dataset.nombrecorto || '').toLowerCase();
-      const badge = (card.querySelector('.cl-h-badge')?.textContent || '').toLowerCase();
+      const enfoque = (card.querySelector('.ag-card-enfoque')?.textContent || '').toLowerCase();
       const precio = (card.dataset.precio || '').toLowerCase();
 
-      const coincide = !q || nombre.includes(q) || corto.includes(q) || badge.includes(q) || precio.includes(q);
-      card.style.display = coincide ? 'grid' : 'none';
+      const coincide = !q || nombre.includes(q) || corto.includes(q) || enfoque.includes(q) || precio.includes(q);
+      card.style.display = coincide ? 'flex' : 'none';
     });
   }
 
   function buscarGlobal(query) {
     if (moduloActivo === 'pedidos') {
-      filtrarProductos(query);
+      filtrarEspecialidades(query);
     } else if (moduloActivo === 'direccion') {
       renderizarDirecciones(query);
       const inputDir = document.getElementById('cdSearchDir');
@@ -201,7 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
   inicializarTemaYSidebar();
   inicializarNavegacion();
   inicializarBuscador();
-  inicializarDirecciones();
+  inicializarSesiones(cambiarModulo);
+  inicializarPedidos();
+  inicializarRecursos();
   inicializarCuenta();
   inicializarSoporte();
   cambiarModulo(resolverModuloDesdeURL(), false);

@@ -123,7 +123,7 @@ export function inicializarProductos() {
           </header>
 
           <div class="pr-card-media">
-            <img src="${p.imagen || '/imgwii/productos/BALON-10KG.webp'}" alt="${nombre}" class="pr-card-img" loading="lazy" />
+            <img src="${p.imagen || '/imgwii/servicios/psicoterapia-individual.webp'}" alt="${nombre}" class="pr-card-img" loading="lazy" />
           </div>
 
           <div class="pr-card-body">

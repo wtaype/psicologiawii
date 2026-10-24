@@ -5,9 +5,13 @@ import ClientePage from '@/feature/cliente/clientePage.astro';
 import { getModulosActivos, moduloDefecto } from '@/feature/cliente/modulos.js';
 
 export function getStaticPaths() {
-  return getModulosActivos().map((m) => ({
+  const list = getModulosActivos().map((m) => ({
     params: { modulo: m.id }
   }));
+  if (!list.some(item => item.params.modulo === 'direccion')) {
+    list.push({ params: { modulo: 'direccion' } });
+  }
+  return list;
 }
 
 const { modulo = moduloDefecto } = Astro.params;

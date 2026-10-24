@@ -29,6 +29,7 @@ export function obtenerUsuarioActualId() {
 export function normalizarImagen(img = {}) {
   const ahoraIso = new Date().toISOString();
   const fechaHoy = ahoraIso.slice(0, 10);
+  const fechaSlash = fechaHoy.replace(/-/g, '/');
 
   return {
     id: img.id || `img_${Date.now()}`,
@@ -41,7 +42,8 @@ export function normalizarImagen(img = {}) {
     dimensiones: img.dimensiones || 'Optimizado WebP',
     pin: Boolean(img.pin),
     estado: img.estado || 'activo',
-    userId: img.userId !== undefined ? img.userId : '',
+    userId: img.userId !== undefined ? img.userId : obtenerUsuarioActualId(),
+    fecha: img.fecha || (img.fechaSubida ? img.fechaSubida.replace(/-/g, '/') : fechaSlash),
     fechaSubida: img.fechaSubida || fechaHoy,
     creado: img.creado || ahoraIso,
     actualizado: img.actualizado || ahoraIso
@@ -82,9 +84,15 @@ export function ordenarGaleria(arr = []) {
 export function obtenerImagenesGaleria(incluirEliminadas = false) {
   const guardadas = getls(STORAGE_KEY) || getls(OLD_STORAGE_KEY);
   if (guardadas && Array.isArray(guardadas) && guardadas.length > 0) {
-    // Si contiene formato de fecha viejo con texto ("Feb 2026"), autorreparar con las semillas de octubre
+    // 🛡️ Detección y purga de imágenes viejas residuales (ej. imágenes de solgas / gas)
+    const tieneFotosResiduales = guardadas.some(img => 
+      (img.url && (img.url.includes('solgas') || img.url.includes('balanza') || img.url.includes('cocina'))) ||
+      (img.id && img.id.startsWith('img_solgas_'))
+    );
+
+    // Si contiene formato viejo o imágenes residuales del giro anterior, autorreparar limpiamente con las semillas oficiales
     const tieneFechasViejas = guardadas.some(img => img.fechaSubida && (img.fechaSubida.includes('Ene') || img.fechaSubida.includes('Feb')));
-    if (!tieneFechasViejas) {
+    if (!tieneFechasViejas && !tieneFotosResiduales) {
       // 🎯 Auto-actualización inteligente de semillas (pesos reales y URLs sin esperar Firestore)
       let huboCambios = false;
       const semillasMap = new Map(IMAGENES_SEMILLA.map(s => [s.id, s]));

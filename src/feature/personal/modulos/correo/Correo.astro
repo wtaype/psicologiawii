@@ -264,7 +264,70 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
               <input type="text" id="crInputSubject" class="cr-input cr-live-input" value={(plantillas[0] as any)?.asuntoDefecto || `Comunicado Oficial · ${datosNegocio.nombreCorto || datosNegocio.nombre || 'Oficial'}`} required />
             </div>
 
-            <!-- BLOQUES DINÁMICOS POR PLANTILLA (CUADRITOS FÁCILES DE AUTOCOMPLETADO) -->
+            <!-- BLOQUES DINÁMICOS POR PLANTILLA CLÍNICA -->
+            <!-- BLOQUE DINÁMICO 1: CONFIRMACIÓN DE CITA PSICOLÓGICA -->
+            <div id="crFieldsCita" class="cr-cat-box" style={primeraPlantillaId === 'cita' ? 'display:block;' : 'display:none;'}>
+              <div class="cr-cat-box-title">
+                <i class="fa-solid fa-calendar-check" style="color:var(--brand-primary, #267a57);"></i> Datos de la Sesión Psicológica
+              </div>
+              <div class="cr-form-row">
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crCitaId">Código de Cita</label>
+                  <input type="text" id="crCitaId" class="cr-input cr-live-input" value="CITA-101" />
+                </div>
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crCitaServicio">Especialidad</label>
+                  <input type="text" id="crCitaServicio" class="cr-input cr-live-input" value="Psicoterapia Individual (TCC)" />
+                </div>
+              </div>
+              <div class="cr-form-row">
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crCitaFechaHora">Fecha y Hora</label>
+                  <input type="text" id="crCitaFechaHora" class="cr-input cr-live-input" value="Sábado 24 de Octubre, 10:00 am" />
+                </div>
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crCitaModalidad">Modalidad</label>
+                  <select id="crCitaModalidad" class="cr-input cr-live-input">
+                    <option value="Presencial en Sede América">Presencial en Sede América</option>
+                    <option value="Virtual Vía Google Meet (Privado)">Virtual Vía Google Meet (Privado)</option>
+                  </select>
+                </div>
+              </div>
+              <div class="cr-form-row">
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crCitaInversion">Inversión por Sesión (S/)</label>
+                  <input type="text" id="crCitaInversion" class="cr-input cr-live-input" value="85.00" />
+                </div>
+              </div>
+            </div>
+
+            <!-- BLOQUE DINÁMICO 2: TALLER VIVENCIAL -->
+            <div id="crFieldsTaller" class="cr-cat-box" style={primeraPlantillaId === 'taller' ? 'display:block;' : 'display:none;'}>
+              <div class="cr-cat-box-title">
+                <i class="fa-solid fa-people-group" style="color:var(--brand-primary, #267a57);"></i> Datos del Taller Vivencial
+              </div>
+              <div class="cr-form-row">
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crTallerNombre">Nombre del Taller</label>
+                  <input type="text" id="crTallerNombre" class="cr-input cr-live-input" value="Taller Vivencial de Inteligencia Emocional" />
+                </div>
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crTallerFecha">Fecha & Horario</label>
+                  <input type="text" id="crTallerFecha" class="cr-input cr-live-input" value="Sábado 31 de Octubre, 4:00 pm" />
+                </div>
+              </div>
+              <div class="cr-form-row">
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crTallerModalidad">Modalidad / Ubicación</label>
+                  <input type="text" id="crTallerModalidad" class="cr-input cr-live-input" value="Grupal Presencial en Sede América" />
+                </div>
+                <div class="cr-form-group">
+                  <label class="cr-label" for="crTallerInversion">Inversión Total (S/)</label>
+                  <input type="text" id="crTallerInversion" class="cr-input cr-live-input" value="60.00" />
+                </div>
+              </div>
+            </div>
+
             <!-- BLOQUE DINÁMICO: CONFIRMACIÓN DE PEDIDO GLP -->
             <div id="crFieldsPedido" class="cr-cat-box" style={primeraPlantillaId === 'pedido' ? 'display:block;' : 'display:none;'}>
               <div class="cr-cat-box-title">

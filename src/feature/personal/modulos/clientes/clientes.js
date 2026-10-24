@@ -87,12 +87,14 @@ export function inicializarModuloClientes() {
     const lista = obtenerClientes();
     let res = lista;
 
-    if (filtroActual === 'mype') {
-      res = res.filter(c => (c.regimenTributario || '').toLowerCase().includes('mype') || (c.regimenTributario || '').toLowerCase().includes('general') || (c.regimenTributario || '').toLowerCase().includes('comercial') || c.documentoTipo === 'RUC');
-    } else if (filtroActual === 'independiente') {
-      res = res.filter(c => (c.regimenTributario || '').toLowerCase().includes('4ta') || (c.regimenTributario || '').toLowerCase().includes('residencial') || (c.regimenTributario || '').toLowerCase().includes('hogar') || c.documentoTipo === 'DNI');
-    } else if (filtroActual === 'rer') {
-      res = res.filter(c => (c.regimenTributario || '').toLowerCase().includes('especial') || (c.regimenTributario || '').toLowerCase().includes('rer'));
+    if (filtroActual === 'individual') {
+      res = res.filter(c => (c.motivoConsulta || '').toLowerCase().includes('individual') || (c.categoria === 'individual'));
+    } else if (filtroActual === 'pareja') {
+      res = res.filter(c => (c.motivoConsulta || '').toLowerCase().includes('pareja') || (c.categoria === 'pareja'));
+    } else if (filtroActual === 'infantil') {
+      res = res.filter(c => (c.motivoConsulta || '').toLowerCase().includes('infantil') || (c.motivoConsulta || '').toLowerCase().includes('aprendizaje') || (c.categoria === 'infantil'));
+    } else if (filtroActual === 'taller') {
+      res = res.filter(c => (c.motivoConsulta || '').toLowerCase().includes('taller') || (c.categoria === 'taller'));
     }
 
     if (busquedaActual.trim()) {
@@ -134,46 +136,47 @@ export function inicializarModuloClientes() {
 
     tableBody.innerHTML = filtrados.map(c => {
       const isSelected = c.id === clienteSeleccionadoId;
-      const ruc = c.documento || 'Sin doc';
-      const digito = c.ultimoDigitoRuc ?? (ruc.length >= 1 ? ruc.slice(-1) : 0);
-      const honorario = (parseFloat(c.honorarioPEN) || 0).toFixed(2);
-      const regimen = c.regimenTributario || 'MYPE';
+      const doc = c.documento || 'Sin DNI';
+      const sesiones = c.totalSesiones || 1;
+      const honorario = (parseFloat(c.honorarioPEN) || 85).toFixed(2);
+      const motivo = c.motivoConsulta || 'Psicoterapia Individual';
+      const modalidad = c.modalidad || 'Presencial Sede América';
 
-        const avatarHtml = c.avatar 
-          ? `<img src="${c.avatar}" alt="${c.nombre}" class="cl-user-avatar" onerror="this.src='/smile.avif'" />`
-          : `<div class="cl-user-avatar-tag">${c.nombre.charAt(0).toUpperCase()}</div>`;
+      const avatarHtml = c.avatar 
+        ? `<img src="${c.avatar}" alt="${c.nombre}" class="cl-user-avatar" onerror="this.src='/smile.avif'" />`
+        : `<div class="cl-user-avatar-tag">${c.nombre.charAt(0).toUpperCase()}</div>`;
 
-        return `
+      return `
         <tr class="cl-row ${isSelected ? 'selected' : ''}" data-id="${c.id}">
           <td>
             <div class="cl-user-cell">
               ${avatarHtml}
               <div class="cl-user-meta">
                 <span class="cl-user-name">${c.nombre}</span>
-                <span class="cl-user-doc">${c.documentoTipo || 'RUC'}: ${ruc}</span>
+                <span class="cl-user-doc"><i class="fa-solid fa-brain" style="font-size:10px; color:var(--brand-primary,#267a57);"></i> ${motivo}</span>
               </div>
             </div>
           </td>
           <td>
-            <a href="tel:${c.celular}" class="cl-user-doc" style="color:var(--mco, var(--brand-primary, #ff6600)); text-decoration:none; font-weight:600;">
+            <a href="tel:${c.celular}" class="cl-user-doc" style="color:var(--brand-primary, #267a57); text-decoration:none; font-weight:600;">
               ${c.celular || 'S/N'}
             </a>
           </td>
           <td style="font-size: 12px; color: var(--tx);">
-            ${regimen}
+            <i class="fa-solid fa-location-dot" style="font-size:10px; color:#64748b;"></i> ${modalidad}
           </td>
-          <td style="text-align: center; font-weight: 800; color: var(--mco, var(--brand-primary, #ff6600)); font-size:14px;">
-            ${digito}
+          <td style="text-align: center; font-weight: 800; color: var(--brand-primary, #267a57); font-size:14px;">
+            <span class="cl-spec-chip" style="background:rgba(38,122,87,0.1); padding:2px 8px; border-radius:6px;">Sesión ${sesiones}</span>
           </td>
           <td style="text-align: right; font-weight: 700; color: var(--tx);">
             S/ ${honorario}
           </td>
           <td>
             <div class="cl-row-actions">
-              <button type="button" class="cl-action-btn ws cl-btn-row-ws" data-id="${c.id}" title="Recordar Vencimiento por WhatsApp">
+              <button type="button" class="cl-action-btn ws cl-btn-row-ws" data-id="${c.id}" title="Contactar por WhatsApp">
                 <i class="fa-brands fa-whatsapp"></i>
               </button>
-              <button type="button" class="cl-action-btn cl-btn-row-del" data-id="${c.id}" title="Eliminar Cliente">
+              <button type="button" class="cl-action-btn cl-btn-row-del" data-id="${c.id}" title="Retirar Consultante">
                 <i class="fa-solid fa-trash-can"></i>
               </button>
             </div>
@@ -256,33 +259,28 @@ export function inicializarModuloClientes() {
     }
 
     if (crmNombre) crmNombre.textContent = c.nombre;
-    if (crmDoc) crmDoc.textContent = `${c.documentoTipo || 'DOC'}: ${c.documento || 'No registrado'} · ${c.email || 'Sin correo'}`;
-    if (crmRegimen) crmRegimen.textContent = c.regimenTributario || (c.documentoTipo === 'RUC' ? 'Comercial' : 'Residencial');
-    if (crmHonorario) crmHonorario.textContent = `S/ ${(parseFloat(c.honorarioPEN) || 65.00).toFixed(2)}`;
-    if (crmServicio) crmServicio.textContent = c.servicioContratado || (c.valvulaPreferida ? `Balón con Válvula ${c.valvulaPreferida}` : 'Despacho Express');
+    if (crmDoc) crmDoc.textContent = `${c.documentoTipo || 'DNI'}: ${c.documento || 'No registrado'} · ${c.email || 'Sin correo'}`;
+    if (crmRegimen) crmRegimen.textContent = c.modalidad || 'Presencial Sede América';
+    if (crmHonorario) crmHonorario.textContent = `S/ ${(parseFloat(c.honorarioPEN) || 85.00).toFixed(2)}`;
+    if (crmServicio) crmServicio.textContent = c.motivoConsulta || 'Psicoterapia Individual (TCC)';
     
-    const ruc = c.documento || '';
-    const dig = c.ultimoDigitoRuc ?? (ruc.length >= 1 ? ruc.slice(-1) : 0);
-    if (crmDigitoRuc) crmDigitoRuc.textContent = `${dig}`;
+    if (crmDigitoRuc) crmDigitoRuc.textContent = `${c.totalSesiones || 1}`;
     
     if (crmEstadoFiscal) {
-      crmEstadoFiscal.textContent = c.estadoTributario === 'al_dia' ? 'Al Día / Activo' : 'Pendiente';
-      crmEstadoFiscal.className = `cl-status-tag ${c.estadoTributario || 'al_dia'}`;
+      const estado = c.estadoTratamiento || 'En Tratamiento';
+      crmEstadoFiscal.textContent = estado;
+      crmEstadoFiscal.className = `cl-status-tag ${estado.toLowerCase().includes('alta') ? 'al-dia' : 'pendiente'}`;
     }
-    if (crmFechaInicio) crmFechaInicio.textContent = c.fechaInicio || 'Ene 2026';
-    if (crmDireccion) crmDireccion.textContent = c.direccion || '-';
-    if (crmContacto) crmContacto.textContent = `Contacto: ${c.contacto || c.nombre}`;
-    if (crmObservaciones) crmObservaciones.textContent = c.observaciones || 'Sin observaciones registradas.';
+    if (crmFechaInicio) crmFechaInicio.textContent = c.fechaInicio || 'Oct 2026';
+    if (crmDireccion) crmDireccion.textContent = c.direccion || 'Presencial en Consultorio Sede América';
+    if (crmContacto) crmContacto.textContent = `Consultante: ${c.contacto || c.nombre}`;
+    if (crmObservaciones) crmObservaciones.textContent = c.observaciones || 'Acuerdos de sesión y tareas terapéuticas al día.';
   }
 
   function abrirWhatsAppCliente(c) {
     const cel = c.celular?.replace(/\D/g, '') || '';
-    const ruc = c.documento || '';
-    const emisor = window.Wii?.negocio?.nombreCorto || window.Wii?.negocio?.nombre || 'la administración';
-    const esGlp = !window.Wii?.negocio?.identidad?.especialista?.toLowerCase().includes('contab');
-    const texto = esGlp
-      ? `¡Hola ${c.contacto || c.nombre}! Te saluda ${emisor}. Nos comunicamos para coordinar tu próximo pedido o consultar si requieres recarga de gas GLP con balanza comprobada. ¡Estamos a tu servicio!`
-      : `¡Hola ${c.contacto || c.nombre}! Te saluda ${emisor}. Te recordamos que la declaración mensual SUNAT de tu RUC (${ruc}) se aproxima a su fecha de vencimiento. Agradecemos remitir tus comprobantes para procesar tu declaración a tiempo.`;
+    const especialista = 'Lic. Sofia Reynaga (C.Ps.P. 49425)';
+    const texto = `¡Hola ${c.contacto || c.nombre}! 👋 Te saluda la ${especialista} de Consultorio Psicológico América. Nos comunicamos para coordinar los detalles de tu próxima sesión terapéutica de ${c.motivoConsulta || 'psicoterapia'}. ¿Tienes disponibilidad para confirmar tu horario?`;
     const url = cel 
       ? `https://wa.me/51${cel}?text=${encodeURIComponent(texto)}`
       : `https://wa.me/?text=${encodeURIComponent(texto)}`;
@@ -356,14 +354,14 @@ export function inicializarModuloClientes() {
 
   formModalCliente?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    const docTipo = selectModalDocTipo?.value || 'RUC';
+    const docTipo = selectModalDocTipo?.value || 'DNI';
     const doc = inputModalDoc?.value?.trim();
     const nombre = inputModalNombre?.value?.trim();
-    const regimen = selectModalRegimen?.value || 'Régimen MYPE Tributario (RMT)';
-    const honorario = parseFloat(inputModalHonorario?.value) || 150.00;
+    const motivo = selectModalRegimen?.value || 'Psicoterapia Individual (TCC)';
+    const honorario = parseFloat(inputModalHonorario?.value) || 85.00;
     const celular = inputModalCelular?.value?.trim();
     const email = inputModalEmail?.value?.trim();
-    const direccion = inputModalDireccion?.value?.trim() || '';
+    const direccion = inputModalDireccion?.value?.trim() || 'Presencial Sede América';
 
     if (!doc || !nombre || !celular) {
       Notificacion('Completa los campos obligatorios (*).', 'warning', 2500);
@@ -379,15 +377,14 @@ export function inicializarModuloClientes() {
         contacto: nombre,
         documentoTipo: docTipo,
         documento: doc,
-        regimenTributario: regimen,
+        motivoConsulta: motivo,
+        modalidad: direccion.toLowerCase().includes('online') || direccion.toLowerCase().includes('meet') ? 'Virtual Vía Google Meet' : 'Presencial Sede América',
         honorarioPEN: honorario,
         celular,
         email,
         direccion,
-        servicioContratado: configSemilla?.modeloNegocio === 'servicios_y_asesorias'
-          ? (regimen.includes('4ta') ? 'Asesoría y Consultoría Especializada' : 'Servicio Profesional Mensual')
-          : (configSemilla?.terminologia?.comprobanteConceptoDefault || 'Suministro y Recarga de Balón GLP'),
-        estadoTributario: 'al_dia',
+        totalSesiones: 1,
+        estadoTratamiento: 'Primera Cita',
         fechaInicio: 'Hoy'
       });
 
@@ -395,7 +392,7 @@ export function inicializarModuloClientes() {
       actualizarKpis();
       renderizarTabla();
       if (modalOverlay) modalOverlay.classList.remove('active');
-      Notificacion(`Cliente ${nombre} registrado con éxito.`, 'success', 3000);
+      Notificacion(`Consultante ${nombre} registrado con éxito.`, 'success', 3000);
     } catch (err) {
       console.error(err);
       Notificacion('Error al guardar cliente: ' + (err?.message || err), 'danger', 3000);

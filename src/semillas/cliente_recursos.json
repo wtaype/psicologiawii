@@ -1,0 +1,93 @@
+[
+  {
+    "id": "respiracion-4-7-8",
+    "userId": "sofia-reynaga-psicologa",
+    "titulo": "Técnica de Respiración Diafragmática (4-7-8)",
+    "categoria": "calma",
+    "categoriaEtiqueta": "Respiración & Calma",
+    "colorTema": "teal",
+    "icono": "fa-solid fa-wind",
+    "duracion": "5 min",
+    "descripcion": "Diseñada por el Dr. Andrew Weil y ampliamente usada en terapia TCC para reducir el ritmo cardíaco y desactivar la respuesta de lucha o huida ante la ansiedad.",
+    "pasos": [
+      { "orden": 1, "accion": "Inhala", "tiempo": "4 seg", "via": "por la nariz" },
+      { "orden": 2, "accion": "Retén", "tiempo": "7 seg", "via": "el aire" },
+      { "orden": 3, "accion": "Exhala", "tiempo": "8 seg", "via": "por la boca" }
+    ],
+    "botones": {
+      "principal": { "texto": "Ejercicio Guiado", "icono": "fa-play", "modalId": "modalRespiracion" },
+      "secundario": { "texto": "Guía PDF", "icono": "fa-download", "accion": "descargarPdf" }
+    },
+    "creado": "2026-10-10T10:00:00Z",
+    "actualizado": "2026-10-23T19:00:00Z"
+  },
+  {
+    "id": "registro-tcc",
+    "userId": "sofia-reynaga-psicologa",
+    "titulo": "Registro de Pensamientos Automáticos (TCC)",
+    "categoria": "tcc",
+    "categoriaEtiqueta": "Terapia Cognitiva",
+    "colorTema": "purple",
+    "icono": "fa-solid fa-brain",
+    "duracion": "Ficha Práctica",
+    "descripcion": "Bitácora de 5 columnas para identificar la situación detonante, la emoción experimentada, el pensamiento automático distorsionado y la respuesta racional alternativa.",
+    "columnas": [
+      { "nombre": "Situación", "desc": "¿Dónde estabas y qué ocurrió?" },
+      { "nombre": "Emoción", "desc": "¿Qué sentiste y del 1 al 100 con qué intensidad?" },
+      { "nombre": "Pensamiento", "desc": "¿Qué idea automática cruzó por tu mente?" },
+      { "nombre": "Alternativa Racional", "desc": "Reestructuración y evidencia a favor/en contra", "destacado": true }
+    ],
+    "botones": {
+      "principal": { "texto": "Ver Plantilla", "icono": "fa-table-list", "modalId": "modalTcc" },
+      "secundario": { "texto": "Imprimir", "icono": "fa-print", "accion": "imprimir" }
+    },
+    "creado": "2026-10-10T10:00:00Z",
+    "actualizado": "2026-10-23T19:00:00Z"
+  },
+  {
+    "id": "anclaje-54321",
+    "userId": "sofia-reynaga-psicologa",
+    "titulo": "Técnica Sensorial de Anclaje (5-4-3-2-1)",
+    "categoria": "calma",
+    "categoriaEtiqueta": "Enraizamiento / Grounding",
+    "colorTema": "rose",
+    "icono": "fa-solid fa-anchor",
+    "duracion": "3 min",
+    "descripcion": "Herramienta de atención plena y reconexión con el presente ante episodios de sobrecarga emocional, rumiación o ataques de pánico.",
+    "pasosSensoriales": [
+      { "cantidad": 5, "sentido": "Vista", "instruccion": "Cosas que puedas ver a tu alrededor" },
+      { "cantidad": 4, "sentido": "Tacto", "instruccion": "Cosas que puedas tocar con tus manos" },
+      { "cantidad": 3, "sentido": "Oído", "instruccion": "Sonidos que puedas escuchar ahora mismo" },
+      { "cantidad": 2, "sentido": "Olfato", "instruccion": "Olores que puedas percibir" },
+      { "cantidad": 1, "sentido": "Autoafirmación", "instruccion": "Cosa positiva que puedas decirte a ti mismo" }
+    ],
+    "botones": {
+      "principal": { "texto": "Iniciar Anclaje", "icono": "fa-eye", "modalId": "modalGrounding" }
+    },
+    "creado": "2026-10-10T10:00:00Z",
+    "actualizado": "2026-10-23T19:00:00Z"
+  },
+  {
+    "id": "plan-autocuidado",
+    "userId": "sofia-reynaga-psicologa",
+    "titulo": "Plan de Autocuidado & Metas de Bienestar",
+    "categoria": "autocuidado",
+    "categoriaEtiqueta": "Hábitos & Metas",
+    "colorTema": "blue",
+    "icono": "fa-solid fa-heart-circle-check",
+    "duracion": "Semanal",
+    "descripcion": "Estructura tus 4 pilares básicos: higiene del sueño, movimiento físico amable, límites saludables y tiempo de desconexión digital.",
+    "pilares": [
+      { "id": "hab-sueno", "icono": "fa-bed", "texto": "Sueño reparador de 7 a 8 horas" },
+      { "id": "hab-caminata", "icono": "fa-person-walking", "texto": "Caminata o estiramiento de 20 min" },
+      { "id": "hab-limites", "icono": "fa-shield-halved", "texto": "Decir 'No' sin culpa y respetar mis límites" },
+      { "id": "hab-digital", "icono": "fa-mobile-screen", "texto": "Desconexión de pantallas 30 min antes de dormir" }
+    ],
+    "botones": {
+      "principal": { "texto": "Revisar Plan", "icono": "fa-list-check", "modalId": "modalAutocuidado" },
+      "secundario": { "texto": "PDF", "icono": "fa-download", "accion": "descargarPdf" }
+    },
+    "creado": "2026-10-10T10:00:00Z",
+    "actualizado": "2026-10-23T19:00:00Z"
+  }
+]

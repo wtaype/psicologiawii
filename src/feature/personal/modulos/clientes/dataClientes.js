@@ -19,14 +19,14 @@ let _memoriaClientes = null;
  * Normaliza los datos de un cliente desde el esquema smiles
  */
 export function normalizarCliente(c = {}) {
-  const ruc = String(c.documento || '').trim();
-  const ultimoDigito = ruc.length >= 1 ? parseInt(ruc.slice(-1), 10) : (c.ultimoDigitoRuc ?? 0);
-  const uid = c.uid || c.id || `cli_${Date.now()}`;
+  const docNum = String(c.documento || '').trim();
+  const uid = c.uid || c.id || `paciente_${Date.now()}`;
   const nombreContacto = c.contacto || `${c.nombre || ''} ${c.apellidos || ''}`.trim() || c.razonSocial || '';
 
   let avatar = c.avatar || '';
   if (!avatar || avatar.includes('smile.webp') || avatar.includes('hero.webp')) {
-    avatar = '/smile.avif';
+    const seed = encodeURIComponent(c.nombre || 'Paciente');
+    avatar = `https://api.dicebear.com/7.x/initials/svg?seed=${seed}&backgroundColor=059669`;
   }
 
   let direccion = c.direccion || '';
@@ -38,22 +38,23 @@ export function normalizarCliente(c = {}) {
   return {
     id: uid,
     uid: uid,
-    nombre: c.razonSocial || c.nombre || '',
+    nombre: c.nombre || c.razonSocial || '',
     contacto: nombreContacto,
     apellidos: c.apellidos || '',
-    usuario: c.usuario || (c.email ? c.email.split('@')[0] : (c.nombre ? c.nombre.toLowerCase().replace(/\s+/g, '') : 'cliente')),
-    documentoTipo: c.documentoTipo || (ruc.length === 11 ? 'RUC' : (ruc ? 'DNI' : '')),
-    documento: ruc,
+    usuario: c.usuario || (c.email ? c.email.split('@')[0] : (c.nombre ? c.nombre.toLowerCase().replace(/\s+/g, '') : 'paciente')),
+    documentoTipo: c.documentoTipo || (docNum.length === 11 ? 'RUC' : (docNum ? 'DNI' : 'DNI')),
+    documento: docNum,
     celular: c.celular || '',
     email: c.email || '',
-    direccion: direccion,
-    regimenTributario: c.regimenTributario || '',
-    servicioContratado: c.servicioContratado || '',
-    honorarioPEN: parseFloat(c.honorarioPEN) || 0,
-    ultimoDigitoRuc: isNaN(ultimoDigito) ? 0 : ultimoDigito,
-    estadoTributario: c.estadoTributario || 'al_dia', // 'al_dia' | 'pendiente' | 'por_vencer'
-    fechaInicio: c.fechaInicio || '',
-    observaciones: c.observaciones || '',
+    direccion: direccion || 'Presencial en Consultorio Sede América',
+    motivoConsulta: c.motivoConsulta || c.servicioContratado || 'Psicoterapia Individual (TCC)',
+    modalidad: c.modalidad || 'Presencial Sede América',
+    categoria: c.categoria || 'individual', // 'individual' | 'pareja' | 'infantil' | 'taller'
+    estadoTratamiento: c.estadoTratamiento || c.estadoTributario || 'En Tratamiento', // 'Primera Cita' | 'En Tratamiento' | 'De Alta' | 'Pausado'
+    totalSesiones: typeof c.totalSesiones === 'number' ? c.totalSesiones : (parseInt(c.sesiones, 10) || 1),
+    honorarioPEN: parseFloat(c.honorarioPEN) || 85.00,
+    fechaInicio: c.fechaInicio || c.fecha || '2026/10/23',
+    observaciones: c.observaciones || 'Consultante comprometido con su proceso terapéutico.',
     avatar: avatar,
     rol: 'cliente',
     activo: Boolean(c.activo ?? true)

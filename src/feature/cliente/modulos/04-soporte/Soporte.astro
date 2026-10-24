@@ -14,7 +14,7 @@ const telefonoMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono 
 const nombreEspecialista = datosNegocio.identidad?.especialista || datosNegocio.especialista || datosNegocio.nombre || '';
 const nombreNegocio = datosNegocio.nombreCorto || datosNegocio.nombre || '';
 const distritoSede = datosNegocio.ubicacion?.distrito || '';
-const badgeSede = distritoSede ? `Sede ${distritoSede} · Despacho y Atención Activa` : 'Atención y Despacho Activo';
+const badgeSede = distritoSede ? `Sede ${distritoSede} · Consultas & Orientación Activa` : 'Orientación & Atención Activa';
 const term = configSemilla?.terminologia || {};
 const garantiaTxt = esServicios
   ? (datosNegocio.identidad?.especialista
@@ -56,7 +56,7 @@ const msjWsSoporte = `Hola ${nombreEspecialista || nombreNegocio}, deseo realiza
       <div class="sp-card-header">
         <div class="sp-card-title">
           <i class="fa-solid fa-paper-plane"></i>
-          <span>{esServicios ? 'Enviar Consulta a la Contadora' : 'Enviar Consulta a Central'}</span>
+          <span>Enviar Mensaje a la Especialista</span>
         </div>
       </div>
 

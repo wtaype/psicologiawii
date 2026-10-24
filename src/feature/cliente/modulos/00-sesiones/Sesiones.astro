@@ -1,0 +1,221 @@
+---
+// src/feature/cliente/modulos/00-sesiones/Sesiones.astro
+// Dashboard Principal del Paciente · Consultorio Psicológico América
+// Totalmente desacoplado: Consume cliente_session.json y datos de sesión autenticada
+import { datosNegocio } from '@/negocio.js';
+import clienteSession from '@semillas/cliente_session.json';
+
+interface Props {
+  cliente?: any;
+}
+
+const { cliente = {} } = Astro.props;
+const especialista = datosNegocio.identidad?.especialista || clienteSession.proximaSesion?.especialista?.nombre || 'Lic. Sofia Reynaga Pachas';
+const colegiatura = datosNegocio.identidad?.colegiatura || clienteSession.proximaSesion?.especialista?.colegiatura || '49425';
+const whatsapp = datosNegocio.whatsappLimpio || '51960332958';
+
+const proxima = clienteSession.proximaSesion;
+const nota = clienteSession.notaEspecialista;
+const resumen = clienteSession.resumenClinico;
+const historial = clienteSession.historial || [];
+
+// Extraer fecha para la caja visual
+const [diaSemana, restoFecha] = proxima.fechaTexto ? proxima.fechaTexto.split(' ') : ['Viernes', '24'];
+const mesBox = 'OCT';
+const diaBox = '24';
+---
+
+<div class="cl-sesiones-module" id="moduloSesiones">
+  
+  <!-- 1. HERO EMPÁTICO DE BIENVENIDA -->
+  <header class="se-hero">
+    <div class="se-hero-main">
+      <div class="se-hero-badge">
+        <i class="fa-solid fa-shield-heart"></i>
+        <span>Espacio Confidencial y Seguro · C.Ps.P. {colegiatura}</span>
+      </div>
+      <h1 class="se-hero-title">
+        <span id="seUserSalute">¡Hola!</span>, bienvenido a tu <span class="se-gradient-text">Espacio Terapéutico</span>
+      </h1>
+      <p class="se-hero-desc">
+        Consulta aquí el estado de tu proceso psicológico, tu próxima sesión programada y las orientaciones de tu especialista.
+      </p>
+    </div>
+
+    <div class="se-hero-actions">
+      <button type="button" class="se-btn-primary" id="btnIrAgendarSesion">
+        <i class="fa-solid fa-calendar-plus"></i>
+        <span>Agendar Nueva Cita</span>
+      </button>
+      <button type="button" class="se-btn-secondary" id="btnIrRecursosSesion">
+        <i class="fa-solid fa-book-medical"></i>
+        <span>Mis Recursos</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 2. GRID PRINCIPAL: PRÓXIMA CITA + MENSAJE DE ESPECIALISTA -->
+  <div class="se-grid-top">
+    
+    <!-- TARJETA DESTACADA: PRÓXIMA SESIÓN -->
+    <article class="se-card se-next-appointment" id="cardProximaCita">
+      <div class="se-card-header">
+        <div class="se-badge-pulse">
+          <span class="se-pulse-dot"></span>
+          <span>{proxima.etiquetaEstado || 'PRÓXIMA SESIÓN CONFIRMADA'}</span>
+        </div>
+        <span class="se-time-countdown" id="seCountdownText">{proxima.diasRestantes || 'En 2 días'}</span>
+      </div>
+
+      <div class="se-date-banner">
+        <div class="se-date-box">
+          <span class="se-date-month">{mesBox}</span>
+          <span class="se-date-day">{diaBox}</span>
+          <span class="se-date-weekday">{diaSemana}</span>
+        </div>
+        <div class="se-date-info">
+          <h2 class="se-session-type">{proxima.servicioNombre}</h2>
+          <div class="se-session-time">
+            <i class="fa-regular fa-clock"></i>
+            <span>{proxima.horaTexto}</span>
+          </div>
+          <div class="se-session-loc">
+            <i class="fa-solid fa-location-dot"></i>
+            <span>{proxima.modalidad}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="se-therapist-strip">
+        <div class="se-therapist-avatar">
+          <img src={proxima.especialista?.foto || "/imgwii/hero/psicologa-sofia-reynaga.webp"} alt={especialista} onerror="this.src='/imgwii/logo.webp'" />
+        </div>
+        <div class="se-therapist-meta">
+          <span class="se-therapist-name">{especialista}</span>
+          <span class="se-therapist-tag">Psicóloga Clínica Colegiada · {colegiatura}</span>
+        </div>
+      </div>
+
+      <div class="se-card-actions">
+        <a href={proxima.linkMapa} target="_blank" rel="noopener" class="se-action-btn secondary">
+          <i class="fa-solid fa-map-location-dot"></i>
+          <span>Cómo Llegar</span>
+        </a>
+        <a href={proxima.linkVirtual} target="_blank" rel="noopener" class="se-action-btn secondary">
+          <i class="fa-solid fa-video"></i>
+          <span>Enlace Virtual</span>
+        </a>
+        <a 
+          href={`https://wa.me/${whatsapp}?text=Hola%20Lic.%20Sof%C3%ADa,%20deseo%20consultar%20sobre%20mi%20sesi%C3%B3n%20programada%20del%20${encodeURIComponent(proxima.fechaTexto)}`} 
+          target="_blank" 
+          rel="noopener" 
+          class="se-action-btn primary"
+        >
+          <i class="fa-brands fa-whatsapp"></i>
+          <span>Coordinar por WhatsApp</span>
+        </a>
+      </div>
+    </article>
+
+    <!-- TARJETA LATERAL: NOTA DE LA ESPECIALISTA -->
+    <aside class="se-card se-reflection-card">
+      <div class="se-card-header">
+        <span class="se-card-title"><i class="fa-solid fa-comment-dots"></i> Nota de tu Especialista</span>
+        <span class="se-pill-tag">Sesión #{nota.numeroSesion || '3'}</span>
+      </div>
+
+      <div class="se-quote-bubble">
+        <i class="fa-solid fa-quote-left se-quote-icon"></i>
+        <p class="se-quote-text">
+          "{nota.mensaje}"
+        </p>
+        <span class="se-quote-author">— {nota.firmadoPor || especialista}</span>
+      </div>
+
+      <div class="se-support-callout">
+        <div class="se-callout-icon">
+          <i class="fa-solid fa-heart-pulse"></i>
+        </div>
+        <div class="se-callout-text">
+          <strong>¿Necesitas apoyo antes de tu sesión?</strong>
+          <span>Escríbenos directamente o consulta nuestra guía de primeros auxilios emocionales.</span>
+        </div>
+        <button type="button" class="se-callout-btn" id="btnIrSoporteSesion">
+          <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- 3. MÉTRICAS DE ACOMPAÑAMIENTO Y PROCESO TERAPÉUTICO -->
+  <section class="se-stats-row" aria-label="Métricas de tu proceso">
+    <div class="se-stat-item">
+      <div class="se-stat-icon teal"><i class="fa-solid fa-calendar-check"></i></div>
+      <div class="se-stat-data">
+        <span class="se-stat-num">{resumen.sesionesAtendidas || 3}</span>
+        <span class="se-stat-label">Sesiones Atendidas</span>
+      </div>
+    </div>
+
+    <div class="se-stat-item">
+      <div class="se-stat-icon purple"><i class="fa-solid fa-brain"></i></div>
+      <div class="se-stat-data">
+        <span class="se-stat-num">{resumen.enfoque || 'TCC / ACT'}</span>
+        <span class="se-stat-label">Enfoque Clínico</span>
+      </div>
+    </div>
+
+    <div class="se-stat-item">
+      <div class="se-stat-icon green"><i class="fa-solid fa-circle-check"></i></div>
+      <div class="se-stat-data">
+        <span class="se-stat-num">{resumen.puntualidad || '100%'}</span>
+        <span class="se-stat-label">Constancia & Puntualidad</span>
+      </div>
+    </div>
+
+    <div class="se-stat-item">
+      <div class="se-stat-icon blue"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+      <div class="se-stat-data">
+        <span class="se-stat-num">{resumen.comprobantesAlDia ? 'Al Día' : 'Pendiente'}</span>
+        <span class="se-stat-label">Recibos por Honorarios</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. HISTORIAL DE SESIONES CLÍNICAS -->
+  <section class="se-card se-history-card">
+    <div class="se-card-header">
+      <div>
+        <h3 class="se-card-title"><i class="fa-solid fa-timeline"></i> Historial de Sesiones</h3>
+        <span class="se-card-subtitle">Registro de sesiones clínicas y atenciones recibidas</span>
+      </div>
+      <span class="se-badge-history">{historial.length} Atenciones Registradas</span>
+    </div>
+
+    <div class="se-history-list">
+      {historial.map((item: any) => (
+        <div class="se-history-item" data-id={item.id}>
+          <div class="se-history-status completed">
+            <i class="fa-solid fa-check"></i>
+          </div>
+          <div class="se-history-content">
+            <div class="se-history-head">
+              <h4 class="se-history-name">{item.servicio}</h4>
+              <span class="se-history-date">{item.fecha}</span>
+            </div>
+            <p class="se-history-notes">{item.modalidad} · {item.estado}</p>
+            <div class="se-history-tags">
+              <span class="se-tag"><i class="fa-solid fa-location-dot"></i> {item.modalidad}</span>
+              <span class="se-tag"><i class="fa-solid fa-user-doctor"></i> {especialista}</span>
+              {item.comprobante && (
+                <span class="se-tag badge-success"><i class="fa-solid fa-receipt"></i> Recibo {item.comprobante}</span>
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+</div>

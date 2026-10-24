@@ -1,14 +1,18 @@
 ---
 // src/feature/cliente/clientePage.astro
-// Orquestador de la Vista Cliente · Ecosistema Wii
-// Inyección modular de CSS inlined y ensamblaje de paneles de módulos
+// Orquestador de la Vista Cliente · Consultorio Psicológico América
+// Inyección modular de CSS inlined y ensamblaje de paneles de módulos clínicos
 import Sonrisas from './layout/Sonrisas.astro';
+import Sesiones from './modulos/00-sesiones/Sesiones.astro';
 import Pedidos from './modulos/01-pedidos/Pedidos.astro';
+import Recursos from './modulos/05-recursos/Recursos.astro';
 import Direccion from './modulos/02-direccion/Direccion.astro';
 import Cuenta from './modulos/03-cuenta/Cuenta.astro';
 import Soporte from './modulos/04-soporte/Soporte.astro';
 
+import sesionesCss from './modulos/00-sesiones/sesiones.css?inline';
 import pedidosCss from './modulos/01-pedidos/pedidos.css?inline';
+import recursosCss from './modulos/05-recursos/recursos.css?inline';
 import direccionCss from './modulos/02-direccion/direccion.css?inline';
 import cuentaCss from './modulos/03-cuenta/cuenta.css?inline';
 import soporteCss from './modulos/04-soporte/soporte.css?inline';
@@ -22,33 +26,43 @@ interface Props {
 }
 
 const {
-  titulo = `${datosNegocio.nombre} · Portal del Cliente`,
-  moduloActivo = 'pedidos',
+  titulo = `${datosNegocio.nombre} · Portal del Paciente`,
+  moduloActivo = 'sesiones',
   cliente
 } = Astro.props;
 ---
 
 <Sonrisas titulo={titulo} moduloActivo={moduloActivo} cliente={cliente}>
   <!-- Inyección inlined de CSS específico de módulos -->
-  <style is:global slot="modulo-css" set:html={`${pedidosCss}\n${direccionCss}\n${cuentaCss}\n${soporteCss}`}></style>
+  <style is:global slot="modulo-css" set:html={`${sesionesCss}\n${pedidosCss}\n${recursosCss}\n${direccionCss}\n${cuentaCss}\n${soporteCss}`}></style>
 
-  <!-- MÓDULO 01: SERVICIOS Y ASESORÍAS -->
-  <section class={`cl-panel ${moduloActivo === 'pedidos' ? 'active' : ''}`} id="panel-pedidos" aria-label="Módulo Servicios">
+  <!-- MÓDULO 00: MIS SESIONES & RESUMEN CLÍNICO -->
+  <section class={`cl-panel ${moduloActivo === 'sesiones' ? 'active' : ''}`} id="panel-sesiones" aria-label="Módulo Mis Sesiones">
+    <Sesiones cliente={cliente} />
+  </section>
+
+  <!-- MÓDULO 01: AGENDAR CITA PSICOLÓGICA -->
+  <section class={`cl-panel ${moduloActivo === 'pedidos' ? 'active' : ''}`} id="panel-pedidos" aria-label="Módulo Agendar Cita">
     <Pedidos cliente={cliente} />
   </section>
 
-  <!-- MÓDULO 02: DOMICILIO FISCAL -->
-  <section class={`cl-panel ${moduloActivo === 'direccion' ? 'active' : ''}`} id="panel-direccion" aria-label="Módulo Domicilio Fiscal">
-    <Direccion cliente={cliente} />
+  <!-- MÓDULO 05: MIS RECURSOS & TAREAS TERAPÉUTICAS -->
+  <section class={`cl-panel ${moduloActivo === 'recursos' ? 'active' : ''}`} id="panel-recursos" aria-label="Módulo Mis Recursos">
+    <Recursos cliente={cliente} />
   </section>
 
-  <!-- MÓDULO 03: MI CUENTA / FICHA TRIBUTARIA -->
-  <section class={`cl-panel ${moduloActivo === 'cuenta' ? 'active' : ''}`} id="panel-cuenta" aria-label="Módulo Ficha Tributaria">
+  <!-- MÓDULO 03: MI FICHA DE PACIENTE -->
+  <section class={`cl-panel ${moduloActivo === 'cuenta' ? 'active' : ''}`} id="panel-cuenta" aria-label="Módulo Mi Ficha">
     <Cuenta cliente={cliente} />
   </section>
 
-  <!-- MÓDULO 04: CONSULTAS SUNAT & SOPORTE -->
-  <section class={`cl-panel ${moduloActivo === 'soporte' ? 'active' : ''}`} id="panel-soporte" aria-label="Módulo Consultas SUNAT">
+  <!-- MÓDULO 04: SOPORTE & ORIENTACIÓN -->
+  <section class={`cl-panel ${moduloActivo === 'soporte' ? 'active' : ''}`} id="panel-soporte" aria-label="Módulo Soporte">
     <Soporte cliente={cliente} />
+  </section>
+
+  <!-- RETROCOMPATIBILIDAD CON MODALIDAD / DIRECCION -->
+  <section class={`cl-panel ${moduloActivo === 'direccion' ? 'active' : ''}`} id="panel-direccion" aria-label="Módulo Modalidad">
+    <Direccion cliente={cliente} />
   </section>
 </Sonrisas>

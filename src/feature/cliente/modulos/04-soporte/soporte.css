@@ -44,7 +44,7 @@
 }
 
 .sp-panel-title i {
-  color: var(--cl-orange);
+  color: var(--accent);
 }
 
 .sp-panel-subtitle {
@@ -123,7 +123,7 @@
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: clamp(0.95rem, 1.1vw, 1.15rem);
   font-weight: 800;
-  color: var(--cl-orange);
+  color: var(--accent);
   display: flex;
   align-items: center;
   gap: 9px;
@@ -156,7 +156,7 @@
 }
 
 .sp-form-label i {
-  color: var(--cl-orange);
+  color: var(--accent);
   font-size: 0.76rem;
 }
 
@@ -185,8 +185,8 @@
 .sp-input:focus,
 .sp-select:focus,
 .sp-textarea:focus {
-  border-color: var(--cl-orange);
-  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--brand-soft);
   background: var(--surface);
 }
 
@@ -204,8 +204,8 @@
 
 .cl-soporte-module .wi-select-trigger:focus-visible,
 .cl-soporte-module .wi-select-trigger.wi-select-open {
-  border-color: var(--cl-orange);
-  box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.15);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--brand-soft);
 }
 
 .cl-soporte-module .wi-select-label {
@@ -225,7 +225,7 @@
 .sp-btn-save {
   flex: 1;
   padding: 12px 20px;
-  background: var(--cl-orange);
+  background: var(--accent);
   border: none;
   border-radius: 9px;
   color: #fff;
@@ -238,13 +238,13 @@
   justify-content: center;
   gap: 8px;
   transition: all 0.18s;
-  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(16, 67, 86, 0.2);
 }
 
 .sp-btn-save:hover {
-  background: #ea580c;
+  background: var(--accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(255, 102, 0, 0.35);
+  box-shadow: 0 4px 12px rgba(16, 67, 86, 0.3);
 }
 
 /* ============================================================
@@ -292,8 +292,8 @@
 }
 
 .sp-channel-card:hover {
-  border-color: var(--cl-orange);
-  background: rgba(255, 102, 0, 0.03);
+  border-color: var(--accent);
+  background: var(--brand-soft);
   transform: translateY(-1px);
 }
 
@@ -315,7 +315,7 @@
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 0.95rem;
   font-weight: 800;
-  color: var(--cl-orange);
+  color: var(--accent);
   margin-top: 2px;
 }
 
@@ -365,7 +365,7 @@
 }
 
 .sp-ticket-item:hover {
-  border-color: rgba(255, 102, 0, 0.4);
+  border-color: var(--border_accent);
 }
 
 .sp-ticket-top {

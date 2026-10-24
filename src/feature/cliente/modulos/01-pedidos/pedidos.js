@@ -1,137 +1,343 @@
 // src/feature/cliente/modulos/01-pedidos/pedidos.js
-// Controlador reactivo de servicios y asesorías conectado a Firestore con sincronización Local-First
-// Sincronización inteligente sin setInterval (cuida cuota gratuita Firebase Spark)
-// Validación estricta y formato profesional tributario
+// Controlador reactivo de las 3 Boletas de Agendamiento, Paginación de 5 en 5 y Sincronización en Tiempo Real
 
-import { Saludar, Notificacion, getls, savels } from '@widev';
+import { getls } from '@widev';
 import { datosNegocio, configurarSistema } from '../../../../negocio.js';
-import { firebaseConfig } from '../../../../core/servicios/firebase.js';
-import { normalizarDireccionesMap, sincronizarDireccionesDesdeFirestore } from '../02-direccion/dataDireccion.js';
-
-const PRODUCTOS_CACHE_KEY = 'wi_productos';
-const PRODUCTOS_TS_KEY = 'wi_productos_ts';
-const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutos TTL para cuidar lecturas
 
 export function inicializarPedidos() {
   const modulo = document.getElementById('moduloPedidos');
   if (!modulo) return;
-
-  const rolClienteNombre = configurarSistema?.terminologia?.rolClienteNombre || 'Cliente';
-
-  // Estado del usuario activo desde wiSmile (Sesión real obligatoria)
-  const user = getls('wiSmile');
-  if (!user || (!user.uid && !user.usuario && !user.nombre)) {
+  if (modulo.dataset.pedidosInit === 'true') {
     return;
   }
+  modulo.dataset.pedidosInit = 'true';
 
-  // Saludo dinámico según la hora del día
-  const saluteElem = document.getElementById('clWelcomeSalute');
-  if (saluteElem) {
-    const primerNombre = (user.nombre || user.usuario || rolClienteNombre).trim().split(/\s+/)[0];
-    saluteElem.textContent = `¡${Saludar(primerNombre, 'es')}!`;
-  }
+  const rolClienteNombre = configurarSistema?.terminologia?.rolClienteNombre || 'Paciente';
+  const user = getls('wiSmile') || (typeof window !== 'undefined' ? window.__WI_USER__ : null);
+  const nombrePaciente = user?.nombre || user?.usuario || rolClienteNombre;
+  const celPaciente = user?.celular || user?.telefono || '';
 
-  // Estado del Carrito Multi-servicio
-  const cart = {};
-  const cardElements = document.querySelectorAll('#listaProductosCards .cl-h-card');
-  cardElements.forEach(card => {
-    const id = card.dataset.id;
-    const nombre = card.dataset.nombre;
-    const corto = card.dataset.nombrecorto || nombre;
-    const precio = parseFloat(card.dataset.precio) || 0;
-    const qtySpan = document.getElementById(`qty-${id}`);
-    const qty = parseInt(qtySpan?.textContent || '0', 10);
-    cart[id] = { nombre, corto, precio, qty };
-  });
-
-  // Referencias DOM del Módulo
-  const selDir = document.getElementById('selDireccionPedido');
-  const inCel = document.getElementById('inCelularPedido');
-  const bubble = document.getElementById('bubbleWaPedido');
-  const sumItems = document.getElementById('sumItemsCount');
-  const sumDir = document.getElementById('sumDirSelected');
-  const sumPr = document.getElementById('sumPriceTotal');
-  const btnWa = document.getElementById('btnWaOrder');
-  const lblBtn = document.getElementById('lblBtnWaOrder');
-  const inNotas = document.getElementById('inNotasPedido');
-  const mCartCount = document.getElementById('mCartCount');
-  const mCartTotal = document.getElementById('mCartTotal');
-  const mBtnWa = document.getElementById('mBtnWaOrder');
-
-  // Estado reactivo de la solicitud
+  // Estado centralizado
   let state = {
-    nombre: user.nombre || user.usuario || rolClienteNombre,
-    celular: inCel?.value?.trim() || user.celular || '',
-    calle: '',
-    distrito: '',
-    formaPago: 'Transferencia BCP / Yape',
-    notas: ''
+    servicioId: 'psicoterapia-individual',
+    servicioNombre: 'Psicoterapia Individual (TCC & Contextual)',
+    servicioCorto: 'Psicoterapia Individual',
+    precio: 85.0,
+    modalidad: 'Presencial en Consultorio Sede América',
+    modalidadCorta: 'Presencial',
+    turno: 'Turno Tarde / Noche (3:00 PM - 8:00 PM)',
+    turnocorto: 'Turno Tarde',
+    formaPago: 'Yape',
+    motivo: '',
+    nombre: nombrePaciente,
+    celular: celPaciente
   };
 
-  function calculateTotals() {
-    let total = 0;
-    let count = 0;
-    const itemsList = [];
+  // ========================================================
+  // 1. SISTEMA DE LAS 3 BOLETAS (TABS)
+  // ========================================================
+  const boletaButtons = modulo.querySelectorAll('.ag-boleta-card');
+  const boletaPanels = modulo.querySelectorAll('.ag-boleta-panel');
 
-    for (const id in cart) {
-      const item = cart[id];
-      if (item.qty > 0) {
-        const subtotal = item.qty * item.precio;
-        total += subtotal;
-        count += item.qty;
-        itemsList.push(`• ${item.qty}x ${item.nombre} (S/ ${subtotal.toFixed(2)})`);
+  function activarBoleta(tabNum) {
+    boletaButtons.forEach(btn => {
+      const isTarget = btn.dataset.tab === String(tabNum);
+      btn.classList.toggle('active', isTarget);
+      btn.setAttribute('aria-selected', isTarget ? 'true' : 'false');
+    });
+
+    boletaPanels.forEach(panel => {
+      const isTarget = panel.id === `panelBoleta${tabNum}`;
+      panel.classList.toggle('active', isTarget);
+    });
+  }
+
+  boletaButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      if (tab) activarBoleta(tab);
+    });
+  });
+
+  // Botones de salto [data-goto]
+  modulo.querySelectorAll('[data-goto]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetTab = btn.dataset.goto;
+      if (targetTab) {
+        activarBoleta(targetTab);
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+      }
+    });
+  });
+
+  // ========================================================
+  // 2. CATEGORÍAS Y PAGINACIÓN DE 5 EN 5 (PANEL BOLETA 1)
+  // ========================================================
+  const catButtons = modulo.querySelectorAll('.ag-cat-btn');
+  const allCards = Array.from(modulo.querySelectorAll('#listaEspecialidadesAgendar .ag-service-card'));
+  const paginationBar = document.getElementById('paginationBar');
+  const btnPrev = document.getElementById('btnPagePrev');
+  const btnNext = document.getElementById('btnPageNext');
+  const pageNumbersContainer = document.getElementById('pageNumbersContainer');
+
+  const ITEMS_PER_PAGE = 5;
+  let activeCategory = 'mas_pedidos';
+  let currentPage = 1;
+
+  function getFilteredCards() {
+    return allCards.filter(card => {
+      if (activeCategory === 'todos') return true;
+      if (activeCategory === 'mas_pedidos') {
+        return card.dataset.maspedido === 'true';
+      }
+      return card.dataset.cat === activeCategory;
+    });
+  }
+
+  function renderPagination() {
+    const filtered = getFilteredCards();
+    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+
+    if (currentPage > totalPages) currentPage = totalPages;
+    if (currentPage < 1) currentPage = 1;
+
+    const startIdx = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIdx = startIdx + ITEMS_PER_PAGE;
+
+    allCards.forEach(card => {
+      card.style.display = 'none';
+    });
+
+    filtered.forEach((card, idx) => {
+      if (idx >= startIdx && idx < endIdx) {
+        card.style.display = 'flex';
+      }
+    });
+
+    if (btnPrev) btnPrev.disabled = currentPage === 1;
+    if (btnNext) btnNext.disabled = currentPage === totalPages;
+
+    if (pageNumbersContainer) {
+      pageNumbersContainer.innerHTML = '';
+      for (let i = 1; i <= totalPages; i++) {
+        const numBtn = document.createElement('button');
+        numBtn.type = 'button';
+        numBtn.className = `ag-page-num ${i === currentPage ? 'active' : ''}`;
+        numBtn.textContent = String(i);
+        numBtn.addEventListener('click', () => {
+          currentPage = i;
+          renderPagination();
+        });
+        pageNumbersContainer.appendChild(numBtn);
       }
     }
 
-    if (count === 0) {
-      itemsList.push('• (Selecciona al menos 1 ítem del catálogo)');
+    if (paginationBar) {
+      paginationBar.style.display = totalPages > 1 ? 'flex' : 'none';
     }
-
-    return { total, count, itemsList };
   }
 
-  const term = configurarSistema?.terminologia || {};
-  const itemSingular = term.itemSingular || 'consulta';
-  const itemsPlural = term.itemsPlural || 'consultas';
-  const modalidadDefecto = term.modalidadDefecto || 'Presencial en Consultorio Sede América';
+  catButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      catButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      activeCategory = btn.dataset.cat || 'todos';
+      currentPage = 1;
+      renderPagination();
+    });
+  });
+
+  btnPrev?.addEventListener('click', () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderPagination();
+    }
+  });
+
+  btnNext?.addEventListener('click', () => {
+    const totalPages = Math.ceil(getFilteredCards().length / ITEMS_PER_PAGE);
+    if (currentPage < totalPages) {
+      currentPage++;
+      renderPagination();
+    }
+  });
+
+  // Render inicial de tarjetas de Boleta 1
+  renderPagination();
+
+  // ========================================================
+  // 3. SELECCIÓN DE ESPECIALIDADES (RADIO CARDS)
+  // ========================================================
+  allCards.forEach(card => {
+    if (card.classList.contains('selected')) {
+      state.servicioId = card.dataset.id;
+      state.servicioNombre = card.dataset.nombre;
+      state.servicioCorto = card.dataset.nombrecorto || card.dataset.nombre;
+      state.precio = parseFloat(card.dataset.precio) || 85.0;
+    }
+
+    card.addEventListener('click', () => {
+      allCards.forEach(c => {
+        c.classList.remove('selected');
+        c.setAttribute('aria-checked', 'false');
+      });
+      card.classList.add('selected');
+      card.setAttribute('aria-checked', 'true');
+
+      state.servicioId = card.dataset.id;
+      state.servicioNombre = card.dataset.nombre;
+      state.servicioCorto = card.dataset.nombrecorto || card.dataset.nombre;
+      state.precio = parseFloat(card.dataset.precio) || 85.0;
+      updateUI();
+    });
+  });
+
+  // ========================================================
+  // 4. SELECTOR DE MODALIDAD (BOLETA 2)
+  // ========================================================
+  const modButtons = modulo.querySelectorAll('#selectorModalidad .ag-mod-opt');
+  modButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      modButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mod = btn.dataset.mod;
+      if (mod === 'virtual') {
+        state.modalidad = 'Online vía Google Meet (Enlace Privado)';
+        state.modalidadCorta = 'Virtual Meet';
+      } else {
+        state.modalidad = 'Presencial en Consultorio Sede América';
+        state.modalidadCorta = 'Presencial Sede América';
+      }
+      updateUI();
+    });
+  });
+
+  // ========================================================
+  // 5. SELECTOR DE TURNO (BOLETA 2)
+  // ========================================================
+  const turnButtons = modulo.querySelectorAll('#selectorTurno .ag-turn-opt');
+  turnButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      turnButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const turno = btn.dataset.turno;
+      if (turno === 'manana') {
+        state.turno = 'Turno Mañana (8:00 AM - 1:00 PM)';
+        state.turnocorto = 'Turno Mañana';
+      } else {
+        state.turno = 'Turno Tarde / Noche (3:00 PM - 8:00 PM)';
+        state.turnocorto = 'Turno Tarde';
+      }
+      updateUI();
+    });
+  });
+
+  // ========================================================
+  // 6. MEDIOS DE PAGO (BOLETA 3)
+  // ========================================================
+  const payButtons = modulo.querySelectorAll('#payMethodsGrid .ag-pay-chip');
+  payButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      payButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.formaPago = btn.dataset.method || 'Yape';
+      updateUI();
+    });
+  });
+
+  // ========================================================
+  // 7. MOTIVO DE CONSULTA
+  // ========================================================
+  const inNotas = document.getElementById('inNotasPedido');
+  inNotas?.addEventListener('input', () => {
+    state.motivo = inNotas.value.trim();
+    updateUI();
+  });
+
+  // Referencias DOM
+  const bTitle1 = document.getElementById('boletaTitle1');
+  const bSub1 = document.getElementById('boletaSub1');
+  const bTitle2 = document.getElementById('boletaTitle2');
+  const bSub2 = document.getElementById('boletaSub2');
+  const bTitle3 = document.getElementById('boletaTitle3');
+  const bSub3 = document.getElementById('boletaSub3');
+
+  const lblService = document.getElementById('agSelectedServiceName');
+  const lblModalidad = document.getElementById('agSelectedModalidad');
+  const lblTurno = document.getElementById('agSelectedTurno');
+  const lblFormaPago = document.getElementById('agSelectedFormaPago');
+  const lblPrecio = document.getElementById('sumPriceTotal');
+  const bubble = document.getElementById('bubbleWaPedido');
+  const btnWa = document.getElementById('btnWaOrder');
+  const lblBtnWa = document.getElementById('lblBtnWaOrder');
+  const btnWaStep = document.getElementById('btnWaOrderStep');
+  const lblBtnWaStep = document.getElementById('lblBtnWaOrderStep');
+  const mName = document.getElementById('mAgServiceName');
+  const mTotal = document.getElementById('mCartTotal');
+  const mBtnWa = document.getElementById('mBtnWaOrder');
+
+  function getNombreClinicaSeguro() {
+    const raw = datosNegocio.nombreCorto || datosNegocio.nombre || 'Consultorio Psicológico América';
+    if (typeof raw === 'object' && raw !== null) {
+      return raw.es || raw.nombre || 'Consultorio Psicológico América';
+    }
+    return String(raw);
+  }
 
   function buildMessage() {
-    const { total, itemsList } = calculateTotals();
-    const neg = getls('wi_negocio') || getls('minegocio') || {};
-    const nombreNegocio = neg.identidad?.nombreComercial || neg.identidad?.nombre || datosNegocio.nombre || 'Consultorio Psicológico América';
-    const direccionTexto = state.calle 
-      ? `${state.calle}${state.distrito ? ', ' + state.distrito : ''}` 
-      : modalidadDefecto;
+    const nombreClinica = getNombreClinicaSeguro();
+    const celTexto = state.celular ? `\n📱 WhatsApp: ${state.celular}` : '';
 
-    const celTexto = state.celular ? `\n📱 Celular / WhatsApp: ${state.celular}` : '';
+    let msg = `¡Hola ${nombreClinica}! Deseo agendar la siguiente atención psicológica:\n\n` +
+      `👤 Paciente: ${state.nombre}${celTexto}\n` +
+      `📋 Especialidad: ${state.servicioNombre}\n` +
+      `📍 Modalidad: ${state.modalidad}\n` +
+      `⏰ Turno de preferencia: ${state.turno}\n` +
+      `💰 Inversión estimada: S/ ${state.precio.toFixed(2)}\n` +
+      `💳 Medio de Pago: ${state.formaPago}`;
 
-    let msg = `¡Hola ${nombreNegocio}! Deseo agendar la siguiente atención psicológica:
-
-👤 ${rolClienteNombre}: ${state.nombre}${celTexto}
-📋 Detalle de la cita / servicio:
-${itemsList.join('\n')}
-💰 Inversión estimada: S/ ${total.toFixed(2)}
-💳 Medio de Pago: ${state.formaPago}
-📍 Modalidad / Sede: ${direccionTexto}`;
-
-    if (state.notas.trim()) {
-      msg += `\n📝 Motivo de consulta / Horario de preferencia: ${state.notas.trim()}`;
+    if (state.motivo) {
+      msg += `\n📝 Motivo de consulta: ${state.motivo}`;
     }
 
     msg += `\n\n💬 ¿Podrían confirmarme la disponibilidad de horario para la sesión? ¡Muchas gracias!`;
-
     return msg;
   }
 
-  function update() {
-    const { total, count } = calculateTotals();
-    const finalMessage = buildMessage();
-    const encoded = encodeURIComponent(finalMessage);
-    const neg = getls('wi_negocio') || getls('minegocio') || {};
-    const numWa = String(neg.contacto?.whatsappLimpio || neg.contacto?.whatsapp || datosNegocio.whatsappLimpio || '').replace(/\D/g, '');
-    const waBase = `https://wa.me/${numWa}`;
+  function updateUI() {
+    // 1. Textos y badges de las 3 Boletas Superiores
+    if (bTitle1) bTitle1.textContent = state.servicioCorto || state.servicioNombre;
+    if (bSub1) bSub1.textContent = `S/ ${state.precio.toFixed(2)} · Seleccionado`;
 
-    // 1. Burbuja de WhatsApp en vivo
+    if (bTitle2) bTitle2.textContent = state.modalidadCorta;
+    if (bSub2) bSub2.textContent = state.turnocorto;
+
+    if (bTitle3) bTitle3.textContent = state.formaPago;
+    if (bSub3) bSub3.textContent = state.motivo ? 'Motivo redactado' : 'Listo para coordinar';
+
+    // 2. Columna lateral de confirmación
+    if (lblService) lblService.textContent = state.servicioNombre;
+    if (lblModalidad) lblModalidad.textContent = state.modalidad;
+    if (lblTurno) lblTurno.textContent = state.turno;
+    if (lblFormaPago) lblFormaPago.textContent = state.formaPago;
+    if (lblPrecio) lblPrecio.textContent = `S/ ${state.precio.toFixed(2)}`;
+
+    // 3. Botones de WhatsApp
+    if (lblBtnWa) lblBtnWa.textContent = `Confirmar Cita (S/ ${state.precio.toFixed(2)})`;
+    if (lblBtnWaStep) lblBtnWaStep.textContent = `Confirmar y Agendar por WhatsApp (S/ ${state.precio.toFixed(2)})`;
+
+    if (mName) mName.textContent = state.servicioNombre;
+    if (mTotal) mTotal.textContent = `S/ ${state.precio.toFixed(2)}`;
+
+    const message = buildMessage();
+    const encoded = encodeURIComponent(message);
+    const numWa = String(datosNegocio.whatsappLimpio || '51960332958').replace(/\D/g, '');
+    const waUrl = `https://wa.me/${numWa}?text=${encoded}`;
+
+    if (btnWa) btnWa.href = waUrl;
+    if (btnWaStep) btnWaStep.href = waUrl;
+    if (mBtnWa) mBtnWa.href = waUrl;
+
     if (bubble) {
       const now = new Date();
       const hrs = now.getHours();
@@ -139,182 +345,11 @@ ${itemsList.join('\n')}
       const ampm = hrs >= 12 ? 'p. m.' : 'a. m.';
       const horaStr = `${hrs % 12 || 12}:${mins} ${ampm}`;
 
-      bubble.innerHTML = finalMessage.replace(/\n/g, '<br>') + 
-        `<div class="cl-wa-time"><span>${horaStr}</span> <i class="fa-solid fa-check-double" style="color:#53bdeb;"></i></div>`;
-    }
-
-    // 2. Resumen Desktop
-    if (sumItems) sumItems.textContent = `${count} ${count === 1 ? itemSingular : itemsPlural} seleccionada${count === 1 ? '' : 's'}`;
-    if (sumDir) {
-      const celTag = state.celular ? ` · 📞 ${state.celular}` : '';
-      sumDir.textContent = state.calle 
-        ? `${state.calle}, ${state.distrito}${celTag}` 
-        : modalidadDefecto;
-    }
-    if (sumPr) sumPr.textContent = `S/ ${total.toFixed(2)}`;
-    if (lblBtn) lblBtn.textContent = `Agendar por WhatsApp (S/ ${total.toFixed(2)})`;
-    if (btnWa) btnWa.href = `${waBase}?text=${encoded}`;
-
-    // 3. Barra Resumen Móvil Flotante
-    if (mCartCount) mCartCount.textContent = `${count} ${count === 1 ? itemSingular : itemsPlural}`;
-    if (mCartTotal) mCartTotal.textContent = `S/ ${total.toFixed(2)}`;
-    if (mBtnWa) mBtnWa.href = `${waBase}?text=${encoded}`;
-  }
-
-  // Sincronizar dirección seleccionada
-  function syncDireccionDesdeSelect() {
-    if (!selDir) return;
-    const opt = selDir.options[selDir.selectedIndex];
-    if (opt && opt.value) {
-      state.calle = opt.dataset.calle || '';
-      state.distrito = opt.dataset.distrito || (datosNegocio.distritoSede || '');
-      if (opt.dataset.celular && !inCel.value.trim()) {
-        inCel.value = opt.dataset.celular;
-        state.celular = opt.dataset.celular;
-      }
-    } else {
-      state.calle = '';
-      state.distrito = datosNegocio.distritoSede || '';
+      bubble.innerHTML = message.replace(/\n/g, '<br>') +
+        `<div class="ag-wa-time"><span>${horaStr}</span> <i class="fa-solid fa-check-double" style="color:#53bdeb;"></i></div>`;
     }
   }
 
-  syncDireccionDesdeSelect();
-  selDir?.addEventListener('change', () => {
-    syncDireccionDesdeSelect();
-    update();
-  });
-
-  // Salto rápido al módulo de direcciones
-  document.getElementById('btnAddDirJump')?.addEventListener('click', () => {
-    document.dispatchEvent(new CustomEvent('cambiarModuloCliente', { detail: { modulo: 'direccion' } }));
-  });
-
-  // Salto rápido a la ficha fiscal
-  document.getElementById('btnGestionarFicha')?.addEventListener('click', () => {
-    document.dispatchEvent(new CustomEvent('cambiarModuloCliente', { detail: { modulo: 'cuenta' } }));
-  });
-
-  // Sincronizar input de celular
-  inCel?.addEventListener('input', () => {
-    state.celular = inCel.value.trim();
-    update();
-  });
-
-  // Sincronizar notas
-  inNotas?.addEventListener('input', () => {
-    state.notas = inNotas.value;
-    update();
-  });
-
-  // Validar al pulsar botón WhatsApp
-  function validarYPedir(e) {
-    const { count } = calculateTotals();
-    if (count === 0) {
-      e.preventDefault();
-      Notificacion(`Por favor selecciona al menos 1 ${itemSingular} del catálogo.`, 'warning');
-      return false;
-    }
-    return true;
-  }
-
-  btnWa?.addEventListener('click', validarYPedir);
-  mBtnWa?.addEventListener('click', validarYPedir);
-
-  // Steppers (+ / -)
-  modulo.querySelectorAll('.btn-plus').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const id = btn.dataset.id;
-      if (!cart[id]) return;
-      cart[id].qty++;
-      const qtyElem = document.getElementById(`qty-${id}`);
-      if (qtyElem) qtyElem.textContent = cart[id].qty;
-      const card = btn.closest('.cl-h-card');
-      if (cart[id].qty > 0 && card) card.classList.add('has-items');
-      update();
-    });
-  });
-
-  modulo.querySelectorAll('.btn-minus').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const id = btn.dataset.id;
-      if (!cart[id] || cart[id].qty <= 0) return;
-      cart[id].qty--;
-      const qtyElem = document.getElementById(`qty-${id}`);
-      if (qtyElem) qtyElem.textContent = cart[id].qty;
-      const card = btn.closest('.cl-h-card');
-      if (cart[id].qty === 0 && card) card.classList.remove('has-items');
-      update();
-    });
-  });
-
-  // Métodos de Pago
-  modulo.querySelectorAll('#payMethodsGrid .cl-pay-opt').forEach(opt => {
-    opt.addEventListener('click', () => {
-      modulo.querySelectorAll('#payMethodsGrid .cl-pay-opt').forEach(o => o.classList.remove('active'));
-      opt.classList.add('active');
-      state.formaPago = opt.dataset.method;
-      update();
-    });
-  });
-
-  // Sincronizar precios frescos de Firestore
-  function sincronizarCatalogoFrescoFirestore() {
-    const ahora = Date.now();
-    const lastFetch = parseInt(localStorage.getItem(PRODUCTOS_TS_KEY) || '0', 10);
-
-    if (ahora - lastFetch < CACHE_TTL_MS && localStorage.getItem(PRODUCTOS_CACHE_KEY)) {
-      return;
-    }
-
-    const projectId = firebaseConfig?.projectId || 'psicologiawii';
-    const coleccion = 'productos';
-    const ctrl = new AbortController();
-    const timer = setTimeout(() => ctrl.abort(), 5000);
-
-    fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${coleccion}`, {
-      signal: ctrl.signal
-    })
-      .then(res => res.ok ? res.json() : null)
-      .then(data => {
-        clearTimeout(timer);
-        if (!data || !Array.isArray(data.documents)) return;
-
-        localStorage.setItem(PRODUCTOS_TS_KEY, ahora.toString());
-
-        const nuevosProds = {};
-        data.documents.forEach(docRaw => {
-          const fields = docRaw.fields || {};
-          const id = fields.id?.stringValue || (docRaw.name ? docRaw.name.split('/').pop() : '');
-          const precio = Number(fields.precioPEN?.doubleValue ?? fields.precioPEN?.integerValue ?? fields.precio?.doubleValue ?? fields.precio?.integerValue ?? 0);
-          const estado = fields.estado?.stringValue || 'activo';
-          nuevosProds[id] = { precio, estado };
-        });
-
-        let huboCambios = false;
-        for (const [id, prodInfo] of Object.entries(nuevosProds)) {
-          if (cart[id] && prodInfo.precio && cart[id].precio !== prodInfo.precio) {
-            cart[id].precio = prodInfo.precio;
-            const priceElem = document.getElementById(`priceDisplay-${id}`);
-            if (priceElem) priceElem.textContent = `S/ ${prodInfo.precio.toFixed(2)}`;
-            const card = document.querySelector(`.cl-h-card[data-id="${id}"]`);
-            if (card) card.dataset.precio = prodInfo.precio;
-            huboCambios = true;
-          }
-        }
-
-        if (huboCambios) {
-          update();
-        }
-      })
-      .catch(() => {
-        clearTimeout(timer);
-      });
-  }
-
-  // Inicializar UI
-  update();
-  sincronizarCatalogoFrescoFirestore();
-  sincronizarDireccionesDesdeFirestore();
+  // Ejecución inicial
+  updateUI();
 }

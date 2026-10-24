@@ -1,7 +1,7 @@
 ---
 // src/feature/personal/modulos/clientes/Clientes.astro
-// Módulo de Clientes: Directorio CRM Autónomo & Universal
-// 100% JS Nativo · Integrado con @widev, Firestore ('clientes') · 0 CSS Inline
+// Módulo de Pacientes: Directorio Clínico CRM Autónomo & Universal
+// 100% JS Nativo · Integrado con @widev, Firestore ('smiles') · 0 CSS Inline
 import { configurarSistema } from '../../../../semillas/configurar.js';
 
 interface Props {
@@ -10,11 +10,17 @@ interface Props {
 
 const { esActivo = false } = Astro.props;
 const term = configurarSistema.terminologia || {};
-const directorioTitulo = term.directorioTitulo || 'Directorio de Clientes & Empresas';
-const directorioSub = term.directorioSub || 'Gestión centralizada de clientes residenciales y comerciales con historial de pedidos y contacto directo.';
-const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributarios) && configurarSistema.parametros.regimenesTributarios.length > 0
-  ? configurarSistema.parametros.regimenesTributarios
-  : ['Estándar / General', 'Comercial / Empresa'];
+const directorioTitulo = term.directorioTitulo || 'Directorio de Pacientes & Consultantes';
+const directorioSub = term.directorioSub || 'Gestión centralizada de consultantes con historial de sesiones, motivo de consulta y contacto directo.';
+const especialidadesOpciones = [
+  'Psicoterapia Individual (TCC)',
+  'Psicoterapia de Pareja',
+  'Psicoterapia Familiar',
+  'Terapia Infantil & Crianza',
+  'Terapia de Aprendizaje',
+  'Evaluación Psicológica Integral',
+  'Taller Vivencial de Inteligencia Emocional'
+];
 ---
 
 <section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-clientes" data-clientes-init="false">
@@ -23,7 +29,7 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
   <div class="ps-section-header">
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">
-        <i class="fa-solid fa-address-book sn-header-icon" style="color: var(--brand-primary, var(--mco, #ff6600));"></i>
+        <i class="fa-solid fa-address-book sn-header-icon" style="color: var(--brand-primary, #267a57);"></i>
         {directorioTitulo}
       </h1>
       <p class="ps-section-sub">
@@ -32,7 +38,7 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
     </div>
     <div class="ps-header-actions">
       <button type="button" class="ps-btn ps-btn-primary" id="btnNuevoCliente">
-        <i class="fa-solid fa-user-plus"></i> Registrar Cliente
+        <i class="fa-solid fa-user-plus"></i> Registrar Paciente
       </button>
     </div>
   </div>
@@ -40,42 +46,42 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
   <!-- KPIS SUPERIORES -->
   <div class="cl-kpi-grid">
     <div class="cl-kpi-card">
-      <div class="cl-kpi-icon-wrap">
-        <i class="fa-solid fa-briefcase"></i>
+      <div class="cl-kpi-icon-wrap" style="background: rgba(38,122,87,0.12); color: var(--brand-primary, #267a57);">
+        <i class="fa-solid fa-users"></i>
       </div>
       <div class="cl-kpi-data">
         <span class="cl-kpi-val" id="clKpiTotal">0</span>
-        <span class="cl-kpi-lbl">Total Clientes Registrados</span>
+        <span class="cl-kpi-lbl">Pacientes Registrados</span>
       </div>
     </div>
 
     <div class="cl-kpi-card">
-      <div class="cl-kpi-icon-wrap cl-kpi-icon-vip">
-        <i class="fa-solid fa-building"></i>
+      <div class="cl-kpi-icon-wrap" style="background: rgba(35,101,125,0.12); color: var(--brand-blue, #23657d);">
+        <i class="fa-solid fa-brain"></i>
       </div>
       <div class="cl-kpi-data">
         <span class="cl-kpi-val" id="clKpiMype">0</span>
-        <span class="cl-kpi-lbl">Empresas & Negocios</span>
+        <span class="cl-kpi-lbl">En Psicoterapia Activa</span>
       </div>
     </div>
 
     <div class="cl-kpi-card">
-      <div class="cl-kpi-icon-wrap cl-kpi-icon-green">
-        <i class="fa-solid fa-user"></i>
+      <div class="cl-kpi-icon-wrap" style="background: rgba(234,179,8,0.12); color: #d97706;">
+        <i class="fa-solid fa-people-group"></i>
       </div>
       <div class="cl-kpi-data">
         <span class="cl-kpi-val" id="clKpiIndependientes">0</span>
-        <span class="cl-kpi-lbl">Clientes Residenciales</span>
+        <span class="cl-kpi-lbl">Talleres & Parejas</span>
       </div>
     </div>
 
     <div class="cl-kpi-card">
-      <div class="cl-kpi-icon-wrap cl-kpi-icon-blue">
-        <i class="fa-solid fa-coins"></i>
+      <div class="cl-kpi-icon-wrap" style="background: rgba(16,185,129,0.12); color: #10b981;">
+        <i class="fa-solid fa-calendar-check"></i>
       </div>
       <div class="cl-kpi-data">
         <span class="cl-kpi-val" id="clKpiFacturacion">S/ 0.00</span>
-        <span class="cl-kpi-lbl">Consumo / Facturación</span>
+        <span class="cl-kpi-lbl">Honorarios del Mes</span>
       </div>
     </div>
   </div>
@@ -88,9 +94,10 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
       <div class="cl-toolbar">
         <div class="cl-filters-wrap" id="clFiltersWrap">
           <button type="button" class="cl-filter-pill active" data-filter="todos">Todos</button>
-          <button type="button" class="cl-filter-pill" data-filter="mype">Empresas</button>
-          <button type="button" class="cl-filter-pill" data-filter="independiente">Residencial</button>
-          <button type="button" class="cl-filter-pill" data-filter="rer">Especial</button>
+          <button type="button" class="cl-filter-pill" data-filter="individual">Individual</button>
+          <button type="button" class="cl-filter-pill" data-filter="pareja">Pareja</button>
+          <button type="button" class="cl-filter-pill" data-filter="infantil">Infantil</button>
+          <button type="button" class="cl-filter-pill" data-filter="taller">Talleres</button>
         </div>
 
         <div class="cl-search-box">
@@ -99,7 +106,7 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
             type="text" 
             id="clSearchInput" 
             class="cl-search-input" 
-            placeholder="Buscar por documento, nombre o celular..." 
+            placeholder="Buscar por nombre, motivo o celular..." 
             autocomplete="off" 
           />
         </div>
@@ -109,11 +116,11 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
         <table class="cl-table">
           <thead>
             <tr>
-              <th>Cliente / Razón Social</th>
-              <th>Celular</th>
-              <th>Tipo / Régimen</th>
-              <th class="sn-text-center">Dígito</th>
-              <th class="sn-text-right">Monto Habitual</th>
+              <th>Paciente / Especialidad</th>
+              <th>WhatsApp / Teléfono</th>
+              <th>Modalidad</th>
+              <th class="sn-text-center">Progreso</th>
+              <th class="sn-text-right">Tarifa</th>
               <th class="sn-text-right">Acción</th>
             </tr>
           </thead>
@@ -129,8 +136,8 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
       <div class="cl-crm-card">
         <div class="cl-crm-head">
           <div class="cl-crm-avatar-box" id="clCrmAvatarBox">
-            <img id="clCrmAvatarImg" class="cl-crm-avatar-lg" alt="Avatar cliente" src="/smile.avif" style="display:none;" />
-            <span id="clCrmAvatarLetter">E</span>
+            <img id="clCrmAvatarImg" class="cl-crm-avatar-lg" alt="Avatar consultante" src="/smile.avif" style="display:none;" />
+            <span id="clCrmAvatarLetter">P</span>
           </div>
           <div class="cl-crm-info-head">
             <h2 class="cl-crm-title" id="clCrmNombre">Cargando...</h2>
@@ -140,57 +147,57 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
 
         <div class="cl-crm-stats">
           <div class="cl-crm-stat-box">
-            <span class="cl-crm-stat-val" id="clCrmRegimen">General</span>
-            <span class="cl-crm-stat-lbl">Categoría / Régimen</span>
+            <span class="cl-crm-stat-val" id="clCrmRegimen">Presencial</span>
+            <span class="cl-crm-stat-lbl">Modalidad Habitual</span>
           </div>
           <div class="cl-crm-stat-box">
-            <span class="cl-crm-stat-val" id="clCrmHonorario">S/ 0.00</span>
-            <span class="cl-crm-stat-lbl">Monto Habitual</span>
+            <span class="cl-crm-stat-val" id="clCrmHonorario">S/ 85.00</span>
+            <span class="cl-crm-stat-lbl">Inversión por Sesión</span>
           </div>
         </div>
 
         <div class="cl-crm-section-title">
-          <i class="fa-solid fa-file-invoice"></i> Información Comercial & Servicio
+          <i class="fa-solid fa-brain"></i> Proceso Terapéutico
         </div>
 
         <div class="cl-crm-detail-row">
-          <span class="cl-crm-detail-lbl">Servicio / Producto:</span>
-          <span id="clCrmServicio" style="font-weight:600;">Estándar</span>
+          <span class="cl-crm-detail-lbl">Motivo de Consulta:</span>
+          <span id="clCrmServicio" style="font-weight:600; color:var(--brand-primary, #267a57);">Psicoterapia Individual</span>
         </div>
         <div class="cl-crm-detail-row">
-          <span class="cl-crm-detail-lbl">Último Dígito Doc:</span>
-          <span id="clCrmDigitoRuc" style="font-weight:700; color:var(--brand-primary, var(--mco, #ff6600)); font-size:14px;">-</span>
+          <span class="cl-crm-detail-lbl">Sesiones Atendidas:</span>
+          <span id="clCrmDigitoRuc" style="font-weight:800; color:var(--brand-primary, #267a57); font-size:14px;">1</span>
         </div>
         <div class="cl-crm-detail-row">
-          <span class="cl-crm-detail-lbl">Estado:</span>
-          <span id="clCrmEstadoFiscal" class="cl-status-tag al-dia">Al Día</span>
+          <span class="cl-crm-detail-lbl">Estado Actual:</span>
+          <span id="clCrmEstadoFiscal" class="cl-status-tag al-dia">En Tratamiento</span>
         </div>
         <div class="cl-crm-detail-row">
-          <span class="cl-crm-detail-lbl">Cliente desde:</span>
-          <span id="clCrmFechaInicio">Ene 2026</span>
+          <span class="cl-crm-detail-lbl">Inicio de Terapia:</span>
+          <span id="clCrmFechaInicio">Oct 2026</span>
         </div>
 
         <div class="cl-crm-section-title sn-mt-14">
-          <i class="fa-solid fa-map-location-dot"></i> Dirección de Entrega & Contacto
+          <i class="fa-solid fa-location-dot"></i> Ubicación & Notas de Acuerdos
         </div>
 
         <div class="cl-crm-address-box">
           <div class="cl-crm-address-title">
-            <span id="clCrmDireccion">-</span>
+            <span id="clCrmDireccion">Presencial en Sede América</span>
           </div>
-          <div class="cl-crm-address-sub" id="clCrmContacto">Contacto: -</div>
-          <div class="cl-crm-address-sub" id="clCrmObservaciones" style="font-style: italic; margin-top:4px;">Sin observaciones</div>
+          <div class="cl-crm-address-sub" id="clCrmContacto">Consultante: -</div>
+          <div class="cl-crm-address-sub" id="clCrmObservaciones" style="font-style: italic; margin-top:4px;">Compromiso con tareas reflexivas.</div>
         </div>
 
         <div class="cl-crm-actions">
           <button type="button" class="cl-crm-btn cl-crm-btn-ws" id="btnCrmWs">
-            <i class="fa-brands fa-whatsapp"></i> Contactar por WhatsApp
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp Directo
           </button>
           <button type="button" class="cl-crm-btn cl-crm-btn-call" id="btnCrmCall">
-            <i class="fa-solid fa-phone"></i> Llamar al Celular
+            <i class="fa-solid fa-phone"></i> Llamar al Paciente
           </button>
           <button type="button" class="cl-crm-btn cl-crm-btn-sunat" id="btnCrmSunat">
-            <i class="fa-solid fa-receipt"></i> Emitir Comprobante
+            <i class="fa-solid fa-receipt"></i> Recibo por Honorarios
           </button>
         </div>
       </div>
@@ -198,12 +205,12 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
 
   </div>
 
-  <!-- MODAL: REGISTRAR NUEVO CLIENTE -->
+  <!-- MODAL: REGISTRAR NUEVO CONSULTANTE -->
   <div class="cl-modal-overlay" id="clModalOverlay">
     <div class="cl-modal">
       <div class="cl-modal-head">
         <h3 class="cl-modal-title">
-          <i class="fa-solid fa-user-plus sn-title-icon"></i> Nuevo Cliente
+          <i class="fa-solid fa-user-plus sn-title-icon"></i> Nuevo Paciente / Consultante
         </h3>
         <button type="button" class="cl-modal-close" id="btnModalClose">
           <i class="fa-solid fa-xmark"></i>
@@ -216,54 +223,55 @@ const regimenes = Array.isArray(configurarSistema.parametros?.regimenesTributari
             <label class="sn-label" for="clModalDocTipo">Tipo Documento</label>
             <select id="clModalDocTipo" class="sn-select">
               <option value="DNI">DNI (Persona Natural)</option>
-              <option value="RUC">RUC (Empresa o Negocio)</option>
+              <option value="CE">Carnet de Extranjería</option>
+              <option value="Pasaporte">Pasaporte</option>
             </select>
           </div>
           <div class="sn-form-group">
             <label class="sn-label" for="clModalDoc">N° Documento *</label>
-            <input type="text" id="clModalDoc" class="sn-input" placeholder="Ej: 10203040" required />
+            <input type="text" id="clModalDoc" class="sn-input" placeholder="Ej: 45892014" required />
           </div>
         </div>
 
         <div class="sn-form-group">
-          <label class="sn-label" for="clModalNombre">Nombre Completo o Razón Social *</label>
-          <input type="text" id="clModalNombre" class="sn-input" placeholder="Ej. Juan Pérez o Empresa S.A.C." required />
+          <label class="sn-label" for="clModalNombre">Nombre Completo del Paciente *</label>
+          <input type="text" id="clModalNombre" class="sn-input" placeholder="Ej. Mariana Flores" required />
         </div>
 
         <div class="cl-modal-row">
           <div class="sn-form-group">
-            <label class="sn-label" for="clModalRegimen">Categoría / Régimen</label>
+            <label class="sn-label" for="clModalRegimen">Motivo de Consulta / Especialidad</label>
             <select id="clModalRegimen" class="sn-select">
-              {regimenes.map((r: string) => (
+              {especialidadesOpciones.map((r: string) => (
                 <option value={r}>{r}</option>
               ))}
             </select>
           </div>
           <div class="sn-form-group">
-            <label class="sn-label" for="clModalHonorario">Monto Estimado / Tarifa (S/)</label>
-            <input type="number" step="0.01" id="clModalHonorario" class="sn-input" value="" placeholder="0.00" />
+            <label class="sn-label" for="clModalHonorario">Inversión por Sesión (S/)</label>
+            <input type="number" step="0.01" id="clModalHonorario" class="sn-input" value="85.00" placeholder="85.00" />
           </div>
         </div>
 
         <div class="cl-modal-row">
           <div class="sn-form-group">
             <label class="sn-label" for="clModalCelular">Celular WhatsApp *</label>
-            <input type="tel" id="clModalCelular" class="sn-input" placeholder="900000000" required />
+            <input type="tel" id="clModalCelular" class="sn-input" placeholder="987654321" required />
           </div>
           <div class="sn-form-group">
             <label class="sn-label" for="clModalEmail">Correo Electrónico</label>
-            <input type="email" id="clModalEmail" class="sn-input" placeholder="contacto@cliente.com" />
+            <input type="email" id="clModalEmail" class="sn-input" placeholder="paciente@correo.com" />
           </div>
         </div>
 
         <div class="sn-form-group">
-          <label class="sn-label" for="clModalDireccion">Dirección de Entrega / Domicilio</label>
-          <input type="text" id="clModalDireccion" class="sn-input" placeholder="Calle, número, departamento o referencia" />
+          <label class="sn-label" for="clModalDireccion">Sede / Modalidad Preferida</label>
+          <input type="text" id="clModalDireccion" class="sn-input" placeholder="Presencial Sede América o Virtual Google Meet" />
         </div>
 
         <div class="cl-modal-actions">
           <button type="submit" class="ps-btn ps-btn-primary" id="btnModalGuardar">
-            <i class="fa-solid fa-check"></i> Guardar Cliente
+            <i class="fa-solid fa-check"></i> Registrar Paciente
           </button>
         </div>
       </form>

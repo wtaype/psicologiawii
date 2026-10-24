@@ -20,6 +20,8 @@ import {
 } from './dataCorreo.js';
 import { datosNegocio, configSemilla } from '../../../../negocio.js';
 import {
+  generarPlantillaCita,
+  generarPlantillaTaller,
   generarPlantillaLiquidacion,
   generarPlantillaCronograma,
   generarPlantillaComprobante,
@@ -37,7 +39,7 @@ export function inicializarModuloCorreo() {
   let carpetaActiva = 'recibidos';
   let mensajeActivo = null;
   const esServicios = configSemilla?.modeloNegocio === 'servicios_y_asesorias';
-  let plantillaSeleccionada = document.getElementById('crSelectTipo')?.value || (esServicios ? 'liquidacion' : 'pedido');
+  let plantillaSeleccionada = document.getElementById('crSelectTipo')?.value || 'cita';
   let isSending = false;
   let liveDebounceTimer = null;
 
@@ -102,11 +104,26 @@ export function inicializarModuloCorreo() {
   const wordsCounter = document.getElementById('crLiveWordsCount');
 
   // Cajas dinámicas por categoría
+  const boxCita = document.getElementById('crFieldsCita');
+  const boxTaller = document.getElementById('crFieldsTaller');
   const boxPedido = document.getElementById('crFieldsPedido');
   const boxLiquidacion = document.getElementById('crFieldsLiquidacion');
   const boxCronograma = document.getElementById('crFieldsCronograma');
   const boxComprobante = document.getElementById('crFieldsComprobante');
   const boxCotizacion = document.getElementById('crFieldsCotizacion');
+
+  // Inputs dinámicos: Cita Psicológica
+  const inCitaId = document.getElementById('crCitaId');
+  const inCitaServicio = document.getElementById('crCitaServicio');
+  const inCitaFechaHora = document.getElementById('crCitaFechaHora');
+  const inCitaModalidad = document.getElementById('crCitaModalidad');
+  const inCitaInversion = document.getElementById('crCitaInversion');
+
+  // Inputs dinámicos: Taller Vivencial
+  const inTallerNombre = document.getElementById('crTallerNombre');
+  const inTallerFecha = document.getElementById('crTallerFecha');
+  const inTallerModalidad = document.getElementById('crTallerModalidad');
+  const inTallerInversion = document.getElementById('crTallerInversion');
 
   // Inputs dinámicos: Pedido GLP
   const inPedNumero = document.getElementById('crPedNumero');
@@ -526,6 +543,8 @@ export function inicializarModuloCorreo() {
       btn.classList.toggle('active', btn.getAttribute('data-template') === tipo);
     });
 
+    if (boxCita) boxCita.style.display = tipo === 'cita' ? 'block' : 'none';
+    if (boxTaller) boxTaller.style.display = tipo === 'taller' ? 'block' : 'none';
     if (boxPedido) boxPedido.style.display = tipo === 'pedido' ? 'block' : 'none';
     if (boxLiquidacion) boxLiquidacion.style.display = tipo === 'liquidacion' ? 'block' : 'none';
     if (boxCronograma) boxCronograma.style.display = tipo === 'cronograma' ? 'block' : 'none';
@@ -533,8 +552,16 @@ export function inicializarModuloCorreo() {
     if (boxCotizacion) boxCotizacion.style.display = tipo === 'cotizacion' ? 'block' : 'none';
 
     if (sobrescribirTextos) {
-      const sufijoMarca = datosNegocio.nombreCorto || datosNegocio.nombre || 'Oficial';
-      if (tipo === 'pedido') {
+      const sufijoMarca = datosNegocio.nombreCorto || datosNegocio.nombre || 'Consultorio Psicológico América';
+      if (tipo === 'cita') {
+        const cId = inCitaId?.value || 'CITA-101';
+        if (inputSubject) inputSubject.value = `🗓️ Tu cita psicológica está confirmada (#${cId}) · ${sufijoMarca}`;
+        if (textMarkdown) textMarkdown.value = 'Hemos reservado con éxito tu sesión terapéutica. Recuerda conectarte o presentarte con 5 minutos de anticipación.';
+      } else if (tipo === 'taller') {
+        const tNom = inTallerNombre?.value || 'Taller Vivencial de Inteligencia Emocional';
+        if (inputSubject) inputSubject.value = `🌱 Inscripción confirmada a Taller Vivencial · ${sufijoMarca}`;
+        if (textMarkdown) textMarkdown.value = '¡Tu cupo está confirmado! Te recomendamos asistir con ropa cómoda y cuaderno de notas personal.';
+      } else if (tipo === 'pedido') {
         const pedId = inPedNumero?.value || 'PED-1029';
         if (inputSubject) inputSubject.value = `📦 ¡Tu pedido #${pedId} está confirmado! · ${sufijoMarca}`;
         if (textMarkdown) textMarkdown.value = 'Hemos recibido tu pedido con éxito y nuestra unidad de reparto se encuentra preparando tu despacho con balanza digital calibrada.';
@@ -617,7 +644,29 @@ export function inicializarModuloCorreo() {
 
     let res = null;
 
-    if (plantillaSeleccionada === 'pedido') {
+    if (plantillaSeleccionada === 'cita') {
+      res = generarPlantillaCita({
+        cliente: clienteNombre || 'Estimado/a consultante',
+        citaId: inCitaId?.value || 'CITA-101',
+        servicio: inCitaServicio?.value || 'Psicoterapia Individual (TCC)',
+        fechaHora: inCitaFechaHora?.value || 'Sábado 24 de Octubre, 10:00 am',
+        modalidad: inCitaModalidad?.value || 'Presencial en Sede América',
+        precio: inCitaInversion?.value || '85.00',
+        mensajeMarkdown: mdExtra,
+        negocio
+      });
+    } else if (plantillaSeleccionada === 'taller') {
+      res = generarPlantillaTaller({
+        cliente: clienteNombre || 'Estimado/a participante',
+        tallerNombre: inTallerNombre?.value || 'Taller Vivencial de Inteligencia Emocional',
+        fechaTaller: inTallerFecha?.value || 'Sábado 31 de Octubre, 4:00 pm',
+        modalidad: inTallerModalidad?.value || 'Grupal Presencial en Sede América',
+        cupos: '1 cupo reservado',
+        inversion: inTallerInversion?.value || '60.00',
+        mensajeMarkdown: mdExtra,
+        negocio
+      });
+    } else if (plantillaSeleccionada === 'pedido') {
       res = generarPlantillaPedido({
         cliente: clienteNombre || 'Estimado/a cliente',
         pedidoId: inPedNumero?.value || 'PED-001',

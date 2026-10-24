@@ -12,7 +12,7 @@
       "es": "Abordaje empático y científico para el manejo de ansiedad, estrés, depresión, autoestima, gestión de emociones y duelo.",
       "en": "Evidence-based empathetic therapy for anxiety, stress management, depression, self-esteem, emotional regulation, and grief."
     },
-    "precioPEN": 85.00,
+    "precioPEN": 85,
     "duracion": {
       "es": "45 - 60 min",
       "en": "45 - 60 mins"
@@ -46,8 +46,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "psicoterapia-pareja",
@@ -62,7 +63,7 @@
       "es": "Espacio de mediación y reconexión emocional con enfoque sistémico y humanista para superar crisis, sanar heridas y fortalecer acuerdos.",
       "en": "Mediation and emotional reconnection with a systemic and humanistic approach to resolve conflicts and rebuild healthy bonds."
     },
-    "precioPEN": 100.00,
+    "precioPEN": 100,
     "duracion": {
       "es": "60 min",
       "en": "60 mins"
@@ -96,8 +97,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "psicoterapia-familiar",
@@ -112,7 +114,7 @@
       "es": "Intervención terapéutica integral para restaurar la armonía en el hogar, pautas de crianza respetuosa y resolución de tensiones intergeneracionales.",
       "en": "Comprehensive family intervention to restore household harmony, respectful parenting techniques, and intergenerational understanding."
     },
-    "precioPEN": 100.00,
+    "precioPEN": 100,
     "duracion": {
       "es": "60 min",
       "en": "60 mins"
@@ -146,8 +148,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "terapia-infantil-conducta",
@@ -162,7 +165,7 @@
       "es": "Abordaje lúdico y conductual para niños con dificultades de autorregulación emocional, rabietas, impulsividad y adaptación escolar.",
       "en": "Play-based behavioral therapy for children struggling with emotional self-regulation, tantrums, impulsivity, and school adjustment."
     },
-    "precioPEN": 85.00,
+    "precioPEN": 85,
     "duracion": {
       "es": "45 min",
       "en": "45 mins"
@@ -196,8 +199,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "terapia-aprendizaje-tea",
@@ -212,7 +216,7 @@
       "es": "Estimulación psicopedagógica y desarrollo de habilidades cognitivas, comprensión social y Teoría de la Mente para niños con condición del espectro autista.",
       "en": "Psychopedagogical stimulation, cognitive development, social understanding, and Theory of Mind for children on the autism spectrum."
     },
-    "precioPEN": 85.00,
+    "precioPEN": 85,
     "duracion": {
       "es": "45 min",
       "en": "45 mins"
@@ -246,8 +250,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "evaluacion-descarte-tdah-tea",
@@ -262,7 +267,7 @@
       "es": "Batería diagnóstica integral para niños, adolescentes y adultos. Incluye entrevistas clínicas, pruebas psicométricas estandarizadas e informe oficial con C.Ps.P.",
       "en": "Comprehensive diagnostic battery for children, teens, and adults. Includes clinical interviews, standardized psychometric tests, and official psychological report."
     },
-    "precioPEN": 600.00,
+    "precioPEN": 600,
     "duracion": {
       "es": "Batería Completa (4 a 5 sesiones)",
       "en": "Full Battery (4 to 5 sessions)"
@@ -296,8 +301,9 @@
     "tagClase": "badge-oro",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "taller-habilidades-sociales",
@@ -312,7 +318,7 @@
       "es": "Dinámicas grupales para vencer la timidez, iniciar conversaciones, defender puntos de vista con respeto y hacer amigos con confianza.",
       "en": "Interactive group sessions to overcome shyness, build confidence, make friends, and communicate assertively with peers."
     },
-    "precioPEN": 50.00,
+    "precioPEN": 50,
     "duracion": {
       "es": "4 Sesiones (90 min c/u)",
       "en": "4 Sessions (90 mins each)"
@@ -346,8 +352,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "taller-amor-propio-sexualidad",
@@ -362,7 +369,7 @@
       "es": "Espacio seguro de autodescubrimiento, fortalecimiento del autoconcepto, establecimiento de límites personales saludables y vínculos afectivos sanos.",
       "en": "A safe space for self-discovery, strengthening self-worth, setting healthy personal boundaries, and fostering respectful relationships."
     },
-    "precioPEN": 50.00,
+    "precioPEN": 50,
     "duracion": {
       "es": "4 Sesiones (90 min c/u)",
       "en": "4 Sessions (90 mins each)"
@@ -396,8 +403,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "taller-inteligencia-emocional",
@@ -412,7 +420,7 @@
       "es": "Aprendizaje lúdico para identificar emociones, tolerar la frustración, calmar la ansiedad y responder con serenidad ante situaciones difíciles.",
       "en": "Playful learning to recognize feelings, build frustration tolerance, reduce anxiety, and foster emotional calm."
     },
-    "precioPEN": 50.00,
+    "precioPEN": 50,
     "duracion": {
       "es": "4 Sesiones (75 min c/u)",
       "en": "4 Sessions (75 mins each)"
@@ -446,8 +454,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "taller-expresion-artistica",
@@ -462,7 +471,7 @@
       "es": "Uso de la pintura, modelado en arcilla y dramatizaciones teatrales guiadas para canalizar emociones, desinhibirse y desarrollar creatividad.",
       "en": "Using painting, clay modeling, and theatrical role-playing to release emotions, overcome social inhibition, and foster creativity."
     },
-    "precioPEN": 55.00,
+    "precioPEN": 55,
     "duracion": {
       "es": "4 Sesiones (90 min c/u)",
       "en": "4 Sessions (90 mins each)"
@@ -496,8 +505,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "taller-liderazgo-oratoria",
@@ -512,7 +522,7 @@
       "es": "Entrenamiento práctico para hablar en público sin miedo, modular la voz, estructurar ideas con claridad y liderar con empatía.",
       "en": "Practical training to speak in public without fear, modulate tone of voice, structure ideas clearly, and lead with empathy."
     },
-    "precioPEN": 50.00,
+    "precioPEN": 50,
     "duracion": {
       "es": "4 Sesiones (90 min c/u)",
       "en": "4 Sessions (90 mins each)"
@@ -546,8 +556,9 @@
     "tagClase": "badge-serenidad",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   },
   {
     "id": "taller-orientacion-vocacional",
@@ -562,7 +573,7 @@
       "es": "Evaluación psicopedagógica completa de aptitudes, intereses vocacionales y personalidad para elegir la carrera ideal y trazar un plan futuro.",
       "en": "Comprehensive assessment of aptitudes, vocational interests, and personality to choose the ideal career and build a future plan."
     },
-    "precioPEN": 120.00,
+    "precioPEN": 120,
     "duracion": {
       "es": "Módulo Completo (2 Sesiones + Test)",
       "en": "Full Module (2 Sessions + Tests)"
@@ -596,7 +607,8 @@
     "tagClase": "badge-oro",
     "userId": "sistema",
     "email": "sistema",
-    "creado": null,
-    "actualizado": null
+    "creado": "2026-10-23T05:00:00.000Z",
+    "actualizado": "2026-10-23T05:00:00.000Z",
+    "fecha": "2026/10/23"
   }
 ]

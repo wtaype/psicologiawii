@@ -9,13 +9,11 @@ interface Props {
 }
 const { cliente = {} } = Astro.props;
 const term = configSemilla?.terminologia || {};
-const esServicios = configSemilla?.modeloNegocio === 'servicios_y_asesorias';
-const tituloModulo = esServicios ? 'Mi Ficha Fiscal y Cuenta del Contribuyente' : 'Mi Cuenta y Datos de Facturación';
-const subtituloModulo = esServicios 
-  ? 'Administra tus datos fiscales, número de RUC/DNI, clave de acceso y preferencias de asesoría tributaria.'
-  : 'Administra tus datos de contacto, facturación (RUC/DNI), clave de acceso y preferencias de despacho.';
-const rolCliente = term.rolClienteNombre || 'Cliente';
-const estadoBadge = esServicios ? 'Habido' : 'Activo';
+const esServicios = true;
+const tituloModulo = 'Mi Ficha de Paciente & Cuenta';
+const subtituloModulo = 'Administra tus datos de contacto, persona de emergencia y emisión de Recibos por Honorarios Profesionales.';
+const rolCliente = term.rolClienteNombre || 'Paciente';
+const estadoBadge = 'Paciente Activo';
 ---
 
 <div class="cl-cuenta-module" id="moduloCuenta">
@@ -56,7 +54,7 @@ const estadoBadge = esServicios ? 'Habido' : 'Activo';
       <div class="ct-card-header">
         <div class="ct-card-title">
           <i class="fa-solid fa-id-card"></i>
-          <span>Datos de la Cuenta & Identificación SUNAT</span>
+          <span>Datos del Paciente & Contacto Seguro</span>
         </div>
       </div>
 
@@ -164,7 +162,7 @@ const estadoBadge = esServicios ? 'Habido' : 'Activo';
         <!-- Fila 4: Celular / WhatsApp de Coordinación -->
         <div class="ct-form-group">
           <label class="ct-form-label" for="ctInputCelular">
-            <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> WhatsApp de Notificaciones y Despacho:
+            <i class="fa-brands fa-whatsapp" style="color:#22c55e;"></i> WhatsApp de Coordinación Terapéutica:
           </label>
           <input 
             type="tel" 
@@ -176,8 +174,8 @@ const estadoBadge = esServicios ? 'Habido' : 'Activo';
 
         <!-- SECCIÓN SUNAT: COMPROBANTES ELECTRÓNICOS -->
         <div class="ct-sunat-divider">
-          <i class="fa-solid fa-file-invoice"></i>
-          <span>Datos de Facturación Electrónica (SUNAT)</span>
+          <i class="fa-solid fa-receipt"></i>
+          <span>Emisión de Recibos por Honorarios Electrónicos (SUNAT)</span>
         </div>
 
         <div class="ct-form-row">
@@ -306,49 +304,35 @@ const estadoBadge = esServicios ? 'Habido' : 'Activo';
         <div class="ct-card-header">
           <div class="ct-card-title">
             <i class="fa-solid fa-sliders"></i>
-            <span>{esServicios ? 'Perfil Tributario & Preferencias de Atención' : 'Preferencias de Pedido & Despacho'}</span>
+            <span>Preferencias de Acompañamiento & Notificaciones</span>
           </div>
         </div>
 
         <form id="formCuentaPreferencias">
-          <!-- Fila 1: Preferencia Especial & Modalidad habitual -->
+          <!-- Fila 1: Modalidad y Horario habitual -->
           <div class="ct-form-row">
             <div class="ct-form-group">
               <label class="ct-form-label" for="ctSelectRegimen">
-                <i class="fa-solid fa-sliders"></i> {term.campoEspecialCliente || 'Preferencia de Pedido'}:
+                <i class="fa-solid fa-hospital-user"></i> Modalidad Habitual de Atención:
               </label>
               <select class="ct-select" id="ctSelectRegimen">
-                {Array.isArray(configSemilla?.parametros?.tiposValvula) ? (
-                  configSemilla.parametros.tiposValvula.map((v: string) => (
-                    <option value={v}>{v}</option>
-                  ))
-                ) : Array.isArray(configSemilla?.parametros?.regimenesTributarios) ? (
-                  configSemilla.parametros.regimenesTributarios.map((r: string) => (
-                    <option value={r}>{r}</option>
-                  ))
-                ) : (
-                  <option value="estandar">Estándar</option>
-                )}
+                <option value="presencial">Presencial en Consultorio (Sede América)</option>
+                <option value="virtual">Virtual vía Google Meet (Enlace Privado)</option>
               </select>
             </div>
 
             <div class="ct-form-group">
               <label class="ct-form-label" for="ctSelectHorario">
-                <i class="fa-solid fa-clock"></i> {esServicios ? 'Modalidad de Contacto:' : 'Modalidad de Despacho Habitual:'}
+                <i class="fa-solid fa-clock"></i> Turno Preferido para Sesiones:
               </label>
               <select class="ct-select" id="ctSelectHorario">
-                {Array.isArray(configSemilla?.parametros?.modalidades) ? (
-                  configSemilla.parametros.modalidades.map((m: string) => (
-                    <option value={m}>{m}</option>
-                  ))
-                ) : (
-                  <option value="delivery">Delivery Express a Domicilio</option>
-                )}
+                <option value="tarde">Turno Tarde / Noche (3:00 PM - 8:00 PM)</option>
+                <option value="manana">Turno Mañana (8:00 AM - 1:00 PM)</option>
               </select>
             </div>
           </div>
 
-          <!-- Fila 2: Método de pago & Giro / Referencia -->
+          <!-- Fila 2: Método de pago & Contacto de emergencia -->
           <div class="ct-form-row">
             <div class="ct-form-group">
               <label class="ct-form-label" for="ctSelectMetodoPago">
@@ -356,20 +340,20 @@ const estadoBadge = esServicios ? 'Habido' : 'Activo';
               </label>
               <select class="ct-select" id="ctSelectMetodoPago">
                 <option value="yape">Yape / Plin</option>
-                <option value="efectivo">Efectivo contra entrega</option>
-                <option value="transferencia">Transferencia Bancaria</option>
+                <option value="efectivo">Efectivo en Consultorio</option>
+                <option value="transferencia">Transferencia BCP</option>
               </select>
             </div>
 
             <div class="ct-form-group">
               <label class="ct-form-label" for="ctInputPisoAscensor">
-                <i class="fa-solid fa-building-user"></i> {esServicios ? 'Actividad o Giro Comercial:' : 'Piso / Departamento / Referencia:'}
+                <i class="fa-solid fa-heart-pulse"></i> Persona / Contacto de Emergencia:
               </label>
               <input 
                 type="text" 
                 class="ct-input" 
                 id="ctInputPisoAscensor" 
-                placeholder={esServicios ? "Ej: Servicios de TI, Restaurante..." : "Ej: Piso 3 con ascensor, timbre blanco..."} 
+                placeholder="Nombre, parentesco y número telefónico" 
               />
             </div>
           </div>
@@ -379,9 +363,9 @@ const estadoBadge = esServicios ? 'Habido' : 'Activo';
             <label class="ct-apple-card" for="ctSwitchTimbre">
               <div class="ct-apple-card-info">
                 <span class="ct-apple-title">
-                  <i class="fa-solid fa-motorcycle ct-bell-icon"></i> {esServicios ? 'Alerta de Vencimiento' : 'Aviso de Motorizado en Ruta'}
+                  <i class="fa-solid fa-bell ct-bell-icon"></i> Recordatorio de Cita
                 </span>
-                <span class="ct-apple-desc">{esServicios ? 'Avisar según último dígito de RUC' : 'Recibir WhatsApp cuando salga el pedido'}</span>
+                <span class="ct-apple-desc">Avisarme por WhatsApp 24 horas antes de cada sesión</span>
               </div>
               <div class="ct-apple-switch">
                 <input type="checkbox" id="ctSwitchTimbre" checked />
@@ -392,9 +376,9 @@ const estadoBadge = esServicios ? 'Habido' : 'Activo';
             <label class="ct-apple-card" for="ctSwitchLlamar">
               <div class="ct-apple-card-info">
                 <span class="ct-apple-title">
-                  <i class="fa-solid fa-bell ct-phone-icon"></i> {esServicios ? 'Alerta Buzón SOL' : 'Recordatorio de Balón Seguro'}
+                  <i class="fa-solid fa-book-medical ct-phone-icon"></i> Tareas y Guías Clínicas
                 </span>
-                <span class="ct-apple-desc">{esServicios ? 'Avisarme ante esquelas SUNAT' : 'Avisos preventivos de mantenimiento'}</span>
+                <span class="ct-apple-desc">Notificarme cuando mi especialista comparta nuevo material</span>
               </div>
               <div class="ct-apple-switch">
                 <input type="checkbox" id="ctSwitchLlamar" checked />

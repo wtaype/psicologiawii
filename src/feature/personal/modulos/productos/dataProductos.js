@@ -101,7 +101,7 @@ export function normalizarProducto(p = {}) {
     delivery: String(prod.delivery || 'Despacho en puerta'),
     seguridad: String(prod.seguridad || 'Precinto verificado'),
     userId: String(prod.userId || ''),
-    fecha: String(prod.fecha || new Date().toISOString().slice(0, 10)),
+    fecha: String(prod.fecha || new Date().toISOString().slice(0, 10).replace(/-/g, '/')),
     creado: prod.creado || null,
     actualizado: prod.actualizado || null,
 

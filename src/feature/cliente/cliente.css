@@ -7,8 +7,8 @@
   --side-w: 230px;
   --side-collapsed-w: 68px;
   --topbar-h: clamp(54px, 6.8vh, 62px);
-  --cl-orange: var(--brand-primary, var(--mco, #9e7b4f));
-  --cl-orange-hover: var(--mco-dark, #82633c);
+  --cl-orange: var(--accent);
+  --cl-orange-hover: var(--accent-hover);
   --cl-emerald: #10b981;
   --cl-wa: var(--wa-green, #25d366);
   --cl-wa-hover: #1ebe57;
@@ -269,7 +269,9 @@ body {
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--cl-orange), #ff9933);
+  background: var(--brand-soft);
+  color: var(--accent);
+  border: 1px solid var(--border_accent);
   color: #fff;
   display: grid;
   place-items: center;
@@ -499,11 +501,14 @@ html.is-collapsed .cl-btn-collapse {
 .cl-main-shell {
   margin-top: var(--topbar-h);
   margin-left: var(--side-w);
-  height: calc(100vh - var(--topbar-h));
-  padding: 1.2vh 1.6vw;
+  min-height: calc(100vh - var(--topbar-h));
+  height: auto;
+  padding: 1.5vh 1.8vw 5rem;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
   transition: margin-left 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  scroll-behavior: smooth;
 }
 
 html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
@@ -511,7 +516,13 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
 /* PANELES DE MÓDULOS (TABS) */
 .cl-panel {
   display: none;
-  height: 100%;
+  height: auto;
+  min-height: 100%;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 .cl-panel.active {
   display: block;
@@ -541,8 +552,12 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
   .cl-main-shell {
     margin-left: 0 !important;
     height: auto;
-    overflow: visible;
-    padding: 16px 14px 140px;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+    padding: 12px 3% 130px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 
   .cl-mobile-cart-bar {

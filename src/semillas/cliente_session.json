@@ -1,0 +1,67 @@
+{
+  "userId": "",
+  "proximaSesion": {
+    "id": "ses-demo-proxima",
+    "fechaISO": "2026-10-24T16:00:00Z",
+    "fechaTexto": "Viernes 24 de Octubre",
+    "horaTexto": "4:00 p. m. - 4:50 p. m. (50 min)",
+    "servicioId": "psicoterapia-individual",
+    "servicioNombre": "Psicoterapia Individual (TCC & Contextual)",
+    "modalidad": "Presencial · Sede Villa El Salvador (Av. 3 de Octubre)",
+    "esVirtual": false,
+    "linkVirtual": "https://meet.google.com/psicologia-america",
+    "linkMapa": "https://maps.google.com/?q=Consultorio+Psicologico+America",
+    "estado": "confirmada",
+    "etiquetaEstado": "PRÓXIMA SESIÓN CONFIRMADA",
+    "diasRestantes": "En 2 días",
+    "especialista": {
+      "nombre": "Lic. Sofia Reynaga Pachas",
+      "cargo": "Psicóloga Clínica Colegiada",
+      "colegiatura": "C.Ps.P. 49425",
+      "foto": "/imgwii/hero/psicologa-sofia-reynaga.webp"
+    }
+  },
+  "notaEspecialista": {
+    "numeroSesion": 3,
+    "mensaje": "Recuerda realizar el ejercicio de respiración diafragmática (4-7-8) durante 5 minutos antes de dormir y registrar tus pensamientos automáticos en tu bitácora de Mis Recursos. ¡Cada paso suma en tu proceso!",
+    "fecha": "17 Oct 2026",
+    "firmadoPor": "Lic. Sofia Reynaga Pachas"
+  },
+  "resumenClinico": {
+    "sesionesAtendidas": 3,
+    "enfoque": "TCC / ACT",
+    "puntualidad": "100%",
+    "comprobantesAlDia": true
+  },
+  "historial": [
+    {
+      "id": "hist-demo-003",
+      "servicio": "Psicoterapia Individual (TCC) · Sesión 3",
+      "fecha": "17 Oct 2026 · 4:00 PM",
+      "modalidad": "Presencial Sede Central",
+      "estado": "Realizada",
+      "comprobante": "RH-E001-042",
+      "montoPEN": 85.00
+    },
+    {
+      "id": "hist-demo-002",
+      "servicio": "Psicoterapia Individual (TCC) · Sesión 2",
+      "fecha": "10 Oct 2026 · 4:00 PM",
+      "modalidad": "Presencial Sede Central",
+      "estado": "Realizada",
+      "comprobante": "RH-E001-035",
+      "montoPEN": 85.00
+    },
+    {
+      "id": "hist-demo-001",
+      "servicio": "Evaluación Inicial y Anamnesis · Sesión 1",
+      "fecha": "03 Oct 2026 · 4:00 PM",
+      "modalidad": "Presencial Sede Central",
+      "estado": "Realizada",
+      "comprobante": "RH-E001-018",
+      "montoPEN": 85.00
+    }
+  ],
+  "creado": "2026-10-01T09:00:00Z",
+  "actualizado": "2026-10-23T19:00:00Z"
+}

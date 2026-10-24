@@ -1,0 +1,344 @@
+---
+// src/feature/cliente/modulos/05-recursos/Recursos.astro
+// Módulo de Recursos Clínicos y Herramientas Terapéuticas · Consultorio Psicológico América
+// Dinámico: Consume cliente_recursos.json e integra 4 modales interactivos con @widev
+import { datosNegocio } from '@/negocio.js';
+import clienteRecursos from '@semillas/cliente_recursos.json';
+
+interface Props {
+  cliente?: any;
+}
+
+const { cliente = {} } = Astro.props;
+const especialista = datosNegocio.identidad?.especialista || 'Lic. Sofia Reynaga Pachas';
+---
+
+<div class="cl-recursos-module" id="moduloRecursos">
+  
+  <!-- CABECERA DEL MÓDULO -->
+  <header class="rc-panel-head">
+    <div class="rc-head-left">
+      <div class="rc-badge-clinical">
+        <i class="fa-solid fa-brain"></i>
+        <span>Material Clínico Basado en Evidencia · TCC & ACT</span>
+      </div>
+      <h1 class="rc-panel-title">
+        Mis Recursos & Herramientas Terapéuticas
+      </h1>
+      <p class="rc-panel-subtitle">
+        Guías clínicas, técnicas de autorregulación emocional y ejercicios recomendados por tu especialista para tu proceso continuo de bienestar.
+      </p>
+    </div>
+
+    <!-- TARJETA RÁPIDA DE ANCLAJE -->
+    <div class="rc-quick-grounding">
+      <i class="fa-solid fa-wind rc-grounding-icon"></i>
+      <div class="rc-grounding-text">
+        <strong>Pausa Consciente</strong>
+        <span>Tómate 2 minutos para respirar profundamente antes de comenzar.</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- FILTROS POR CATEGORÍA -->
+  <nav class="rc-filter-bar" aria-label="Categorías de recursos">
+    <button type="button" class="rc-filter-chip active" data-filter="todos">
+      <i class="fa-solid fa-border-all"></i> Todos ({clienteRecursos.length})
+    </button>
+    <button type="button" class="rc-filter-chip" data-filter="calma">
+      <i class="fa-solid fa-wind"></i> Respiración & Calma
+    </button>
+    <button type="button" class="rc-filter-chip" data-filter="tcc">
+      <i class="fa-solid fa-clipboard-check"></i> Registro TCC
+    </button>
+    <button type="button" class="rc-filter-chip" data-filter="autocuidado">
+      <i class="fa-solid fa-heart-pulse"></i> Autocuidado
+    </button>
+  </nav>
+
+  <!-- GRID DE RECURSOS CLÍNICOS DINÁMICOS -->
+  <div class="rc-grid-cards">
+    {clienteRecursos.map((rec: any) => (
+      <article class="rc-card" data-category={rec.categoria} data-id={rec.id}>
+        <div class="rc-card-top">
+          <span class={`rc-tag ${rec.colorTema}`}>
+            <i class={rec.icono}></i> {rec.categoriaEtiqueta}
+          </span>
+          <span class="rc-read-time">
+            <i class="fa-regular fa-clock"></i> {rec.duracion}
+          </span>
+        </div>
+
+        <h3 class="rc-card-title">{rec.titulo}</h3>
+        <p class="rc-card-desc">{rec.descripcion}</p>
+
+        {rec.pasos && (
+          <div class="rc-steps-box">
+            {rec.pasos.map((p: any) => (
+              <div class="rc-step-pill">
+                <strong>{p.orden}. {p.accion}</strong> {p.tiempo} {p.via}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {rec.columnas && (
+          <div class="rc-columns-preview">
+            {rec.columnas.map((col: any) => (
+              <div class={`rc-col-mini ${col.destacado ? 'highlight' : ''}`}>
+                {col.nombre}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {rec.pasosSensoriales && (
+          <ul class="rc-grounding-list">
+            {rec.pasosSensoriales.map((ps: any) => (
+              <li>
+                <strong>{ps.cantidad}</strong> {ps.instruccion}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {rec.pilares && (
+          <div class="rc-pillars-box">
+            {rec.pilares.map((pil: any) => (
+              <div class="rc-pillar-item">
+                <i class={`fa-solid ${pil.icono}`}></i> {pil.texto}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div class="rc-card-footer">
+          <button 
+            type="button" 
+            class="rc-btn-action primary" 
+            data-open-modal={rec.botones?.principal?.modalId}
+            id={`btnAction-${rec.id}`}
+          >
+            <i class={`fa-solid ${rec.botones?.principal?.icono || 'fa-play'}`}></i> 
+            <span>{rec.botones?.principal?.texto || 'Ver'}</span>
+          </button>
+          
+          {rec.botones?.secundario && (
+            <button 
+              type="button" 
+              class="rc-btn-action secondary" 
+              data-action={rec.botones?.secundario?.accion}
+              data-doc={rec.id}
+            >
+              <i class={`fa-solid ${rec.botones?.secundario?.icono || 'fa-download'}`}></i> 
+              <span>{rec.botones?.secundario?.texto || 'Descargar'}</span>
+            </button>
+          )}
+        </div>
+      </article>
+    ))}
+  </div>
+
+  <!-- ========================================================
+       MODAL 1: RESPIRACIÓN DIAFRAGMÁTICA (4-7-8)
+       ======================================================== -->
+  <div class="rc-breath-modal" id="modalRespiracion" style="display:none;" role="dialog" aria-modal="true">
+    <div class="rc-breath-backdrop" data-close-modal="modalRespiracion"></div>
+    <div class="rc-breath-box">
+      <button type="button" class="rc-btn-close-modal" data-close-modal="modalRespiracion">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="rc-breath-content">
+        <h3 class="rc-modal-title">Respiración Diafragmática Consciente (4-7-8)</h3>
+        <p class="rc-modal-sub">Sigue el ritmo del círculo para reducir la activación del sistema nervioso</p>
+
+        <div class="rc-breath-circle-wrapper">
+          <div class="rc-breath-circle" id="circleBreath">
+            <span class="rc-breath-cue" id="cueBreath">Inhala</span>
+            <span class="rc-breath-timer" id="timerBreath">4s</span>
+          </div>
+        </div>
+
+        <div class="rc-breath-controls">
+          <button type="button" class="rc-btn-modal-start" id="btnStartBreath">Comenzar Ciclo</button>
+          <button type="button" class="rc-btn-modal-stop" id="btnStopBreath" style="display:none;">Detener</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 2: BITÁCORA DE REESTRUCTURACIÓN COGNITIVA TCC
+       ======================================================== -->
+  <div class="rc-breath-modal" id="modalTcc" style="display:none;" role="dialog" aria-modal="true">
+    <div class="rc-breath-backdrop" data-close-modal="modalTcc"></div>
+    <div class="rc-breath-box rc-wide-box">
+      <button type="button" class="rc-btn-close-modal" data-close-modal="modalTcc">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="rc-modal-body-pad">
+        <div class="rc-modal-header-row">
+          <div>
+            <span class="rc-tag purple"><i class="fa-solid fa-brain"></i> Registro de Pensamientos (TCC)</span>
+            <h3 class="rc-modal-title" style="margin-top:0.4rem;">Bitácora Terapéutica de 4 Columnas</h3>
+          </div>
+          <span class="rc-modal-author">Supervisado por {especialista}</span>
+        </div>
+
+        <p class="rc-modal-sub">Identifica tus pensamientos automáticos y genera alternativas racionales con evidencia objetiva.</p>
+
+        <!-- FORMULARIO INTERACTIVO TCC -->
+        <div class="rc-tcc-form-grid">
+          <div class="rc-tcc-field">
+            <label for="tccSituacion"><strong>1. Situación Detonante:</strong></label>
+            <textarea id="tccSituacion" rows="2" placeholder="¿Dónde estabas? ¿Qué ocurrió exactamente?"></textarea>
+          </div>
+          <div class="rc-tcc-field">
+            <label for="tccEmocion"><strong>2. Emoción Experimentada:</strong></label>
+            <input type="text" id="tccEmocion" placeholder="Ej: Ansiedad (80%), Culpa, Miedo..." />
+          </div>
+          <div class="rc-tcc-field">
+            <label for="tccPensamiento"><strong>3. Pensamiento Automático:</strong></label>
+            <textarea id="tccPensamiento" rows="2" placeholder="¿Qué te dijiste a ti mismo en ese momento?"></textarea>
+          </div>
+          <div class="rc-tcc-field highlight">
+            <label for="tccAlternativa"><strong>4. Alternativa Racional (Reestructuración):</strong></label>
+            <textarea id="tccAlternativa" rows="2" placeholder="¿Qué prueba real tengo? ¿Qué le diría a un amigo en mi lugar?"></textarea>
+          </div>
+        </div>
+
+        <!-- ACCIONES TCC: COPIAR Y GUARDAR -->
+        <div class="rc-modal-footer-actions">
+          <button type="button" class="rc-btn-action secondary" id="btnCopiarTcc">
+            <i class="fa-regular fa-copy"></i> <span>Copiar Plantilla para mi Psicóloga</span>
+          </button>
+          <button type="button" class="rc-btn-action primary" id="btnGuardarTcc">
+            <i class="fa-solid fa-check"></i> <span>Guardar en mi Bitácora</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 3: TÉCNICA SENSORIAL DE ANCLAJE 5-4-3-2-1 GROUNDING
+       ======================================================== -->
+  <div class="rc-breath-modal" id="modalGrounding" style="display:none;" role="dialog" aria-modal="true">
+    <div class="rc-breath-backdrop" data-close-modal="modalGrounding"></div>
+    <div class="rc-breath-box">
+      <button type="button" class="rc-btn-close-modal" data-close-modal="modalGrounding">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="rc-modal-body-pad text-center">
+        <span class="rc-tag rose"><i class="fa-solid fa-anchor"></i> Enraizamiento / Grounding</span>
+        <h3 class="rc-modal-title" style="margin-top:0.5rem;">Técnica Sensorial de Anclaje</h3>
+        <p class="rc-modal-sub">Reconéctate con el momento presente a través de tus 5 sentidos</p>
+
+        <!-- STEPPER INTERACTIVO SENSORIAL -->
+        <div class="rc-grounding-stepper-box">
+          <div class="rc-grounding-progress-bar">
+            <div class="rc-grounding-fill" id="groundingProgressFill" style="width: 20%;"></div>
+          </div>
+          <span class="rc-grounding-step-counter" id="groundingStepLabel">Paso 1 de 5</span>
+
+          <div class="rc-grounding-current-card" id="groundingCardContent">
+            <div class="rc-grounding-big-icon" id="groundingIcon"><i class="fa-solid fa-eye"></i></div>
+            <h4 class="rc-grounding-big-num" id="groundingNum">5</h4>
+            <p class="rc-grounding-instruccion" id="groundingText">
+              Mira a tu alrededor y nombra <strong>5 cosas que puedas ver</strong> en este momento (un cuadro, la luz, un libro...).
+            </p>
+          </div>
+        </div>
+
+        <div class="rc-modal-footer-actions center">
+          <button type="button" class="rc-btn-action primary" id="btnNextGroundingStep">
+            <span>Siguiente Sentido</span> <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================
+       MODAL 4: PLAN DE AUTOCUIDADO & METAS DIARIAS
+       ======================================================== -->
+  <div class="rc-breath-modal" id="modalAutocuidado" style="display:none;" role="dialog" aria-modal="true">
+    <div class="rc-breath-backdrop" data-close-modal="modalAutocuidado"></div>
+    <div class="rc-breath-box rc-wide-box">
+      <button type="button" class="rc-btn-close-modal" data-close-modal="modalAutocuidado">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="rc-modal-body-pad">
+        <div class="rc-modal-header-row">
+          <div>
+            <span class="rc-tag blue"><i class="fa-solid fa-heart-circle-check"></i> Hábitos Saludables</span>
+            <h3 class="rc-modal-title" style="margin-top:0.4rem;">Plan Diario de Autocuidado</h3>
+          </div>
+          <span class="rc-modal-author">Metas Semanales</span>
+        </div>
+
+        <p class="rc-modal-sub">Marca los hábitos cumplidos el día de hoy para fortalecer tu salud emocional:</p>
+
+        <!-- BARRA DE CUMPLIMIENTO -->
+        <div class="rc-habits-meter">
+          <div class="rc-meter-info">
+            <span id="habitsProgressText">Progreso de hoy: 0 de 4 cumplidas (0%)</span>
+          </div>
+          <div class="rc-meter-track">
+            <div class="rc-meter-fill" id="habitsMeterFill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <!-- LISTA DE CHECKBOXES INTERACTIVOS -->
+        <div class="rc-habits-checklist" id="habitsChecklistContainer">
+          <label class="rc-habit-check-item">
+            <input type="checkbox" data-habit="sueno" />
+            <span class="rc-check-box"><i class="fa-solid fa-check"></i></span>
+            <div class="rc-habit-label">
+              <strong>Higiene del Sueño (7 - 8 horas continuas)</strong>
+              <small>Horario regular de descanso para restaurar el sistema cognitivo.</small>
+            </div>
+          </label>
+
+          <label class="rc-habit-check-item">
+            <input type="checkbox" data-habit="caminata" />
+            <span class="rc-check-box"><i class="fa-solid fa-check"></i></span>
+            <div class="rc-habit-label">
+              <strong>Movimiento Físico Consciente (20 min)</strong>
+              <small>Caminata suave, estiramientos o respiración al aire libre.</small>
+            </div>
+          </label>
+
+          <label class="rc-habit-check-item">
+            <input type="checkbox" data-habit="limites" />
+            <span class="rc-check-box"><i class="fa-solid fa-check"></i></span>
+            <div class="rc-habit-label">
+              <strong>Límites Asertivos (Decir "No" sin culpa)</strong>
+              <small>Priorizar tu paz mental y respetar tu tiempo personal.</small>
+            </div>
+          </label>
+
+          <label class="rc-habit-check-item">
+            <input type="checkbox" data-habit="digital" />
+            <span class="rc-check-box"><i class="fa-solid fa-check"></i></span>
+            <div class="rc-habit-label">
+              <strong>Desconexión Digital Nocturna (30 min antes de dormir)</strong>
+              <small>Evitar pantallas azules y redes sociales para calmar la mente.</small>
+            </div>
+          </label>
+        </div>
+
+        <div class="rc-modal-footer-actions">
+          <button type="button" class="rc-btn-action primary" id="btnGuardarHabitos">
+            <i class="fa-solid fa-floppy-disk"></i> <span>Guardar Progreso de Hoy</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>

@@ -201,7 +201,7 @@ export function inicializarModalProducto() {
         orden: ordenNum,
         estado: prFormEstado?.value || 'activo',
         activo: prFormEstado?.value !== 'pausado',
-        imagen: normalizarUrlParaGuardar(inputImagen?.value || '/imgwii/productos/BALON-10KG.webp'),
+        imagen: normalizarUrlParaGuardar(inputImagen?.value || '/imgwii/servicios/psicoterapia-individual.webp'),
         badgeIcon: (prFormBadgeIcon?.value || '').trim() || 'fa-solid fa-star',
         tagClase: prFormTagClase?.value || 'badge-fire',
         peso: (prFormPeso?.value || '').trim() || '10 kg',
@@ -348,7 +348,7 @@ export function abrirModalProducto(producto = null) {
 
     // URL completa de la imagen para fácil edición/copia
     if (inputImagen) {
-      inputImagen.value = resolverUrlCompleta(producto.imagen || '/imgwii/productos/BALON-10KG.webp');
+      inputImagen.value = resolverUrlCompleta(producto.imagen || '/imgwii/servicios/psicoterapia-individual.webp');
     }
 
     // Español
@@ -400,7 +400,7 @@ export function abrirModalProducto(producto = null) {
 
     // URL completa de la imagen por defecto
     if (inputImagen) {
-      inputImagen.value = resolverUrlCompleta('/imgwii/productos/BALON-10KG.webp');
+      inputImagen.value = resolverUrlCompleta('/imgwii/servicios/psicoterapia-individual.webp');
     }
 
     // Valores por defecto en Español

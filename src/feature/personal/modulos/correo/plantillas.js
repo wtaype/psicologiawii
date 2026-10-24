@@ -4,9 +4,11 @@
 
 export { mdToEmailHtml } from './plantillas/parser.js';
 export { envoltorioBase } from './plantillas/base.js';
+export { generarPlantillaCita } from './plantillas/citas.js';
+export { generarPlantillaTaller } from './plantillas/talleres.js';
+export { generarPlantillaComprobante } from './plantillas/comprobantes.js';
+export { generarPlantillaLibre } from './plantillas/mensajes.js';
 export { generarPlantillaLiquidacion } from './plantillas/liquidacion.js';
 export { generarPlantillaCronograma } from './plantillas/cronograma.js';
-export { generarPlantillaComprobante } from './plantillas/comprobantes.js';
 export { generarPlantillaCotizacion } from './plantillas/cotizacion.js';
-export { generarPlantillaLibre } from './plantillas/mensajes.js';
 export { generarPlantillaPedido } from './plantillas/pedidos.js';

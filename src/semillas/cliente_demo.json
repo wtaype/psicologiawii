@@ -1,0 +1,35 @@
+{
+  "uid": "paciente-demo-001",
+  "userId": "usr-demo-auth",
+  "usuario": "paciente.demo",
+  "nombre": "Paciente",
+  "apellidos": "Demostración",
+  "nombreCompleto": "Paciente de Demostración",
+  "email": "paciente.demo@consultorioamerica.pe",
+  "celular": "900000000",
+  "avatar": "https://imgwii.web.app/smile.avif",
+  "iniciales": "PD",
+  "rol": "Paciente",
+  "estado": "Activo",
+  "contactoEmergencia": {
+    "nombre": "Familiar de Confianza",
+    "parentesco": "Familiar",
+    "celular": "900000001"
+  },
+  "facturacion": {
+    "tipoDoc": "DNI",
+    "numeroDoc": "00000000",
+    "razonSocial": "Paciente Demostración",
+    "tipoComprobante": "Boleta / Recibo por Honorarios",
+    "envioAutomaticoEmail": true
+  },
+  "preferenciasTerapeuticas": {
+    "modalidadHabitual": "presencial",
+    "turnoHabitual": "tarde",
+    "medioPagoHabitual": "Yape",
+    "recordatorioWhatsApp": true,
+    "tareasNotificaciones": true
+  },
+  "creado": "2026-10-01T09:00:00Z",
+  "actualizado": "2026-10-23T19:00:00Z"
+}

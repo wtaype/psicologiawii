@@ -48,7 +48,7 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
         <!-- 1. Hero del Post con Badges Interactivos -->
         <div class="po_hero">
           <img 
-            src={post.imagenTop || post.imagen || '/imgwii/02-solgas-surquillo-balanza.webp'} 
+            src={post.imagenTop || post.imagen || '/imgwii/Psychotherapy_office_interior.jpeg'} 
             alt={post.metaSEO?.alt || post.titulo} 
             class="po_hero_img"
             loading="eager"
@@ -121,7 +121,7 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
             {prevPost ? (
               <a href={`${prefix}${prevPost.slug || prevPost.id}`} class="po_pn_card pn_prev" title={prevPost.titulo}>
                 <div class="po_pn_img">
-                  <img src={prevPost.imagen || '/imgwii/02-solgas-surquillo-balanza.webp'} alt="" loading="lazy" />
+                  <img src={prevPost.imagen || '/imgwii/Psychotherapy_office_interior.jpeg'} alt="" loading="lazy" />
                 </div>
                 <div class="po_pn_info">
                   <span class="po_pn_lb"><i class="fa-solid fa-arrow-left"></i> {t.prev_post}</span>
@@ -137,7 +137,7 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
                   <strong class="po_pn_tit">{nextPost.titulo}</strong>
                 </div>
                 <div class="po_pn_img">
-                  <img src={nextPost.imagen || '/imgwii/03-solgas-surquillo-instalacion.webp'} alt="" loading="lazy" />
+                  <img src={nextPost.imagen || '/imgwii/Reception_desk_at_psychology_office.jpeg'} alt="" loading="lazy" />
                 </div>
               </a>
             ) : (<div></div>)}
