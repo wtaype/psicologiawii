@@ -58,7 +58,7 @@ const { esActivo = true } = Astro.props;
                 type="text" 
                 id="blInputTitulo" 
                 class="bl-input bl-title-input" 
-                placeholder="Escribe un título que enganche... (Ej: ¿Cómo comprobar el peso exacto?)" 
+                placeholder="Escribe un título que enganche... (Ej: ¿Cómo gestionar la ansiedad en el día a día?)" 
                 maxlength="60" 
                 required 
               />
@@ -69,7 +69,7 @@ const { esActivo = true } = Astro.props;
                   type="text" 
                   id="blInputSlug" 
                   class="bl-slug-input" 
-                  placeholder="slug-del-articulo (ej: como-comprobar-peso-exacto)" 
+                  placeholder="slug-del-articulo (ej: como-gestionar-la-ansiedad)" 
                   spellcheck="false" 
                   required 
                 />
@@ -215,8 +215,8 @@ const { esActivo = true } = Astro.props;
                 type="text" 
                 id="blInputCategoria" 
                 class="bl-input" 
-                placeholder="Ej: Seguridad & Peso" 
-                value="Seguridad & Peso" 
+                placeholder="Ej: Salud Emocional & Bienestar" 
+                value="Salud Emocional" 
                 required 
               />
 
@@ -305,8 +305,8 @@ const { esActivo = true } = Astro.props;
                   type="text" 
                   id="blInputAutor" 
                   class="bl-input" 
-                  placeholder="Ej: Redacción Oficial" 
-                  value={datosNegocio.identidad?.nombreCorto || datosNegocio.nombre || 'Redacción'} 
+                  placeholder="Ej: Lic. Sofia Reynaga Pachas" 
+                  value={datosNegocio.identidad?.especialista || (typeof datosNegocio.nombreCorto === 'string' ? datosNegocio.nombreCorto : 'Lic. Sofia Reynaga Pachas')} 
                   required
                 />
               </div>
@@ -363,10 +363,10 @@ const { esActivo = true } = Astro.props;
 
           <select id="blSelectCategoriaFilter" class="bl-select" style="width:auto; padding:6px 12px; font-size:12px;">
             <option value="todas">Todas las categorías</option>
-            <option value="Seguridad & Peso">Seguridad & Peso</option>
-            <option value="Instalación & Hogar">Instalación & Hogar</option>
-            <option value="Safety & Weight">Safety & Weight</option>
-            <option value="Safety & Installation">Safety & Installation</option>
+            <option value="Salud Emocional">Salud Emocional</option>
+            <option value="Terapia & Bienestar">Terapia & Bienestar</option>
+            <option value="Desarrollo Personal">Desarrollo Personal</option>
+            <option value="Emotional Health">Emotional Health</option>
           </select>
 
           <button type="button" class="bl-pill-btn" id="blBtnSyncSemillas" title="Recargar artículos desde blogs.json">
@@ -414,4 +414,5 @@ const { esActivo = true } = Astro.props;
 <script>
   import { inicializarBlogs } from './blogs.js';
   inicializarBlogs();
+  document.addEventListener('astro:page-load', inicializarBlogs);
 </script>

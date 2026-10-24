@@ -23,7 +23,7 @@ export function generarPlantillaComprobante({
   const docTexto = docIdentidad ? `<div style="font-size: 13px; color: #64748b; margin-top: 2px;">RUC / DNI: <strong>${docIdentidad}</strong></div>` : '';
   const nombreEmpresa = neg?.nombreCorto || neg?.nombre || '';
   const esServicios = neg?.modeloNegocio === 'servicios_y_asesorias';
-  const colorMarca = neg?.colorPrimario || '#ff6600';
+  const colorMarca = neg?.colorPrimario || '#104356';
   const conceptoDefault = esServicios ? 'Servicio Profesional y Asesoría' : (configurarSistema.terminologia?.comprobanteConceptoDefault || 'Servicios y Productos');
   const conceptoFinal = servicio || conceptoDefault;
   const descripcionIntro = `Te hacemos llegar el comprobante electrónico oficial emitido por ${nombreEmpresa || 'nuestra empresa'} conforme a las disposiciones vigentes de SUNAT.`;

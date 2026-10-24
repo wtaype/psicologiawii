@@ -24,11 +24,13 @@ export const configurarSistema = {
     { id: 'redes',       label: { es: 'Enlaces',      en: 'Bio-Link' },     href: '/redes',       icono: 'fa-link',             color: 'color-brand-blue' }
   ],
 
-  // 🚀 Control de Versión y Despliegues (MMNNPP: 02.00.00 -> 200000)
+  // 🚀 Control de Versión, Dominio y Despliegues (MMNNPP: 02.00.00 -> 200000)
   version: '2.0.0',
   versionCode: 200000,
   versionNota: 'Golden Boilerplate v2.0: Hub maestro de semillas, Bio-link oficial, 0ms y 14 módulos.',
-  actualizado: '2026-10-22',
+  dominioOficial: 'psicologiaamerica.com',
+  siteUrl: 'https://psicologiaamerica.com',
+  actualizado: '2026-10-23',
 
   // 🛡️ Banderas de Estado del Sistema
   modoDemo: false,              // true = modo presentación (protege datos reales)
@@ -136,8 +138,7 @@ export const configurarPersonal = {
     { id: 'sunat',     nombre: 'Honorarios',  icono: 'file-invoice-dollar', activo: true },
     { id: 'correo',    nombre: 'Correo',      icono: 'envelope',            activo: true },
     { id: 'galeria',   nombre: 'Galería',     icono: 'images',              activo: true },
-    { id: 'entradas',  nombre: 'Artículos',   icono: 'newspaper',           activo: true },
-    { id: 'paginas',   nombre: 'Páginas',     icono: 'file-lines',          activo: true },
+    { id: 'blogs',     nombre: 'Blogs',       icono: 'newspaper',           activo: true },
     { id: 'personal',  nombre: 'Equipo',      icono: 'users',               activo: true },
     { id: 'perfil',    nombre: 'Mi perfil',   icono: 'user-gear',           activo: true },
     { id: 'ajustes',   nombre: 'Ajustes',     icono: 'gear',                activo: true },

@@ -36,7 +36,7 @@ const prefix = lang === 'en' ? '/en/' : '/';
       </div>
       <div class="po_autor_info">
         <strong>{post.autor || datosNegocio.nombreCorto || datosNegocio.nombre}</strong>
-        <span>{t.brand_badge} <i class="fa-solid fa-shield-check" style="color:var(--brand-primary, #ff6600);"></i></span>
+        <span>{t.brand_badge} <i class="fa-solid fa-shield-check" style="color:var(--brand-primary, #104356);"></i></span>
       </div>
     </div>
   </div>
@@ -91,21 +91,21 @@ const prefix = lang === 'en' ? '/en/' : '/';
     </div>
   )}
 
-  <!-- 4. Banner Institucional Gaswii / Delivery SOS -->
+  <!-- 4. Banner Institucional Consultorio Psicológico América -->
   <div class="po_side_banner">
     <div class="po_side_banner_icon">
-      <i class="fa-solid fa-truck-fast"></i>
+      <i class="fa-solid fa-calendar-check"></i>
     </div>
     <div class="po_side_banner_title">
-      {lang === 'en' ? 'Cooking Gas Delivery 15 Min' : 'Delivery de Gas en 15 Minutos'}
+      {lang === 'en' ? 'Book Your Psychological Session' : 'Agenda tu Sesión Psicológica'}
     </div>
     <p class="po_side_banner_desc">
       {lang === 'en' 
-        ? 'Verified weight with calibrated digital scale right at your door. Certified Solgas safety.' 
-        : 'Pesaje verificado con balanza digital en la puerta de tu hogar. Balones 100% sellados de planta.'}
+        ? 'Professional psychological support in-person and online. Safe, confidential and evidence-based.' 
+        : 'Atención psicológica profesional presencial y virtual. Un espacio seguro, confidencial y sin juicios.'}
     </p>
     <a href={datosNegocio.linkWhatsapp} target="_blank" rel="noopener noreferrer" class="po_side_banner_btn">
-      <i class="fa-brands fa-whatsapp"></i> {lang === 'en' ? 'Order by WhatsApp' : 'Pedir Balón Ahora'}
+      <i class="fa-brands fa-whatsapp"></i> {lang === 'en' ? 'Book via WhatsApp' : 'Agendar por WhatsApp'}
     </a>
   </div>
 </aside>

@@ -146,7 +146,7 @@ export function inicializarNotepad() {
         <div class="np-summary-card ${isActive ? 'active' : ''} ${isPinned ? 'pinned' : ''} ${isListo ? 'listo done' : ''}" data-note-id="${n.id}">
           <div class="np-card-top">
             <span class="np-card-title">
-              ${isPinned ? '<i class="fa-solid fa-thumbtack" style="color:var(--mco, var(--brand-primary, #ff6600)); margin-right:4px; font-size:10px;"></i>' : ''}
+              ${isPinned ? '<i class="fa-solid fa-thumbtack" style="color:var(--mco, var(--brand-primary, #104356)); margin-right:4px; font-size:10px;"></i>' : ''}
               ${n.titulo || 'Sin título'}
             </span>
             <span class="ps-badge ps-badge-blue" style="font-size:10px; padding:1px 5px;">${n.tag || 'Nota'}</span>
@@ -159,7 +159,7 @@ export function inicializarNotepad() {
               ${linkCount > 0 ? `<span style="font-size:10px; color:var(--muted);"><i class="fa-solid fa-link"></i> ${linkCount}</span>` : ''}
             </div>
             <div style="display:flex; gap:6px;">
-              <button type="button" class="np-btn-icon-action btn-pin-note ${isPinned ? 'active' : ''}" title="${isPinned ? 'Desfijar' : 'Fijar'}" style="color:${isPinned ? 'var(--mco, var(--brand-primary, #ff6600))' : 'var(--muted)'};">
+              <button type="button" class="np-btn-icon-action btn-pin-note ${isPinned ? 'active' : ''}" title="${isPinned ? 'Desfijar' : 'Fijar'}" style="color:${isPinned ? 'var(--mco, var(--brand-primary, #104356))' : 'var(--muted)'};">
                 <i class="fa-solid fa-thumbtack"></i>
               </button>
               <button type="button" class="np-btn-icon-action btn-toggle-done" title="${isListo ? 'Marcar pendiente' : 'Marcar listo'}" style="color:${isListo ? 'var(--green)' : 'var(--muted)'};">

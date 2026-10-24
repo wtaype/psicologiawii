@@ -57,7 +57,7 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--border-accent, rgba(255, 102, 0, 0.25)) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--border-accent, rgba(56, 189, 248, 0.25)) 0%, transparent 70%);
 }
 
 .pf-id-header {
@@ -71,16 +71,16 @@
   font-family: var(--ff_O, sans-serif);
   font-size: 14px;
   font-weight: 800;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .pf-id-role-badge {
-  background: var(--mbg, rgba(255, 102, 0, 0.15));
-  border: 1px solid var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.15));
+  border: 1px solid var(--mco, var(--brand-primary, #104356));
+  color: var(--mco, var(--brand-primary, #104356));
   font-size: 10.5px;
   font-weight: 800;
   text-transform: uppercase;
@@ -102,8 +102,8 @@
   height: 80px;
   border-radius: 50%;
   object-fit: cover;
-  border: 3px solid var(--mco, var(--brand-primary, #ff6600));
-  box-shadow: var(--shadow-hover, 0 4px 14px rgba(255, 102, 0, 0.3));
+  border: 3px solid var(--mco, var(--brand-primary, #104356));
+  box-shadow: var(--shadow-hover, 0 4px 14px rgba(56, 189, 248, 0.3));
 }
 
 .pf-id-name {

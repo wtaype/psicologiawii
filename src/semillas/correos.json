@@ -1,6 +1,10 @@
 {
   "titulo": "Centro de Correo & Notificaciones Clínicas",
   "subtitulo": "Gestor oficial institucional: Bandeja de entrada, enviados, borradores y plantillas con Live Preview de confirmaciones de citas, recibos de honorarios y talleres.",
+  "userId": "",
+  "email": "demo@consultorioamerica.com",
+  "creado": "2026-10-01T10:00:00Z",
+  "actualizado": "2026-10-23T20:00:00Z",
   "plantillas": [
     {
       "id": "cita",
@@ -8,7 +12,11 @@
       "icono": "fa-solid fa-calendar-check",
       "categoria": "cita",
       "asuntoDefecto": "🗓️ Tu cita psicológica está confirmada · Consultorio Psicológico América",
-      "descripcion": "Notificación inmediata al paciente con detalle de la especialidad, fecha, hora, modalidad y recomendaciones."
+      "descripcion": "Notificación inmediata al paciente con detalle de la especialidad, fecha, hora, modalidad y recomendaciones.",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "comprobante",
@@ -16,7 +24,11 @@
       "icono": "fa-solid fa-file-invoice-dollar",
       "categoria": "comprobante",
       "asuntoDefecto": "🧾 Tu Recibo por Honorarios Electrónico (RHE) · Lic. Sofia Reynaga",
-      "descripcion": "Envío formal de comprobante SUNAT con validez legal para fines personales o seguros de salud."
+      "descripcion": "Envío formal de comprobante SUNAT con validez legal para fines personales o seguros de salud.",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "taller",
@@ -24,7 +36,11 @@
       "icono": "fa-solid fa-people-group",
       "categoria": "taller",
       "asuntoDefecto": "🌱 Inscripción confirmada a Taller Vivencial · Consultorio Psicológico América",
-      "descripcion": "Detalles de participación en talleres grupales, dinámica vivencial y lista de materiales recomendados."
+      "descripcion": "Detalles de participación en talleres grupales, dinámica vivencial y lista de materiales recomendados.",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "libre",
@@ -32,7 +48,11 @@
       "icono": "fa-solid fa-envelope-open-text",
       "categoria": "libre",
       "asuntoDefecto": "🌸 Mensaje de Acompañamiento Terapéutico · Lic. Sofia Reynaga",
-      "descripcion": "Redacción libre con diseño institucional y pie de firma profesional de la especialista."
+      "descripcion": "Redacción libre con diseño institucional y pie de firma profesional de la especialista.",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     }
   ],
   "recibidos": [
@@ -45,7 +65,11 @@
       "fecha": "Hoy, 10:15 am",
       "leido": false,
       "tag": "Cita",
-      "mensaje": "Estimada Lic. Sofia, buenas tardes. Desearía consultar sobre la posibilidad de agendar una primera sesión de evaluación psicológica individual en horario de sábado por la mañana. Quedo atenta a los requisitos y disponibilidad. Muchas gracias."
+      "mensaje": "Estimada Lic. Sofia, buenas tardes. Desearía consultar sobre la posibilidad de agendar una primera sesión de evaluación psicológica individual en horario de sábado por la mañana. Quedo atenta a los requisitos y disponibilidad. Muchas gracias.",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-23T10:15:00Z",
+      "actualizado": "2026-10-23T10:15:00Z"
     },
     {
       "id": "rec_102",
@@ -56,7 +80,11 @@
       "fecha": "Ayer, 04:30 pm",
       "leido": true,
       "tag": "Taller",
-      "mensaje": "Buenas tardes Lic. Reynaga, le escribo para confirmar si aún quedan cupos para el taller de Inteligencia Emocional y Gestión del Estrés del próximo mes. Me gustaría participar. Saludos cordiales."
+      "mensaje": "Buenas tardes Lic. Reynaga, le escribo para confirmar si aún quedan cupos para el taller de Inteligencia Emocional y Gestión del Estrés del próximo mes. Me gustaría participar. Saludos cordiales.",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-22T16:30:00Z",
+      "actualizado": "2026-10-22T16:30:00Z"
     }
   ]
 }

@@ -15,7 +15,7 @@ export function generarPlantillaCronograma({
 } = {}) {
   const contenidoExtraHtml = mensajeMarkdown ? mdToEmailHtml(mensajeMarkdown) : '';
   const nombreEmpresa = negocio?.nombre || '';
-  const colorMarca = negocio?.colorPrimario || '#ff6600';
+  const colorMarca = negocio?.colorPrimario || '#104356';
 
   const contenidoHtml = `
     <h2 style="color: ${colorMarca}; margin-top: 0; font-size: 21px; font-weight: 700;">⏰ Recordatorio de Vencimiento SUNAT</h2>

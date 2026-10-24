@@ -44,42 +44,63 @@ export function normalizarProducto(p = {}) {
   const nombreEs = prod.nombre?.es || (typeof prod.nombre === 'string' ? prod.nombre : '');
   const idDefault = prod.id || (nombreEs ? generarSlug(nombreEs) : `prod-${Date.now()}`);
 
-  const tipo = (prod.tipo === 'asesoria' || prod.tipo === 'accesorio' || prod.tipoCategoria === 'accesorio') ? 'asesoria' : 'servicio';
-  const tipoCategoria = prod.tipoCategoria || (tipo === 'asesoria' ? 'accesorio' : 'gas');
+  const tipo = (prod.tipo === 'asesoria' || prod.tipo === 'taller' || prod.tipoCategoria === 'taller') ? 'taller' : 'psicologia';
+  const tipoCategoria = prod.tipoCategoria || (tipo === 'taller' ? 'taller' : 'psicologia');
 
-  // Garantías bilingües
+  // Garantías bilingües clínicas
   const garantiasEs = Array.isArray(prod.garantias?.es)
     ? prod.garantias.es
-    : (Array.isArray(prod.garantias) ? prod.garantias : (Array.isArray(prod.caracteristicas) ? prod.caracteristicas : []));
+    : (Array.isArray(prod.garantias) ? prod.garantias : [
+        'Espacio seguro y 100% confidencial',
+        'Herramientas prácticas para tu vida diaria',
+        'Acompañamiento cálido basado en evidencia científica'
+      ]);
   const garantiasEn = Array.isArray(prod.garantias?.en)
     ? prod.garantias.en
-    : (Array.isArray(prod.garantiasEn) ? prod.garantiasEn : (Array.isArray(prod.caracteristicasEn) ? prod.caracteristicasEn : []));
+    : (Array.isArray(prod.garantiasEn) ? prod.garantiasEn : [
+        'Safe and 100% confidential space',
+        'Practical tools for daily life',
+        'Compassionate evidence-based care'
+      ]);
 
-  // Público bilingüe (Dirigido a / Uso: Hogar, Ahorro, Negocio, Seguridad)
+  // Público bilingüe (Adolescentes, Adultos, Parejas)
   const publicoEs = typeof prod.publico === 'object' && prod.publico !== null
     ? (prod.publico.es || '')
-    : (prod.publico || prod.tipoUso || '');
+    : (prod.publico || prod.tipoUso || 'Adolescentes y Adultos');
   const publicoEn = typeof prod.publico === 'object' && prod.publico !== null
     ? (prod.publico.en || '')
-    : (prod.publicoEn || prod.tipoUsoEn || '');
+    : (prod.publicoEn || prod.tipoUsoEn || 'Teens and Adults');
 
-  // Badge bilingüe (Más Pedido, Económico, Comercial, Antifugas)
+  // Badge bilingüe (Más Solicitado, Serenidad, Terapia Destacada)
   const badgeEs = typeof prod.badge === 'object' && prod.badge !== null
     ? (prod.badge.es || '')
-    : (prod.badge || (prod.pin ? 'Más Pedido' : ''));
+    : (prod.badge || (prod.pin ? 'Más Solicitado' : ''));
   const badgeEn = typeof prod.badge === 'object' && prod.badge !== null
     ? (prod.badge.en || '')
-    : (prod.badgeEn || (prod.pin ? 'Most Popular' : ''));
+    : (prod.badgeEn || (prod.pin ? 'Most Requested' : ''));
 
-  const valvulaEs = typeof prod.valvula === 'object' && prod.valvula !== null
-    ? (prod.valvula.es || '')
-    : (prod.valvula || 'Click-On');
-  const valvulaEn = typeof prod.valvula === 'object' && prod.valvula !== null
-    ? (prod.valvula.en || '')
-    : (prod.valvulaEn || valvulaEs || 'Click-On');
+  // Sanitización estricta: NUNCA permitir remanentes como "Click-On", "Rosca", "10 kg" o "válvula"
+  let modalidadEs = prod.modalidad?.es || prod.modalidad || '';
+  if (!modalidadEs || typeof modalidadEs !== 'string' || /click|rosca|valvula|gas|cilindro/i.test(modalidadEs)) {
+    modalidadEs = 'Presencial y Online';
+  }
+  let modalidadEn = prod.modalidad?.en || prod.modalidadEn || '';
+  if (!modalidadEn || typeof modalidadEn !== 'string' || /click|screw|valve|gas/i.test(modalidadEn)) {
+    modalidadEn = modalidadEs === 'Presencial y Online' ? 'In-Person & Online' : modalidadEs;
+  }
+
+  let duracionEs = prod.duracion?.es || prod.duracion || '';
+  if (!duracionEs || typeof duracionEs !== 'string' || /kg|kilo|peso|regulador/i.test(duracionEs)) {
+    duracionEs = '45 - 60 min';
+  }
+  let duracionEn = prod.duracion?.en || prod.duracionEn || '';
+  if (!duracionEn || typeof duracionEn !== 'string' || /kg|kilo|weight/i.test(duracionEn)) {
+    duracionEn = String(duracionEs).includes('min') ? String(duracionEs).replace('min', 'mins') : duracionEs;
+  }
+  const enfoque = prod.enfoque || 'Cognitivo Conductual / ACT';
 
   const precio = Number(prod.precio ?? prod.precioPEN ?? prod.price ?? 0);
-  const stock = Number(prod.stock ?? (tipoCategoria === 'accesorio' ? 35 : 50));
+  const stock = Number(prod.stock ?? 50);
 
   return {
     id: String(idDefault),
@@ -91,16 +112,25 @@ export function normalizarProducto(p = {}) {
     pin: Boolean(prod.pin),
     orden: Number(prod.orden ?? 1),
     precio,
+    precioPEN: precio,
     stock,
-    imagen: String(prod.imagen || ''),
+    imagen: String(prod.imagen || '/imgwii/servicios/psicoterapia-individual.webp'),
     badgeIcon: String(prod.badgeIcon || 'fa-solid fa-star'),
-    tagClase: String(prod.tagClase || 'badge-fire'),
-    valvula: String(valvulaEs),
-    valvulaEn: String(valvulaEn),
-    peso: String(prod.peso || '10 kg'),
-    delivery: String(prod.delivery || 'Despacho en puerta'),
-    seguridad: String(prod.seguridad || 'Precinto verificado'),
+    tagClase: String(prod.tagClase || 'badge-serenidad'),
+    modalidad: {
+      es: String(modalidadEs),
+      en: String(modalidadEn)
+    },
+    duracion: {
+      es: String(duracionEs),
+      en: String(duracionEn)
+    },
+    enfoque: String(enfoque),
+    valvula: String(modalidadEs),
+    valvulaEn: String(modalidadEn),
+    peso: String(duracionEs),
     userId: String(prod.userId || ''),
+    email: String(prod.email || 'demo@consultorioamerica.com'),
     fecha: String(prod.fecha || new Date().toISOString().slice(0, 10).replace(/-/g, '/')),
     creado: prod.creado || null,
     actualizado: prod.actualizado || null,
@@ -161,33 +191,67 @@ export function getUsuarioActivo() {
   };
 }
 
+// Detector y purgador de datos residuales de proyectos anteriores (Gaswii, GLP, Click-On, 10 kg)
+function esRegistroResidualGaswii(p) {
+  if (!p) return true;
+  const str = JSON.stringify(p).toLowerCase();
+  return (
+    str.includes('click-on') || 
+    str.includes('click_on') || 
+    str.includes('10 kg') || 
+    str.includes('45 kg') || 
+    str.includes('regulador') || 
+    str.includes('solgas') || 
+    str.includes('balon') || 
+    str.includes('balón') ||
+    str.includes('glp') ||
+    str.includes('válvula')
+  );
+}
+
 /**
  * Obtiene los productos almacenados en memoria, localStorage o semilla (Prioridad 1° Local / Firestore, 2° Semilla)
  */
 export function obtenerProductosLocal() {
   if (_memoriaProductos && Array.isArray(_memoriaProductos) && _memoriaProductos.length > 0) {
-    return _memoriaProductos.sort((a, b) => (Number(a.orden) || 999) - (Number(b.orden) || 999));
+    if (_memoriaProductos.some(esRegistroResidualGaswii)) {
+      _memoriaProductos = null;
+    } else {
+      return _memoriaProductos.sort((a, b) => (Number(a.orden) || 999) - (Number(b.orden) || 999));
+    }
   }
 
   // 1. Revisar localStorage (wi_productos, wi_servicios o gaswii_productos)
   try {
     const local = getls(STORAGE_KEY) || getls(OLD_STORAGE_KEY) || getls('gaswii_productos');
     if (Array.isArray(local) && local.length > 0) {
-      _memoriaProductos = local
-        .map(normalizarProducto)
-        .sort((a, b) => (Number(a.orden) || 999) - (Number(b.orden) || 999));
-      savels(STORAGE_KEY, _memoriaProductos);
-      return _memoriaProductos;
+      if (local.some(esRegistroResidualGaswii)) {
+        // 🔥 PURGA AUTOMÁTICA DE DATOS RESIDUALES DE GAS/CLICK-ON EN EL NAVEGADOR
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+          localStorage.removeItem(OLD_STORAGE_KEY);
+          localStorage.removeItem('gaswii_productos');
+        } catch (e) {}
+        _memoriaProductos = null;
+      } else {
+        _memoriaProductos = local
+          .map(normalizarProducto)
+          .sort((a, b) => (Number(a.orden) || 999) - (Number(b.orden) || 999));
+        savels(STORAGE_KEY, _memoriaProductos);
+        return _memoriaProductos;
+      }
     }
   } catch (e) {}
 
-  // 2. Fallback a Semilla oficial
+  // 2. Fallback a Semilla oficial (100% clínica y sin residuos)
   const semillas = (Array.isArray(productosSemilla) ? productosSemilla : [])
     .map(normalizarProducto)
     .sort((a, b) => (Number(a.orden) || 999) - (Number(b.orden) || 999));
   _memoriaProductos = semillas;
   try {
     savels(STORAGE_KEY, semillas);
+    savels('wi_servicios', semillas);
+    localStorage.removeItem('gaswii_productos');
   } catch (e) {}
 
   return _memoriaProductos;
@@ -207,6 +271,7 @@ export function guardarProductosLocal(lista = []) {
     sessionStorage.removeItem('wi_sync_prods_ts');
   } catch (e) {}
   if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('psicologia:servicios-actualizado', { detail: normalizados }));
     window.dispatchEvent(new CustomEvent('wi:productos-actualizado', { detail: normalizados }));
     window.dispatchEvent(new CustomEvent('gaswii:productos-actualizado', { detail: normalizados }));
   }

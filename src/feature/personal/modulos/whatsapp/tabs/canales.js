@@ -13,9 +13,8 @@ import {
   obtenerSaludoHora 
 } from '../lib/formateador.js';
 import { datosNegocio } from '@/negocio.js';
-import productosSemilla from '@/semillas/productos.json';
 
-let canalActualId = 'canal_catalogo_producto';
+let canalActualId = 'canal_servicio_consulta';
 
 export function initCanalesTab() {
   const container = document.getElementById('waViewCanales');
@@ -35,21 +34,22 @@ export function initCanalesTab() {
   const chipsContainer = document.getElementById('waChipsContainer');
 
   // Cajas de variables de prueba en vivo
-  const testBoxCatalogo = document.getElementById('waTestVars_catalogo');
-  const testBoxModal = document.getElementById('waTestVars_modal');
+  const testBoxServicio = document.getElementById('waTestVars_servicio');
+  const testBoxTaller = document.getElementById('waTestVars_taller');
+  const testBoxCotizador = document.getElementById('waTestVars_cotizador');
   const testBoxGeneral = document.getElementById('waTestVars_general');
-  const testBoxCalculadora = document.getElementById('waTestVars_calculadora');
 
   // Inputs de simulación
   const simProd = document.getElementById('waSimProd');
   const simPrecio = document.getElementById('waSimPrecio');
-  const simCliente = document.getElementById('waSimCliente');
-  const simDireccion = document.getElementById('waSimDireccion');
-  const simDistrito = document.getElementById('waSimDistrito');
-  const simPago = document.getElementById('waSimPago');
-  const simKg = document.getElementById('waSimKg');
-  const simPersonas = document.getElementById('waSimPersonas');
-  const simDias = document.getElementById('waSimDias');
+  const simModalidad = document.getElementById('waSimModalidad');
+  const simTaller = document.getElementById('waSimTaller');
+  const simDuracion = document.getElementById('waSimDuracion');
+  const simPublico = document.getElementById('waSimPublico');
+  const simCotServicio = document.getElementById('waSimCotServicio');
+  const simCantidad = document.getElementById('waSimCantidad');
+  const simTotal = document.getElementById('waSimTotal');
+  const simCotModalidad = document.getElementById('waSimCotModalidad');
 
   // Smartphone Preview de Canales
   const chatBubble = document.getElementById('waChatBubbleCanales');
@@ -62,17 +62,17 @@ export function initCanalesTab() {
   function obtenerValoresSimulacion() {
     return {
       saludo: obtenerSaludoHora(),
-      producto: simProd?.value || datosNegocio?.productoPrincipal || productosSemilla?.[0]?.nombre || 'Producto Principal',
-      precio: simPrecio?.value || '0.00',
-      total: simPrecio?.value || '0.00',
-      cantidad: 1,
-      cliente: simCliente?.value?.trim() || 'Cliente Frecuente',
-      direccion: simDireccion?.value?.trim() || datosNegocio?.ubicacion?.direccion || '',
-      distrito: simDistrito?.value?.trim() || datosNegocio?.ubicacion?.distrito || '',
-      metodoPago: simPago?.value || 'Efectivo / Digital',
-      kg: simKg?.value || '10',
-      personas: simPersonas?.value || '3',
-      dias: simDias?.value || '30'
+      servicio: simProd?.value || 'Psicoterapia Individual (TCC)',
+      producto: simProd?.value || 'Psicoterapia Individual (TCC)',
+      precio: simPrecio?.value || '85.00',
+      modalidad: simModalidad?.value || 'Presencial / Online (Google Meet)',
+      taller: simTaller?.value || 'Taller de Inteligencia Emocional & Manejo del Estrés',
+      duracion: simDuracion?.value || '4 sesiones (Sábados 4:00 pm)',
+      publico: simPublico?.value || 'Jóvenes y Adultos',
+      cantidad: simCantidad?.value || '4 sesiones',
+      total: simTotal?.value || '320.00',
+      cliente: 'Consultante',
+      nombreNegocio: datosNegocio?.nombreCorto || datosNegocio?.nombre || 'Consultorio Psicológico América'
     };
   }
 
@@ -151,28 +151,34 @@ export function initCanalesTab() {
   function cargarCanal(canalId) {
     canalActualId = canalId;
     const col = obtenerColeccion();
-    const canal = col.canalesWeb?.find(c => c.id === canalId);
-    if (!canal) return;
+    let canal = col.canalesWeb?.find(c => c.id === canalId);
+    if (!canal) {
+      canal = col.canalesWeb?.[0];
+      if (canal) canalActualId = canal.id;
+      else return;
+    }
 
     // Actualizar selector visual
     container.querySelectorAll('.wa-channel-sel-card').forEach(card => {
-      card.classList.toggle('active', card.dataset.canalId === canalId);
+      card.classList.toggle('active', card.dataset.canalId === canalActualId);
     });
 
     if (canalTitle) canalTitle.textContent = canal.nombre;
-    if (canalBadge) canalBadge.textContent = canal.id === 'canal_catalogo_producto' ? 'Tarjetas de Balones' :
-      canal.id === 'canal_modal_express' ? 'Checkout en Modal' :
-      canal.id === 'canal_calculadora' ? 'Calculadora de Gas' : 'Header / Redes';
+    if (canalBadge) {
+      canalBadge.textContent = canal.id === 'canal_servicio_consulta' ? 'Especialidades Clínicas' :
+        canal.id === 'canal_taller_vivencial' ? 'Talleres Vivenciales' :
+        canal.id === 'canal_calculadora_cotizador' ? 'Cotizador Terapéutico' : 'Header / Redes';
+    }
     if (canalDesc) canalDesc.textContent = canal.descripcion;
     if (textarea) textarea.value = canal.formatoMensaje || '';
 
     // Mostrar/ocultar cajas de variables de prueba
-    if (testBoxCatalogo) testBoxCatalogo.style.display = canalId === 'canal_catalogo_producto' ? 'grid' : 'none';
-    if (testBoxModal) testBoxModal.style.display = canalId === 'canal_modal_express' ? 'grid' : 'none';
-    if (testBoxGeneral) testBoxGeneral.style.display = canalId === 'canal_general_header' ? 'grid' : 'none';
-    if (testBoxCalculadora) testBoxCalculadora.style.display = canalId === 'canal_calculadora' ? 'grid' : 'none';
+    if (testBoxServicio) testBoxServicio.style.display = canalActualId === 'canal_servicio_consulta' ? 'grid' : 'none';
+    if (testBoxTaller) testBoxTaller.style.display = canalActualId === 'canal_taller_vivencial' ? 'grid' : 'none';
+    if (testBoxCotizador) testBoxCotizador.style.display = canalActualId === 'canal_calculadora_cotizador' ? 'grid' : 'none';
+    if (testBoxGeneral) testBoxGeneral.style.display = canalActualId === 'canal_general_header' ? 'grid' : 'none';
 
-    renderizarChips(canal.variablesPermitidas || ['saludo', 'producto', 'precio']);
+    renderizarChips(canal.variablesPermitidas || ['servicio', 'precio', 'modalidad']);
     actualizarPreview();
   }
 
@@ -193,7 +199,20 @@ export function initCanalesTab() {
     actualizarPreview();
   });
 
-  const simInputs = [simProd, simPrecio, simCliente, simDireccion, simDistrito, simPago, simKg, simPersonas, simDias];
+  // Sincronizar precio automáticamente al cambiar de servicio
+  simProd?.addEventListener('change', () => {
+    const opt = simProd.options[simProd.selectedIndex];
+    const precio = opt?.getAttribute('data-precio');
+    if (precio && simPrecio) {
+      simPrecio.value = precio;
+    }
+    actualizarPreview();
+  });
+
+  const simInputs = [
+    simProd, simPrecio, simModalidad, simTaller, simDuracion, 
+    simPublico, simCotServicio, simCantidad, simTotal, simCotModalidad
+  ];
   simInputs.forEach(inp => {
     inp?.addEventListener('input', actualizarPreview);
     inp?.addEventListener('change', actualizarPreview);
@@ -202,7 +221,7 @@ export function initCanalesTab() {
   // 7. Botones de Disparo Directo en el Smartphone
   btnOpenWs?.addEventListener('click', () => {
     const col = obtenerColeccion();
-    const tel = inpTelOficial?.value?.trim() || col.telefonoOficial || '51936369384';
+    const tel = inpTelOficial?.value?.trim() || col.telefonoOficial || '51960332958';
     const vals = obtenerValoresSimulacion();
     const texto = formatearCanal(canalActualId, { ...vals, formatoMensaje: textarea?.value || '' });
     const url = construirUrlWhatsapp(texto, tel);
@@ -227,7 +246,7 @@ export function initCanalesTab() {
     const col = obtenerColeccion();
     if (inpTelOficial) {
       const clean = inpTelOficial.value.trim().replace(/\D/g, '');
-      col.telefonoOficial = clean.startsWith('51') ? clean : (clean.length === 9 ? `51${clean}` : '51936369384');
+      col.telefonoOficial = clean.startsWith('51') ? clean : (clean.length === 9 ? `51${clean}` : '51960332958');
     }
     const canal = col.canalesWeb?.find(c => c.id === canalActualId);
     if (canal && textarea) {
@@ -238,12 +257,12 @@ export function initCanalesTab() {
   });
 
   btnResetTop?.addEventListener('click', () => {
-    if (confirm('¿Deseas restaurar todos los canales web a los formatos originales de Gaswii?')) {
+    if (confirm('¿Deseas restaurar todos los canales web a los formatos originales del consultorio?')) {
       restaurarColeccion();
       cargarCanal(canalActualId);
       if (inpTelOficial) {
         const col = obtenerColeccion();
-        inpTelOficial.value = String(col.telefonoOficial || '51936369384').replace(/^51/, '');
+        inpTelOficial.value = String(col.telefonoOficial || '51960332958').replace(/^51/, '');
       }
       Notificacion('Canales web restaurados a valores por defecto.', 'info', 2200);
     }
@@ -262,7 +281,7 @@ export function initCanalesTab() {
   // Inicialización
   const col = obtenerColeccion();
   if (inpTelOficial) {
-    inpTelOficial.value = String(col.telefonoOficial || '51936369384').replace(/^51/, '');
+    inpTelOficial.value = String(col.telefonoOficial || '51960332958').replace(/^51/, '');
   }
   cargarCanal(canalActualId);
 }

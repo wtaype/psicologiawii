@@ -1,5 +1,5 @@
 // src/core/servicios/actualizar.js
-// 🚀 Motor Central de Actualización Universal Zero-Waste (Gaswii Web)
+// 🚀 Motor Central de Actualización Universal Zero-Waste (PsicologíaWii Web)
 // Centraliza: Local-First (0ms) + Dirty Checking + Firestore Granular + Smart Dock Cloudflare
 // Etapa 1: Visualización Inmediata en Vivo (0ms) en pantalla y clientes
 // Etapa 2: Smart Dock Cloudflare (Cooldown 30s + Pausa "Espérame" + Auto-deploy 5 min para cuidar cuota de 500 builds)

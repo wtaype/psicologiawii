@@ -101,9 +101,20 @@ export function inicializarProductos() {
       const nombreEn = typeof p.nombre === 'object' ? (p.nombre?.en || '') : (p.nombreEn || '');
       const precio = Number(p.precio ?? p.precioPEN ?? 0);
       const stock = Number(p.stock ?? (p.tipoCategoria === 'accesorio' ? 35 : 50));
-      const peso = p.peso || '10 kg';
-      const valvula = p.valvula || 'Click-On';
-      const uso = typeof p.publico === 'object' ? (p.publico?.es || 'Hogar') : (p.publico || p.tipoUso || 'Hogar');
+      let duracion = typeof p.duracion === 'object' ? (p.duracion?.es || '') : (p.duracion || '');
+      if (!duracion || /kg|kilo|peso|regulador/i.test(duracion)) {
+        duracion = '45 - 60 min';
+      }
+
+      let modalidad = typeof p.modalidad === 'object' ? (p.modalidad?.es || '') : (p.modalidad || '');
+      if (!modalidad || /click|rosca|valvula|gas/i.test(modalidad)) {
+        modalidad = 'Presencial y Online';
+      }
+
+      let publico = typeof p.publico === 'object' ? (p.publico?.es || '') : (p.publico || p.tipoUso || '');
+      if (!publico || /hogar|negocio/i.test(publico)) {
+        publico = 'Adolescentes y Adultos';
+      }
 
       return `
         <article class="pr-card ${esActivo ? '' : 'pausado'}" data-id="${p.id}">
@@ -131,12 +142,12 @@ export function inicializarProductos() {
             ${nombreEn ? `<div class="pr-card-sub-en">${nombreEn}</div>` : ''}
 
             <div class="pr-card-specs">
-              <span class="pr-spec-chip"><i class="fa-solid fa-scale-balanced"></i> ${peso}</span>
-              <span class="pr-spec-chip"><i class="fa-solid fa-tag"></i> ${valvula}</span>
-              <span class="pr-spec-chip"><i class="fa-solid fa-user-tag"></i> ${uso}</span>
+              <span class="pr-spec-chip"><i class="fa-solid fa-clock"></i> ${duracion}</span>
+              <span class="pr-spec-chip"><i class="fa-solid fa-location-dot"></i> ${modalidad}</span>
+              <span class="pr-spec-chip"><i class="fa-solid fa-user-tag"></i> ${publico}</span>
             </div>
 
-            <!-- Edición rápida de Precio y Stock con 0 ms Local-First -->
+            <!-- Edición rápida de Precio y Duración con 0 ms Local-First -->
             <div class="pr-quick-edit-row">
               <div class="pr-quick-field">
                 <span class="pr-quick-label">Precio Oficial</span>
@@ -153,16 +164,15 @@ export function inicializarProductos() {
                 </div>
               </div>
               <div class="pr-quick-field">
-                <span class="pr-quick-label">Stock</span>
+                <span class="pr-quick-label">Duración</span>
                 <div class="pr-quick-input-wrap">
-                  <span class="pr-quick-prefix"><i class="fa-solid fa-boxes-stacked" style="font-size: 0.75rem; color: var(--muted, #94a3b8);"></i></span>
+                  <span class="pr-quick-prefix"><i class="fa-solid fa-clock" style="font-size: 0.75rem; color: var(--muted, #94a3b8);"></i></span>
                   <input
                     type="text"
-                    inputmode="numeric"
-                    class="pr-quick-input pr-quick-stock"
+                    class="pr-quick-input pr-quick-duracion"
                     data-id="${p.id}"
-                    value="${stock}"
-                    title="Modificar stock disponible"
+                    value="${duracion}"
+                    title="Modificar duración oficial"
                   />
                 </div>
               </div>
@@ -278,6 +288,25 @@ export function inicializarProductos() {
           setTimeout(() => input.classList.remove('pr-input-saved'), 1000);
           await guardarProductoFirestore(item);
         }
+      } else if (e.target.classList.contains('pr-quick-duracion')) {
+        const id = e.target.getAttribute('data-id');
+        const nuevaDuracion = e.target.value.trim() || '45 - 60 min';
+        e.target.value = nuevaDuracion;
+        const lista = obtenerProductosLocal();
+        const item = lista.find(p => p.id === id);
+        if (item) {
+          _ultimoEditadoId = id;
+          _ultimoCampoEditado = 'duracion';
+          item.duracion = {
+            es: nuevaDuracion,
+            en: nuevaDuracion.includes('min') ? nuevaDuracion.replace('min', 'mins') : nuevaDuracion
+          };
+          item.peso = nuevaDuracion;
+          const input = e.target;
+          input.classList.add('pr-input-saved');
+          setTimeout(() => input.classList.remove('pr-input-saved'), 1000);
+          await guardarProductoFirestore(item);
+        }
       } else if (e.target.classList.contains('pr-quick-stock')) {
         const id = e.target.getAttribute('data-id');
         const nuevoStock = parseInt(String(e.target.value).replace(/[^0-9]/g, ''), 10) || 0;
@@ -298,7 +327,7 @@ export function inicializarProductos() {
 
     // Guardar al presionar Enter en inputs de edición rápida
     prGrid.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' && (e.target.classList.contains('pr-quick-precio') || e.target.classList.contains('pr-quick-stock'))) {
+      if (e.key === 'Enter' && (e.target.classList.contains('pr-quick-precio') || e.target.classList.contains('pr-quick-duracion') || e.target.classList.contains('pr-quick-stock'))) {
         e.preventDefault();
         e.target.blur();
       }
@@ -352,6 +381,14 @@ export function inicializarProductos() {
   });
 
   // Escuchar actualizaciones globales de productos en 0 ms
+  window.addEventListener('psicologia:servicios-actualizado', (e) => {
+    if (Array.isArray(e.detail) && e.detail.length > 0) {
+      renderizarConDebounce(e.detail);
+    } else {
+      renderizarConDebounce();
+    }
+  });
+
   window.addEventListener('wi:productos-actualizado', (e) => {
     if (Array.isArray(e.detail) && e.detail.length > 0) {
       renderizarConDebounce(e.detail);

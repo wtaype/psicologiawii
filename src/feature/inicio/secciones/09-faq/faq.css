@@ -1,5 +1,5 @@
 /* ==========================================================================
-   09-FAQ SECTION STYLES - SOLGAS SURQUILLO (GASWII)
+   09-FAQ SECTION STYLES - CONSULTORIO PSICOLÓGICO AMÉRICA
    Acordeón Interactivo y Tarjeta de Contacto sobre .pagewii (85vw)
    ========================================================================== */
 
@@ -84,7 +84,7 @@
 }
 
 .faq-details-card[open] {
-  border-color: rgba(255, 102, 0, 0.4);
+  border-color: var(--border-accent, rgba(56, 189, 248, 0.45));
 }
 
 .faq-summary {
@@ -106,7 +106,7 @@
 }
 
 .faq-summary i.fa-circle-check {
-  color: var(--primary, #ff6600);
+  color: var(--brand-sky, #38bdf8);
   margin-right: 0.5rem;
   font-size: 0.95rem;
 }
@@ -120,7 +120,7 @@
 
 .faq-details-card[open] .faq-icon-arrow {
   transform: rotate(180deg);
-  color: var(--primary, #ff6600);
+  color: var(--brand-sky, #38bdf8);
 }
 
 .faq-answer-content {
@@ -136,7 +136,7 @@
 /* Columna 2: Tarjeta Lateral Ejecutiva */
 .faq-side-card {
   background: var(--bg-surface-elevated, #101935);
-  border: 2px solid var(--border-accent, rgba(224, 86, 0, 0.4));
+  border: 2px solid var(--border-accent, rgba(56, 189, 248, 0.45));
   border-radius: 1.5vh;
   padding: 2vh 1.8vw;
   box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.35);
@@ -145,15 +145,17 @@
 
 .faq-media-box {
   border-radius: 1vh;
-  height: 28vh;
-  min-height: 220px;
+  height: 38vh;
+  min-height: 340px;
   margin-bottom: 2vh;
   position: relative;
   overflow: hidden;
+  background: var(--bg-surface, #07131b);
 }
 
 .faq-media-img {
   object-fit: cover;
+  object-position: center 25%;
   width: 100%;
   height: 100%;
   display: block;
@@ -163,8 +165,8 @@
   position: absolute;
   bottom: 0;
   inset-inline: 0;
-  padding: 1.2vh 1.2vw;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, transparent 100%);
+  padding: 1.4vh 1.2vw;
+  background: linear-gradient(to top, rgba(7, 19, 27, 0.92) 0%, rgba(7, 19, 27, 0.45) 60%, transparent 100%);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -173,9 +175,9 @@
 }
 
 .faq-badge-fire {
-  color: #ff7a1a;
-  background: rgba(255, 102, 0, 0.2);
-  border: 1px solid rgba(255, 102, 0, 0.4);
+  color: var(--brand-sky, #38bdf8);
+  background: rgba(2, 132, 199, 0.2);
+  border: 1px solid rgba(56, 189, 248, 0.4);
   font-size: 0.72rem;
   padding: 0.3vh 0.7vw;
   border-radius: 999px;
@@ -232,7 +234,7 @@
 }
 
 .faq-meta-item i {
-  color: var(--primary, #ff6600);
+  color: var(--brand-sky, #38bdf8);
 }
 
 .faq-side-actions {

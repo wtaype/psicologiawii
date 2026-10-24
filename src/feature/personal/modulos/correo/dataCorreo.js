@@ -362,18 +362,32 @@ export function obtenerMetadatosCorreo() {
 }
 
 /**
- * Obtiene la lista de correos recibidos (inbox)
+ * Obtiene la lista de correos recibidos (inbox) con normalización resiliente
  */
 export function obtenerRecibidos() {
+  let list = [];
   try {
     const local = getls(STORAGE_KEY_RECIBIDOS);
     if (Array.isArray(local) && local.length > 0) {
-      return local;
+      list = local;
     }
   } catch (e) {}
 
-  savels(STORAGE_KEY_RECIBIDOS, RECIBIDOS_DEMO);
-  return RECIBIDOS_DEMO;
+  if (!list || list.length === 0) {
+    list = RECIBIDOS_DEMO;
+    savels(STORAGE_KEY_RECIBIDOS, list);
+  }
+
+  return list.map(item => ({
+    ...item,
+    id: item.id || `rec_${Date.now()}`,
+    de: item.de || item.remitente?.desde || 'Consultante',
+    asunto: item.asunto || item.mensaje?.asunto || 'Consulta Psicológica',
+    tag: item.tag || item.categoria || item.mensaje?.tipo || 'Cita',
+    fecha: item.fecha || 'Reciente',
+    mensaje: typeof item.mensaje === 'string' ? item.mensaje : (item.mensaje?.resumen || item.mensaje?.html || item.resumen || ''),
+    leido: !!item.leido
+  }));
 }
 
 /**

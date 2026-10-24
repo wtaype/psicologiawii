@@ -15,6 +15,7 @@ const STORAGE_KEY = 'wi_whatsapp_config';
 
 /**
  * Obtiene la colección completa (Local-First desde localStorage con fallback a la semilla)
+ * Con purgado proactivo de registros residuales de gas/glp.
  */
 export function obtenerColeccion() {
   if (typeof window !== 'undefined') {
@@ -23,14 +24,26 @@ export function obtenerColeccion() {
       if (raw) {
         const parsed = JSON.parse(raw);
         if (parsed && Array.isArray(parsed.canalesWeb) && Array.isArray(parsed.plantillas)) {
-          return parsed;
+          const esResidualGas = parsed.canalesWeb.some(c => 
+            c.id === 'canal_catalogo_producto' || 
+            c.id === 'canal_modal_express' ||
+            /gas|balon|glp|click-on|balanza/i.test(c.formatoMensaje || '')
+          );
+          const tieneCanalesClinicos = parsed.canalesWeb.some(c => c.id === 'canal_servicio_consulta');
+          if (!esResidualGas && tieneCanalesClinicos) {
+            return parsed;
+          }
         }
       }
     } catch (e) {
       console.warn('Error leyendo wi_whatsapp_config de localStorage:', e);
     }
   }
-  return JSON.parse(JSON.stringify(whatsappSemilla));
+  const fresca = JSON.parse(JSON.stringify(whatsappSemilla));
+  if (typeof window !== 'undefined') {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(fresca)); } catch(e){}
+  }
+  return fresca;
 }
 
 /**
@@ -90,37 +103,45 @@ export function obtenerCanal(canalId) {
  * Formatea el mensaje dinámico para un canal web específico
  */
 export function formatearCanal(canalId, datos = {}) {
-  const canal = obtenerCanal(canalId);
-  const plantillaBase = canal?.formatoMensaje || '';
+  const canal = obtenerCanal(canalId) || (datos?.id ? datos : null);
+  const plantillaBase = datos.formatoMensaje || canal?.formatoMensaje || '';
 
-  const nombreNegocio = datosNegocio?.identidad?.nombreCorto || datosNegocio?.identidad?.nombre || datosNegocio?.nombre || '';
-  const prodDefault = datosNegocio?.productoPrincipal || productosSemilla?.[0]?.nombre || 'Producto Principal';
-  const dirDefault = datosNegocio?.ubicacion?.direccion || '';
-  const distDefault = datosNegocio?.ubicacion?.distrito || '';
+  const nombreNegocio = datosNegocio?.identidad?.nombreCorto || datosNegocio?.identidad?.nombre || datosNegocio?.nombre || 'Consultorio Psicológico América';
+  const prodObj = productosSemilla?.[0];
+  const prodDefault = typeof prodObj?.nombre === 'object' ? (prodObj.nombre.es || prodObj.nombre.en) : (prodObj?.nombre || 'Psicoterapia Individual (TCC)');
+  const precioDefault = prodObj?.precioPEN || prodObj?.precio || 85;
 
+  const extractString = (val, fallback = '') => {
+    if (!val) return fallback;
+    if (typeof val === 'object') return val.es || val.en || fallback;
+    return String(val);
+  };
+
+  const servicioNom = extractString(datos.servicio || datos.producto, prodDefault);
   const precioFormateado = datos.precio !== undefined && datos.precio !== null && !isNaN(Number(datos.precio))
     ? Number(datos.precio).toFixed(2)
-    : (datos.precio || '');
+    : (datos.precio || String(precioDefault));
   const totalFormateado = datos.total !== undefined && datos.total !== null && !isNaN(Number(datos.total))
     ? Number(datos.total).toFixed(2)
-    : (precioFormateado || '');
+    : (precioFormateado || '85.00');
 
   const merge = {
     saludo: obtenerSaludoHora(),
     nombreNegocio: nombreNegocio,
-    producto: datos.producto || prodDefault,
+    servicio: servicioNom,
+    producto: servicioNom,
+    taller: extractString(datos.taller, 'Taller de Inteligencia Emocional & Manejo del Estrés'),
+    duracion: extractString(datos.duracion, '4 sesiones (Sábados 4:00 pm)'),
+    publico: extractString(datos.publico, 'Jóvenes y Adultos'),
+    inversion: datos.inversion || precioFormateado,
+    modalidad: datos.modalidad || 'Presencial / Online (Google Meet)',
     precio: precioFormateado,
     total: totalFormateado,
-    cantidad: datos.cantidad || 1,
-    cliente: datos.cliente || '',
+    cantidad: datos.cantidad || 4,
+    cliente: datos.cliente || 'Consultante',
     celular: datos.celular || '',
-    direccion: datos.direccion || dirDefault,
-    distrito: datos.distrito || distDefault,
-    metodoPago: datos.metodoPago || 'Efectivo',
-    notas: datos.notas || '',
-    kg: datos.kg || '',
-    personas: datos.personas || '',
-    dias: datos.dias || '',
+    direccion: datos.direccion || datosNegocio?.ubicacion?.direccion || 'Av. Separadora Industrial',
+    distrito: datos.distrito || datosNegocio?.ubicacion?.distrito || 'Villa El Salvador',
     ...datos
   };
 
@@ -159,23 +180,35 @@ export function formatearPlantillaDespacho(plantillaId, datos = {}) {
   const tpl = obtenerPlantillaDespacho(plantillaId);
   if (!tpl) return '';
 
-  const nombreNegocio = datosNegocio?.identidad?.nombreCorto || datosNegocio?.identidad?.nombre || datosNegocio?.nombre || '';
-  const prodDefault = datosNegocio?.productoPrincipal || productosSemilla?.[0]?.nombre || 'Producto Principal';
-  const dirDefault = datosNegocio?.ubicacion?.direccion || '';
-  const distDefault = datosNegocio?.ubicacion?.distrito || '';
+  const nombreNegocio = datosNegocio?.identidad?.nombreCorto || datosNegocio?.identidad?.nombre || datosNegocio?.nombre || 'Consultorio Psicológico América';
+  const prodObj = productosSemilla?.[0];
+  const prodDefault = typeof prodObj?.nombre === 'object' ? (prodObj.nombre.es || prodObj.nombre.en) : (prodObj?.nombre || 'Psicoterapia Individual (TCC)');
+  const dirDefault = datosNegocio?.ubicacion?.direccion || 'Av. Separadora Industrial / Google Meet';
+  const distDefault = datosNegocio?.ubicacion?.distrito || 'Villa El Salvador';
+
+  const extractString = (val, fallback = '') => {
+    if (!val) return fallback;
+    if (typeof val === 'object') return val.es || val.en || fallback;
+    return String(val);
+  };
 
   const defaults = {
     saludo: obtenerSaludoHora(),
     nombreNegocio: nombreNegocio,
-    cliente: 'Estimado/a cliente',
-    pedidoId: '001',
-    producto: prodDefault,
-    cantidad: '1',
-    monto: '0.00',
-    precioMayorista: '0.00',
+    cliente: 'Camila Valdivia',
+    pedidoId: 'CITA-101',
+    codigo: 'CITA-101',
+    servicio: extractString(datos.servicio || datos.producto, prodDefault),
+    producto: extractString(datos.producto || datos.servicio, prodDefault),
+    monto: '85.00',
+    precio: '85.00',
+    fecha: 'Sábado 24 de Octubre',
+    hora: '10:00 am',
+    modalidad: 'Presencial / Online (Google Meet)',
+    lugar: dirDefault,
     direccion: dirDefault,
     distrito: distDefault,
-    tiempoEstimado: 'Atención Inmediata'
+    tiempoEstimado: 'Sesión de 50 minutos'
   };
 
   const merge = { ...defaults, ...datos };

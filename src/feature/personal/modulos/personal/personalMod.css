@@ -24,15 +24,15 @@
 
 .pe-kpi-card:hover {
   transform: translateY(-2px);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 .pe-kpi-icon-wrap {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
+  color: var(--mco, var(--brand-primary, #104356));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -96,7 +96,7 @@
 
 .pe-driver-card:hover {
   transform: translateY(-2px);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 .pe-driver-head {
@@ -131,7 +131,7 @@
 
 .pe-driver-cargo {
   font-size: 11.5px;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   font-weight: 600;
 }
 
@@ -231,8 +231,8 @@
 }
 
 .pe-btn-copy-email:hover {
-  border-color: var(--brand-primary, #ff6600);
-  color: var(--brand-primary, #ff6600);
+  border-color: var(--brand-primary, #104356);
+  color: var(--brand-primary, #104356);
   background: var(--surface, #1e293b);
 }
 
@@ -297,8 +297,8 @@
 
 .pe-btn-driver.toggle:hover,
 .pe-btn-driver.edit:hover {
-  border-color: var(--brand-primary, var(--mco, #ff6600));
-  color: var(--brand-primary, var(--mco, #ff6600));
+  border-color: var(--brand-primary, var(--mco, #104356));
+  color: var(--brand-primary, var(--mco, #104356));
 }
 
 /* ── MODAL OVERLAYS (ESTADO ACTIVO) ── */

@@ -7,7 +7,7 @@ import { datosNegocio, configSemilla } from '@/negocio.js';
 interface Props {
   cliente?: any;
 }
-const esServicios = configSemilla?.modeloNegocio === 'servicios_y_asesorias';
+const esServicios = true;
 const whatsappSede = datosNegocio.whatsappLimpio || datosNegocio.whatsapp || '';
 const telefonoSede = datosNegocio.telefonoLimpio || '';
 const telefonoMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono || '';
@@ -67,24 +67,12 @@ const msjWsSoporte = `Hola ${nombreEspecialista || nombreNegocio}, deseo realiza
             <i class="fa-solid fa-circle-question"></i> Motivo de tu Consulta:
           </label>
           <select class="sp-select" id="spSelectTipo">
-            {esServicios ? (
-              <>
-                <option value="declaracion">Consulta sobre Servicio / Asesoría Activa</option>
-                <option value="esquela">Atención Urgente / Incidencia Prioritaria</option>
-                <option value="honorarios">Coordinación de Citas o Sesión Virtual</option>
-                <option value="comprobante">Comprobante de Pago Electrónico (Boleta / Factura)</option>
-                <option value="cotizacion">Presupuesto para Servicio o Consultoría Mensual</option>
-                <option value="otro">Otra consulta o requerimiento</option>
-              </>
-            ) : (
-              <>
-                <option value="pedido">Consulta sobre Estado de Pedido / Delivery Express</option>
-                <option value="comprobante">Solicitud de Comprobante Electrónico (Boleta / Factura)</option>
-                <option value="instalacion">Soporte de Instalación Técnica / Válvula Click-On</option>
-                <option value="cotizacion">Cotización por Mayor / Balones 45kg para Empresas</option>
-                <option value="otro">Otra consulta o sugerencia</option>
-              </>
-            )}
+            <option value="cita">Consulta sobre Cita Psicológica o Reprogramación</option>
+            <option value="virtual">Coordinación de Sesión Virtual (Google Meet / Enlace)</option>
+            <option value="comprobante">Recibo por Honorarios Electrónico (RHE)</option>
+            <option value="taller">Inscripción o Información sobre Talleres Vivenciales</option>
+            <option value="evaluacion">Evaluaciones Psicológicas y Diagnóstico</option>
+            <option value="otro">Otra consulta o sugerencia</option>
           </select>
         </div>
 
@@ -130,50 +118,28 @@ const msjWsSoporte = `Hola ${nombreEspecialista || nombreNegocio}, deseo realiza
         <div class="sp-form-row" id="spCamposCotizacion" style="display:none;">
           <div class="sp-form-group">
             <label class="sp-form-label" for="spSelectTipoNegocio">
-              <i class="fa-solid fa-briefcase"></i> {esServicios ? 'Giro o Rubro Comercial:' : 'Giro de tu Negocio / Empresa:'}
+              <i class="fa-solid fa-brain"></i> Especialidad o Tipo de Consulta:
             </label>
             <select class="sp-select" id="spSelectTipoNegocio">
-              {esServicios ? (
-                <>
-                  <option value="comercio">Comercio / Venta de productos físicos</option>
-                  <option value="servicios">Servicios profesionales / Consultoría / Software</option>
-                  <option value="restaurante">Restaurante / Alimentos</option>
-                  <option value="construccion">Construcción / Contratista</option>
-                  <option value="otro">Otro rubro comercial</option>
-                </>
-              ) : (
-                <>
-                  <option value="restaurante">Restaurante / Pollería / Chifa</option>
-                  <option value="panaderia">Panadería / Pastelería</option>
-                  <option value="lavanderia">Lavandería / Tintorería Industrial</option>
-                  <option value="condominio">Condominio / Edificio Multifamiliar</option>
-                  <option value="comercio">Comercio / Pequeña Empresa</option>
-                  <option value="otro">Otro rubro comercial</option>
-                </>
-              )}
+              <option value="individual">Psicoterapia Individual (Adultos y Jóvenes)</option>
+              <option value="infantil">Terapia Infanto-Juvenil y Conductual</option>
+              <option value="pareja">Terapia de Pareja y Acompañamiento Familiar</option>
+              <option value="evaluacion">Evaluación Psicológica Integral / Informe Clínico</option>
+              <option value="taller">Taller Grupal o Institucional</option>
+              <option value="otro">Otro tipo de orientación</option>
             </select>
           </div>
 
           <div class="sp-form-group">
             <label class="sp-form-label" for="spSelectRegimenCotiz">
-              <i class="fa-solid fa-scale-balanced"></i> {esServicios ? 'Régimen Tributario Estimado:' : 'Consumo Mensual Estimado:'}
+              <i class="fa-solid fa-calendar-check"></i> Modalidad y Frecuencia Estimada:
             </label>
             <select class="sp-select" id="spSelectRegimenCotiz">
-              {esServicios ? (
-                <>
-                  <option value="mype">Régimen MYPE Tributario (RMT)</option>
-                  <option value="rer">Régimen Especial de Renta (RER)</option>
-                  <option value="general">Régimen General</option>
-                  <option value="persona">Persona Natural con Negocio (RUC 10)</option>
-                </>
-              ) : (
-                <>
-                  <option value="comercial_45kg_2_5">2 a 5 Balones de 45kg al mes</option>
-                  <option value="comercial_45kg_6_15">6 a 15 Balones de 45kg al mes</option>
-                  <option value="comercial_45kg_mas">Más de 15 Balones de 45kg al mes</option>
-                  <option value="hogar_10kg_flota">Flota de Balones 10kg (Comercio / Hogar)</option>
-                </>
-              )}
+              <option value="presencial">Presencial (Sedes Miraflores / Villa El Salvador)</option>
+              <option value="online">Virtual en Directo (Google Meet / Zoom)</option>
+              <option value="paquete_4">Paquete Mensual (4 sesiones continuas)</option>
+              <option value="paquete_8">Paquete de Acompañamiento (8 sesiones)</option>
+              <option value="evaluacion_integral">Proceso de Evaluación Diagnóstica</option>
             </select>
           </div>
         </div>
@@ -186,7 +152,7 @@ const msjWsSoporte = `Hola ${nombreEspecialista || nombreNegocio}, deseo realiza
           <textarea 
             class="sp-textarea" 
             id="spTextareaDetalle" 
-            placeholder={esServicios ? "Describe tu caso con total confianza: número de RUC, plazo límite o duda sobre tus impuestos..." : "Describe tu requerimiento o consulta con total confianza: dirección, horario preferente o especificaciones..."} 
+            placeholder="Describe tu motivo de consulta o requerimiento con total confianza: horarios preferidos, modalidad o cualquier detalle que desees compartir..." 
             required 
             style="min-height: 120px;"
           ></textarea>

@@ -137,8 +137,8 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; }
 }
 
 .ps-search-box input:focus {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  box-shadow: 0 0 0 3px var(--mbg, rgba(255, 102, 0, 0.15));
+  border-color: var(--mco, var(--primary, #104356));
+  box-shadow: 0 0 0 3px var(--mbg, undefined);
 }
 
 .ps-search-icon {
@@ -175,8 +175,8 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; }
 }
 
 .ps-btn-icon:hover {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--primary, #104356));
+  color: var(--mco, var(--primary, #104356));
   transform: translateY(-1px);
 }
 
@@ -196,7 +196,7 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; }
 }
 
 .ps-user-badge:hover, .ps-user-badge.open {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--primary, #104356));
   background: var(--surface);
 }
 
@@ -294,7 +294,7 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; }
 
 .ps-dropdown-item:hover {
   background: var(--raised);
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--primary, #104356));
 }
 
 .ps-dropdown-item i {
@@ -304,7 +304,7 @@ button, input, select, textarea { font-family: inherit; font-size: inherit; }
   color: var(--muted);
 }
 
-.ps-dropdown-item:hover i { color: var(--mco, var(--brand-primary, #ff6600)); }
+.ps-dropdown-item:hover i { color: var(--mco, var(--primary, #104356)); }
 .ps-dropdown-divider { height: 1px; background: var(--line); margin: 4px 0; }
 .ps-dropdown-item.danger { color: var(--red); }
 .ps-dropdown-item.danger i { color: var(--red); }
@@ -355,7 +355,7 @@ body.ps-locked-scroll {
 }
 
 .ps-sidebar-mobile-title i {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--primary, #104356));
 }
 
 .ps-btn-mobile-close {
@@ -428,7 +428,7 @@ html.is-collapsed .ps-sidebar {
 
 .ps-nav-item.active {
   background: var(--raised);
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--primary, #104356));
   font-weight: 600;
 }
 
@@ -440,8 +440,8 @@ html.is-collapsed .ps-sidebar {
   bottom: 6px;
   width: 3.5px;
   border-radius: 0 3px 3px 0;
-  background: var(--mco, var(--brand-primary, #ff6600));
-  box-shadow: 0 0 8px var(--mbg, rgba(255, 102, 0, 0.4));
+  background: var(--mco, var(--primary, #104356));
+  box-shadow: 0 0 8px var(--mbg, undefined);
 }
 
 .ps-nav-item i {
@@ -454,7 +454,7 @@ html.is-collapsed .ps-sidebar {
 }
 
 .ps-nav-item:hover i, .ps-nav-item.active i {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--primary, #104356));
 }
 
 .ps-nav-text {
@@ -466,7 +466,7 @@ html.is-collapsed .ps-sidebar {
 .ps-nav-badge {
   font-size: 10px;
   font-weight: 700;
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--primary, #104356));
   color: var(--white, #fff);
   padding: 1px 6px;
   border-radius: 10px;
@@ -628,13 +628,13 @@ html.is-collapsed .ps-main-shell {
 }
 
 .ps-btn-primary {
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--primary, #104356));
   color: var(--white, #fff);
 }
 
 .ps-btn-primary:hover {
   background: var(--hv, var(--brand-primary-hover, #ff771a));
-  box-shadow: var(--shadow-hover, 0 4px 14px rgba(255, 102, 0, 0.3));
+  box-shadow: var(--shadow-hover, 0 4px 14px undefined);
   transform: translateY(-1px);
 }
 
@@ -645,8 +645,8 @@ html.is-collapsed .ps-main-shell {
 }
 
 .ps-btn-secondary:hover {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--primary, #104356));
+  color: var(--mco, var(--primary, #104356));
 }
 
 .ps-btn-danger {
@@ -691,7 +691,7 @@ html.is-collapsed .ps-main-shell {
 
 .ps-placeholder-icon {
   font-size: 36px;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--primary, #104356));
   margin-bottom: 12px;
   display: inline-block;
 }
@@ -756,8 +756,8 @@ html.is-collapsed .ps-main-shell {
 .ps-input:focus,
 .ps-select:focus,
 .ps-textarea:focus {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  box-shadow: 0 0 0 3px var(--mbg, rgba(255, 102, 0, 0.12));
+  border-color: var(--mco, var(--primary, #104356));
+  box-shadow: 0 0 0 3px var(--mbg, undefined);
 }
 
 /* Selector de Etiquetas (Pills) */
@@ -785,9 +785,9 @@ html.is-collapsed .ps-main-shell {
 
 .ps-tag-pill:hover,
 .ps-tag-pill.active {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
-  background: var(--mbg, rgba(255, 102, 0, 0.08));
+  border-color: var(--mco, var(--primary, #104356));
+  color: var(--mco, var(--primary, #104356));
+  background: var(--mbg, undefined);
   font-weight: 600;
 }
 
@@ -795,8 +795,8 @@ html.is-collapsed .ps-main-shell {
 .sn-mt-10 { margin-top: 10px; }
 .sn-mt-14 { margin-top: 14px; }
 .sn-mb-14 { margin-bottom: 14px; }
-.sn-header-icon { color: var(--mco, var(--brand-primary, #ff6600)); margin-right: 8px; }
-.sn-title-icon { color: var(--mco, var(--brand-primary, #ff6600)); }
+.sn-header-icon { color: var(--mco, var(--primary, #104356)); margin-right: 8px; }
+.sn-title-icon { color: var(--mco, var(--primary, #104356)); }
 
 /* ============================================================
    RESPONSIVE DESIGN (TABLET & MOBILE)

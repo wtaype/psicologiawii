@@ -21,8 +21,10 @@ function resolverDestinoDashboard(smile) {
  * Actualiza la UI de autenticación en Header y MobileDrawer
  */
 export function actualizarAuthUi(smile) {
+  const u = (smile && typeof smile === 'object' && smile.value) ? smile.value : smile;
+  const authBox = document.getElementById('headerAuthContainer');
   const btnLogin = document.getElementById('headerBtnLogin');
-  const userPerfil = document.getElementById('headerUserPerfil');
+  const userContainer = document.getElementById('headerUserContainer') || document.getElementById('headerUserPerfil');
   const userAvatar = document.getElementById('headerUserAvatar');
   const userNombre = document.getElementById('headerUserNombre');
   const userBadge = document.getElementById('headerUserBadge');
@@ -35,35 +37,42 @@ export function actualizarAuthUi(smile) {
   const drawerUserBadge = document.getElementById('drawerUserBadge');
   const drawerPerfilLink = document.getElementById('drawerPerfilLink');
 
-  if (smile && (smile.uid || smile.nombre)) {
-    if (btnLogin) btnLogin.style.display = 'none';
-    if (userPerfil) userPerfil.style.display = 'flex';
+  if (u && (u.uid || u.nombre || u.usuario || u.email)) {
+    if (authBox) authBox.classList.add('has-user');
+    if (btnLogin) btnLogin.style.setProperty('display', 'none', 'important');
+    if (userContainer) userContainer.style.setProperty('display', 'inline-flex', 'important');
     if (drawerBtnLogin) drawerBtnLogin.style.display = 'none';
     if (drawerUserPerfil) drawerUserPerfil.style.display = 'flex';
 
-    const foto = smile.foto || `https://ui-avatars.com/api/?name=${encodeURIComponent(smile.nombre || smile.usuario || 'VIP')}&background=ff6a00&color=fff&rounded=true`;
+    const foto = (!u.avatar && !u.foto && !u.photoURL) || (u.avatar && u.avatar.includes('smile.webp')) 
+      ? '/smile.avif' 
+      : (u.avatar || u.foto || u.photoURL);
     if (userAvatar) userAvatar.src = foto;
     if (drawerUserAvatar) drawerUserAvatar.src = foto;
 
-    const nombreCorto = smile.nombre ? smile.nombre.split(' ')[0] : (smile.usuario || 'VIP');
+    const nombreCorto = (u.nombre || u.usuario || 'Usuario').trim().split(' ')[0];
     if (userNombre) userNombre.textContent = nombreCorto;
     if (drawerUserNombre) drawerUserNombre.textContent = nombreCorto;
 
-    const rol = smile.rol || 'cliente';
-    let rolBadge = smile.usuario ? `@${smile.usuario.replace('@', '')}` : 'VIP';
-    if (rol === 'gestor') rolBadge = 'Gestor';
-    else if (rol === 'admin') rolBadge = 'Admin';
-    else if (rol === 'personal') rolBadge = 'Personal';
+    const rol = (u.rol || 'cliente').toLowerCase();
+    const esStaff = ['personal', 'gestor', 'admin', 'colaborador'].includes(rol);
+    const rolBadge = esStaff ? (u.cargo || 'Especialista') : 'Paciente';
 
     if (userBadge) userBadge.textContent = rolBadge;
     if (drawerUserBadge) drawerUserBadge.textContent = rolBadge;
 
-    const rutaDestino = resolverDestinoDashboard(smile);
+    const rutaDestino = esStaff ? '/personal' : '/cliente';
     if (perfilLink) perfilLink.href = rutaDestino;
     if (drawerPerfilLink) drawerPerfilLink.href = rutaDestino;
   } else {
-    if (btnLogin) btnLogin.style.display = 'inline-flex';
-    if (userPerfil) userPerfil.style.display = 'none';
+    if (authBox) authBox.classList.remove('has-user');
+    if (btnLogin) {
+      btnLogin.style.removeProperty('display');
+      btnLogin.style.display = 'inline-flex';
+    }
+    if (userContainer) {
+      userContainer.style.setProperty('display', 'none', 'important');
+    }
     if (drawerBtnLogin) drawerBtnLogin.style.display = 'flex';
     if (drawerUserPerfil) drawerUserPerfil.style.display = 'none';
   }
@@ -163,70 +172,122 @@ function initSelectorTemas() {
 }
 
 /**
- * Calculadora de duración y rendimiento de balones de gas
+ * Cotizador Interactivo de Sesiones Terapéuticas (Psicología América)
  */
 function initCalculadora() {
-  const sPersonas = document.getElementById('calcPersonas');
-  const sHoras = document.getElementById('calcHoras');
-  const sTamano = document.getElementById('calcTamano');
-  const dPersonas = document.getElementById('personasDisplay');
-  const dHoras = document.getElementById('horasDisplay');
-  const dDias = document.getElementById('calcDiasResult');
+  const sServicio = document.getElementById('calcServicio');
+  const sModalidad = document.getElementById('calcModalidad');
+  const sSesiones = document.getElementById('calcSesiones');
+  const dSesiones = document.getElementById('sesionesDisplay');
+  const dTotal = document.getElementById('calcTotalResult');
+  const gSesiones = document.getElementById('groupSesiones');
+  const btnWs = document.getElementById('btnCalcWs');
 
-  if (!sPersonas || !sHoras || !sTamano || !dPersonas || !dHoras || !dDias) return;
-
-  const unidadPersonas = sPersonas.getAttribute('data-unidad') || 'personas';
-  const unidadHoras = sHoras.getAttribute('data-unidad') || 'horas / día';
-  const unidadDias = dDias.getAttribute('data-unidad') || 'días';
+  if (!sServicio || !sModalidad || !sSesiones || !dTotal || !btnWs) return;
 
   function recalcular() {
-    const p = parseFloat(sPersonas.value || '3');
-    const h = parseFloat(sHoras.value || '2.5');
-    const kg = parseFloat(sTamano.value || '10');
+    const selectedOpt = sServicio.options[sServicio.selectedIndex];
+    if (!selectedOpt) return;
 
-    dPersonas.textContent = `${p} ${unidadPersonas}`;
-    dHoras.textContent = `${h} ${unidadHoras}`;
+    const precioBase = parseFloat(selectedOpt.value || '85');
+    const esFijo = selectedOpt.getAttribute('data-fijo') === 'true';
+    const nombreServicio = selectedOpt.getAttribute('data-nombre') || selectedOpt.text;
+    const modalidad = sModalidad.options[sModalidad.selectedIndex]?.text || '';
+    const numSesiones = parseInt(sSesiones.value || '1', 10);
 
-    const consumoDiario = Math.max(0.1, (p * 0.04) + (h * 0.1));
-    const diasEstimados = Math.max(1, Math.round(kg / consumoDiario));
-
-    dDias.textContent = `${diasEstimados} ${unidadDias}`;
-
-    const btnWa = document.querySelector('.btn-calc-pedir');
-    if (btnWa) {
-      const numWa = btnWa.getAttribute('data-ws-num') || '51936369384';
-      const saludo = obtenerSaludoHora();
-      const msg = `${saludo}. He visto en su página web y calculé mi consumo: balón de ${kg} kg para ${p} personas (~${diasEstimados} días de rendimiento). Quisiera pedir a domicilio, ¿podrían confirmarme por favor? ¡Muchas gracias!`;
-      btnWa.href = `https://wa.me/${numWa}?text=${encodeURIComponent(msg)}`;
+    let total = 0;
+    if (esFijo) {
+      total = precioBase;
+      if (gSesiones) gSesiones.style.opacity = '0.35';
+    } else {
+      if (gSesiones) gSesiones.style.opacity = '1';
+      total = precioBase * numSesiones;
+      if (numSesiones >= 10 && precioBase === 85) {
+        total = 600.00; // Tarifa especial paquete 10 sesiones
+      }
     }
+
+    if (dSesiones) {
+      dSesiones.textContent = `${numSesiones} ${numSesiones === 1 ? 'sesión' : 'sesiones'}`;
+    }
+
+    dTotal.textContent = `S/ ${total.toFixed(2)}`;
+
+    const wsNum = btnWs.getAttribute('data-ws-num') || '51960332958';
+    const detalleSesiones = esFijo ? 'programa integral' : `${numSesiones} sesión(es)`;
+    const msg = `Hola Lic. Sofía, coticé en su web: ${nombreServicio} (${modalidad}) por ${detalleSesiones}. Total: S/ ${total.toFixed(2)}. Deseo agendar mi cita.`;
+    btnWs.href = `https://wa.me/${wsNum}?text=${encodeURIComponent(msg)}`;
   }
 
-  sPersonas.addEventListener('input', recalcular);
-  sHoras.addEventListener('input', recalcular);
-  sTamano.addEventListener('change', recalcular);
+  sServicio.addEventListener('change', recalcular);
+  sModalidad.addEventListener('change', recalcular);
+  sSesiones.addEventListener('input', recalcular);
+  recalcular();
 }
 
 /**
- * Reconciliación Local-First de productos con localStorage
+ * Reconciliación Reactiva Local-First de servicios con Firestore y localStorage (0ms latencia)
  */
-function initReconciliacionProductos() {
+export function reconciliarServiciosUI(lista = null) {
   try {
-    const local = localStorage.getItem('gaswii_productos');
-    if (!local) return;
-    const prods = JSON.parse(local);
+    let prods = lista;
+    if (!Array.isArray(prods) || prods.length === 0) {
+      const local = localStorage.getItem('wi_servicios') || localStorage.getItem('wi_productos') || localStorage.getItem('gaswii_productos');
+      if (!local) return;
+      const parsed = JSON.parse(local);
+      prods = Array.isArray(parsed) ? parsed : (parsed?.value || []);
+    }
     if (!Array.isArray(prods) || prods.length === 0) return;
 
     prods.forEach((p) => {
       const id = p.id || p.slug;
       if (!id) return;
-      const card = document.querySelector(`[data-prod-id="${id}"]`);
-      if (!card) return;
-      const precioEl = card.querySelector('.producto-card-precio');
-      if (precioEl && p.precioPEN !== undefined) {
-        precioEl.textContent = `S/ ${Number(p.precioPEN).toFixed(2)}`;
+      const precioNum = Number(p.precioPEN ?? p.precio ?? 0);
+      if (precioNum <= 0) return;
+
+      // 1. Tarjetas de Servicios y Talleres (span[data-price-id])
+      const priceEls = document.querySelectorAll(`[data-price-id="${id}"]`);
+      priceEls.forEach(el => {
+        el.textContent = precioNum.toFixed(2);
+      });
+
+      // 2. Opciones de Calculadora
+      const calcOpt = document.querySelector(`#calcServicio option[data-prod-id="${id}"], #calcServicio option[value="${id}"]`);
+      if (calcOpt) {
+        calcOpt.value = precioNum;
+        const nombre = calcOpt.getAttribute('data-nombre') || p.nombre?.es || p.nombre || '';
+        calcOpt.textContent = `${nombre} (S/ ${precioNum.toFixed(2)})`;
       }
     });
+
+    // Si la calculadora está presente, recalcular en vivo
+    const sServicio = document.getElementById('calcServicio');
+    if (sServicio) {
+      sServicio.dispatchEvent(new Event('change'));
+    }
   } catch (e) {}
+}
+
+function initReconciliacionProductos() {
+  reconciliarServiciosUI();
+
+  // Escuchar eventos en vivo emitidos desde /personal
+  window.addEventListener('psicologia:servicios-actualizado', (e) => {
+    reconciliarServiciosUI(e.detail);
+  });
+  window.addEventListener('wi:servicios-actualizado', (e) => {
+    reconciliarServiciosUI(e.detail);
+  });
+  window.addEventListener('wi:productos-actualizado', (e) => {
+    reconciliarServiciosUI(e.detail);
+  });
+
+  // Escuchar cambios entre pestañas del navegador (StorageEvent)
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'wi_servicios' || e.key === 'wi_productos') {
+      reconciliarServiciosUI();
+    }
+  });
 }
 
 /**

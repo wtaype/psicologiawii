@@ -21,8 +21,8 @@ const t = getBlogI18n(lang);
   <div id="comments_box" style="padding: 1vh 0; font-size: var(--fz_m1); color: var(--tx2); text-align: center;">
     <p style="margin-bottom: 2vh; line-height: 1.6;">
       {lang === 'en' 
-        ? 'Share your experience, ask a question about LPG safety, or leave a review for our technical team.' 
-        : 'Comparte tu experiencia, realiza una consulta sobre seguridad de gas GLP o deja un comentario para nuestro equipo técnico.'}
+        ? 'Share your thoughts, ask a question about psychological wellness, or leave a message for our clinical team.' 
+        : 'Comparte tu reflexión, realiza una consulta sobre bienestar emocional o déjanos un comentario con total confianza.'}
     </p>
     <div id="disqus_thread"></div>
   </div>
@@ -66,7 +66,8 @@ const t = getBlogI18n(lang);
       } else {
         win.disqus_config = dCfg;
         const script = document.createElement('script');
-        script.src = 'https://solgassurquillo.disqus.com/embed.js';
+        const shortname = import.meta.env.PUBLIC_DISQUS_SHORTNAME || 'psicologiaamerica';
+        script.src = `https://${shortname}.disqus.com/embed.js`;
         script.setAttribute('data-timestamp', String(+new Date()));
         script.async = true;
         document.body.appendChild(script);

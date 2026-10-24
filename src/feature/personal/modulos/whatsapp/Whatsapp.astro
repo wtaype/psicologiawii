@@ -24,10 +24,20 @@ const subNegocio = datosNegocio.identidad?.especialista ? `${datosNegocio.identi
 const avatarNegocio = datosNegocio.identidad?.logo || datosNegocio.logo || '/smile.avif';
 const telefonoOficial = whatsappSemilla?.telefonoOficial || datosNegocio.whatsapp || '';
 const telefonoLimpio = String(telefonoOficial).replace(/^51/, '');
-const prodPrincipal = datosNegocio.productoPrincipal || productosSemilla?.[0]?.nombre || 'Producto Principal';
 const dirNegocio = datosNegocio.ubicacion?.direccion || '';
 const distNegocio = datosNegocio.ubicacion?.distrito || '';
-const listaProductos = Array.isArray(productosSemilla) && productosSemilla.length > 0 ? productosSemilla : [{ nombre: prodPrincipal, precio: 0 }];
+
+const obtenerNombre = (p: any) => typeof p?.nombre === 'object' ? (p.nombre.es || p.nombre.en || '') : (p?.nombre || '');
+const obtenerPrecio = (p: any) => Number(p?.precioPEN || p?.precio || 85);
+
+const listaProductos = Array.isArray(productosSemilla) && productosSemilla.length > 0 
+  ? productosSemilla.map(p => ({
+      nombre: obtenerNombre(p),
+      precio: obtenerPrecio(p)
+    })).filter(p => Boolean(p.nombre))
+  : [{ nombre: 'Psicoterapia Individual (TCC)', precio: 85 }];
+
+const prodPrincipal = listaProductos[0]?.nombre || 'Psicoterapia Individual (TCC)';
 ---
 
 <!-- Inyección modular de estilos con set:html (0 CSS generado en compilación) -->
@@ -73,20 +83,28 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
           <!-- Selector de Canales Web (Tarjetas idénticas a Plantillas) -->
           <div class="wa-channel-selector-grid">
             
-            <div class="wa-channel-sel-card active" data-canal-id="canal_catalogo_producto">
+            <div class="wa-channel-sel-card active" data-canal-id="canal_servicio_consulta">
               <div class="wa-channel-sel-head">
-                <i class="fa-solid fa-boxes-stacked"></i>
-                <span>Catálogo de Productos</span>
+                <i class="fa-solid fa-brain"></i>
+                <span>Agendar Especialidad</span>
               </div>
               <div class="wa-channel-sel-desc">Botón "Agendar por WhatsApp" en tarjetas de servicios clínicos.</div>
             </div>
 
-            <div class="wa-channel-sel-card" data-canal-id="canal_modal_express">
+            <div class="wa-channel-sel-card" data-canal-id="canal_taller_vivencial">
               <div class="wa-channel-sel-head">
-                <i class="fa-solid fa-cart-shopping"></i>
-                <span>Modal de Pedido Express</span>
+                <i class="fa-solid fa-people-group"></i>
+                <span>Inscripción a Taller</span>
               </div>
-              <div class="wa-channel-sel-desc">Checkout emergente de compra rápida (Header y Hero).</div>
+              <div class="wa-channel-sel-desc">Botón de reserva en talleres vivenciales de salud mental.</div>
+            </div>
+
+            <div class="wa-channel-sel-card" data-canal-id="canal_calculadora_cotizador">
+              <div class="wa-channel-sel-head">
+                <i class="fa-solid fa-calculator"></i>
+                <span>Cotizador Terapéutico</span>
+              </div>
+              <div class="wa-channel-sel-desc">Mensaje generado al cotizar paquetes de sesiones en la web.</div>
             </div>
 
             <div class="wa-channel-sel-card" data-canal-id="canal_general_header">
@@ -94,15 +112,7 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
                 <i class="fa-solid fa-comments"></i>
                 <span>Consulta General</span>
               </div>
-              <div class="wa-channel-sel-desc">Saludo general para consultas antes de comprar.</div>
-            </div>
-
-            <div class="wa-channel-sel-card" data-canal-id="canal_calculadora">
-              <div class="wa-channel-sel-head">
-                <i class="fa-solid fa-calculator"></i>
-                <span>Calculadora de Rendimiento</span>
-              </div>
-              <div class="wa-channel-sel-desc">Botón "Pedir Gas Calculado" con estimación de días.</div>
+              <div class="wa-channel-sel-desc">Saludo general para consultas desde el Header, Hero o redes.</div>
             </div>
 
           </div>
@@ -112,12 +122,12 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
             
             <div class="wa-channel-header-info">
               <div>
-                <strong id="waCanalTitle" style="font-size: 1.05rem; color: var(--tx);">Catálogo de Productos</strong>
+                <strong id="waCanalTitle" style="font-size: 1.05rem; color: var(--tx);">Agendar Especialidad Clínica</strong>
                 <p id="waCanalDesc" style="margin: 2px 0 0; font-size: 0.84rem; color: var(--tx2);">
-                  Mensaje generado al hacer clic en 'Pedir por WhatsApp' en cualquier producto del catálogo.
+                  Mensaje generado al hacer clic en 'Agendar Sesión' en cualquier especialidad.
                 </p>
               </div>
-              <span class="wa-channel-badge-pill" id="waCanalBadge">Catálogo</span>
+              <span class="wa-channel-badge-pill" id="waCanalBadge">Especialidades Clínicas</span>
             </div>
 
             <!-- Chips de Etiquetas Dinámicas -->
@@ -144,67 +154,70 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
                 <i class="fa-solid fa-sliders"></i> Variables de Prueba en Vivo (Simulador)
               </div>
 
-              <!-- Simulación para Catálogo -->
-              <div class="wa-test-form-row" id="waTestVars_catalogo">
+              <!-- Simulación para Servicio Clínico -->
+              <div class="wa-test-form-row" id="waTestVars_servicio">
                 <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimProd">{term.producto || 'Producto de Prueba'}</label>
+                  <label class="wa-field-label" for="waSimProd">Especialidad de Prueba</label>
                   <select id="waSimProd" class="wa-field-select">
                     {listaProductos.map((p) => (
-                      <option value={p.nombre}>{p.nombre}</option>
+                      <option value={p.nombre} data-precio={p.precio.toFixed(2)}>{p.nombre}</option>
                     ))}
                   </select>
                 </div>
                 <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimPrecio">Precio Simulado (S/)</label>
-                  <input type="text" id="waSimPrecio" class="wa-field-input" value={String(listaProductos[0]?.precio !== undefined ? Number(listaProductos[0]?.precio).toFixed(2) : '0.00')} />
+                  <label class="wa-field-label" for="waSimPrecio">Inversión Sesión (S/)</label>
+                  <input type="text" id="waSimPrecio" class="wa-field-input" value={listaProductos[0]?.precio?.toFixed(2) || '85.00'} />
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimModalidad">Modalidad</label>
+                  <select id="waSimModalidad" class="wa-field-select">
+                    <option value="Presencial en Consultorio">Presencial en Consultorio</option>
+                    <option value="Online (Google Meet)">Online (Google Meet)</option>
+                  </select>
                 </div>
               </div>
 
-              <!-- Simulación para Modal Express -->
-              <div class="wa-test-form-row" id="waTestVars_modal" style="display: none;">
+              <!-- Simulación para Taller Vivencial -->
+              <div class="wa-test-form-row" id="waTestVars_taller" style="display: none;">
                 <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimCliente">Cliente</label>
-                  <input type="text" id="waSimCliente" class="wa-field-input" value="Cliente Frecuente" />
+                  <label class="wa-field-label" for="waSimTaller">Nombre del Taller</label>
+                  <input type="text" id="waSimTaller" class="wa-field-input" value="Taller de Inteligencia Emocional & Manejo del Estrés" />
                 </div>
                 <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimDireccion">Dirección</label>
-                  <input type="text" id="waSimDireccion" class="wa-field-input" value={dirNegocio} placeholder="Dirección sede" />
+                  <label class="wa-field-label" for="waSimDuracion">Horario / Fechas</label>
+                  <input type="text" id="waSimDuracion" class="wa-field-input" value="Sábados 4:00 pm (4 sesiones)" />
                 </div>
                 <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimDistrito">Distrito</label>
-                  <input type="text" id="waSimDistrito" class="wa-field-input" value={distNegocio} placeholder="Distrito" />
+                  <label class="wa-field-label" for="waSimPublico">Público</label>
+                  <input type="text" id="waSimPublico" class="wa-field-input" value="Jóvenes y Adultos" />
+                </div>
+              </div>
+
+              <!-- Simulación para Cotizador Terapéutico -->
+              <div class="wa-test-form-row" id="waTestVars_cotizador" style="display: none;">
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimCotServicio">Servicio</label>
+                  <input type="text" id="waSimCotServicio" class="wa-field-input" value="Psicoterapia Individual (TCC)" />
                 </div>
                 <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimPago">Medio de Pago</label>
-                  <select id="waSimPago" class="wa-field-select">
-                    <option value="Efectivo (Pago contra entrega)">Efectivo</option>
-                    <option value="Yape / Plin">Yape / Plin</option>
-                    <option value="Tarjeta POS (Visa / Mastercard)">Tarjeta POS</option>
-                  </select>
+                  <label class="wa-field-label" for="waSimCantidad">Sesiones</label>
+                  <input type="text" id="waSimCantidad" class="wa-field-input" value="4 sesiones" />
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimTotal">Total Cotizado (S/)</label>
+                  <input type="text" id="waSimTotal" class="wa-field-input" value="320.00" />
+                </div>
+                <div class="wa-field-group">
+                  <label class="wa-field-label" for="waSimCotModalidad">Modalidad</label>
+                  <input type="text" id="waSimCotModalidad" class="wa-field-input" value="Presencial / Online" />
                 </div>
               </div>
 
               <!-- Simulación para General Header -->
               <div class="wa-test-form-row" id="waTestVars_general" style="display: none;">
                 <div class="wa-field-group">
-                  <label class="wa-field-label">Nombre del Negocio</label>
-                  <input type="text" class="wa-field-input" value={nombreNegocio} readonly />
-                </div>
-              </div>
-
-              <!-- Simulación para Calculadora -->
-              <div class="wa-test-form-row" id="waTestVars_calculadora" style="display: none;">
-                <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimKg">Unidad / Capacidad</label>
-                  <input type="text" id="waSimKg" class="wa-field-input" value="10" />
-                </div>
-                <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimPersonas">Personas</label>
-                  <input type="text" id="waSimPersonas" class="wa-field-input" value="3" />
-                </div>
-                <div class="wa-field-group">
-                  <label class="wa-field-label" for="waSimDias">Días Estimados</label>
-                  <input type="text" id="waSimDias" class="wa-field-input" value="30" />
+                  <label class="wa-field-label">Identidad Institucional</label>
+                  <input type="text" class="wa-field-input" value={`${nombreNegocio} · ${subNegocio}`} readonly />
                 </div>
               </div>
             </div>
@@ -216,8 +229,8 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
             <div class="wa-tel-meta">
               <i class="fa-solid fa-headset"></i>
               <div>
-                <h5>Número de WhatsApp para Recepción de Pedidos</h5>
-                <p>Este número recibe todos los pedidos y consultas disparados desde la página web.</p>
+                <h5>Número de WhatsApp para Recepción de Citas y Consultas</h5>
+                <p>Este número recibe las consultas y solicitudes de citas enviadas desde la página web.</p>
               </div>
             </div>
 
@@ -228,7 +241,7 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
                 id="waInputOficial" 
                 class="wa-tel-input" 
                 value={telefonoLimpio} 
-                placeholder="936369384" 
+                placeholder="960332958" 
                 maxlength="9"
               />
             </div>
@@ -305,7 +318,7 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
     </div>
 
     <!-- ═══════════════════════════════════════════════════════════════ -->
-    <!-- 3. PESTAÑA 2: PLANTILLAS OFICIALES & SANDBOX (DESPACHO GLP)      -->
+    <!-- 3. PESTAÑA 2: PLANTILLAS OFICIALES & SANDBOX (CITAS CLÍNICAS)   -->
     <!-- ═══════════════════════════════════════════════════════════════ -->
     <div class="wa-tab-view hidden" id="waViewPlantillas">
       <div class="wa-plantillas-shell">
@@ -313,39 +326,39 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
         <!-- Columna Izquierda (60%): Selector de Plantillas y Variables Operativas -->
         <div class="wa-ops-card">
           <h2 class="wa-ops-title">
-            <i class="fa-solid fa-layer-group"></i> 1. Selecciona la Plantilla de Despacho
+            <i class="fa-solid fa-layer-group"></i> 1. Selecciona la Plantilla de Notificación
           </h2>
 
-          <!-- Grid dinámico de las 5 plantillas -->
+          <!-- Grid dinámico de las plantillas -->
           <div class="wa-tpls-grid" id="waTemplatesGrid"></div>
 
-          <!-- Variables Operativas de Gaswii (Cero SUNAT) -->
+          <!-- Variables Operativas de Citas Clínicas -->
           <div class="wa-vars-box">
             <div class="wa-vars-header">
-              <i class="fa-solid fa-sliders"></i> 2. Variables Operativas de Gas
+              <i class="fa-solid fa-sliders"></i> 2. Variables de Atención Terapéutica
             </div>
 
             <div class="wa-form-row">
               <div class="wa-field-group">
-                <label class="wa-field-label" for="waInpCliente">Cliente / Contacto</label>
-                <input type="text" id="waInpCliente" class="wa-field-input" value="Familia Gonzales" />
+                <label class="wa-field-label" for="waInpCliente">Paciente / Consultante</label>
+                <input type="text" id="waInpCliente" class="wa-field-input" value="Camila Valdivia" />
               </div>
               <div class="wa-field-group">
                 <label class="wa-field-label" for="waInpCelular">Celular WhatsApp Destino</label>
-                <input type="tel" id="waInpCelular" class="wa-field-input" placeholder="51900000000" />
+                <input type="tel" id="waInpCelular" class="wa-field-input" placeholder="51960332958" />
               </div>
             </div>
 
             <div class="wa-form-row">
               <div class="wa-field-group">
-                <label class="wa-field-label" for="waInpPedidoId">Código de Pedido</label>
-                <input type="text" id="waInpPedidoId" class="wa-field-input" value="001" />
+                <label class="wa-field-label" for="waInpPedidoId">Código de Cita</label>
+                <input type="text" id="waInpPedidoId" class="wa-field-input" value="CITA-101" />
               </div>
               <div class="wa-field-group">
-                <label class="wa-field-label" for="waInpProducto">{term.producto || 'Producto'}</label>
+                <label class="wa-field-label" for="waInpProducto">Especialidad / Taller</label>
                 <select id="waInpProducto" class="wa-field-select">
                   {listaProductos.map((p) => (
-                    <option value={p.nombre}>{p.nombre}</option>
+                    <option value={p.nombre} data-precio={p.precio.toFixed(2)}>{p.nombre}</option>
                   ))}
                 </select>
               </div>
@@ -353,23 +366,23 @@ const listaProductos = Array.isArray(productosSemilla) && productosSemilla.lengt
 
             <div class="wa-form-row">
               <div class="wa-field-group">
-                <label class="wa-field-label" for="waInpMonto">Monto Total (S/)</label>
-                <input type="text" id="waInpMonto" class="wa-field-input" value={String(listaProductos[0]?.precio !== undefined ? Number(listaProductos[0]?.precio).toFixed(2) : '0.00')} />
+                <label class="wa-field-label" for="waInpMonto">Inversión Sesión (S/)</label>
+                <input type="text" id="waInpMonto" class="wa-field-input" value={String(listaProductos[0]?.precio !== undefined ? Number(listaProductos[0]?.precio).toFixed(2) : '85.00')} />
               </div>
               <div class="wa-field-group">
-                <label class="wa-field-label" for="waInpEta">Tiempo Estimado (ETA)</label>
-                <input type="text" id="waInpEta" class="wa-field-input" value="Atención Inmediata" />
+                <label class="wa-field-label" for="waInpEta">Horario de Sesión</label>
+                <input type="text" id="waInpEta" class="wa-field-input" value="10:00 am (50 min)" />
               </div>
             </div>
 
             <div class="wa-form-row">
               <div class="wa-field-group">
-                <label class="wa-field-label" for="waInpDireccion">Dirección de Entrega</label>
-                <input type="text" id="waInpDireccion" class="wa-field-input" value={dirNegocio} placeholder="Dirección de entrega" />
+                <label class="wa-field-label" for="waInpDireccion">Sede / Modalidad</label>
+                <input type="text" id="waInpDireccion" class="wa-field-input" value={dirNegocio || 'Sede Villa El Salvador / Google Meet'} placeholder="Sede o modalidad" />
               </div>
               <div class="wa-field-group">
-                <label class="wa-field-label" for="waInpDistrito">Distrito</label>
-                <input type="text" id="waInpDistrito" class="wa-field-input" value={distNegocio} placeholder="Distrito" />
+                <label class="wa-field-label" for="waInpDistrito">Distrito / Plataforma</label>
+                <input type="text" id="waInpDistrito" class="wa-field-input" value={distNegocio || 'Villa El Salvador'} placeholder="Distrito o enlace" />
               </div>
             </div>
           </div>

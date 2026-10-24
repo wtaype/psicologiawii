@@ -10,11 +10,11 @@
   left: 0;
   height: 0.25vh;
   min-height: 2px;
-  background: var(--brand-primary, var(--mco, #ff6600));
+  background: var(--brand-primary, var(--mco, #104356));
   z-index: 99999;
   width: 0%;
   transition: width 0.1s ease-out;
-  box-shadow: 0 -1px 6px rgba(255, 102, 0, 0.4);
+  box-shadow: 0 -1px 6px rgba(56, 189, 248, 0.4);
 }
 
 /* ── CONTENEDOR GENERAL (.page-container 85VW ESTILO GASWII) ── */
@@ -105,8 +105,8 @@
 }
 
 .po_back:hover {
-  background: var(--brand-primary, #ff6600);
-  border-color: var(--brand-primary, #ff6600);
+  background: var(--brand-primary, #104356);
+  border-color: var(--brand-primary, #104356);
 }
 
 .po_hero_badges {
@@ -131,7 +131,7 @@
 }
 
 .po_dest_badge {
-  background: var(--brand-primary, #ff6600);
+  background: var(--brand-primary, #104356);
   color: #ffffff;
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: 11.5px;
@@ -142,7 +142,7 @@
   align-items: center;
   gap: 6px;
   text-decoration: none;
-  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.35);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
   transition: all 0.2s ease;
 }
 
@@ -853,7 +853,7 @@
 }
 
 .po_side_title i {
-  color: var(--brand-primary, #ff6600);
+  color: var(--brand-primary, #104356);
 }
 
 /* Ficha del Autor */
@@ -916,7 +916,7 @@
 }
 
 .po_rel_card:hover {
-  border-color: var(--brand-primary, #ff6600);
+  border-color: var(--brand-primary, #104356);
   transform: translateX(3px);
 }
 
@@ -945,7 +945,7 @@
   display: block;
   font-size: 10.5px;
   font-weight: 700;
-  color: var(--brand-primary, #ff6600);
+  color: var(--brand-primary, #104356);
   margin-bottom: 2px;
 }
 
@@ -969,8 +969,8 @@
 
 /* Banner Promocional */
 .po_side_banner {
-  background: linear-gradient(135deg, rgba(255, 102, 0, 0.12), rgba(255, 152, 0, 0.05));
-  border: 1px dashed var(--brand-primary, #ff6600);
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(255, 152, 0, 0.05));
+  border: 1px dashed var(--brand-primary, #104356);
   border-radius: 1.5vh;
   padding: 22px 18px;
   text-align: center;
@@ -978,7 +978,7 @@
 
 .po_side_banner_icon {
   font-size: 2rem;
-  color: var(--brand-primary, #ff6600);
+  color: var(--brand-primary, #104356);
   margin-bottom: 10px;
 }
 
@@ -998,7 +998,7 @@
 }
 
 .po_side_banner_btn {
-  background: var(--brand-primary, #ff6600);
+  background: var(--brand-primary, #104356);
   color: #fff;
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: 12px;

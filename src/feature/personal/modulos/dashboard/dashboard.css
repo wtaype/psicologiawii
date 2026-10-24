@@ -163,7 +163,7 @@
   gap: 6px;
   font-size: 11px;
   font-weight: 700;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: 4px;
@@ -215,7 +215,7 @@
 
 .db-tool-card:hover {
   transform: translateY(-4px);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
   box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.18);
 }
 
@@ -319,7 +319,7 @@
 .db-tool-meta-item i {
   width: 14px;
   margin-top: 2px;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   flex-shrink: 0;
 }
 
@@ -334,7 +334,7 @@
 .db-tool-action-link {
   font-size: 12px;
   font-weight: 600;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -398,8 +398,8 @@
 }
 
 .db-quicklink-btn:hover {
-  background: var(--mbg, rgba(255, 102, 0, 0.08));
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.08));
+  border-color: var(--mco, var(--brand-primary, #104356));
   transform: translateY(-2px);
 }
 

@@ -173,14 +173,17 @@ export function inicializarModalProducto() {
       const stockNum = parseInt(String(prFormStock?.value || '').replace(/[^0-9]/g, ''), 10) || 50;
       const ordenNum = parseInt(String(prFormOrden?.value || '').replace(/[^0-9]/g, ''), 10) || 1;
 
-      const valvulaEs = (prFormValvulaEs?.value || '').trim() || 'Click-On';
-      const valvulaEn = (prFormValvulaEn?.value || '').trim() || valvulaEs;
+      const modalidadEs = (prFormValvulaEs?.value || '').trim() || 'Presencial y Online';
+      const modalidadEn = (prFormValvulaEn?.value || '').trim() || (modalidadEs === 'Presencial y Online' ? 'In-Person & Online' : modalidadEs);
 
-      const badgeTextoEs = (prFormBadgeTexto?.value || '').trim() || 'Más Pedido';
-      const badgeTextoEn = (prFormBadgeTextoEn?.value || '').trim() || (badgeTextoEs === 'Más Pedido' ? 'Most Popular' : badgeTextoEs);
+      const duracionEs = (prFormPeso?.value || '').trim() || '45 - 60 min';
+      const duracionEn = duracionEs.includes('min') ? duracionEs.replace('min', 'mins') : duracionEs;
 
-      const publicoEs = (prFormPublicoEs?.value || '').trim() || 'Hogar';
-      const publicoEn = (prFormPublicoEn?.value || '').trim() || 'Household';
+      const badgeTextoEs = (prFormBadgeTexto?.value || '').trim() || 'Más Solicitado';
+      const badgeTextoEn = (prFormBadgeTextoEn?.value || '').trim() || (badgeTextoEs === 'Más Solicitado' ? 'Most Requested' : badgeTextoEs);
+
+      const publicoEs = (prFormPublicoEs?.value || '').trim() || 'Adolescentes y Adultos';
+      const publicoEn = (prFormPublicoEn?.value || '').trim() || 'Teens and Adults';
 
       const garantiasEs = (prFormGarantiasEs?.value || '')
         .split('\n')
@@ -195,20 +198,30 @@ export function inicializarModalProducto() {
         id: idFinal,
         slug: idFinal,
         tipo,
-        tipoCategoria: tipo === 'asesoria' ? 'accesorio' : 'gas',
+        tipoCategoria: tipo === 'asesoria' ? 'taller' : 'psicologia',
         precio: precioNum,
+        precioPEN: precioNum,
         stock: stockNum,
         orden: ordenNum,
         estado: prFormEstado?.value || 'activo',
         activo: prFormEstado?.value !== 'pausado',
         imagen: normalizarUrlParaGuardar(inputImagen?.value || '/imgwii/servicios/psicoterapia-individual.webp'),
         badgeIcon: (prFormBadgeIcon?.value || '').trim() || 'fa-solid fa-star',
-        tagClase: prFormTagClase?.value || 'badge-fire',
-        peso: (prFormPeso?.value || '').trim() || '10 kg',
-        valvula: valvulaEs,
-        valvulaEn: valvulaEn,
-        delivery: 'Despacho en puerta',
-        seguridad: 'Precinto verificado',
+        tagClase: prFormTagClase?.value || 'badge-serenidad',
+        duracion: {
+          es: duracionEs,
+          en: duracionEn
+        },
+        modalidad: {
+          es: modalidadEs,
+          en: modalidadEn
+        },
+        enfoque: 'Cognitivo Conductual / ACT',
+        peso: duracionEs,
+        valvula: modalidadEs,
+        valvulaEn: modalidadEn,
+        userId: '',
+        email: 'demo@consultorioamerica.com',
 
         nombre: {
           es: nombreEs,
@@ -228,12 +241,15 @@ export function inicializarModalProducto() {
         },
         garantias: {
           es: garantiasEs.length > 0 ? garantiasEs : [
-            'Misma garantía de peso exacto de origen y base',
-            'Llama azul constante y duradera',
-            'Cilindro inspeccionado libre de corrosión',
-            'Entrega inmediata sin costo de flete'
+            'Espacio seguro y 100% confidencial',
+            'Herramientas prácticas para tu vida diaria',
+            'Acompañamiento cálido basado en evidencia científica'
           ],
-          en: garantiasEn
+          en: garantiasEn.length > 0 ? garantiasEn : [
+            'Safe and 100% confidential space',
+            'Practical tools for daily life',
+            'Compassionate evidence-based care'
+          ]
         }
       };
 
@@ -326,9 +342,10 @@ export function abrirModalProducto(producto = null) {
     if (prFormStock) prFormStock.value = String(producto.stock ?? 50);
     if (prFormOrden) prFormOrden.value = String(producto.orden ?? 1);
 
-    // Fila 2: Peso - Categoría (Select nativo)
-    if (prFormPeso) prFormPeso.value = producto.peso || '10 kg';
-    const catVal = (producto.tipo === 'asesoria' || producto.tipoCategoria === 'accesorio') ? 'asesoria' : 'servicio';
+    // Fila 2: Duración - Categoría (Select nativo)
+    const durVal = typeof producto.duracion === 'object' ? (producto.duracion?.es || '') : (producto.duracion || producto.peso || '45 - 60 min');
+    if (prFormPeso) prFormPeso.value = durVal;
+    const catVal = (producto.tipo === 'asesoria' || producto.tipo === 'taller' || producto.tipoCategoria === 'taller') ? 'asesoria' : 'servicio';
     if (prFormCategoria) prFormCategoria.value = catVal;
 
     // Fila 3: Icono - Badge Texto
@@ -337,13 +354,13 @@ export function abrirModalProducto(producto = null) {
       if (previewBadgeIcon) previewBadgeIcon.innerHTML = `<i class="${prFormBadgeIcon.value}"></i>`;
     }
     const badgeVal = typeof producto.badge === 'object' ? (producto.badge?.es || '') : (producto.badge || '');
-    if (prFormBadgeTexto) prFormBadgeTexto.value = badgeVal || 'Más Pedido';
+    if (prFormBadgeTexto) prFormBadgeTexto.value = badgeVal || 'Más Solicitado';
 
     // Fila 4: Estado - Estilo del Badge (Selects nativos)
     const estVal = (producto.estado === 'pausado' || producto.activo === false) ? 'pausado' : 'activo';
     if (prFormEstado) prFormEstado.value = estVal;
 
-    const tagVal = producto.tagClase || 'badge-fire';
+    const tagVal = producto.tagClase || 'badge-serenidad';
     if (prFormTagClase) prFormTagClase.value = tagVal;
 
     // URL completa de la imagen para fácil edición/copia
@@ -354,9 +371,9 @@ export function abrirModalProducto(producto = null) {
     // Español
     if (prFormNombreEs) prFormNombreEs.value = nombre;
     if (prFormDescEs) prFormDescEs.value = typeof producto.descripcion === 'object' ? (producto.descripcion?.es || '') : (producto.descripcion || '');
-    const valvEsVal = typeof producto.valvula === 'object' ? (producto.valvula?.es || '') : (producto.valvula || 'Click-On');
-    if (prFormValvulaEs) prFormValvulaEs.value = valvEsVal;
-    if (prFormPublicoEs) prFormPublicoEs.value = typeof producto.publico === 'object' ? (producto.publico?.es || '') : (producto.publico || producto.tipoUso || '');
+    const modEsVal = typeof producto.modalidad === 'object' ? (producto.modalidad?.es || '') : (producto.modalidad || producto.valvula || 'Presencial y Online');
+    if (prFormValvulaEs) prFormValvulaEs.value = modEsVal;
+    if (prFormPublicoEs) prFormPublicoEs.value = typeof producto.publico === 'object' ? (producto.publico?.es || '') : (producto.publico || producto.tipoUso || 'Adolescentes y Adultos');
 
     const garEs = Array.isArray(producto.garantias?.es) ? producto.garantias.es : (Array.isArray(producto.garantias) ? producto.garantias : []);
     if (prFormGarantiasEs) prFormGarantiasEs.value = garEs.join('\n');
@@ -364,27 +381,27 @@ export function abrirModalProducto(producto = null) {
     // Inglés
     if (prFormNombreEn) prFormNombreEn.value = typeof producto.nombre === 'object' ? (producto.nombre?.en || '') : (producto.nombreEn || '');
     if (prFormDescEn) prFormDescEn.value = typeof producto.descripcion === 'object' ? (producto.descripcion?.en || '') : (producto.descripcionEn || '');
-    const valvEnVal = typeof producto.valvula === 'object' ? (producto.valvula?.en || '') : (producto.valvulaEn || producto.valvula || 'Click-On');
-    if (prFormValvulaEn) prFormValvulaEn.value = valvEnVal;
-    if (prFormPublicoEn) prFormPublicoEn.value = typeof producto.publico === 'object' ? (producto.publico?.en || '') : (producto.publicoEn || producto.tipoUsoEn || '');
+    const modEnVal = typeof producto.modalidad === 'object' ? (producto.modalidad?.en || '') : (producto.modalidadEn || (modEsVal === 'Presencial y Online' ? 'In-Person & Online' : modEsVal));
+    if (prFormValvulaEn) prFormValvulaEn.value = modEnVal;
+    if (prFormPublicoEn) prFormPublicoEn.value = typeof producto.publico === 'object' ? (producto.publico?.en || '') : (producto.publicoEn || producto.tipoUsoEn || 'Teens and Adults');
     const badgeEnVal = typeof producto.badge === 'object' ? (producto.badge?.en || '') : (producto.badgeEn || '');
-    if (prFormBadgeTextoEn) prFormBadgeTextoEn.value = badgeEnVal || 'Most Popular';
+    if (prFormBadgeTextoEn) prFormBadgeTextoEn.value = badgeEnVal || 'Most Requested';
 
     const garEn = Array.isArray(producto.garantias?.en) ? producto.garantias.en : (Array.isArray(producto.garantiasEn) ? producto.garantiasEn : []);
     if (prFormGarantiasEn) prFormGarantiasEn.value = garEn.join('\n');
   } else {
     // ── MODO NUEVO ──
-    if (tituloEl) tituloEl.innerHTML = `<i class="fa-solid fa-plus"></i> Registrar Nuevo Ítem en Catálogo`;
+    if (tituloEl) tituloEl.innerHTML = `<i class="fa-solid fa-plus"></i> Registrar Nuevo Servicio en Catálogo`;
     if (form) form.reset();
     if (prFormId) prFormId.value = '';
 
     // Fila 1: Precio - Stock - Orden (Inputs tipo texto)
-    if (prFormPrecio) prFormPrecio.value = '65';
+    if (prFormPrecio) prFormPrecio.value = '85';
     if (prFormStock) prFormStock.value = '50';
     if (prFormOrden) prFormOrden.value = String(obtenerProductosLocal().length + 1);
 
-    // Fila 2: Peso - Categoría (Select nativo)
-    if (prFormPeso) prFormPeso.value = '10 kg';
+    // Fila 2: Duración - Categoría (Select nativo)
+    if (prFormPeso) prFormPeso.value = '45 - 60 min';
     if (prFormCategoria) prFormCategoria.value = 'servicio';
 
     // Fila 3: Icono - Badge Texto
@@ -392,11 +409,11 @@ export function abrirModalProducto(producto = null) {
       prFormBadgeIcon.value = 'fa-solid fa-star';
       if (previewBadgeIcon) previewBadgeIcon.innerHTML = `<i class="fa-solid fa-star"></i>`;
     }
-    if (prFormBadgeTexto) prFormBadgeTexto.value = 'Más Pedido';
+    if (prFormBadgeTexto) prFormBadgeTexto.value = 'Más Solicitado';
 
     // Fila 4: Estado - Estilo del Badge (Selects nativos)
     if (prFormEstado) prFormEstado.value = 'activo';
-    if (prFormTagClase) prFormTagClase.value = 'badge-fire';
+    if (prFormTagClase) prFormTagClase.value = 'badge-serenidad';
 
     // URL completa de la imagen por defecto
     if (inputImagen) {
@@ -404,27 +421,25 @@ export function abrirModalProducto(producto = null) {
     }
 
     // Valores por defecto en Español
-    if (prFormValvulaEs) prFormValvulaEs.value = 'Click-On';
-    if (prFormPublicoEs) prFormPublicoEs.value = 'Hogar';
+    if (prFormValvulaEs) prFormValvulaEs.value = 'Presencial y Online';
+    if (prFormPublicoEs) prFormPublicoEs.value = 'Adolescentes y Adultos';
     if (prFormGarantiasEs) {
       prFormGarantiasEs.value = [
-        'Misma garantía de peso exacto de origen y base',
-        'Llama azul constante y duradera',
-        'Cilindro inspeccionado libre de corrosión',
-        'Entrega inmediata sin costo de flete'
+        'Espacio seguro y 100% confidencial',
+        'Herramientas prácticas para tu vida diaria',
+        'Acompañamiento cálido basado en evidencia científica'
       ].join('\n');
     }
 
     // Valores por defecto en Inglés
-    if (prFormValvulaEn) prFormValvulaEn.value = 'Click-On';
-    if (prFormPublicoEn) prFormPublicoEn.value = 'Household';
-    if (prFormBadgeTextoEn) prFormBadgeTextoEn.value = 'Most Popular';
+    if (prFormValvulaEn) prFormValvulaEn.value = 'In-Person & Online';
+    if (prFormPublicoEn) prFormPublicoEn.value = 'Teens and Adults';
+    if (prFormBadgeTextoEn) prFormBadgeTextoEn.value = 'Most Requested';
     if (prFormGarantiasEn) {
       prFormGarantiasEn.value = [
-        'Same guarantee of exact weight from origin and base',
-        'Constant and long-lasting blue flame',
-        'Inspected cylinder free of corrosion',
-        'Immediate delivery without freight cost'
+        'Safe and 100% confidential space',
+        'Practical tools for daily life',
+        'Compassionate evidence-based care'
       ].join('\n');
     }
   }

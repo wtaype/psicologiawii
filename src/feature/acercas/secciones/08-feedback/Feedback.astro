@@ -17,14 +17,15 @@ interface Props {
 
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
 const t = resolverIdiomaSeccion({ es, en }, idioma);
+const firebaseProjectId = import.meta.env.PUBLIC_FIREBASE_PROJECT_ID || 'psicologiawii';
 
 const motivos = [
   { id: 'puntualidad', label: t.motivo_1, icon: 'fa-solid fa-stopwatch' },
-  { id: 'balanza', label: t.motivo_2, icon: 'fa-solid fa-scale-balanced' },
+  { id: 'empatia', label: t.motivo_2, icon: 'fa-solid fa-heart' },
   { id: 'trato', label: t.motivo_3, icon: 'fa-solid fa-handshake' },
-  { id: 'balon', label: t.motivo_4, icon: 'fa-solid fa-certificate' },
+  { id: 'espacio', label: t.motivo_4, icon: 'fa-solid fa-house-chimney-medical' },
   { id: 'pagos', label: t.motivo_5, icon: 'fa-solid fa-mobile-screen-button' },
-  { id: 'instalacion', label: t.motivo_6, icon: 'fa-solid fa-shield-halved' }
+  { id: 'confidencialidad', label: t.motivo_6, icon: 'fa-solid fa-shield-halved' }
 ];
 ---
 
@@ -44,7 +45,7 @@ const motivos = [
 
     <AcercasNav seccionActiva="feedback" idioma={idioma} />
 
-    <div class="feedback-container">
+    <div class="feedback-container" data-project-id={firebaseProjectId}>
 
       <!-- Caja de Éxito -->
       <div id="feedbackSuccessCard" class="feedback-success-card">
@@ -241,7 +242,8 @@ const motivos = [
           fecha: { stringValue: payload.fecha }
         };
 
-        await fetch('https://firestore.googleapis.com/v1/projects/gaswii/databases/(default)/documents/feedbacks', {
+        const pId = document.querySelector('.feedback-container')?.getAttribute('data-project-id') || 'psicologiawii';
+        await fetch(`https://firestore.googleapis.com/v1/projects/${pId}/databases/(default)/documents/feedbacks`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ fields })

@@ -1,5 +1,5 @@
 // src/feature/inicio/lib/whatsapp.js
-// 🚀 Motor Centralizado de Mensajes WhatsApp para Gaswii
+// 🚀 Motor Centralizado de Mensajes WhatsApp para Consultorio Psicológico América
 // Funciona de forma isomórfica (Build-time SSR en Astro + Runtime en Cliente)
 // Genera mensajes naturales, directos y amigables según la hora del día sin tecnicismos.
 
@@ -46,7 +46,7 @@ export function obtenerNombreNegocio() {
       }
     } catch (e) {}
   }
-  return datosNegocio.nombre || 'Solgas Surquillo';
+  return datosNegocio.nombreCorto || datosNegocio.nombre || 'Consultorio Psicológico América';
 }
 
 /**
@@ -76,19 +76,19 @@ export function generarMensajeWhatsApp({
 
   // CASO A: Pedido formal desde el Modal Express (con dirección, cliente o pago)
   if (cliente || direccion || metodoPago) {
-    lineas.push(`${saludo}, quiero realizar un pedido:`);
+    lineas.push(`${saludo}, deseo solicitar una cita psicológica:`);
     if (cliente) {
       const cel = celular ? ` (📱 ${celular})` : '';
       lineas.push(`👤 Soy: ${cliente}${cel}`);
     }
     if (producto) {
-      lineas.push(`📦 ${cantTxt}${producto}${precioTxt}`);
+      lineas.push(`🧠 Servicio: ${cantTxt}${producto}${precioTxt}`);
     }
     if (direccion || distrito) {
       const dirCompleta = direccion && distrito 
         ? `${direccion}, ${distrito}` 
         : (direccion || distrito);
-      lineas.push(`📍 Entrega: ${dirCompleta}`);
+      lineas.push(`📍 Sede / Modalidad: ${dirCompleta}`);
     }
     if (metodoPago) {
       lineas.push(`💳 Pago: ${metodoPago}`);
@@ -100,13 +100,13 @@ export function generarMensajeWhatsApp({
       lineas.push(extra);
     }
     lineas.push(``);
-    lineas.push(`¿Podrían confirmarme el pedido, por favor? ¡Muchas gracias!`);
+    lineas.push(`¿Podrían confirmarme la disponibilidad, por favor? ¡Muchas gracias!`);
     return lineas.join('\n');
   }
 
   // CASO B: Clic directo en tarjeta de producto (Card de Inicio)
   if (producto) {
-    lineas.push(`${saludo}. He visto en su página web el ${cantTxt}${producto}${precioTxt}. Quiero realizar el pedido, ¿podrían confirmarme por favor? ¡Muchas gracias!`);
+    lineas.push(`${saludo}. He visto en su página web el ${cantTxt}${producto}${precioTxt}. Quisiera solicitar información y agendar una cita, ¿podrían orientarme por favor? ¡Muchas gracias!`);
     if (notas) lineas.push(`📝 Nota: ${notas}`);
     if (extra) lineas.push(extra);
     return lineas.join('\n');
@@ -120,7 +120,12 @@ export function generarMensajeWhatsApp({
 
   // CASO D: Saludo de consulta general
   const nombreNegocio = obtenerNombreNegocio();
-  lineas.push(`${saludo}, ${nombreNegocio}. He visto su página web y deseo consultar sobre el pedido de gas a domicilio. ¿Podrían atenderme, por favor? ¡Muchas gracias!`);
+  const msgDinamico = datosNegocio.whatsappMensaje;
+  if (msgDinamico) {
+    lineas.push(msgDinamico);
+  } else {
+    lineas.push(`${saludo}, ${nombreNegocio}. He visitado su sitio web y deseo solicitar información sobre las consultas psicológicas y agendar una cita. ¿Podrían orientarme, por favor? ¡Muchas gracias!`);
+  }
   return lineas.join('\n');
 }
 

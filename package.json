@@ -10,7 +10,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "firebase": "firebase deploy --only hosting"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",

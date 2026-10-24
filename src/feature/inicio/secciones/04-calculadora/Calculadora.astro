@@ -236,7 +236,7 @@ const defaultWsLink = `https://wa.me/${whatsappNumero}?text=${encodeURIComponent
 
       dTotal.textContent = `S/ ${total.toFixed(2)}`;
 
-      const wsNum = btnWs.getAttribute('data-ws-num') || '51936369384';
+      const wsNum = btnWs.getAttribute('data-ws-num') || '51960332958';
       const detalleSesiones = esFijo ? 'programa integral' : `${numSesiones} sesión(es)`;
       const msg = `Hola Lic. Sofía, coticé en su web: ${nombreServicio} (${modalidad}) por ${detalleSesiones}. Total: S/ ${total.toFixed(2)}. Deseo agendar mi cita.`;
       btnWs.href = `https://wa.me/${wsNum}?text=${encodeURIComponent(msg)}`;

@@ -6,7 +6,7 @@ import { getls, savels } from '@widev';
 
 import { datosNegocio } from '../../../../negocio.js';
 
-const CLOUDFLARE_CORREO_ENDPOINT = import.meta.env.PUBLIC_CORREO_WORKER_ENDPOINT || 'https://correo.gaswii.workers.dev/enviar';
+const CLOUDFLARE_CORREO_ENDPOINT = import.meta.env.PUBLIC_CORREO_WORKER_ENDPOINT || '';
 
 /**
  * Obtiene la lista de tickets del cliente desde la caché local wiSoporte (0ms)
@@ -36,9 +36,13 @@ function generarCodigoTicket() {
  * Despacha el correo de notificación y acuse a través del Cloudflare Worker
  */
 async function despacharCorreoWorker(ticket) {
+  if (!CLOUDFLARE_CORREO_ENDPOINT) {
+    console.info('[Soporte Wii] Worker de correo no configurado (PUBLIC_CORREO_WORKER_ENDPOINT); omitiendo despacho.');
+    return;
+  }
   try {
     const nombreEmpresa = datosNegocio.nombreCorto || datosNegocio.nombre || 'Atención al Cliente';
-    const colorMarca = datosNegocio.colorPrimario || '#ff6600';
+    const colorMarca = datosNegocio.colorPrimario || '#104356';
     const payload = {
       tipo: 'soporte',
       para: ticket.email || datosNegocio.email || '',

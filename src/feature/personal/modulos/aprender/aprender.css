@@ -230,13 +230,13 @@
 }
 
 [data-theme="luz"] .ap-nav-icon-wrap {
-  background: var(--mbg, rgba(255, 102, 0, 0.08));
-  border-color: var(--border-card, rgba(255, 102, 0, 0.2));
+  background: var(--mbg, rgba(56, 189, 248, 0.08));
+  border-color: var(--border-card, rgba(56, 189, 248, 0.2));
 }
 
 [data-theme="luz"] .ap-nav-item-btn.is-active .ap-nav-icon-wrap {
-  background: var(--mco, var(--brand-primary, #ff6600));
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--brand-primary, #104356));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 [data-theme="luz"] .ap-nav-item-btn.is-active .ap-nav-item-icon {

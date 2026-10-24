@@ -10,7 +10,7 @@
   width: 100%;
 }
 
-/* ── COLUMNA IZQUIERDA (60%): CONFIGURADOR OPERATIVO DE GLP ── */
+/* ── COLUMNA IZQUIERDA (60%): CONFIGURADOR OPERATIVO DE CITAS CLÍNICAS ── */
 .wa-ops-card {
   background: var(--surface);
   border: 1px solid var(--line);
@@ -38,7 +38,7 @@
   font-size: 1.25rem;
 }
 
-/* ── GRID DE PLANTILLAS MAESTRAS DE GLP ── */
+/* ── GRID DE PLANTILLAS MAESTRAS DE CITAS ── */
 .wa-tpls-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -90,7 +90,7 @@
   line-height: 1.4;
 }
 
-/* ── CAJA DE VARIABLES OPERATIVAS DE GASWII ── */
+/* ── CAJA DE VARIABLES OPERATIVAS DE CITAS Y SESIONES ── */
 .wa-vars-box {
   background: var(--canvas);
   border: 1px solid var(--line);

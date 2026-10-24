@@ -118,7 +118,7 @@
 .pr-modal-preview-box {
   width: 100%;
   height: 180px;
-  background: radial-gradient(circle, rgba(255, 102, 0, 0.06) 0%, rgba(240, 243, 246, 0.4) 100%);
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.06) 0%, rgba(240, 243, 246, 0.4) 100%);
   border: 2px dashed var(--line, #cbd5e1);
   border-radius: 12px;
   display: flex;
@@ -296,7 +296,7 @@
 .pr-f-textarea:focus {
   outline: none;
   border-color: var(--mco);
-  box-shadow: 0 0 0 3px var(--mbg, rgba(255, 102, 0, 0.16));
+  box-shadow: 0 0 0 3px var(--mbg, rgba(56, 189, 248, 0.16));
 }
 
 .pr-f-textarea {
@@ -322,8 +322,8 @@
 }
 
 .pr-url-input-wrap:focus-within {
-  border-color: var(--mco, #ff6600);
-  box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2);
+  border-color: var(--mco, var(--brand-sky, #38bdf8));
+  box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
 }
 
 .pr-url-domain {
@@ -362,7 +362,7 @@
   align-items: center;
   justify-content: center;
   font-size: 1rem;
-  color: var(--mco, #ff6600);
+  color: var(--mco, var(--brand-sky, #38bdf8));
   flex-shrink: 0;
   transition: all 0.2s ease;
 }

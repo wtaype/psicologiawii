@@ -23,7 +23,7 @@ const grupo2 = term.grupo2Titulo || 'Categoría 2';
   <div class="ps-section-header">
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">
-        <i class="fa-solid fa-box-archive sn-header-icon" style="color: var(--brand-primary, var(--mco, #ff6600));"></i>
+        <i class="fa-solid fa-box-archive sn-header-icon" style="color: var(--brand-primary, var(--mco, #104356));"></i>
         {tituloCat}
       </h1>
       <p class="ps-section-sub">
@@ -163,8 +163,8 @@ const grupo2 = term.grupo2Titulo || 'Categoría 2';
             <input type="text" inputmode="decimal" id="prFormPrecio" class="pr-f-input" placeholder="65" required />
           </div>
           <div class="pr-f-field">
-            <label class="pr-f-label" for="prFormStock">Stock *</label>
-            <input type="text" inputmode="numeric" id="prFormStock" class="pr-f-input" placeholder="50" required />
+            <label class="pr-f-label" for="prFormStock">Sesión / Cupos</label>
+            <input type="text" id="prFormStock" class="pr-f-input" placeholder="Ej: 1 sesión, 12 cupos" value="1 sesión" />
           </div>
           <div class="pr-f-field">
             <label class="pr-f-label" for="prFormOrden">Orden</label>
@@ -172,11 +172,11 @@ const grupo2 = term.grupo2Titulo || 'Categoría 2';
           </div>
         </div>
 
-        <!-- Fila 2: Peso - Categoría -->
+        <!-- Fila 2: Duración - Categoría -->
         <div class="pr-f-grid-2">
           <div class="pr-f-field">
-            <label class="pr-f-label" for="prFormPeso">Peso / Capacidad</label>
-            <input type="text" id="prFormPeso" class="pr-f-input" placeholder="Ej: 10 kg, 45 kg, Regulador" />
+            <label class="pr-f-label" for="prFormPeso">Duración / Frecuencia</label>
+            <input type="text" id="prFormPeso" class="pr-f-input" placeholder="Ej: 45 - 60 min, 4 sesiones" />
           </div>
           <div class="pr-f-field">
             <label class="pr-f-label" for="prFormCategoria">Categoría *</label>
@@ -238,28 +238,28 @@ const grupo2 = term.grupo2Titulo || 'Categoría 2';
         <div class="pr-lang-pane active" id="pane-es">
           <div class="pr-f-field">
             <label class="pr-f-label" for="prFormNombreEs">Nombre Oficial *</label>
-            <input type="text" id="prFormNombreEs" class="pr-f-input" placeholder="Ej: Balón SOLGAS Premium 10 kg" required />
+            <input type="text" id="prFormNombreEs" class="pr-f-input" placeholder="Ej: Psicoterapia Individual (TCC & Contextual)" required />
           </div>
 
           <div class="pr-f-field">
             <label class="pr-f-label" for="prFormDescEs">Descripción Detallada *</label>
-            <textarea id="prFormDescEs" class="pr-f-textarea" rows="3" placeholder="Descripción detallada de características y especificaciones..." required></textarea>
+            <textarea id="prFormDescEs" class="pr-f-textarea" rows="3" placeholder="Abordaje empático y científico para el bienestar emocional..." required></textarea>
           </div>
 
           <div class="pr-f-grid-2">
             <div class="pr-f-field">
-              <label class="pr-f-label" for="prFormValvulaEs">Tipo de Válvula</label>
-              <input type="text" id="prFormValvulaEs" class="pr-f-input" placeholder="Ej: Click-On, Rosca tradicional" />
+              <label class="pr-f-label" for="prFormValvulaEs">Modalidad de Atención</label>
+              <input type="text" id="prFormValvulaEs" class="pr-f-input" placeholder="Ej: Presencial y Online, Vía Google Meet" />
             </div>
             <div class="pr-f-field">
-              <label class="pr-f-label" for="prFormPublicoEs">Dirigido a / Uso</label>
-              <input type="text" id="prFormPublicoEs" class="pr-f-input" placeholder="Ej: Hogar, Negocios, Ahorro" />
+              <label class="pr-f-label" for="prFormPublicoEs">Dirigido a / Público</label>
+              <input type="text" id="prFormPublicoEs" class="pr-f-input" placeholder="Ej: Adolescentes y Adultos, Parejas" />
             </div>
           </div>
 
           <div class="pr-f-field">
-            <label class="pr-f-label" for="prFormGarantiasEs">Puntos Clave / Garantías (Una por línea)</label>
-            <textarea id="prFormGarantiasEs" class="pr-f-textarea" rows="4" placeholder="Misma garantía de peso exacto de origen y base&#10;Llama azul constante y duradera&#10;Cilindro inspeccionado libre de corrosión&#10;Entrega inmediata sin costo de flete"></textarea>
+            <label class="pr-f-label" for="prFormGarantiasEs">Puntos Clave / Garantías Clínicas (Una por línea)</label>
+            <textarea id="prFormGarantiasEs" class="pr-f-textarea" rows="4" placeholder="Espacio seguro y 100% confidencial&#10;Herramientas prácticas para tu vida diaria&#10;Acompañamiento cálido basado en evidencia científica"></textarea>
           </div>
         </div>
 
@@ -267,28 +267,28 @@ const grupo2 = term.grupo2Titulo || 'Categoría 2';
         <div class="pr-lang-pane" id="pane-en">
           <div class="pr-f-field">
             <label class="pr-f-label" for="prFormNombreEn">Official Name</label>
-            <input type="text" id="prFormNombreEn" class="pr-f-input" placeholder="Ex: SOLGAS Premium 10 kg Gas Cylinder" />
+            <input type="text" id="prFormNombreEn" class="pr-f-input" placeholder="Ex: Individual Psychotherapy (CBT & Contextual)" />
           </div>
 
           <div class="pr-f-field">
             <label class="pr-f-label" for="prFormDescEn">Detailed Description</label>
-            <textarea id="prFormDescEn" class="pr-f-textarea" rows="3" placeholder="Clear technical and commercial explanation..."></textarea>
+            <textarea id="prFormDescEn" class="pr-f-textarea" rows="3" placeholder="Evidence-based empathetic therapy for emotional wellness..."></textarea>
           </div>
 
           <div class="pr-f-grid-2">
             <div class="pr-f-field">
-              <label class="pr-f-label" for="prFormValvulaEn">Valve Type</label>
-              <input type="text" id="prFormValvulaEn" class="pr-f-input" placeholder="Ex: Click-On, Screw thread" />
+              <label class="pr-f-label" for="prFormValvulaEn">Modality</label>
+              <input type="text" id="prFormValvulaEn" class="pr-f-input" placeholder="Ex: In-Person & Online, Google Meet" />
             </div>
             <div class="pr-f-field">
-              <label class="pr-f-label" for="prFormPublicoEn">Target Audience / Use</label>
-              <input type="text" id="prFormPublicoEn" class="pr-f-input" placeholder="Ex: Household, Business, Savings" />
+              <label class="pr-f-label" for="prFormPublicoEn">Target Audience</label>
+              <input type="text" id="prFormPublicoEn" class="pr-f-input" placeholder="Ex: Teens and Adults, Couples" />
             </div>
           </div>
 
           <div class="pr-f-field">
             <label class="pr-f-label" for="prFormBadgeTextoEn">Badge Text (EN)</label>
-            <input type="text" id="prFormBadgeTextoEn" class="pr-f-input" placeholder="Ex: Most Popular, Economy" />
+            <input type="text" id="prFormBadgeTextoEn" class="pr-f-input" placeholder="Ex: Most Requested, Recommended" />
           </div>
 
           <div class="pr-f-field">

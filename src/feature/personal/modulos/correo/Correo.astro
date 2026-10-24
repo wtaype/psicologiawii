@@ -35,7 +35,7 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
   <div class="ps-section-header" style="margin-bottom: 16px;">
     <div class="ps-section-title-wrap">
       <h1 class="ps-section-title">
-        <i class="fa-solid fa-envelope" style="color: var(--brand-primary, var(--mco, #ff6600)); margin-right: 8px;"></i>
+        <i class="fa-solid fa-envelope" style="color: var(--brand-primary, var(--mco, #104356)); margin-right: 8px;"></i>
         {tituloCorreo}
       </h1>
       <p class="ps-section-sub">
@@ -259,7 +259,7 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
             <!-- Asunto Oficial (Ubicado arriba, estilo Gmail) -->
             <div class="cr-form-group" style="margin-bottom: 16px;">
               <label class="cr-label" for="crInputSubject">
-                <i class="fa-solid fa-heading" style="color:var(--brand-primary, var(--mco, #ff6600)); margin-right:4px;"></i> Asunto Oficial *
+                <i class="fa-solid fa-heading" style="color:var(--brand-primary, var(--mco, #104356)); margin-right:4px;"></i> Asunto Oficial *
               </label>
               <input type="text" id="crInputSubject" class="cr-input cr-live-input" value={(plantillas[0] as any)?.asuntoDefecto || `Comunicado Oficial · ${datosNegocio.nombreCorto || datosNegocio.nombre || 'Oficial'}`} required />
             </div>
@@ -328,10 +328,10 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
               </div>
             </div>
 
-            <!-- BLOQUE DINÁMICO: CONFIRMACIÓN DE PEDIDO GLP -->
+            <!-- BLOQUE DINÁMICO: CONFIRMACIÓN DE SESIÓN CLÍNICA Y ATENCIÓN -->
             <div id="crFieldsPedido" class="cr-cat-box" style={primeraPlantillaId === 'pedido' ? 'display:block;' : 'display:none;'}>
               <div class="cr-cat-box-title">
-                <i class="fa-solid fa-box" style="color:var(--brand-primary, #ff6600);"></i> Datos del Pedido y Entrega
+                <i class="fa-solid fa-calendar-check" style="color:var(--brand-primary, #267a57);"></i> Datos de la Sesión y Atención Terapéutica
               </div>
               <div class="cr-form-row">
                 <div class="cr-form-group">
@@ -369,7 +369,7 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
             {esServicios && (
               <div id="crFieldsLiquidacion" class="cr-cat-box" style={primeraPlantillaId === 'liquidacion' ? 'display:block;' : 'display:none;'}>
                 <div class="cr-cat-box-title">
-                  <i class="fa-solid fa-calculator" style="color:var(--brand-primary, var(--mco, #ff6600));"></i> Datos de la Liquidación Mensual
+                  <i class="fa-solid fa-calculator" style="color:var(--brand-primary, var(--mco, #104356));"></i> Datos de la Liquidación Mensual
                 </div>
                 <div class="cr-form-row">
                   <div class="cr-form-group">
@@ -413,7 +413,7 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
             {esServicios && (
               <div id="crFieldsCronograma" class="cr-cat-box" style="display:none;">
                 <div class="cr-cat-box-title">
-                  <i class="fa-solid fa-calendar-days" style="color:var(--brand-primary, var(--mco, #ff6600));"></i> Recordatorio de Vencimiento de Declaración
+                  <i class="fa-solid fa-calendar-days" style="color:var(--brand-primary, var(--mco, #104356));"></i> Recordatorio de Vencimiento de Declaración
                 </div>
                 <div class="cr-form-row">
                   <div class="cr-form-group">
@@ -441,7 +441,7 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
             <!-- BLOQUE DINÁMICO 3: COMPROBANTE SUNAT -->
             <div id="crFieldsComprobante" class="cr-cat-box" style="display:none;">
               <div class="cr-cat-box-title">
-                <i class="fa-solid fa-file-invoice" style="color:var(--brand-primary, var(--mco, #ff6600));"></i> {esServicios ? 'Datos del Comprobante de Honorarios' : 'Datos del Comprobante de Venta'}
+                <i class="fa-solid fa-file-invoice" style="color:var(--brand-primary, var(--mco, #104356));"></i> {esServicios ? 'Datos del Comprobante de Honorarios' : 'Datos del Comprobante de Venta'}
               </div>
               <div class="cr-form-row">
                 <div class="cr-form-group">
@@ -475,7 +475,7 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
             <!-- BLOQUE DINÁMICO 4: PROPUESTA / COTIZACIÓN -->
             <div id="crFieldsCotizacion" class="cr-cat-box" style="display:none;">
               <div class="cr-cat-box-title">
-                <i class="fa-solid fa-handshake" style="color:var(--brand-primary, var(--mco, #ff6600));"></i> Datos de la Propuesta / Cotización
+                <i class="fa-solid fa-handshake" style="color:var(--brand-primary, var(--mco, #104356));"></i> Datos de la Propuesta / Cotización
               </div>
               <div class="cr-form-row">
                 <div class="cr-form-group">
@@ -602,14 +602,14 @@ const primeraPlantillaId = plantillas[0]?.id || (esServicios ? 'liquidacion' : '
               </div>
               <div class="cr-form-group">
                 <label class="cr-label" for="crAjusteSlogan">Firma Institucional / Slogan</label>
-                <input type="text" id="crAjusteSlogan" class="cr-input" value={datosNegocio.slogan || 'Distribución Oficial de GLP · Pesaje Exacto Garantizado'} />
+                <input type="text" id="crAjusteSlogan" class="cr-input" value={datosNegocio.slogan || 'Atención Psicológica Colegiada · Consultorio Psicológico América'} />
               </div>
             </div>
 
             <!-- Resumen de Infraestructura & Seguridad -->
             <div class="cr-settings-info-grid">
               <div class="cr-settings-info-card">
-                <i class="fa-solid fa-server" style="color:var(--brand-primary, var(--mco, #ff6600));"></i>
+                <i class="fa-solid fa-server" style="color:var(--brand-primary, var(--mco, #104356));"></i>
                 <div>
                   <strong>Servidor de Despacho</strong>
                   <span>API Resend & Cloud Functions</span>

@@ -18,7 +18,7 @@ interface Props {
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
 const t = resolverIdiomaSeccion({ es, en }, idioma);
 
-const emailLegal = datosNegocio.email || 'atencion@gaswii.pe';
+const emailLegal = datosNegocio.email;
 const emailSubject = encodeURIComponent(
   idioma === 'en'
     ? `Request for ARCO Rights Exercise - ${datosNegocio.nombre}`

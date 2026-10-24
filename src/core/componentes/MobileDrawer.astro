@@ -37,7 +37,7 @@ const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.hor
 <aside class="mobile-drawer" id="mobileDrawer">
   <div class="drawer-brand-header">
     <div class="drawer-brand-box">
-      <img src={datosNegocio.logo} alt={datosNegocio.nombre} width="44" height="44" class="drawer-logo-img" />
+      <img src="/imgwii/logo_full.webp" alt={datosNegocio.nombre} class="drawer-logo-full" />
     </div>
     
     <div class="flex items-center gap-2">
@@ -79,12 +79,12 @@ const horarioTexto = idioma === 'en' ? datosNegocio.horarioEn : datosNegocio.hor
     </button>
 
     <!-- Card Usuario Móvil (Cuando está autenticado) -->
-    <div id="drawerUserPerfil" class="drawer-user-card" data-idioma={idioma}>
-      <a id="drawerPerfilLink" href="/cliente" onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-user-link">
-        <img id="drawerUserAvatar" src="" alt="Avatar" class="drawer-user-avatar" />
+    <div id="drawerUserPerfil" class="drawer-user-card" data-idioma={idioma} style="display: none;">
+      <a id="drawerPerfilLink" href="/personal" onclick="window.cerrarDrawer && window.cerrarDrawer()" class="drawer-user-link">
+        <img id="drawerUserAvatar" src="/smile.avif" alt="Avatar" class="drawer-user-avatar" />
         <div>
-          <div id="drawerUserNombre" class="drawer-user-name">Cliente VIP</div>
-          <div id="drawerUserBadge" class="drawer-user-badge">@usuario</div>
+          <div id="drawerUserNombre" class="drawer-user-name">Usuario</div>
+          <div id="drawerUserBadge" class="drawer-user-badge">Paciente</div>
         </div>
       </a>
       <button type="button" onclick="window.cerrarSesionHeader && window.cerrarSesionHeader()" class="drawer-btn-logout" title="Cerrar Sesión">

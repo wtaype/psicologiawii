@@ -13,7 +13,14 @@ interface Props {
 const { esActivo = false } = Astro.props;
 const term = configurarSistema.terminologia || {};
 const itemSingular = term.itemSingular || 'Ítem';
-const prodsRapidos = Array.isArray(productosSemilla) ? productosSemilla.slice(0, 5) : [];
+const obtenerNombreProd = (p: any) => typeof p?.nombre === 'object' ? (p.nombre.es || p.nombre.en || '') : (p?.nombre || '');
+const prodsRapidos = Array.isArray(productosSemilla) 
+  ? productosSemilla.slice(0, 5).map(p => ({
+      ...p,
+      nombre: obtenerNombreProd(p),
+      precio: Number(p?.precioPEN ?? p?.precio ?? 0)
+    }))
+  : [];
 
 const rawNombreTicket = datosNegocio.nombreCorto || datosNegocio.nombre || '';
 const nombreTicket = String(typeof rawNombreTicket === 'object' ? (rawNombreTicket.es || '') : rawNombreTicket).toUpperCase();
@@ -242,7 +249,7 @@ const telefonoTicket = datosNegocio.telefonoMostrado || datosNegocio.whatsapp ||
 
         <div class="sn-form-group sn-mt-10">
           <label class="sn-label" for="snInpObservacion">Observación del Comprobante</label>
-          <input type="text" id="snInpObservacion" class="sn-input" placeholder="Ej: Despacho a domicilio verificado con balanza digital conforme a Ley." />
+          <input type="text" id="snInpObservacion" class="sn-input" placeholder="Ej: Atención psicológica individual (TCC) - Recibo por Honorarios Electrónico conforme a Ley." />
         </div>
       </form>
     </div>

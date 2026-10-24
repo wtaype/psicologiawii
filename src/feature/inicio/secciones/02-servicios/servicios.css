@@ -87,7 +87,7 @@
 
 /* ── 3. TARJETA CLÍNICA (HUMANA, SEGURA Y CÁLIDA) ── */
 .producto-card-box,
-.card-balon {
+.card-servicio, .card-taller {
   background: var(--bg-card, #ffffff);
   border: 1.5px solid var(--border-card, #dceaf2);
   border-radius: 1.5vh;
@@ -102,7 +102,7 @@
 }
 
 .producto-card-box:hover,
-.card-balon:hover {
+.card-servicio:hover, .card-taller:hover {
   transform: translateY(-5px);
   border-color: var(--brand-sky, #38bdf8);
   box-shadow: 0 12px 30px rgba(16, 67, 86, 0.10);

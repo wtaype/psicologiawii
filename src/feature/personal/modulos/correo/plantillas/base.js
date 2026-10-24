@@ -12,11 +12,9 @@ export function envoltorioBase({ contenidoHtml, asunto, vistaPreviaTexto = '', n
   const telefono = negocio?.telefono || '';
   const especialista = negocio?.especialista || '';
   const esServicios = negocio?.modeloNegocio === 'servicios_y_asesorias';
-  const colorMarca = negocio?.colorPrimario || '#ff6600';
-  const etiquetaOficial = negocio?.etiquetaOficial || (esServicios ? 'ASESORÍA OFICIAL' : 'DESPACHO OFICIAL');
-  const pieDescripcion = negocio?.descripcionCorta || negocio?.slogan || (esServicios 
-    ? 'Estudio Contable y Asesoría Tributaria Especializada. Atención presencial en Lima y modalidad 100% online a nivel nacional.' 
-    : 'Distribución Oficial de GLP con pesaje exacto garantizado en puerta. Delivery express a domicilio.');
+  const colorMarca = negocio?.colorPrimario || '#267a57';
+  const etiquetaOficial = negocio?.etiquetaOficial || 'ATENCIÓN PSICOLÓGICA OFICIAL';
+  const pieDescripcion = negocio?.descripcionCorta || negocio?.slogan || 'Consultorio Psicológico América · Lic. Sofia Reynaga Pachas (C.Ps.P. 49425). Atención presencial en Villa El Salvador y online vía Google Meet.';
 
   return `
 <!DOCTYPE html>

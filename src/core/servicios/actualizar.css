@@ -40,14 +40,14 @@
   background: var(--bg2, rgba(17, 24, 39, 0.94));
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1.5px solid var(--brand-primary, #ff6600);
+  border: 1.5px solid var(--brand-primary, #104356);
   border-radius: 999px;
   color: var(--tx, #f8fafc);
   font-family: 'Poppins', system-ui, sans-serif;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 14px rgba(255, 102, 0, 0.25);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45), 0 0 14px rgba(56, 189, 248, 0.25);
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
   animation: cfPillPop 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -65,7 +65,7 @@
 
 .cf-dock-pill-btn:hover {
   transform: translateY(-2px) scale(1.02);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), 0 0 20px rgba(255, 102, 0, 0.45);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.55), 0 0 20px rgba(56, 189, 248, 0.45);
   border-color: #ff8533;
 }
 
@@ -75,7 +75,7 @@
 
 .cf-pill-icon {
   font-size: 13px;
-  color: var(--brand-primary, #ff6600);
+  color: var(--brand-primary, #104356);
   display: flex;
   align-items: center;
 }
@@ -88,13 +88,13 @@
 }
 
 .cf-pill-time {
-  background: rgba(255, 102, 0, 0.12);
-  border: 1px solid rgba(255, 102, 0, 0.35);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.35);
   padding: 2px 8px;
   border-radius: 999px;
   font-size: 11px;
   font-weight: 700;
-  color: #ff6600;
+  color: #38bdf8;
   font-variant-numeric: tabular-nums;
   transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
@@ -284,7 +284,7 @@
 
 .cf-dock-icon {
   font-size: 18px;
-  color: var(--brand-primary, #ff6600);
+  color: var(--brand-primary, #104356);
   flex-shrink: 0;
 }
 
@@ -319,7 +319,7 @@
 .cf-dock-pct {
   font-size: 12px;
   font-weight: 700;
-  color: var(--brand-primary, #ff6600);
+  color: var(--brand-primary, #104356);
   font-variant-numeric: tabular-nums;
 }
 
@@ -397,14 +397,14 @@
   justify-content: center;
   gap: 6px;
   padding: 9px 12px;
-  background: var(--brand-primary, #ff6600);
+  background: var(--brand-primary, #104356);
   color: #ffffff;
   border: none;
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(255, 102, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
   transition: all 0.2s ease;
   font-family: inherit;
 }
@@ -412,7 +412,7 @@
 .cf-dock-btn-seo:hover:not(:disabled) {
   filter: brightness(1.12);
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(255, 102, 0, 0.45);
+  box-shadow: 0 6px 18px rgba(56, 189, 248, 0.45);
 }
 
 .cf-dock-btn-seo:disabled {
@@ -476,7 +476,7 @@
 .cf-dock-bar-fill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #ff6600, #f59e0b, #10b981);
+  background: linear-gradient(90deg, #38bdf8, #0284c7, #10b981);
   transition: width 0.3s ease;
   position: relative;
 }

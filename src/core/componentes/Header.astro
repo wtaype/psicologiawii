@@ -3,6 +3,7 @@
 // Header principal con autenticación y agendamiento · Consultorio Psicológico América
 import app from '../../app.js';
 import { datosNegocio } from '../../negocio.js';
+import { app as appNombre, linkweb } from '../../wii.js';
 import { getI18n, IDIOMAS, buildRuta, type Idioma } from '../idioma/idioma';
 
 interface Props {
@@ -37,18 +38,25 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
     
     <!-- Logo y Título -->
     <a href={urlInicio} title={esPersonal || esCliente ? (t.ir_tienda_publica || 'Ir al Sitio Web') : (t.inicio_titulo || 'Consultorio Psicológico América')} class="header-brand-link">
+      <!-- En Desktop: Logo circular institucional -->
       <img 
         src={datosNegocio.logo} 
-        alt={datosNegocio.nombre} 
+        alt={appNombre} 
         width="44"
         height="44"
-        class="header-logo-img"
+        class="desktop-only header-logo-img"
       />
-      <div>
-        <span class="desktop-only header-brand-title">
-          {datosNegocio.nombre.split(' ')[0]} <span>{datosNegocio.nombre.split(' ').slice(1).join(' ')}</span>
+      <!-- En Móvil: Logo full horizontal completo con tipografía -->
+      <img 
+        src="/imgwii/logo_full.webp" 
+        alt={appNombre} 
+        class="mobile-only header-logo-full-mobile"
+      />
+      <div class="header-brand-text desktop-only">
+        <span class="header-brand-title">
+          {appNombre.split(' ')[0]} <span>{appNombre.split(' ').slice(1).join(' ')}</span>
         </span>
-        <span class="desktop-only header-brand-sub">
+        <span class="header-brand-sub">
           {esPersonal ? (
             <span class="inline-flex items-center gap-1"><i class="fa-solid fa-user-doctor"></i> Consola de Consultas</span>
           ) : esCliente ? (
@@ -119,32 +127,234 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
       </button>
       <script is:inline>try{const t=document.documentElement.dataset.theme,i=document.getElementById('themeIcon');if(i&&t)i.className=t==='futuro'?'fa-solid fa-moon':'fa-solid fa-sun';}catch(e){}</script>
 
-      <!-- Contenedor Auth Desktop -->
+      <!-- Contenedor Auth Desktop (Sincronizado con wiSmile) -->
       <div id="headerAuthContainer" class="desktop-only header-auth-box">
-        <!-- Botón LOGIN -->
-        <button id="headerBtnLogin" onclick="window.abrirModalLogin && window.abrirModalLogin()" class="header-btn-login" title="Iniciar Sesión o Registrarse">
+        <!-- 1. Botón LOGIN (Se muestra si NO hay wiSmile) -->
+        <button id="headerBtnLogin" onclick="window.abrirModalLogin && window.abrirModalLogin()" class="header-btn-login" title="Iniciar Sesión o Registrarse" aria-label="Iniciar Sesión o Registrarse">
           <i class="fa-solid fa-circle-user"></i> <span>{t.login}</span>
         </button>
 
-        <!-- Card Perfil Usuario -->
-        <div id="headerUserPerfil" class="header-user-card" data-idioma={idioma}>
-          <a href="/cliente" id="headerPerfilLink" class="header-user-link">
-            <img id="headerUserAvatar" src="" alt="Foto de perfil" class="header-user-avatar" />
-            <div class="header-user-info">
-              <span id="headerUserNombre" class="header-user-name">Cliente</span>
-              <div class="header-user-meta">
-                <span id="headerUserBadge" class="header-user-badge">@usuario</span>
-              </div>
-            </div>
-          </a>
-          <button type="button" onclick="window.cerrarSesionHeader && window.cerrarSesionHeader()" title="Cerrar Sesión" class="header-btn-logout">
-            <i class="fa-solid fa-right-from-bracket"></i>
+        <!-- 2. Contenedor USUARIO con Dropdown Flotante (Se muestra si HAY wiSmile) -->
+        <div id="headerUserContainer" class="header-user-container" style="display: none;">
+          <button type="button" id="headerUserBtn" class="header-user-btn" aria-expanded="false" aria-haspopup="true" title="Ver mi cuenta">
+            <img id="headerUserAvatar" src="/smile.avif" alt="Avatar" class="header-user-avatar" />
+            <span id="headerUserNombre" class="header-user-name">Usuario</span>
+            <i class="fa-solid fa-chevron-down header-user-chevron"></i>
           </button>
+
+          <!-- Menú Desplegable Flotante -->
+          <div class="header-dropdown-menu" id="headerUserDropdownMenu">
+            <div class="header-dropdown-header">
+              <strong id="headerDropdownNombre" class="header-dropdown-name">Usuario</strong>
+              <span id="headerDropdownEmail" class="header-dropdown-email">cuenta@activa.com</span>
+            </div>
+            
+            <a href="/personal" id="headerDropdownLinkCuenta" class="header-dropdown-item">
+              <i class="fa-solid fa-id-card"></i> <span id="headerDropdownTextCuenta">Consola de Gestión</span>
+            </a>
+
+            <a href="/personal/dashboard" id="headerDropdownLinkAccion" class="header-dropdown-item">
+              <i class="fa-solid fa-calendar-check"></i> <span id="headerDropdownTextAccion">Citas & Agenda</span>
+            </a>
+
+            <div class="header-dropdown-divider"></div>
+
+            <button type="button" id="headerDropdownBtnSalir" class="header-dropdown-item danger">
+              <i class="fa-solid fa-arrow-right-from-bracket"></i> <span>Cerrar Sesión</span>
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Anti-Flash Inmediato (0ms) para Perfil de Usuario -->
-      <script is:inline>try{const u=JSON.parse(localStorage.getItem('wiSmile')||'{}');if(u.uid||u.nombre){const d=(u.rol==='personal'||u.rol==='gestor'||u.rol==='admin')?'/personal':'/cliente';const p=location.pathname.startsWith('/en')?`/en${d}`:d;const a=document.getElementById('headerPerfilLink'),b=document.getElementById('drawerPerfilLink');if(a)a.href=p;if(b)b.href=p;}}catch(e){}</script>
+      <!-- Script Anti-FOUC Inmediato (0ms) -->
+      <script is:inline>
+        try {
+          var rawInit = localStorage.getItem('wiSmile');
+          if (rawInit) {
+            var parsedInit = JSON.parse(rawInit);
+            var uInit = (parsedInit && typeof parsedInit === 'object' && parsedInit.value) ? parsedInit.value : parsedInit;
+            if (uInit && (uInit.uid || uInit.nombre || uInit.usuario || uInit.email)) {
+              var authBoxInit = document.getElementById('headerAuthContainer');
+              if (authBoxInit) authBoxInit.classList.add('has-user');
+              var bLInit = document.getElementById('headerBtnLogin');
+              if (bLInit) {
+                bLInit.classList.add('is-hidden');
+                bLInit.style.setProperty('display', 'none', 'important');
+              }
+              var uCInit = document.getElementById('headerUserContainer');
+              if (uCInit) uCInit.style.display = 'inline-flex';
+            }
+          }
+        } catch(e) {}
+      </script>
+
+      <!-- Controlador Interactivo del Dropdown y Sincronización Automática con wiSmile -->
+      <script is:inline>
+        (function() {
+          const userContainer = document.getElementById('headerUserContainer');
+          const userBtn = document.getElementById('headerUserBtn');
+          const userDropdown = document.getElementById('headerUserDropdownMenu');
+          const btnSalir = document.getElementById('headerDropdownBtnSalir');
+
+          function cerrarDropdownHeader() {
+            if (userDropdown) userDropdown.classList.remove('active');
+            if (userBtn) userBtn.classList.remove('open');
+          }
+
+          if (userBtn) {
+            userBtn.addEventListener('click', function(e) {
+              e.stopPropagation();
+              if (!userDropdown) return;
+              const isOpen = userDropdown.classList.toggle('active');
+              userBtn.classList.toggle('open', isOpen);
+            });
+          }
+
+          document.addEventListener('click', function(e) {
+            if (userContainer && !userContainer.contains(e.target)) {
+              cerrarDropdownHeader();
+            }
+          });
+
+          if (btnSalir) {
+            btnSalir.addEventListener('click', function() {
+              cerrarDropdownHeader();
+              if (window.cerrarSesionHeader) window.cerrarSesionHeader();
+            });
+          }
+
+          function sincronizarAuth() {
+            try {
+              const raw = localStorage.getItem('wiSmile');
+              const authBox = document.getElementById('headerAuthContainer');
+              const btnLogin = document.getElementById('headerBtnLogin');
+              const uContainer = document.getElementById('headerUserContainer');
+              const userAvatar = document.getElementById('headerUserAvatar');
+              const userNombre = document.getElementById('headerUserNombre');
+
+              const ddNombre = document.getElementById('headerDropdownNombre');
+              const ddEmail = document.getElementById('headerDropdownEmail');
+              const ddLinkCuenta = document.getElementById('headerDropdownLinkCuenta');
+              const ddTextCuenta = document.getElementById('headerDropdownTextCuenta');
+              const ddLinkAccion = document.getElementById('headerDropdownLinkAccion');
+              const ddTextAccion = document.getElementById('headerDropdownTextAccion');
+
+              const dBtnLogin = document.getElementById('drawerBtnLogin');
+              const dUserPerfil = document.getElementById('drawerUserPerfil');
+              const dPerfilLink = document.getElementById('drawerPerfilLink');
+              const dUserAvatar = document.getElementById('drawerUserAvatar');
+              const dUserNombre = document.getElementById('drawerUserNombre');
+              const dUserBadge = document.getElementById('drawerUserBadge');
+
+              function limpiarSesion() {
+                if (authBox) authBox.classList.remove('has-user');
+                if (btnLogin) {
+                  btnLogin.classList.remove('is-hidden');
+                  btnLogin.style.removeProperty('display');
+                }
+                if (uContainer) {
+                  uContainer.style.setProperty('display', 'none', 'important');
+                }
+                cerrarDropdownHeader();
+                if (dBtnLogin) dBtnLogin.style.display = 'flex';
+                if (dUserPerfil) dUserPerfil.style.display = 'none';
+              }
+
+              if (!raw) {
+                limpiarSesion();
+                return;
+              }
+
+              const parsed = JSON.parse(raw);
+              const u = (parsed && typeof parsed === 'object' && parsed.value) ? parsed.value : parsed;
+
+              if (parsed && parsed.expiry && Date.now() > parsed.expiry) {
+                localStorage.removeItem('wiSmile');
+                limpiarSesion();
+                return;
+              }
+
+              if (!u || (!u.uid && !u.nombre && !u.usuario && !u.email)) {
+                limpiarSesion();
+                return;
+              }
+
+              const rol = (u.rol || 'cliente').toLowerCase();
+              const esStaff = ['personal', 'gestor', 'admin', 'colaborador'].includes(rol);
+              const baseDestino = esStaff ? '/personal' : '/cliente';
+              const langMatch = location.pathname.match(/^\/([a-z]{2})(\/|$)/);
+              const prefixLang = (langMatch && langMatch[1] !== 'es') ? `/${langMatch[1]}` : '';
+              const rutaFinal = `${prefixLang}${baseDestino}`;
+
+              const primerNombre = (u.nombre || u.usuario || 'Usuario').trim().split(' ')[0];
+              const nombreCompleto = u.nombreCompleto || u.nombre || primerNombre;
+              const emailUsuario = u.email || u.correo || 'Cuenta activa';
+              const foto = (!u.avatar && !u.foto && !u.photoURL) || (u.avatar && u.avatar.includes('smile.webp')) ? '/smile.avif' : (u.avatar || u.foto || u.photoURL);
+
+              // Activar estado de usuario autenticado en Header
+              if (authBox) authBox.classList.add('has-user');
+              if (btnLogin) {
+                btnLogin.classList.add('is-hidden');
+                btnLogin.style.setProperty('display', 'none', 'important');
+              }
+              if (uContainer) {
+                uContainer.style.removeProperty('display');
+                uContainer.style.display = 'inline-flex';
+              }
+              if (userNombre) userNombre.textContent = primerNombre;
+              if (userAvatar) {
+                userAvatar.src = foto;
+                userAvatar.alt = primerNombre;
+              }
+
+              // Poblar datos del Dropdown Flotante
+              if (ddNombre) ddNombre.textContent = nombreCompleto;
+              if (ddEmail) ddEmail.textContent = emailUsuario;
+              if (ddLinkCuenta) ddLinkCuenta.href = rutaFinal;
+              if (ddTextCuenta) ddTextCuenta.textContent = esStaff ? 'Consola de Gestión' : 'Mi Portal Paciente';
+
+              if (ddLinkAccion) {
+                const subRuta = esStaff ? '/personal/dashboard' : '/cliente';
+                ddLinkAccion.href = `${prefixLang}${subRuta}`;
+              }
+              if (ddTextAccion) {
+                ddTextAccion.textContent = esStaff ? 'Citas & Agenda' : 'Mis Consultas';
+              }
+
+              // Sincronizar también Drawer Móvil
+              if (dBtnLogin) dBtnLogin.style.display = 'none';
+              if (dUserPerfil) dUserPerfil.style.display = 'flex';
+              if (dPerfilLink) dPerfilLink.href = rutaFinal;
+              if (dUserNombre) dUserNombre.textContent = primerNombre;
+              if (dUserBadge) dUserBadge.textContent = esStaff ? (u.cargo || 'Especialista / Staff') : 'Paciente';
+              if (dUserAvatar) {
+                dUserAvatar.src = foto;
+                dUserAvatar.alt = primerNombre;
+              }
+            } catch(e) {}
+          }
+
+          window.sincronizarAuthHeader = sincronizarAuth;
+          window.cerrarSesionHeader = function() {
+            try {
+              localStorage.removeItem('wiSmile');
+              sessionStorage.removeItem('wiSmile');
+              sincronizarAuth();
+              window.location.replace('/');
+            } catch(e) {
+              window.location.href = '/';
+            }
+          };
+
+          sincronizarAuth();
+          document.addEventListener('DOMContentLoaded', sincronizarAuth);
+          document.addEventListener('astro:page-load', sincronizarAuth);
+          window.addEventListener('storage', function(e) {
+            if (e.key === 'wiSmile') sincronizarAuth();
+          });
+          window.addEventListener('wi-auth-cambio', sincronizarAuth);
+        })();
+      </script>
 
       <!-- Botón AGENDAR CITA (Abre Modal Agendar) -->
       {!esPersonal && (
@@ -165,7 +375,6 @@ const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
       </button>
 
     </div>
-
 
   </div>
 </header>

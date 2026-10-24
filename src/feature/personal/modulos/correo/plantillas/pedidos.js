@@ -26,7 +26,7 @@ export function generarPlantillaPedido({
   const contenidoExtraHtml = mensajeMarkdown ? mdToEmailHtml(mensajeMarkdown) : '';
   const nombreEmpresa = neg?.nombreCorto || neg?.nombre || 'nuestra empresa';
   const esServicios = neg?.modeloNegocio === 'servicios_y_asesorias';
-  const colorMarca = neg?.colorPrimario || '#ff6600';
+  const colorMarca = neg?.colorPrimario || '#104356';
 
   const tituloEncabezado = esServicios ? '⚖️ ¡Tu solicitud está confirmada!' : '📦 ¡Tu pedido está confirmado!';
   const bajadaTexto = `Hemos recibido tu solicitud con éxito en ${nombreEmpresa} y nos encontramos coordinando tu atención.`;

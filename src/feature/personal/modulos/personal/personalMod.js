@@ -294,7 +294,7 @@ export function inicializarModuloPersonal() {
     if (lista.length === 0) {
       driversGrid.innerHTML = `
         <div style="grid-column: 1 / -1; text-align: center; padding: 48px 20px; color: var(--tx2); background: var(--surface-card, rgba(255,255,255,0.02)); border: 1px dashed var(--border-card, rgba(255,255,255,0.1)); border-radius: 14px;">
-          <i class="fa-solid fa-users" style="font-size: 28px; opacity: 0.5; margin-bottom: 12px; display: block; color: var(--mco, #ff6600);"></i>
+          <i class="fa-solid fa-users" style="font-size: 28px; opacity: 0.5; margin-bottom: 12px; display: block; color: var(--mco, var(--brand-sky, #38bdf8));"></i>
           <p style="font-size: 15px; font-weight: 700; color: var(--tx, #f3f6fc); margin: 0 0 6px 0;">No hay colaboradores registrados en el equipo</p>
           <span style="font-size: 13px; color: var(--tx2, #94a3b8);">Haz clic en "Registrar Colaborador" para añadir al primer miembro del equipo.</span>
         </div>
@@ -334,7 +334,7 @@ export function inicializarModuloPersonal() {
             <img src="${avatar}" alt="${nombre}" class="pe-driver-avatar" onerror="this.src='/smile.avif'" />
             <div class="pe-driver-meta">
               <span class="pe-driver-name">${nombre}</span>
-              <span class="pe-driver-cargo" style="${p.rol === 'gestor' ? 'color: var(--mco, var(--brand-primary, #ff6600)); font-weight: 700;' : ''}">${cargo}</span>
+              <span class="pe-driver-cargo" style="${p.rol === 'gestor' ? 'color: var(--mco, var(--brand-primary, #104356)); font-weight: 700;' : ''}">${cargo}</span>
               ${statusBadge}
             </div>
           </div>
@@ -342,7 +342,7 @@ export function inicializarModuloPersonal() {
           <div class="pe-driver-details">
             <div class="pe-detail-row">
               <span class="pe-detail-lbl"><i class="fa-solid fa-phone" style="font-size: 11px;"></i> Celular:</span>
-              <span style="color: var(--brand-primary, var(--mco, #ff6600)); font-weight: 700;">${p.celular || 'Sin número'}</span>
+              <span style="color: var(--brand-primary, var(--mco, #104356)); font-weight: 700;">${p.celular || 'Sin número'}</span>
             </div>
             <div class="pe-detail-row">
               <span class="pe-detail-lbl"><i class="fa-regular fa-envelope" style="font-size: 11px;"></i> Correo:</span>

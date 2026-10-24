@@ -9,7 +9,7 @@ import { construirUrlWhatsapp, renderizarWhatsappHtml } from '../lib/formateador
 import { datosNegocio } from '@/negocio.js';
 import productosSemilla from '@/semillas/productos.json';
 
-let plantillaActualId = 'tpl_pedido_confirmado';
+let plantillaActualId = 'tpl_cita_confirmada';
 
 export function initPlantillasTab() {
   const container = document.getElementById('waViewPlantillas');
@@ -34,18 +34,27 @@ export function initPlantillasTab() {
   const btnOpenWs = document.getElementById('btnWaOpenWs');
   const btnCopy = document.getElementById('btnWaCopy');
 
-  // 1. Recoger valores actuales de variables operativas
+  // 1. Recoger valores actuales de variables operativas clínicas
   function obtenerValoresOperativos() {
+    const opt = selProducto?.options?.[selProducto?.selectedIndex ?? 0];
+    const nom = selProducto?.value?.trim() || opt?.text || 'Psicoterapia Individual (TCC)';
+    const pre = inpMonto?.value?.trim() || opt?.getAttribute('data-precio') || '85.00';
     return {
-      cliente: inpCliente?.value?.trim() || 'Estimado/a cliente',
-      celular: inpCelular?.value?.trim() || '',
-      pedidoId: inpPedidoId?.value?.trim() || '001',
-      producto: selProducto?.value?.trim() || datosNegocio?.productoPrincipal || productosSemilla?.[0]?.nombre || 'Producto Principal',
-      monto: inpMonto?.value?.trim() || '0.00',
-      precioMayorista: '0.00',
-      direccion: inpDireccion?.value?.trim() || datosNegocio?.ubicacion?.direccion || '',
-      distrito: inpDistrito?.value?.trim() || datosNegocio?.ubicacion?.distrito || '',
-      tiempoEstimado: inpEta?.value?.trim() || 'Atención Inmediata'
+      cliente: inpCliente?.value?.trim() || 'Camila Valdivia',
+      celular: inpCelular?.value?.trim() || '51960332958',
+      pedidoId: inpPedidoId?.value?.trim() || 'CITA-101',
+      codigo: inpPedidoId?.value?.trim() || 'CITA-101',
+      servicio: nom,
+      producto: nom,
+      monto: pre,
+      precio: pre,
+      hora: inpEta?.value?.trim() || '10:00 am',
+      tiempoEstimado: inpEta?.value?.trim() || 'Sesión de 50 minutos',
+      fecha: 'Sábado 24 de Octubre',
+      modalidad: inpDireccion?.value?.trim() || 'Presencial / Online (Google Meet)',
+      lugar: inpDireccion?.value?.trim() || datosNegocio?.ubicacion?.direccion || 'Av. Separadora Industrial',
+      direccion: inpDireccion?.value?.trim() || datosNegocio?.ubicacion?.direccion || 'Av. Separadora Industrial',
+      distrito: inpDistrito?.value?.trim() || datosNegocio?.ubicacion?.distrito || 'Villa El Salvador'
     };
   }
 
@@ -105,6 +114,13 @@ export function initPlantillasTab() {
   }
 
   // 4. Listeners en Vivo para el formulario
+  selProducto?.addEventListener('change', () => {
+    const opt = selProducto.options[selProducto.selectedIndex];
+    const precio = opt?.getAttribute('data-precio');
+    if (precio && inpMonto) inpMonto.value = precio;
+    actualizarPreview(true);
+  });
+
   const inputs = [inpCliente, inpCelular, inpPedidoId, selProducto, inpMonto, inpDireccion, inpDistrito, inpEta];
   inputs.forEach(input => {
     input?.addEventListener('input', () => actualizarPreview(false));

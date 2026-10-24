@@ -14,19 +14,13 @@ export function generarPlantillaLibre({
   const asuntoDefecto = esServicios ? 'Comunicado Tributario Oficial' : 'Comunicado Oficial';
   const asuntoFinal = asunto || asuntoDefecto;
 
-  const contenidoMarkdownFinal = mensajeMarkdown || (esServicios ? `
-Estimado cliente, te compartimos información importante de nuestro estudio:
+  const contenidoMarkdownFinal = mensajeMarkdown || `
+Estimado/a consultante, te compartimos información importante de nuestro consultorio:
 
-- **Monitoreo de Buzón SOL:** Mantenemos vigilancia activa de las notificaciones que emite la SUNAT para tu RUC.
-- **Canal Directo de Asesoría:** Consultas directas vía WhatsApp institucional y correo oficial.
-- **Cumplimiento Puntual:** Presentación de declaraciones con anticipación para evitar contingencias.
-  `.trim() : `
-Estimado cliente, te compartimos información y novedades importantes sobre nuestro servicio:
-
-- **Pesaje Exacto Comprobado:** Verificación con balanza digital calibrada al momento de la entrega en tu puerta.
-- **Garantía y Seguridad GLP:** Balones con precinto de seguridad termoencogible intacto y revisión técnica gratuita.
-- **Canal Directo de Atención:** Despacho express y consultas vía WhatsApp y teléfono oficial.
-  `.trim());
+- **Espacio Seguro y Confidencial:** Atención ética y personalizada basada en evidencia científica (C.Ps.P. 49425).
+- **Canal Directo de Acompañamiento:** Consultas y reprogramaciones vía WhatsApp oficial y correo institucional.
+- **Continuidad Terapéutica:** Pautas claras y ejercicios prácticos para aplicar entre sesiones.
+  `.trim();
 
   const contenidoHtml = `
     <h2 style="color: #0f172a; margin-top: 0; font-size: 21px; font-weight: 700;">${asuntoFinal}</h2>

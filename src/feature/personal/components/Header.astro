@@ -17,7 +17,7 @@ const defaultEmail = '';
 
     <a href="/" class="ps-brand" title="Ir a la Tienda / Inicio">
       <picture class="ps-brand-picture">
-        <source media="(max-width: 900px)" srcset={datosNegocio.logoFull} />
+        <source media="(max-width: 900px)" srcset={datosNegocio.logoFull || '/imgwii/logo_full.webp'} />
         <img src={datosNegocio.logo} alt={datosNegocio.nombre} class="ps-logo" />
       </picture>
       <div class="ps-brand-text">

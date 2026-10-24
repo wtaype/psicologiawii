@@ -60,8 +60,15 @@ export function obtenerBlogs(force = false) {
     try {
       const local = getls(STORAGE_KEY);
       if (Array.isArray(local) && local.length > 0) {
-        _memoriaBlogs = local.map(normalizarBlog);
-        return _memoriaBlogs;
+        // Purgado proactivo de caché si contiene artículos residuales de Gaswii/GLP
+        const esResidual = local.some(b => 
+          /glp|balon|solgas|click-on|tara|peso exacto/i.test(b.titulo || '') ||
+          /glp|balon|solgas|click-on|tara|peso-exacto/i.test(b.slug || '')
+        );
+        if (!esResidual) {
+          _memoriaBlogs = local.map(normalizarBlog);
+          return _memoriaBlogs;
+        }
       }
     } catch (e) {
       console.warn('[dataBlogs] Error al leer localStorage:', e);

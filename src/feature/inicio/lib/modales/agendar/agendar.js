@@ -18,6 +18,26 @@ function obtenerTextos() {
   return resolverTextos({ es, en });
 }
 
+function obtenerTemasSincronizados() {
+  const t = obtenerTextos();
+  try {
+    const raw = localStorage.getItem('wi_servicios') || localStorage.getItem('wi_productos');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      const lista = Array.isArray(parsed) ? parsed : (parsed?.value || []);
+      if (Array.isArray(lista) && lista.length > 0) {
+        return lista
+          .filter(s => s.activo !== false)
+          .map(s => ({
+            id: s.id,
+            nombre: typeof s.nombre === 'object' ? (s.nombre.es || s.nombre.en) : (s.nombre || s.id)
+          }));
+      }
+    }
+  } catch (e) {}
+  return t.temas || [];
+}
+
 function obtenerUsuarioActivo() {
   try {
     const raw = localStorage.getItem('wiSmile');
@@ -112,7 +132,7 @@ function asegurarModalEnDOM() {
                   <i class="fa-solid fa-brain"></i> ${t.lblTema}
                 </label>
                 <select id="agendarSelectMotivo" class="modal-agendar-input">
-                  ${t.temas.map(s => {
+                  ${obtenerTemasSincronizados().map(s => {
                     return `<option value="${s.id}" data-nombre="${s.nombre}">${s.nombre}</option>`;
                   }).join('')}
                 </select>

@@ -21,11 +21,10 @@ const t = resolverIdiomaSeccion({ es, en }, idioma);
 const telLimpio = datosNegocio.telefonoLimpio;
 const telMostrado = datosNegocio.telefonoMostrado || datosNegocio.telefono;
 const wsNumero = datosNegocio.whatsapp;
-const wsLink = `https://wa.me/${wsNumero}?text=${encodeURIComponent(
-  idioma === 'en'
-    ? `Hello ${datosNegocio.nombre}, I want to request a cylinder delivery.`
-    : `Hola ${datosNegocio.nombre}, deseo solicitar un balón de gas con balanza digital.`
-)}`;
+const wsMensaje = datosNegocio.whatsappMensaje || (idioma === 'en'
+  ? `Hello ${datosNegocio.nombre}, I would like to schedule a psychological consultation.`
+  : `Hola ${datosNegocio.nombre}, deseo agendar una consulta psicológica.`);
+const wsLink = `https://wa.me/${wsNumero}?text=${encodeURIComponent(wsMensaje)}`;
 
 const mapsUrl = datosNegocio.mapsUrl || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(datosNegocio.direccionSede + ' ' + datosNegocio.distritoSede)}`;
 const wazeUrl = `https://waze.com/ul?q=${encodeURIComponent(datosNegocio.direccionSede + ' ' + datosNegocio.distritoSede)}`;

@@ -33,9 +33,9 @@
 
 .gl-filter-pill.active,
 .gl-filter-pill:hover {
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .gl-toolbar-right {
@@ -70,9 +70,9 @@
 }
 
 .gl-btn-sync:hover {
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .gl-btn-sync:disabled {
@@ -101,7 +101,7 @@
 
 .gl-card:hover {
   transform: translateY(-3px);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
@@ -164,7 +164,7 @@
 }
 
 .gl-pin-badge {
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--brand-primary, #104356));
   color: #ffffff;
   font-size: 11px;
   width: 26px;
@@ -210,7 +210,7 @@
 }
 
 .gl-card.pinned {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 .gl-body {
@@ -264,7 +264,7 @@
 .gl-btn-copy-url {
   background: transparent;
   border: none;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -277,7 +277,7 @@
 }
 
 .gl-btn-copy-url:hover {
-  background: var(--mbg, rgba(255, 102, 0, 0.1));
+  background: var(--mbg, rgba(56, 189, 248, 0.1));
 }
 
 .gl-btn-edit {
@@ -292,8 +292,8 @@
 }
 
 .gl-btn-edit:hover {
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .gl-btn-delete {
@@ -370,8 +370,8 @@
 .gl-dropzone.dragover,
 .gl-dropzone-inner:hover,
 .gl-dropzone-inner.dragover {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  background: var(--mbg, rgba(255, 102, 0, 0.06));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  background: var(--mbg, rgba(56, 189, 248, 0.06));
 }
 
 .gl-dropzone.dragover,
@@ -382,9 +382,9 @@
 
 .gl-dropzone-icon {
   font-size: 52px;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   margin-bottom: 16px;
-  filter: drop-shadow(0 4px 14px rgba(255, 102, 0, 0.25));
+  filter: drop-shadow(0 4px 14px rgba(56, 189, 248, 0.25));
   transition: transform 0.2s ease;
 }
 
@@ -673,7 +673,7 @@
 .gl-edit-pin-checkbox {
   width: 16px;
   height: 16px;
-  accent-color: var(--mco, var(--brand-primary, #ff6600));
+  accent-color: var(--mco, var(--brand-primary, #104356));
   cursor: pointer;
 }
 

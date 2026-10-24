@@ -49,7 +49,7 @@
 
 .ng-tab-btn:hover {
   color: var(--ink, #0f172a);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
   background: var(--raised, rgba(0, 0, 0, 0.02));
   transform: translateY(-1px);
 }
@@ -59,10 +59,10 @@
 }
 
 .ng-tab-btn.active {
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--brand-primary, #104356));
   color: #ffffff;
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  box-shadow: 0 2px 10px var(--brand-glow-orange, rgba(255, 102, 0, 0.28));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  box-shadow: 0 2px 10px var(--brand-glow-orange, rgba(56, 189, 248, 0.28));
 }
 
 .ng-tab-btn.active i {
@@ -155,7 +155,7 @@
 }
 
 .ng-card-title i {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .ng-card-desc {
@@ -225,7 +225,7 @@
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--mco, var(--brand-primary, #ff6600));
+  border: 2px solid var(--mco, var(--brand-primary, #104356));
   background: var(--surface, #ffffff);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
   transition: transform 0.2s;
@@ -270,7 +270,7 @@
 }
 
 .ng-photo-box-title i {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   font-size: 13px;
 }
 
@@ -303,7 +303,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   cursor: pointer;
   text-decoration: none;
   flex-shrink: 0;
@@ -312,9 +312,9 @@
 }
 
 .ng-btn-icon-link:hover {
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--brand-primary, #104356));
   color: var(--white, #ffffff);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
   transform: translateY(-1px);
 }
 
@@ -408,8 +408,8 @@
 .ng-textarea:focus,
 .ng-select:focus {
   outline: none;
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  box-shadow: 0 0 0 2px var(--mbg, rgba(255, 102, 0, 0.15));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  box-shadow: 0 0 0 2px var(--mbg, rgba(56, 189, 248, 0.15));
 }
 
 .ng-textarea {
@@ -466,8 +466,8 @@
 }
 
 .ng-btn-maps-action:hover {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .ng-btn-maps-test {
@@ -502,7 +502,7 @@
 }
 
 .ng-select-add-red:focus {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 .ng-btn-sm {
@@ -543,11 +543,11 @@
 
 .ng-red-row.is-dragging {
   opacity: 0.45;
-  border: 1px dashed var(--mco, var(--brand-primary, #ff6600));
+  border: 1px dashed var(--mco, var(--brand-primary, #104356));
 }
 
 .ng-red-row.is-drag-over {
-  border-top: 2px solid var(--mco, var(--brand-primary, #ff6600));
+  border-top: 2px solid var(--mco, var(--brand-primary, #104356));
 }
 
 .ng-red-row-header {
@@ -647,7 +647,7 @@
 
 .ng-btn-move:hover {
   color: var(--ink, #0f172a);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
   background: var(--raised, rgba(0, 0, 0, 0.04));
 }
 
@@ -695,13 +695,13 @@
 }
 
 .ng-btn-probar-red {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .ng-btn-probar-red:hover {
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--brand-primary, #104356));
   color: var(--white, #ffffff);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 .ng-btn-portal-red:hover {
@@ -749,7 +749,7 @@
 }
 
 .ng-section-bilingue-title i {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .ng-section-bilingue-sub {
@@ -787,15 +787,15 @@
 
 .ng-lang-tab-btn:hover {
   color: var(--text-bright, var(--tx, #f8fafc));
-  background: var(--mbg, rgba(255, 102, 0, 0.08));
+  background: var(--mbg, rgba(56, 189, 248, 0.08));
 }
 
 .ng-lang-tab-btn.active {
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--brand-primary, #104356));
   color: var(--white, #ffffff);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
   font-weight: 700;
-  box-shadow: var(--shadow-hover, 0 2px 8px rgba(255, 102, 0, 0.35));
+  box-shadow: var(--shadow-hover, 0 2px 8px rgba(56, 189, 248, 0.35));
 }
 
 .ng-lang-pane {
@@ -824,7 +824,7 @@
 .ng-sede-box-badge {
   font-size: 11px;
   font-weight: 700;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -838,7 +838,7 @@
 .ng-link-btn {
   background: transparent;
   border: none;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
@@ -1096,7 +1096,7 @@
 
 .google-serp-thumb-box:hover {
   transform: scale(1.03);
-  box-shadow: 0 4px 14px rgba(255, 102, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
 }
 
 .google-serp-thumb-img {
@@ -1143,7 +1143,7 @@
   height: 58px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid var(--mco, #ff6600);
+  border: 2px solid var(--mco, var(--brand-sky, #38bdf8));
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -1165,7 +1165,7 @@
 .mockup-bio-cargo {
   font-size: 12px;
   font-weight: 600;
-  color: var(--mco, #ff6600);
+  color: var(--mco, var(--brand-sky, #38bdf8));
 }
 
 .mockup-bio-registro {
@@ -1196,9 +1196,9 @@
   gap: 5px;
   padding: 4px 10px;
   border-radius: 20px;
-  background: rgba(255, 102, 0, 0.1);
-  border: 1px solid rgba(255, 102, 0, 0.25);
-  color: var(--mco, #ff6600);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: var(--mco, var(--brand-sky, #38bdf8));
   font-size: 11px;
   font-weight: 600;
 }
@@ -1286,7 +1286,7 @@
 .mockup-sedes-box-title {
   font-size: 12px;
   font-weight: 700;
-  color: var(--mco, #ff6600);
+  color: var(--mco, var(--brand-sky, #38bdf8));
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1320,7 +1320,7 @@
 }
 
 .mockup-zona-chip strong {
-  color: var(--mco, #ff6600);
+  color: var(--mco, var(--brand-sky, #38bdf8));
 }
 
 .mockup-sedes-action {
@@ -1328,14 +1328,14 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: var(--mco, #ff6600);
+  background: var(--mco, var(--brand-sky, #38bdf8));
   color: #ffffff;
   padding: 8px 14px;
   border-radius: 8px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(255, 102, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.25);
 }
 
 /* ═════════════════════════════════════════════════════════════
@@ -1366,7 +1366,7 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--mco, #ff6600);
+  background: var(--mco, var(--brand-sky, #38bdf8));
   color: #ffffff;
   padding: 8px 14px;
   border-radius: 8px;
@@ -1375,7 +1375,7 @@
   border: none;
   cursor: pointer;
   transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-  box-shadow: 0 2px 6px rgba(255, 102, 0, 0.25);
+  box-shadow: 0 2px 6px rgba(56, 189, 248, 0.25);
 }
 
 .ng-btn-add-zona:hover {
@@ -1398,7 +1398,7 @@
 }
 
 .ng-zona-card:hover {
-  border-color: rgba(255, 102, 0, 0.3);
+  border-color: rgba(56, 189, 248, 0.3);
 }
 
 [data-theme="futuro"] .ng-zona-card {
@@ -1426,8 +1426,8 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(255, 102, 0, 0.12);
-  color: var(--mco, #ff6600);
+  background: rgba(56, 189, 248, 0.12);
+  color: var(--mco, var(--brand-sky, #38bdf8));
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -1584,8 +1584,8 @@
 }
 
 .ng-mock-chip.active {
-  border-color: var(--mco, #ff6600);
-  background: rgba(255, 102, 0, 0.08);
+  border-color: var(--mco, var(--brand-sky, #38bdf8));
+  background: rgba(56, 189, 248, 0.08);
 }
 
 .ng-mock-chip-name {
@@ -1596,7 +1596,7 @@
 
 .ng-mock-chip-time {
   font-size: 11px;
-  color: var(--mco, #ff6600);
+  color: var(--mco, var(--brand-sky, #38bdf8));
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -1636,7 +1636,7 @@
 }
 
 .ng-zona-preview-tip i {
-  color: var(--mco, #ff6600);
+  color: var(--mco, var(--brand-sky, #38bdf8));
   margin-top: 2px;
 }
 
@@ -1693,9 +1693,9 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  background: rgba(255, 102, 0, 0.12);
-  border: 1px solid rgba(255, 102, 0, 0.3);
-  color: var(--mco, #ff6600);
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--mco, var(--brand-sky, #38bdf8));
   padding: 4px 10px;
   border-radius: 20px;
   font-size: 10.5px;
@@ -1767,9 +1767,9 @@
   gap: 5px;
   padding: 4px 10px;
   border-radius: 20px;
-  background: rgba(255, 102, 0, 0.1);
-  border: 1px solid rgba(255, 102, 0, 0.25);
-  color: var(--mco, #ff6600);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  color: var(--mco, var(--brand-sky, #38bdf8));
   font-size: 11px;
   font-weight: 600;
 }

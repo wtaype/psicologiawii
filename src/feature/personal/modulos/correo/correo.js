@@ -125,7 +125,7 @@ export function inicializarModuloCorreo() {
   const inTallerModalidad = document.getElementById('crTallerModalidad');
   const inTallerInversion = document.getElementById('crTallerInversion');
 
-  // Inputs dinámicos: Pedido GLP
+  // Inputs dinámicos: Sesión Clínica / Atención
   const inPedNumero = document.getElementById('crPedNumero');
   const inPedProducto = document.getElementById('crPedProducto');
   const inPedCantidad = document.getElementById('crPedCantidad');
@@ -263,10 +263,10 @@ export function inicializarModuloCorreo() {
     if (filtroBusqueda.trim()) {
       const q = filtroBusqueda.toLowerCase().trim();
       items = items.filter(m => {
-        const dest = m.destinatario?.para || m.destinatario?.nombre || '';
-        const rem = m.remitente?.desde || '';
-        const asu = m.mensaje?.asunto || '';
-        const res = m.mensaje?.resumen || '';
+        const dest = m.para || m.destinatario?.para || m.destinatario?.nombre || '';
+        const rem = m.de || m.remitente?.desde || '';
+        const asu = m.asunto || m.mensaje?.asunto || '';
+        const res = typeof m.mensaje === 'string' ? m.mensaje : (m.mensaje?.resumen || m.resumen || '');
         return dest.toLowerCase().includes(q) || rem.toLowerCase().includes(q) || asu.toLowerCase().includes(q) || res.toLowerCase().includes(q);
       });
     }
@@ -289,21 +289,22 @@ export function inicializarModuloCorreo() {
     messageList.innerHTML = items.map((m) => {
       const isUnread = carpetaActiva === 'recibidos' && !m.leido;
       const isActive = mensajeActivo && mensajeActivo.id === m.id;
+      
       const emisor = carpetaActiva === 'recibidos'
-        ? (m.remitente?.desde || 'Remitente').split('<')[0].trim()
-        : (m.destinatario?.nombre || m.destinatario?.para || 'Cliente');
+        ? (m.de || m.remitente?.desde || 'Consultante').split('<')[0].trim()
+        : (m.para || m.destinatario?.nombre || m.destinatario?.para || 'Cliente');
 
-      const inicial = emisor.charAt(0).toUpperCase() || 'E';
-      const tipo = m.mensaje?.tipo || 'liquidacion';
+      const inicial = (emisor || 'C').charAt(0).toUpperCase() || 'C';
+      const tipo = (m.tag || m.categoria || m.mensaje?.tipo || 'cita').toLowerCase();
       const tagClase = `tag-${tipo}`;
-      const asunto = m.mensaje?.asunto || 'Sin asunto';
-      const resumen = m.mensaje?.resumen || '';
+      const asunto = m.asunto || m.mensaje?.asunto || 'Consulta Psicológica';
+      const resumen = m.resumen || (typeof m.mensaje === 'string' ? m.mensaje.slice(0, 95) + '...' : (m.mensaje?.resumen || ''));
       const fecha = m.fecha || 'Reciente';
 
       let avatarClase = 'cr-msg-avatar';
       if (tipo === 'comprobante') avatarClase += ' green';
-      else if (tipo === 'cronograma' || tipo === 'cotizacion') avatarClase += ' blue';
-      else if (tipo === 'consulta' || tipo === 'general') avatarClase += ' purple';
+      else if (tipo === 'cita' || tipo === 'cronograma' || tipo === 'cotizacion') avatarClase += ' blue';
+      else if (tipo === 'taller' || tipo === 'consulta' || tipo === 'general') avatarClase += ' purple';
 
       return `
         <div class="cr-msg-item ${isUnread ? 'unread' : ''} ${isActive ? 'active' : ''}" data-msg-id="${m.id}">
@@ -358,6 +359,130 @@ export function inicializarModuloCorreo() {
   // ════════════════════════════════════════════════════════════
   // 4. LECTURA DE UN CORREO (PANE 3)
   // ════════════════════════════════════════════════════════════
+  function generarHtmlVisualizacion(msg) {
+    if (!msg) return '';
+    if (msg.mensaje && typeof msg.mensaje === 'object' && msg.mensaje.html) {
+      return msg.mensaje.html;
+    }
+    if (typeof msg.html === 'string' && msg.html) {
+      return msg.html;
+    }
+
+    const remitente = msg.de || msg.remitente?.desde || 'Consultante Clínico';
+    const destinatario = msg.para || msg.destinatario?.para || `${datosNegocio.nombre || 'Lic. Sofia Reynaga'} <${datosNegocio.contacto?.email || datosNegocio.email || ''}>`;
+    const asunto = msg.asunto || msg.mensaje?.asunto || 'Consulta Psicológica';
+    const tag = (msg.tag || msg.categoria || 'Consulta').toUpperCase();
+    const fecha = msg.fecha || 'Reciente';
+    const cuerpo = typeof msg.mensaje === 'string'
+      ? msg.mensaje
+      : (msg.mensaje?.resumen || msg.resumen || 'Sin contenido registrado.');
+
+    return `
+      <!DOCTYPE html>
+      <html lang="es">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        <style>
+          * { box-sizing: border-box; }
+          body {
+            margin: 0;
+            padding: 32px 24px;
+            font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            line-height: 1.65;
+            font-size: 14px;
+          }
+          .mail-container {
+            max-width: 680px;
+            margin: 0 auto;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+          }
+          .mail-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 6px;
+            background: #eff6ff;
+            color: #0284c7;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 16px;
+          }
+          .mail-title {
+            font-size: 19px;
+            font-weight: 600;
+            color: #0f172a;
+            margin: 0 0 18px 0;
+            line-height: 1.4;
+          }
+          .mail-meta {
+            background: #f1f5f9;
+            border-left: 4px solid #0284c7;
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 24px;
+            font-size: 12.5px;
+            color: #475569;
+          }
+          .mail-meta div {
+            margin-bottom: 4px;
+          }
+          .mail-meta div:last-child {
+            margin-bottom: 0;
+          }
+          .mail-meta strong {
+            color: #1e293b;
+          }
+          .mail-content {
+            font-size: 14.5px;
+            color: #334155;
+            line-height: 1.75;
+            white-space: pre-wrap;
+            padding: 8px 0 20px 0;
+          }
+          .mail-footer {
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 12px;
+            color: #64748b;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="mail-container">
+          <span class="mail-tag">${tag}</span>
+          <h1 class="mail-title">${asunto}</h1>
+          <div class="mail-meta">
+            <div><strong>De:</strong> ${remitente}</div>
+            <div><strong>Para:</strong> ${destinatario}</div>
+            <div><strong>Fecha:</strong> ${fecha}</div>
+          </div>
+          <div class="mail-content">${cuerpo}</div>
+          <div class="mail-footer">
+            <span>🛡️ Mensaje verificado por el Consultorio Psicológico América</span>
+            <span>Lic. Sofia Reynaga Pachas</span>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+  }
+
   function abrirLecturaCorreo(msg) {
     mensajeActivo = msg;
 
@@ -371,19 +496,23 @@ export function inicializarModuloCorreo() {
       if (el.getAttribute('data-msg-id') === msg.id) el.classList.remove('unread');
     });
 
-    if (readSubject) readSubject.textContent = msg.mensaje?.asunto || 'Sin Asunto';
-    const senderFallback = `${datosNegocio.nombreCorto || datosNegocio.nombre || 'Emisor'} <${datosNegocio.contacto?.email || datosNegocio.email || ''}>`;
-    if (readFrom) readFrom.textContent = msg.remitente?.desde || senderFallback;
-    if (readTo) readTo.textContent = `Para: ${msg.destinatario?.para || 'Cliente'}`;
+    const asuntoTexto = msg.asunto || msg.mensaje?.asunto || 'Consulta Psicológica';
+    if (readSubject) readSubject.textContent = asuntoTexto;
+
+    const remitenteTexto = msg.de || msg.remitente?.desde || `${datosNegocio.nombreCorto || datosNegocio.nombre || 'Consultorio'} <${datosNegocio.contacto?.email || datosNegocio.email || ''}>`;
+    if (readFrom) readFrom.textContent = remitenteTexto;
+
+    const destinatarioTexto = msg.para || msg.destinatario?.para || `${datosNegocio.nombreCorto || datosNegocio.nombre || 'Lic. Sofia Reynaga'}`;
+    if (readTo) readTo.textContent = `Para: ${destinatarioTexto}`;
     if (readDate) readDate.textContent = msg.fecha || 'Reciente';
 
-    const emisorNombre = (msg.remitente?.desde || 'E').charAt(0).toUpperCase();
-    if (readAvatar) readAvatar.textContent = emisorNombre;
+    const emisorInicial = (remitenteTexto.replace(/[<>"']/g, '').trim() || 'C').charAt(0).toUpperCase();
+    if (readAvatar) readAvatar.textContent = emisorInicial;
 
     if (readFrame && readFrame.contentWindow) {
       const doc = readFrame.contentWindow.document;
       doc.open();
-      doc.write(msg.mensaje?.html || `<p style="font-family:sans-serif; padding:20px;">${msg.mensaje?.resumen || ''}</p>`);
+      doc.write(generarHtmlVisualizacion(msg));
       doc.close();
     }
 
@@ -393,24 +522,28 @@ export function inicializarModuloCorreo() {
   // Botón Responder
   btnReply?.addEventListener('click', () => {
     if (!mensajeActivo) return;
-    const destino = mensajeActivo.remitente?.responderA || mensajeActivo.remitente?.desde || '';
-    const asunto = mensajeActivo.mensaje?.asunto ? `Re: ${mensajeActivo.mensaje.asunto.replace(/^Re:\s*/i, '')}` : '';
+    const destino = mensajeActivo.de || mensajeActivo.remitente?.responderA || mensajeActivo.remitente?.desde || '';
+    const asuntoRaw = mensajeActivo.asunto || mensajeActivo.mensaje?.asunto || '';
+    const asunto = asuntoRaw ? `Re: ${asuntoRaw.replace(/^Re:\s*/i, '')}` : '';
+    const fecha = mensajeActivo.fecha || '';
     abrirRedactor({
       para: limpiarEmail(destino),
       asunto: asunto,
       plantilla: 'libre',
-      markdown: `\n\n--- \n*En respuesta a:* ${mensajeActivo.remitente?.desde || ''}\n*Fecha:* ${mensajeActivo.fecha || ''}`
+      markdown: `\n\n--- \n*En respuesta a:* ${destino}\n*Fecha:* ${fecha}`
     });
   });
 
   // Botón Reenviar
   btnForward?.addEventListener('click', () => {
     if (!mensajeActivo) return;
-    const asunto = mensajeActivo.mensaje?.asunto ? `Fwd: ${mensajeActivo.mensaje.asunto.replace(/^Fwd:\s*/i, '')}` : '';
+    const destino = mensajeActivo.de || mensajeActivo.remitente?.desde || '';
+    const asuntoRaw = mensajeActivo.asunto || mensajeActivo.mensaje?.asunto || '';
+    const asunto = asuntoRaw ? `Fwd: ${asuntoRaw.replace(/^Fwd:\s*/i, '')}` : '';
     abrirRedactor({
       asunto: asunto,
       plantilla: 'libre',
-      markdown: `\n\n--- Mensaje reenviado ---\n**De:** ${mensajeActivo.remitente?.desde || ''}\n**Fecha:** ${mensajeActivo.fecha || ''}\n**Asunto:** ${mensajeActivo.mensaje?.asunto || ''}`
+      markdown: `\n\n--- Mensaje reenviado ---\n**De:** ${destino}\n**Fecha:** ${mensajeActivo.fecha || ''}\n**Asunto:** ${asuntoRaw}`
     });
   });
 
@@ -430,7 +563,7 @@ export function inicializarModuloCorreo() {
     if (!mensajeActivo) return;
     const win = window.open('', '_blank');
     if (win) {
-      win.document.write(mensajeActivo.mensaje?.html || '');
+      win.document.write(generarHtmlVisualizacion(mensajeActivo));
       win.document.close();
     }
   });
@@ -562,26 +695,26 @@ export function inicializarModuloCorreo() {
         if (inputSubject) inputSubject.value = `🌱 Inscripción confirmada a Taller Vivencial · ${sufijoMarca}`;
         if (textMarkdown) textMarkdown.value = '¡Tu cupo está confirmado! Te recomendamos asistir con ropa cómoda y cuaderno de notas personal.';
       } else if (tipo === 'pedido') {
-        const pedId = inPedNumero?.value || 'PED-1029';
-        if (inputSubject) inputSubject.value = `📦 ¡Tu pedido #${pedId} está confirmado! · ${sufijoMarca}`;
-        if (textMarkdown) textMarkdown.value = 'Hemos recibido tu pedido con éxito y nuestra unidad de reparto se encuentra preparando tu despacho con balanza digital calibrada.';
+        const pedId = inPedNumero?.value || 'CITA-1029';
+        if (inputSubject) inputSubject.value = `🗓️ ¡Tu atención psicológica #${pedId} está confirmada! · ${sufijoMarca}`;
+        if (textMarkdown) textMarkdown.value = 'Hemos confirmado tu sesión psicológica con la Lic. Sofia Reynaga Pachas (C.Ps.P. 49425). Le esperamos en el horario acordado.';
       } else if (tipo === 'comprobante') {
-        const compNum = inCompSerie?.value || 'B001-000482';
-        if (inputSubject) inputSubject.value = `🧾 Tu Comprobante Electrónico ${compNum} · ${sufijoMarca}`;
+        const compNum = inCompSerie?.value || 'RH-E001-042';
+        if (inputSubject) inputSubject.value = `🧾 Tu Recibo por Honorarios Electrónico ${compNum} · ${sufijoMarca}`;
         if (textMarkdown) textMarkdown.value = 'Adjuntamos la representación impresa de su comprobante electrónico con validez oficial ante SUNAT.';
       } else if (tipo === 'cotizacion') {
         const cotId = inCotNumero?.value || 'COT-2026-15';
-        if (inputSubject) inputSubject.value = `📋 Propuesta Comercial #${cotId} · ${sufijoMarca}`;
-        if (textMarkdown) textMarkdown.value = 'Presentamos nuestra propuesta formal de suministro con tarifas competitivas por volumen y garantía de peso exacto.';
+        if (inputSubject) inputSubject.value = `📋 Propuesta Terapéutica #${cotId} · ${sufijoMarca}`;
+        if (textMarkdown) textMarkdown.value = 'Presentamos nuestra propuesta formal de acompañamiento terapéutico, evaluaciones y talleres vivenciales.';
       } else if (tipo === 'seguridad') {
-        if (inputSubject) inputSubject.value = `🛡️ Recomendaciones de Seguridad e Instalación · ${sufijoMarca}`;
+        if (inputSubject) inputSubject.value = `🌸 Recomendaciones y Pautas Post-Sesión · ${sufijoMarca}`;
         if (textMarkdown) textMarkdown.value = 'Compartimos las pautas clínicas de acompañamiento y recomendaciones para el bienestar emocional y la continuidad de sus sesiones.';
       } else if (tipo === 'liquidacion') {
-        if (inputSubject) inputSubject.value = `📊 Estado de Cuenta y Consumos · ${sufijoMarca}`;
-        if (textMarkdown) textMarkdown.value = 'Adjuntamos el detalle del consumo para su revisión y conformidad.';
+        if (inputSubject) inputSubject.value = `📊 Estado de Sesiones y Cuenta · ${sufijoMarca}`;
+        if (textMarkdown) textMarkdown.value = 'Adjuntamos el detalle de las sesiones realizadas para su control personal y conformidad.';
       } else if (tipo === 'cronograma') {
-        if (inputSubject) inputSubject.value = `⏰ Recordatorio de Atención y Despacho · ${sufijoMarca}`;
-        if (textMarkdown) textMarkdown.value = 'Recordamos a nuestros clientes los horarios y canales de despacho express.';
+        if (inputSubject) inputSubject.value = `⏰ Recordatorio de Horarios y Citas · ${sufijoMarca}`;
+        if (textMarkdown) textMarkdown.value = 'Recordamos a nuestros pacientes los horarios de atención y canales de reprogramación anticipada.';
       } else {
         if (inputSubject) inputSubject.value = `Comunicado Oficial · ${sufijoMarca}`;
         const dir = datosNegocio.ubicacion?.distrito ? ` (${datosNegocio.ubicacion.distrito}, ${datosNegocio.ubicacion?.ciudad || 'Lima'})` : '';

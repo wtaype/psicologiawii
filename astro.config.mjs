@@ -8,6 +8,11 @@ import { linkweb, id } from './src/wii.js';
 
 // https://astro.build/config
 export default defineConfig({
+  // DESACTIVAR DEV TOOLBAR EN CLIENTE (Evita errores de handshake WebSocket HMR en navegadores)
+  devToolbar: {
+    enabled: false
+  },
+
   // CONFIGURACIÓN BASE (Dominio canónico y compresión extrema HTML)
   site: linkweb,
   base: '/',

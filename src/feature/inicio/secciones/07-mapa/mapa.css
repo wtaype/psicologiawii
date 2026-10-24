@@ -1,5 +1,5 @@
 /* ==========================================================================
-   07-MAPA SECTION STYLES - SOLGAS SURQUILLO (GASWII)
+   07-MAPA SECTION STYLES - CONSULTORIO PSICOLÓGICO AMÉRICA
    Central de Operaciones y Mapa Embebido sobre .pagewii (85vw)
    ========================================================================== */
 
@@ -55,7 +55,7 @@
 /* Tarjeta Contenedora de Mapa */
 .mapa-box-wrapper {
   background: var(--bg-card, #0b1329);
-  border: 2px solid var(--border-accent, rgba(224, 86, 0, 0.4));
+  border: 2px solid var(--border-accent, rgba(56, 189, 248, 0.45));
   box-shadow: var(--shadow-card, 0 1vh 3vh rgba(0, 0, 0, 0.5));
   border-radius: 1.5vh;
   padding: 1.8vh 1.4vw;
@@ -93,8 +93,8 @@
 }
 
 .mapa-icon-box.icon-orange {
-  color: var(--primary, #ff6600);
-  background: rgba(255, 102, 0, 0.15);
+  color: var(--brand-sky, #38bdf8);
+  background: rgba(2, 132, 199, 0.15);
 }
 
 .mapa-icon-box.icon-blue {
@@ -131,7 +131,7 @@
 }
 
 .mapa-btn-action {
-  background: linear-gradient(135deg, var(--brand-orange, #ff6600) 0%, #e05600 100%);
+  background: linear-gradient(135deg, var(--brand-blue, #0284c7) 0%, #0369a1 100%);
   color: #fff;
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: 0.88rem;
@@ -143,7 +143,7 @@
   justify-content: center;
   gap: 0.5rem;
   text-decoration: none;
-  box-shadow: 0 0.5vh 1.5vh rgba(255, 102, 0, 0.3);
+  box-shadow: 0 0.5vh 1.5vh rgba(2, 132, 199, 0.3);
   transition: transform 0.2s, box-shadow 0.2s;
   width: 100%;
   box-sizing: border-box;
@@ -151,7 +151,7 @@
 
 .mapa-btn-action:hover {
   transform: translateY(-0.2vh);
-  box-shadow: 0 0.8vh 2vh rgba(255, 102, 0, 0.45);
+  box-shadow: 0 0.8vh 2vh rgba(2, 132, 199, 0.45);
 }
 
 /* Marco del Iframe */

@@ -1,5 +1,5 @@
 /* ==========================================================================
-   04-TECNICO (SEGURIDAD) SECTION STYLES - SOLGAS SURQUILLO (GASWII)
+   04-TECNICO (SEGURIDAD) SECTION STYLES - CONSULTORIO PSICOLÓGICO AMÉRICA
    Diseño Oficial CRO: 2 Columnas sobre .pagewii (85vw)
    ========================================================================== */
 
@@ -29,12 +29,12 @@
 
 /* Columna Izquierda: Pasos de Seguridad */
 .seguridad-badge {
-  color: #ff7a1a;
+  color: var(--brand-sky, #38bdf8);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  background: rgba(255, 102, 0, 0.15);
-  border: 1px solid rgba(255, 102, 0, 0.35);
+  background: rgba(2, 132, 199, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.35);
   border-radius: 999px;
   align-items: center;
   gap: 0.45rem;
@@ -89,8 +89,8 @@
 }
 
 .seguridad-icon-box.orange {
-  background: rgba(255, 102, 0, 0.15);
-  color: var(--primary, #ff6600);
+  background: rgba(2, 132, 199, 0.15);
+  color: var(--brand-sky, #38bdf8);
 }
 
 .seguridad-icon-box.blue {
@@ -121,7 +121,7 @@
 }
 
 .btn-seguridad-cta {
-  background: linear-gradient(135deg, var(--brand-orange, #ff6600) 0%, #e05600 100%);
+  background: linear-gradient(135deg, var(--brand-blue, #0284c7) 0%, #0369a1 100%);
   color: #fff;
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: clamp(0.85rem, 0.95vw, 1rem);
@@ -134,18 +134,18 @@
   border: none;
   cursor: pointer;
   text-decoration: none;
-  box-shadow: 0 0.5vh 1.5vh rgba(255, 102, 0, 0.35);
+  box-shadow: 0 0.5vh 1.5vh rgba(2, 132, 199, 0.35);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-seguridad-cta:hover {
   transform: translateY(-0.2vh);
-  box-shadow: 0 0.8vh 2vh rgba(255, 102, 0, 0.5);
+  box-shadow: 0 0.8vh 2vh rgba(2, 132, 199, 0.5);
 }
 
 /* Columna Derecha: Tarjeta Fotográfica */
 .seguridad-image-card {
-  border: 2px solid var(--border-accent, rgba(224, 86, 0, 0.4));
+  border: 2px solid var(--border-accent, rgba(56, 189, 248, 0.4));
   background: var(--bg-card, #0b1329);
   border-radius: 1.5vh;
   padding: 10px;
@@ -155,7 +155,7 @@
 }
 
 .seguridad-image-card:hover {
-  border-color: var(--primary, #ff6600);
+  border-color: var(--brand-sky, #38bdf8);
   transform: translateY(-0.2vh);
 }
 

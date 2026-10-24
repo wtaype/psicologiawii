@@ -609,7 +609,7 @@ export function inicializarBlogs() {
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
               </a>
               <button type="button" class="bl-action-btn bl-btn-pin" data-pin-id="${b.id}" title="${b.pin ? 'Quitar Pin' : 'Fijar en Portada'}">
-                <i class="fa-solid fa-thumbtack" style="${b.pin ? 'color:var(--brand-primary, #ff6600);' : ''}"></i>
+                <i class="fa-solid fa-thumbtack" style="${b.pin ? 'color:var(--brand-primary, #104356);' : ''}"></i>
               </button>
               <button type="button" class="bl-action-btn btn-del bl-btn-del" data-del-id="${b.id}" title="Eliminar artículo">
                 <i class="fa-solid fa-trash-can"></i>

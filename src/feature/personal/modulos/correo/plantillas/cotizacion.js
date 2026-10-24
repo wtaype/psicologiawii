@@ -13,7 +13,7 @@ export function generarPlantillaCotizacion({
 } = {}) {
   const neg = { ...datosNegocio, ...negocio };
   const nombreEmpresa = neg?.nombreCorto || neg?.nombre || 'nuestra empresa';
-  const colorMarca = neg?.colorPrimario || '#ff6600';
+  const colorMarca = neg?.colorPrimario || '#104356';
 
   const primerProd = Array.isArray(productosSemilla) && productosSemilla[0] ? productosSemilla[0] : null;
   const nombreProd = typeof primerProd?.nombre === 'object' ? (primerProd?.nombre?.es || '') : (primerProd?.nombre || 'Propuesta Comercial');
@@ -32,11 +32,9 @@ export function generarPlantillaCotizacion({
   `.trim();
 
   const tablaHtml = mdToEmailHtml(mensajeMarkdown || contenidoMarkdownDefecto);
-  const tituloCotiz = esServicios ? '📋 Propuesta de Servicios Contables' : '📋 Cotización de Suministro GLP Comercial';
-  const bajadaCotiz = esServicios 
-    ? 'Presentamos nuestra propuesta formal de servicios contables, tributarios y de planillas con respaldo profesional especializado:' 
-    : 'Presentamos nuestra propuesta comercial formal para el abastecimiento continuo de gas GLP para su negocio con garantía de peso exacto:';
-  const asuntoTag = esServicios ? 'Propuesta Contable' : 'Cotización Comercial';
+  const tituloCotiz = '📋 Propuesta de Atención Psicológica y Talleres';
+  const bajadaCotiz = 'Presentamos nuestra propuesta formal de acompañamiento terapéutico y desarrollo personal con respaldo profesional colegiado:';
+  const asuntoTag = 'Propuesta Terapéutica';
 
   const contenidoHtml = `
     <h2 style="color: ${colorMarca}; margin-top: 0; font-size: 21px; font-weight: 700;">${tituloCotiz}</h2>

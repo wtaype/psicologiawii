@@ -2,6 +2,10 @@
   "version": "2.0.0",
   "negocioId": "psicologia_america",
   "telefonoOficial": "51960332958",
+  "userId": "",
+  "email": "demo@consultorioamerica.com",
+  "creado": "2026-10-01T10:00:00Z",
+  "actualizado": "2026-10-23T20:00:00Z",
   "titulo": "WhatsApp · Centro de Mensajería & Canales Clínicos",
   "subtitulo": "Configura los mensajes automáticos de los botones de la web y gestiona plantillas oficiales de citas con simulador en vivo.",
   "canalesWeb": [
@@ -11,7 +15,10 @@
       "origen": "tarjeta_servicio",
       "descripcion": "Mensaje generado al hacer clic en 'Agendar Sesión' en cualquier especialidad.",
       "formatoMensaje": "¡Hola Lic. Sofia Reynaga! 👋 He visto en su página web el servicio de *{servicio}* (S/ {precio}). Quisiera consultar por horarios disponibles para una sesión, ¿podría brindarme información por favor?",
-      "variablesPermitidas": ["servicio", "precio", "modalidad"]
+      "variablesPermitidas": ["servicio", "precio", "modalidad"],
+      "userId": "",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "canal_taller_vivencial",
@@ -19,7 +26,10 @@
       "origen": "tarjeta_taller",
       "descripcion": "Mensaje enviado al reservar cupo en un taller de desarrollo personal.",
       "formatoMensaje": "¡Hola Lic. Sofia Reynaga! 👋 Deseo inscribirme en el *{taller}*. Quisiera conocer las próximas fechas y cupos disponibles, por favor.",
-      "variablesPermitidas": ["taller", "duracion", "publico"]
+      "variablesPermitidas": ["taller", "duracion", "publico"],
+      "userId": "",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "canal_calculadora_cotizador",
@@ -27,7 +37,10 @@
       "origen": "calculadora_paquetes",
       "descripcion": "Mensaje enviado desde la calculadora de sesiones.",
       "formatoMensaje": "¡Hola Lic. Sofia Reynaga! 👋 Realicé una cotización en su web:\n👤 Servicio: *{servicio}*\n📅 Sesiones: *{cantidad}*\n💳 Inversión Total: *S/ {total}*\n📍 Modalidad: *{modalidad}*\n¿Podríamos coordinar las fechas de las sesiones por favor?",
-      "variablesPermitidas": ["servicio", "cantidad", "total", "modalidad"]
+      "variablesPermitidas": ["servicio", "cantidad", "total", "modalidad"],
+      "userId": "",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "canal_general_header",
@@ -35,7 +48,10 @@
       "origen": "header_hero",
       "descripcion": "Mensaje de saludo general para pacientes que consultan desde el menú o redes.",
       "formatoMensaje": "¡Hola Lic. Sofia Reynaga! Deseo solicitar información para agendar una consulta psicológica en su consultorio.",
-      "variablesPermitidas": []
+      "variablesPermitidas": [],
+      "userId": "",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     }
   ],
   "plantillas": [
@@ -45,7 +61,11 @@
       "icono": "fa-solid fa-calendar-check",
       "categoria": "citas",
       "descripcion": "Notificación inmediata tras acordar fecha, hora y modalidad de la sesión.",
-      "mensaje": "¡Hola *{cliente}*! 👋 Le saluda la *Lic. Sofia Reynaga Pachas* (C.Ps.P. 49425).\n\n🗓️ *Cita Psicológica Confirmada*\n• Servicio: *{servicio}*\n• Fecha: *{fecha}*\n• Hora: *{hora}*\n• Modalidad: *{modalidad}*\n• Dirección / Enlace: *{lugar}*\n\nLe sugerimos llegar 5 minutos antes para su comodidad. ¡Será un gusto acompañarle en su proceso!"
+      "mensaje": "¡Hola *{cliente}*! 👋 Le saluda la *Lic. Sofia Reynaga Pachas* (C.Ps.P. 49425).\n\n🗓️ *Cita Psicológica Confirmada*\n• Servicio: *{servicio}*\n• Fecha: *{fecha}*\n• Hora: *{hora}*\n• Modalidad: *{modalidad}*\n• Dirección / Enlace: *{lugar}*\n\nLe sugerimos llegar 5 minutos antes para su comodidad. ¡Será un gusto acompañarle en su proceso!",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "tpl_recordatorio_24h",
@@ -53,7 +73,11 @@
       "icono": "fa-solid fa-bell",
       "categoria": "recordatorio",
       "descripcion": "Aviso amable un día antes de la sesión programada.",
-      "mensaje": "Estimado/a *{cliente}*, le recordamos su sesión psicológica de mañana:\n\n⏰ *Horario:* {hora}\n📍 *Modalidad:* {modalidad}\n👤 *Especialista:* Lic. Sofia Reynaga (C.Ps.P. 49425)\n\nPor favor, confirme su asistencia respondiendo a este mensaje. En caso de requerir reprogramación, agradeceremos avisar con 24h de anticipación.\n\n¡Que tenga un excelente día!"
+      "mensaje": "Estimado/a *{cliente}*, le recordamos su sesión psicológica de mañana:\n\n⏰ *Horario:* {hora}\n📍 *Modalidad:* {modalidad}\n👤 *Especialista:* Lic. Sofia Reynaga (C.Ps.P. 49425)\n\nPor favor, confirme su asistencia respondiendo a este mensaje. En caso de requerir reprogramación, agradeceremos avisar con 24h de anticipación.\n\n¡Que tenga un excelente día!",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "tpl_enlace_virtual_meet",
@@ -61,7 +85,11 @@
       "icono": "fa-solid fa-video",
       "categoria": "virtual",
       "descripcion": "Envío del enlace seguro y recomendaciones para la videoconsulta.",
-      "mensaje": "¡Hola *{cliente}*! 💻 Compartimos el enlace para nuestra sesión virtual de hoy:\n\n🔗 *Enlace Google Meet:* {meetUrl}\n⏰ *Hora de conexión:* {hora}\n\n💡 *Recomendaciones para su sesión:*\n1. Ubíquese en un espacio privado, cómodo y con buena conexión a internet.\n2. Se sugiere el uso de audífonos con micrófono para mayor privacidad.\n3. Tenga a la mano un vaso con agua o un cuaderno de apuntes si lo desea.\n\n¡Nos conectamos en breve!"
+      "mensaje": "¡Hola *{cliente}*! 💻 Compartimos el enlace para nuestra sesión virtual de hoy:\n\n🔗 *Enlace Google Meet:* {meetUrl}\n⏰ *Hora de conexión:* {hora}\n\n💡 *Recomendaciones para su sesión:*\n1. Ubíquese en un espacio privado, cómodo y con buena conexión a internet.\n2. Se sugiere el uso de audífonos con micrófono para mayor privacidad.\n3. Tenga a la mano un vaso con agua o un cuaderno de apuntes si lo desea.\n\n¡Nos conectamos en breve!",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "tpl_inscripcion_taller",
@@ -69,7 +97,11 @@
       "icono": "fa-solid fa-people-group",
       "categoria": "talleres",
       "descripcion": "Bienvenida formal al taller grupal con detalle de dinámica y materiales.",
-      "mensaje": "¡Felicidades *{cliente}*! 🌟 Tu inscripción al taller ha sido registrada con éxito:\n\n🌱 *{taller}*\n• Fecha: *{fecha}*\n• Horario: *{hora}*\n• Modalidad: *{modalidad}*\n• Participantes: Grupo reducido (máximo 12 personas)\n\nTe sugerimos asistir con ropa cómoda y una libreta de notas personal. ¡Nos vemos pronto para compartir esta experiencia vivencial!"
+      "mensaje": "¡Felicidades *{cliente}*! 🌟 Tu inscripción al taller ha sido registrada con éxito:\n\n🌱 *{taller}*\n• Fecha: *{fecha}*\n• Horario: *{hora}*\n• Modalidad: *{modalidad}*\n• Participantes: Grupo reducido (máximo 12 personas)\n\nTe sugerimos asistir con ropa cómoda y una libreta de notas personal. ¡Nos vemos pronto para compartir esta experiencia vivencial!",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "tpl_recibo_honorarios",
@@ -77,7 +109,11 @@
       "icono": "fa-solid fa-file-invoice-dollar",
       "categoria": "facturacion",
       "descripcion": "Comprobante oficial de pago de la sesión para SUNAT o seguro médico.",
-      "mensaje": "Estimado/a *{cliente}*, adjuntamos el comprobante oficial por la sesión realizada:\n\n🧾 *Recibo por Honorarios Electrónico (RHE)*\n• Emisor: Lic. Sofia Reynaga Pachas (RUC 10478923411)\n• Concepto: {concepto}\n• Importe: S/ {monto}\n\nPuede descargarlo en el siguiente enlace: {linkComprobante}\n\n¡Muchas gracias por su confianza!"
+      "mensaje": "Estimado/a *{cliente}*, adjuntamos el comprobante oficial por la sesión realizada:\n\n🧾 *Recibo por Honorarios Electrónico (RHE)*\n• Emisor: Lic. Sofia Reynaga Pachas (RUC 10478923411)\n• Concepto: {concepto}\n• Importe: S/ {monto}\n\nPuede descargarlo en el siguiente enlace: {linkComprobante}\n\n¡Muchas gracias por su confianza!",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     },
     {
       "id": "tpl_seguimiento_post_sesion",
@@ -85,7 +121,11 @@
       "icono": "fa-solid fa-heart-pulse",
       "categoria": "seguimiento",
       "descripcion": "Mensaje empático de acompañamiento y recordatorio de ejercicios prácticos.",
-      "mensaje": "¡Hola *{cliente}*! 🌸 Deseaba consultar cómo te has sentido tras nuestra sesión de hoy.\n\nRecuerda poner en práctica el ejercicio acordado a tu propio ritmo y sin juzgarte. Cada pequeño paso cuenta en tu bienestar emocional.\n\nQuedo atenta si tienes alguna duda antes de nuestro próximo encuentro. ¡Un abrazo cálido!"
+      "mensaje": "¡Hola *{cliente}*! 🌸 Deseaba consultar cómo te has sentido tras nuestra sesión de hoy.\n\nRecuerda poner en práctica el ejercicio acordado a tu propio ritmo y sin juzgarte. Cada pequeño paso cuenta en tu bienestar emocional.\n\nQuedo atenta si tienes alguna duda antes de nuestro próximo encuentro. ¡Un abrazo cálido!",
+      "userId": "",
+      "email": "demo@consultorioamerica.com",
+      "creado": "2026-10-01T10:00:00Z",
+      "actualizado": "2026-10-23T20:00:00Z"
     }
   ]
 }

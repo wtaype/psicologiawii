@@ -61,7 +61,7 @@ export function getMeta(ruta = '/', idioma = 'es') {
   const data = seo[clave] ? seo[clave][idioma] : seo.inicio[idioma];
   const urlBase = (typeof window !== 'undefined' && window.location?.origin 
     ? window.location.origin 
-    : (app.linkweb || 'https://psicologiawii.web.app')).replace(/\/$/, '');
+    : (app.linkweb || 'https://psicologiaamerica.com')).replace(/\/$/, '');
   const canonical = `${urlBase}${ruta}`;
 
   const title = data.title || datosNegocio.nombre;
@@ -114,7 +114,7 @@ export function getMeta(ruta = '/', idioma = 'es') {
 export function getJsonLd(ruta = '/', idioma = 'es') {
   const urlBase = (typeof window !== 'undefined' && window.location?.origin 
     ? window.location.origin 
-    : (app.linkweb || 'https://psicologiawii.web.app')).replace(/\/$/, '');
+    : (app.linkweb || 'https://psicologiaamerica.com')).replace(/\/$/, '');
   const isEn = idioma === 'en';
   const canonical = `${urlBase}${ruta}`;
   const data = seo.inicio[idioma] || SEO_INICIO.es;

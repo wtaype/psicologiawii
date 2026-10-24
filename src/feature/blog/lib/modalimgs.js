@@ -232,8 +232,8 @@ function injectStyles() {
 .wim_prev { left: 2.2vh !important; }
 .wim_next { right: 2.2vh !important; }
 .wim_prev:hover, .wim_next:hover {
-  background: rgba(255, 102, 0, 0.7) !important;
-  border-color: rgba(255, 102, 0, 1) !important;
+  background: rgba(56, 189, 248, 0.7) !important;
+  border-color: rgba(56, 189, 248, 1) !important;
   color: #fff !important;
   transform: translateY(-50%) scale(1.08) !important;
 }
@@ -276,9 +276,9 @@ function injectStyles() {
 }
 .wim_thumb.active {
   opacity: 1 !important;
-  border-color: var(--brand-primary, #ff6600) !important;
+  border-color: var(--brand-primary, #104356) !important;
   transform: scale(1.12) !important;
-  box-shadow: 0 4px 14px rgba(255, 102, 0, 0.5) !important;
+  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.5) !important;
 }
 
 .wim_solo .wim_prev,

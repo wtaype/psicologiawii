@@ -45,13 +45,13 @@
 }
 
 .ay-card-title-left i {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 /* ── BANNER INFORMATIVO DE TELEMETRÍA ── */
 .ay-info-banner {
-  background: var(--mbg, rgba(255, 102, 0, 0.08));
-  border: 1px solid var(--border-card, rgba(255, 102, 0, 0.25));
+  background: var(--mbg, rgba(56, 189, 248, 0.08));
+  border: 1px solid var(--border-card, rgba(56, 189, 248, 0.25));
   border-radius: var(--r_m, 1vh);
   padding: 1.4vh 1.8vh;
   margin-bottom: 2vh;
@@ -61,7 +61,7 @@
 }
 
 .ay-info-icon {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   font-size: var(--fz_m4);
   margin-top: 0.2vh;
   flex-shrink: 0;
@@ -127,8 +127,8 @@
 .ay-input:focus,
 .ay-select:focus,
 .ay-textarea:focus {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  box-shadow: 0 0 0 0.3vh var(--mbg, rgba(255, 102, 0, 0.2));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  box-shadow: 0 0 0 0.3vh var(--mbg, rgba(56, 189, 248, 0.2));
 }
 
 .ay-textarea {
@@ -147,7 +147,7 @@
 /* ── BOTÓN DE ENVÍO ── */
 .ay-btn-submit {
   width: 100%;
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--brand-primary, #104356));
   color: var(--white, #ffffff);
   border: none;
   border-radius: var(--r_m, 1vh);
@@ -161,7 +161,7 @@
   justify-content: center;
   gap: 1vh;
   transition: all var(--tr_f);
-  box-shadow: var(--shadow-hover, 0 0.8vh 2vh rgba(255, 102, 0, 0.25));
+  box-shadow: var(--shadow-hover, 0 0.8vh 2vh rgba(56, 189, 248, 0.25));
 }
 
 .ay-btn-submit:hover:not(:disabled) {
@@ -196,7 +196,7 @@
 }
 
 .ay-ticket-item:hover {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 .ay-ticket-item-top {
@@ -210,8 +210,8 @@
   font-family: monospace;
   font-size: var(--fz_s3);
   font-weight: 700;
-  color: var(--mco, var(--brand-primary, #ff6600));
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
+  color: var(--mco, var(--brand-primary, #104356));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
   padding: 0.2vh 0.8vh;
   border-radius: var(--r_xs, 0.5vh);
 }
@@ -282,8 +282,8 @@
 
 .ay-count-pill {
   font-size: var(--fz_s2);
-  background: var(--mbg, rgba(255, 102, 0, 0.15));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.15));
+  color: var(--mco, var(--brand-primary, #104356));
   padding: 0.3vh 0.9vh;
   border-radius: var(--r_full, 9999px);
 }
@@ -355,18 +355,18 @@
 }
 
 .ay-software-title i {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .ay-software-tag {
   font-size: var(--fz_s2);
   font-weight: 700;
   text-transform: uppercase;
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
+  color: var(--mco, var(--brand-primary, #104356));
   padding: 0.3vh 1vh;
   border-radius: var(--r_full, 9999px);
-  border: 1px solid var(--border-card, rgba(255, 102, 0, 0.25));
+  border: 1px solid var(--border-card, rgba(56, 189, 248, 0.25));
 }
 
 .ay-software-grid {
@@ -410,7 +410,7 @@
 }
 
 .ay-software-link {
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   text-decoration: none;
   transition: filter var(--tr_f);
 }
@@ -427,6 +427,6 @@
   background: rgba(0, 0, 0, 0.08);
   border-radius: var(--r_s, 0.8vh);
   padding: 1.2vh 1.6vh;
-  border-left: 0.4vh solid var(--mco, var(--brand-primary, #ff6600));
+  border-left: 0.4vh solid var(--mco, var(--brand-primary, #104356));
   margin: 0;
 }

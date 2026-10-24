@@ -2,8 +2,9 @@
 // Lógica de Persistencia y Despacho Legal para el Libro de Reclamaciones
 import { datosNegocio } from '../../../../negocio.js';
 
-const CLOUDFLARE_CORREO_ENDPOINT = 'https://gaswii-correo.lourdesinformatica10.workers.dev/enviar';
-const FIRESTORE_BASE = 'https://firestore.googleapis.com/v1/projects/gaswii/databases/(default)/documents';
+const CLOUDFLARE_CORREO_ENDPOINT = import.meta.env.PUBLIC_CORREO_WORKER_ENDPOINT || 'https://correo.psicologiawii.workers.dev/enviar';
+const FIREBASE_PROJECT_ID = import.meta.env.PUBLIC_FIREBASE_PROJECT_ID || import.meta.env.FIREBASE_PROJECT_ID || 'psicologiawii';
+const FIRESTORE_BASE = `https://firestore.googleapis.com/v1/projects/${FIREBASE_PROJECT_ID}/databases/(default)/documents`;
 
 /**
  * Guarda la reclamación en Firestore (colección 'reclamaciones') y en caché local
@@ -65,7 +66,7 @@ export async function enviarConfirmacionCorreo(reclamo) {
     const asunto = `📋 Hoja de Reclamación ${reclamo.codigoHR} · ${datosNegocio.nombre}`;
     const html = `
       <div style="font-family:'Segoe UI',sans-serif; max-width:620px; margin:0 auto; padding:24px; border:1px solid #e2e8f0; border-radius:12px; background:#ffffff;">
-        <div style="background:#ea580c; padding:16px 20px; border-radius:8px 8px 0 0; color:#ffffff;">
+        <div style="background:#104356; padding:16px 20px; border-radius:8px 8px 0 0; color:#ffffff;">
           <h2 style="margin:0; font-size:1.3rem;">LIBRO DE RECLAMACIONES VIRTUAL</h2>
           <p style="margin:4px 0 0; font-size:0.85rem; opacity:0.9;">${datosNegocio.razonSocial} · RUC ${datosNegocio.ruc}</p>
         </div>
@@ -74,7 +75,7 @@ export async function enviarConfirmacionCorreo(reclamo) {
           <p>Le confirmamos que su <strong>${reclamo.tipoReclamacion.toUpperCase()}</strong> ha sido ingresado(a) con éxito en nuestro sistema conforme a las disposiciones del Código de Protección y Defensa del Consumidor de INDECOPI.</p>
           
           <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:8px; padding:16px; margin:20px 0;">
-            <p style="margin:0; font-size:1.1rem; font-weight:bold; color:#ea580c;">Código: ${reclamo.codigoHR}</p>
+            <p style="margin:0; font-size:1.1rem; font-weight:bold; color:#104356;">Código: ${reclamo.codigoHR}</p>
             <p style="margin:6px 0 0; font-size:0.85rem; color:#64748b;">Fecha de Registro: ${reclamo.fechaTexto}</p>
             <hr style="border:none; border-top:1px solid #e2e8f0; margin:12px 0;" />
             <p style="margin:0; font-size:0.9rem;"><strong>Tipo:</strong> ${reclamo.tipoReclamacion}</p>
@@ -109,7 +110,7 @@ export async function enviarConfirmacionCorreo(reclamo) {
         para: reclamo.email,
         nombre: reclamo.nombre,
         asunto,
-        resumen: `Hoja de Reclamación ${reclamo.codigoHR} registrada en Solgas Surquillo.`,
+        resumen: `Hoja de Reclamación ${reclamo.codigoHR} registrada en ${datosNegocio.nombre}.`,
         html
       })
     });

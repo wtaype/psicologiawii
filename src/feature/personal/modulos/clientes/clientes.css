@@ -24,15 +24,15 @@
 
 .cl-kpi-card:hover {
   transform: translateY(-2px);
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 .cl-kpi-icon-wrap {
   width: 44px;
   height: 44px;
   border-radius: 10px;
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
+  color: var(--mco, var(--brand-primary, #104356));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -121,9 +121,9 @@
 
 .cl-filter-pill.active,
 .cl-filter-pill:hover {
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .cl-search-box {
@@ -153,7 +153,7 @@
 }
 
 .cl-search-input:focus {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
 }
 
 /* ── TABLA DE CLIENTES ── */
@@ -186,7 +186,7 @@
 }
 
 .cl-table tr.selected td {
-  background: var(--mbg, rgba(255, 102, 0, 0.08));
+  background: var(--mbg, rgba(56, 189, 248, 0.08));
 }
 
 .cl-table tr:hover td {
@@ -268,7 +268,7 @@
 
 .cl-action-btn:hover {
   background: var(--raised, #14223a);
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .cl-action-btn.ws {
@@ -349,7 +349,7 @@
 .cl-crm-stat-val {
   font-size: 14px;
   font-weight: 800;
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .cl-crm-stat-lbl {
@@ -443,12 +443,12 @@
 }
 
 .cl-crm-btn-call:hover {
-  border-color: var(--mco, var(--brand-primary, #ff6600));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  border-color: var(--mco, var(--brand-primary, #104356));
+  color: var(--mco, var(--brand-primary, #104356));
 }
 
 .cl-crm-btn-sunat {
-  background: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mco, var(--brand-primary, #104356));
   color: #ffffff;
 }
 
@@ -545,8 +545,8 @@
   width: 38px;
   height: 38px;
   border-radius: 10px;
-  background: var(--mbg, rgba(255, 102, 0, 0.12));
-  color: var(--mco, var(--brand-primary, #ff6600));
+  background: var(--mbg, rgba(56, 189, 248, 0.12));
+  color: var(--mco, var(--brand-primary, #104356));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -561,7 +561,7 @@
   height: 58px;
   border-radius: 12px;
   background: var(--inp, #14223a);
-  color: var(--mco, var(--brand-primary, #ff6600));
+  color: var(--mco, var(--brand-primary, #104356));
   display: flex;
   align-items: center;
   justify-content: center;

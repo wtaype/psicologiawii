@@ -28,7 +28,7 @@ table {
 .email-header {
   background: #ffffff;
   padding: 20px 28px;
-  border-bottom: 2px solid var(--mco, #ff6600);
+  border-bottom: 2px solid var(--mco, var(--brand-sky, #38bdf8));
 }
 
 .email-body {
@@ -48,7 +48,7 @@ table {
 
 .btn-action {
   display: inline-block;
-  background: var(--mco, #ff6600);
+  background: var(--mco, var(--brand-sky, #38bdf8));
   color: #ffffff !important;
   text-decoration: none;
   font-weight: 700;
