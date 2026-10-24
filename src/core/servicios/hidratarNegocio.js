@@ -50,6 +50,8 @@ export function hidratarNegocioEnDOM(datos) {
     : (hRaw || (isEn ? contacto.horarioEn : '') || '');
 
   const nombre = identidad.nombre || '';
+  const direccion = ubicacion.direccion || '';
+  const mapsUrl = ubicacion.mapsUrl || '';
 
   // 1. HIDRATAR TODOS LOS ENLACES DE WHATSAPP
   if (wsLimpio) {
@@ -314,33 +316,33 @@ export function hidratarNegocioEnDOM(datos) {
         el.style.display = 'none';
       }
     });
+  }
 
-    // 7. HIDRATAR IMÁGENES CON CACHE-BUSTING EN VIVO (Evita imágenes pegadas en caché)
-    const logo = identidad.logo || '';
-    const avatar = identidad.imagenSede || datos.hero?.imagen || identidad.logo || '';
-    const heroImg = datos.hero?.imgHero || identidad.imagenSede || '';
-    const tsVersion = datos.actualizado?.seconds || (typeof datos.actualizado === 'string' ? Date.parse(datos.actualizado) : null) || Date.now();
+  // 7. HIDRATAR IMÁGENES CON CACHE-BUSTING EN VIVO (Evita imágenes pegadas en caché)
+  const logo = identidad.logo || '';
+  const avatar = identidad.imagenSede || datos.hero?.imagen || identidad.logo || '';
+  const heroImg = datos.hero?.imgHero || identidad.imagenSede || '/imgwii/hero.webp';
+  const tsVersion = datos.actualizado?.seconds || (typeof datos.actualizado === 'string' ? Date.parse(datos.actualizado) : null) || Date.now();
 
-    if (avatar) {
-      const avatarFresco = aplicarCacheBusting(avatar, tsVersion);
-      document.querySelectorAll('[data-negocio-avatar]').forEach(img => {
-        img.setAttribute('src', avatarFresco);
-      });
-    }
+  if (avatar) {
+    const avatarFresco = aplicarCacheBusting(avatar, tsVersion);
+    document.querySelectorAll('[data-negocio-avatar]').forEach(img => {
+      img.setAttribute('src', avatarFresco);
+    });
+  }
 
-    if (heroImg) {
-      const heroFresco = aplicarCacheBusting(heroImg, tsVersion);
-      document.querySelectorAll('[data-negocio-foto-especialista]').forEach(img => {
-        img.setAttribute('src', heroFresco);
-      });
-    }
+  if (heroImg) {
+    const heroFresco = aplicarCacheBusting(heroImg, tsVersion);
+    document.querySelectorAll('[data-negocio-foto-especialista], .hero-img').forEach(img => {
+      img.setAttribute('src', heroFresco);
+    });
+  }
 
-    if (logo) {
-      const logoFresco = aplicarCacheBusting(logo, tsVersion);
-      document.querySelectorAll('[data-negocio-logo], .header-logo-img').forEach(img => {
-        img.setAttribute('src', logoFresco);
-      });
-    }
+  if (logo) {
+    const logoFresco = aplicarCacheBusting(logo, tsVersion);
+    document.querySelectorAll('[data-negocio-logo], .header-logo-img').forEach(img => {
+      img.setAttribute('src', logoFresco);
+    });
   }
 }
 
