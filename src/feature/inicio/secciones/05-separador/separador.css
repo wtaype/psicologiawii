@@ -1,15 +1,15 @@
 /* ==========================================================================
    05-SEPARADOR (SOS BANNER) SECTION STYLES - CONSULTORIO PSICOLÓGICO AMÉRICA
-   Franja Naranja Oficial Full-Width con contenido en .pagewii (85vw)
+   Franja Serena y Empática con tokens oficiales de witema.css
    ========================================================================== */
 
 .sos-banner-wrapper {
-  color: #fff;
-  background: linear-gradient(90deg, #f95700 0%, #ea580c 50%, #d9480f 100%);
-  border-top: 1px solid rgba(255, 255, 255, 0.15);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--tx);
+  background: var(--mbg);
+  border-top: 1px solid var(--brd);
+  border-bottom: 1px solid var(--brd);
   padding: 2.2vh 0;
-  box-shadow: 0 0.8vh 2.5vh rgba(234, 88, 12, 0.35);
+  box-shadow: 0 0.8vh 2.5vh rgba(16, 67, 86, 0.05);
   width: 100%;
   box-sizing: border-box;
 }
@@ -37,8 +37,9 @@
   min-width: 3.4rem;
   height: 3.4rem;
   font-size: 1.35rem;
-  color: #fff;
-  background: rgba(255, 255, 255, 0.22);
+  color: var(--txe);
+  background: var(--wb);
+  border: 1px solid var(--brd);
   border-radius: 50%;
   justify-content: center;
   align-items: center;
@@ -55,7 +56,7 @@
 .sos-title {
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: clamp(1.1rem, 1.25vw, 1.35rem);
-  color: #fff;
+  color: var(--txe);
   letter-spacing: -0.01em;
   margin: 0;
   font-weight: 800;
@@ -65,13 +66,13 @@
 .sos-sub {
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: clamp(0.82rem, 0.88vw, 0.95rem);
-  color: rgba(255, 255, 255, 0.95);
+  color: var(--tx2);
   margin: 0;
   line-height: 1.45;
 }
 
 .sos-sub strong {
-  color: #fff;
+  color: var(--tx);
   font-weight: 700;
 }
 
@@ -83,13 +84,13 @@
 }
 
 .btn-sos-call {
-  color: #ea580c;
+  color: var(--txe);
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: clamp(0.85rem, 0.92vw, 0.98rem);
   cursor: pointer;
   white-space: nowrap;
-  background: #ffffff;
-  border: none;
+  background: var(--wb);
+  border: 1px solid var(--brd);
   border-radius: 1vh;
   justify-content: center;
   align-items: center;
@@ -98,17 +99,18 @@
   font-weight: 800;
   text-decoration: none;
   display: inline-flex;
-  box-shadow: 0 0.5vh 1.5vh rgba(0, 0, 0, 0.2);
+  box-shadow: 0 0.4vh 1.2vh rgba(16, 67, 86, 0.08);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .btn-sos-call i {
-  color: #ea580c;
+  color: var(--txe);
 }
 
 .btn-sos-call:hover {
   transform: translateY(-0.2vh);
-  box-shadow: 0 0.8vh 2vh rgba(0, 0, 0, 0.3);
+  background: var(--bg3);
+  box-shadow: 0 0.6vh 1.6vh rgba(16, 67, 86, 0.12);
 }
 
 .btn-sos-wa {
@@ -127,14 +129,14 @@
   font-weight: 800;
   text-decoration: none;
   display: inline-flex;
-  box-shadow: 0 0.5vh 1.5vh rgba(34, 197, 94, 0.35);
+  box-shadow: 0 0.5vh 1.5vh rgba(34, 197, 94, 0.3);
   transition: transform 0.2s, background-color 0.2s, box-shadow 0.2s;
 }
 
 .btn-sos-wa:hover {
   background: #16a34a;
   transform: translateY(-0.2vh);
-  box-shadow: 0 0.8vh 2vh rgba(34, 197, 94, 0.5);
+  box-shadow: 0 0.8vh 2vh rgba(34, 197, 94, 0.45);
 }
 
 @media (max-width: 768px) {

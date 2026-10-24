@@ -282,9 +282,9 @@
 }
 
 .ag-boleta-card.active {
-  border-color: var(--accent);
-  background: var(--brand-soft);
-  box-shadow: 0 0 16px rgba(16, 67, 86, 0.2);
+  border-color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
+  box-shadow: 0 0 16px rgba(16, 67, 86, 0.15);
 }
 
 .ag-boleta-head {
@@ -325,7 +325,7 @@
 }
 
 .ag-boleta-card.active .ag-boleta-step-name {
-  color: var(--accent);
+  color: var(--brand-primary, var(--mco, #104356));
 }
 
 .ag-boleta-status-icon {
@@ -334,7 +334,7 @@
 }
 
 .ag-boleta-card.active .ag-boleta-status-icon {
-  color: var(--accent);
+  color: var(--brand-primary, var(--mco, #104356));
 }
 
 .ag-boleta-title {
@@ -770,9 +770,9 @@
 }
 
 .ag-mod-opt.active {
-  border-color: var(--accent);
-  background: var(--brand-soft);
-  box-shadow: 0 0 12px rgba(16, 67, 86, 0.15);
+  border-color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
+  box-shadow: 0 0 12px rgba(16, 67, 86, 0.12);
 }
 
 .ag-turn-selector {
@@ -819,9 +819,9 @@
 }
 
 .ag-turn-opt.active {
-  border-color: var(--accent);
-  background: var(--brand-soft);
-  font-weight: 600;
+  border-color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
+  font-weight: 700;
 }
 
 /* ========================================================

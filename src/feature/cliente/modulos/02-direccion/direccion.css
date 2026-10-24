@@ -119,9 +119,9 @@
   color: var(--ink);
 }
 .cd-chip-btn.active {
-  background: var(--brand-soft);
-  border-color: var(--accent);
-  color: var(--accent);
+  background: var(--mbg);
+  border-color: var(--brand-primary, var(--mco, #104356));
+  color: var(--brand-primary, var(--mco, #104356));
   font-weight: 700;
 }
 

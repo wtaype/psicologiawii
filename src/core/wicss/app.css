@@ -1,4 +1,4 @@
-﻿/* ==========================================================================
+/* ==========================================================================
    APP.CSS - CONSULTORIO PSICOLÓGICO AMÉRICA
    Estilos Core Globales: Variables de Tema, Reset, Componentes y Layout
    (100% Cero CSS Inline - Arquitectura set:html & ?inline)
@@ -415,10 +415,10 @@ img {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box !important;
-  background: var(--topbar-bg, linear-gradient(90deg, #104356 0%, #1e5e75 50%, #104356 100%));
-  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: 0 0.2vh 0.8vh rgba(10, 45, 58, 0.22);
-  color: #ffffff;
+  background: var(--mbg);
+  border-bottom: 1px solid var(--brd);
+  box-shadow: 0 0.2vh 0.8vh rgba(10, 45, 58, 0.05);
+  color: var(--txe);
   font-family: var(--ff_P, 'Poppins', sans-serif);
   font-size: clamp(0.72rem, 0.78vw, 0.84rem);
   font-weight: 600;
@@ -445,8 +445,8 @@ img {
 }
 
 .topbar-auth-pill {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.06) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: var(--wb);
+  border: 1px solid var(--brd);
   padding: 0.35vh 0.75vw;
   border-radius: 1vh;
   display: inline-flex;
@@ -454,14 +454,12 @@ img {
   gap: 0.45rem;
   font-weight: 700;
   letter-spacing: 0.015em;
-  color: #ffffff;
-  box-shadow: 0 0.2vh 0.6vh rgba(0, 0, 0, 0.12);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  color: var(--txe);
+  box-shadow: 0 0.2vh 0.6vh rgba(0, 0, 0, 0.04);
 }
 
 .topbar-auth-pill i {
-  color: var(--accent, #38bdf8);
+  color: var(--p_v1);
   font-size: 0.9em;
 }
 
@@ -475,19 +473,19 @@ img {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--tx2);
   font-weight: 500;
   font-size: clamp(0.72rem, 0.78vw, 0.82rem);
 }
 
 .topbar-meta-item i {
-  color: var(--brand-sky, #38bdf8);
+  color: var(--p_v1);
   opacity: 0.9;
   font-size: 0.85em;
 }
 
 .topbar-meta-sep {
-  color: rgba(255, 255, 255, 0.38);
+  color: var(--brd);
   font-size: 0.75em;
 }
 
@@ -498,25 +496,25 @@ img {
 }
 
 .topbar-pill-subtle {
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  background: var(--wb);
+  border: 1px solid var(--brd);
   padding: 0.35vh 0.7vw;
   border-radius: 1vh;
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  color: rgba(255, 255, 255, 0.92);
+  color: var(--tx2);
   font-weight: 600;
   font-size: clamp(0.72rem, 0.78vw, 0.82rem);
 }
 
 .topbar-pill-subtle i {
-  color: var(--brand-sky, #38bdf8);
+  color: var(--p_v1);
 }
 
 .topbar-phone-link {
-  background: linear-gradient(135deg, rgba(56, 189, 248, 0.28) 0%, rgba(16, 67, 86, 0.72) 100%);
-  border: 1px solid rgba(56, 189, 248, 0.45);
+  background: var(--primary);
+  border: 1px solid var(--primary);
   color: #ffffff !important;
   text-decoration: none !important;
   font-family: var(--ff_P, 'Poppins', sans-serif);
@@ -1391,7 +1389,7 @@ img {
 }
 
 .footer-nav-list a:hover {
-  color: var(--cl-orange, #ea580c);
+  color: var(--txe, var(--primary));
   transform: translateX(2px);
 }
 

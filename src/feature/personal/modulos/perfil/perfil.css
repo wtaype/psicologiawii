@@ -12,11 +12,11 @@
 
 /* ── TARJETA DEL FORMULARIO ── */
 .pf-card {
-  background: var(--surface, #0e192c);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--wb, #ffffff);
+  border: 1px solid var(--brd, #dceaf2);
   border-radius: var(--br_m, 12px);
   padding: 22px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+  box-shadow: var(--shadow-card, 0 4px 16px rgba(0, 0, 0, 0.04));
   margin-bottom: 20px;
 }
 
@@ -24,12 +24,12 @@
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 1.15rem;
   font-weight: 700;
-  color: var(--tx, #f3f6fc);
+  color: var(--tx, #0f2735);
   margin: 0 0 16px;
   display: flex;
   align-items: center;
   gap: 10px;
-  border-bottom: 1px solid var(--brd, #21314b);
+  border-bottom: 1px solid var(--brd, #dceaf2);
   padding-bottom: 12px;
 }
 
@@ -40,11 +40,11 @@
 }
 
 .pf-id-card {
-  background: linear-gradient(135deg, #0e192c 0%, #142542 100%);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--wb, #ffffff);
+  border: 1px solid var(--brd, #dceaf2);
   border-radius: 16px;
   padding: 24px;
-  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-card, 0 8px 24px rgba(16, 67, 86, 0.06));
   position: relative;
   overflow: hidden;
 }
@@ -57,7 +57,7 @@
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--border-accent, rgba(56, 189, 248, 0.25)) 0%, transparent 70%);
+  background: radial-gradient(circle, var(--mbg, rgba(16, 67, 86, 0.08)) 0%, transparent 70%);
 }
 
 .pf-id-header {
@@ -71,16 +71,16 @@
   font-family: var(--ff_O, sans-serif);
   font-size: 14px;
   font-weight: 800;
-  color: var(--mco, var(--brand-primary, #104356));
+  color: var(--txe, var(--brand-primary, #104356));
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .pf-id-role-badge {
-  background: var(--mbg, rgba(56, 189, 248, 0.15));
-  border: 1px solid var(--mco, var(--brand-primary, #104356));
-  color: var(--mco, var(--brand-primary, #104356));
+  background: var(--mbg, rgba(16, 67, 86, 0.08));
+  border: 1px solid var(--brd, rgba(16, 67, 86, 0.15));
+  color: var(--txe, var(--brand-primary, #104356));
   font-size: 10.5px;
   font-weight: 800;
   text-transform: uppercase;
@@ -103,26 +103,26 @@
   border-radius: 50%;
   object-fit: cover;
   border: 3px solid var(--mco, var(--brand-primary, #104356));
-  box-shadow: var(--shadow-hover, 0 4px 14px rgba(56, 189, 248, 0.3));
+  box-shadow: var(--shadow-hover, 0 4px 14px rgba(16, 67, 86, 0.15));
 }
 
 .pf-id-name {
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 1.25rem;
   font-weight: 800;
-  color: var(--tx, #f3f6fc);
+  color: var(--tx, #0f2735);
   margin: 0;
 }
 
 .pf-id-handle {
   font-size: 12px;
-  color: var(--tx2, #90a4c3);
+  color: var(--tx2, #486576);
   margin: 0;
 }
 
 .pf-id-meta-grid {
-  background: var(--inp, #14223a);
-  border: 1px solid var(--brd, #21314b);
+  background: var(--bg3, #eaf3f8);
+  border: 1px solid var(--brd, #dceaf2);
   border-radius: 10px;
   padding: 14px;
   display: flex;
@@ -134,11 +134,11 @@
 .pf-id-meta-row {
   display: flex;
   justify-content: space-between;
-  color: var(--tx, #f3f6fc);
+  color: var(--tx, #0f2735);
 }
 
 .pf-id-meta-lbl {
-  color: var(--tx2, #90a4c3);
+  color: var(--tx2, #486576);
 }
 
 .pf-flex-end {

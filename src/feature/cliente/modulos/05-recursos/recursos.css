@@ -124,10 +124,9 @@
 
 .rc-filter-chip:hover,
 .rc-filter-chip.active {
-  background: var(--primary);
-  color: var(--white);
-  border-color: var(--border_accent);
-  box-shadow: 0 2px 10px rgba(16, 67, 86, 0.25);
+  background: var(--brand-primary, var(--mco, #104356));
+  color: #fff;
+  border-color: var(--brand-primary, var(--mco, #104356));
 }
 
 /* GRID DE CARDS */

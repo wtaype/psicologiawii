@@ -216,7 +216,7 @@ export function renderizarTicketsUI() {
       <div class="sp-ticket-item" data-ticket-id="${t.id}">
         <div class="sp-ticket-top">
           <span class="sp-ticket-id">
-            <i class="fa-solid fa-file-invoice" style="color:var(--brand-primary, #9e7b4f); font-size:0.85rem; margin-right:4px;"></i>
+            <i class="fa-solid fa-file-invoice" style="color:var(--primary, #104356); font-size:0.85rem; margin-right:4px;"></i>
             ${t.ticketId || t.id}
           </span>
           <span class="sp-ticket-badge ${estadoClass}">${estadoLabel}</span>

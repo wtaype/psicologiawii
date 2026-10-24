@@ -5,8 +5,8 @@
 /* 1. BANNER HERO DE BIENVENIDA (Inspirado en Imagen 2)     */
 /* ======================================================== */
 .db-hero-banner {
-  background: linear-gradient(135deg, #094754 0%, #06343e 50%, #04242b 100%);
-  border: 1px solid rgba(45, 212, 191, 0.35);
+  background: linear-gradient(135deg, #0b1c26 0%, #112836 50%, #07131b 100%);
+  border: 1px solid var(--line, #1c3647);
   border-radius: 16px;
   padding: 26px 30px;
   display: flex;
@@ -15,15 +15,42 @@
   gap: 24px;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 10px 30px -10px rgba(4, 36, 43, 0.5);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
   margin-bottom: 28px;
 }
 
 /* Adaptación dinámica a modo claro */
 [data-theme="luz"] .db-hero-banner {
-  background: linear-gradient(135deg, #0284c7 0%, #0d9488 100%);
-  border-color: rgba(13, 148, 136, 0.4);
-  box-shadow: 0 10px 30px -10px rgba(2, 132, 199, 0.35);
+  background: linear-gradient(135deg, #e5f4fa 0%, #edf7fb 50%, #e0f2fe 100%);
+  border: 1px solid var(--brd, #dceaf2);
+  box-shadow: 0 10px 30px -10px rgba(16, 67, 86, 0.08);
+}
+
+[data-theme="luz"] .db-hero-title {
+  color: var(--brand-primary, var(--mco, #104356));
+}
+
+[data-theme="luz"] .db-hero-name {
+  color: var(--p_v1, #1e5e75);
+  text-shadow: none;
+}
+
+[data-theme="luz"] .db-hero-desc {
+  color: var(--tx2, #486576);
+}
+
+[data-theme="luz"] .db-hero-badge {
+  background: var(--wb, #ffffff);
+  border: 1px solid var(--brd, #dceaf2);
+  color: var(--brand-primary, var(--mco, #104356));
+  box-shadow: 0 2px 6px rgba(16, 67, 86, 0.05);
+}
+
+[data-theme="luz"] .db-hero-tag {
+  background: var(--wb, #ffffff);
+  border: 1px solid var(--brd, #dceaf2);
+  color: var(--tx2, #486576);
+  box-shadow: 0 2px 6px rgba(16, 67, 86, 0.04);
 }
 
 .db-hero-content {
@@ -298,7 +325,7 @@
   gap: 7px;
   margin-bottom: 16px;
   padding: 11px 13px;
-  background: rgba(0, 0, 0, 0.025);
+  background: var(--bg3, #eaf3f8);
   border: 1px solid var(--line);
   border-radius: 10px;
 }
@@ -398,9 +425,10 @@
 }
 
 .db-quicklink-btn:hover {
-  background: var(--mbg, rgba(56, 189, 248, 0.08));
-  border-color: var(--mco, var(--brand-primary, #104356));
+  background: var(--mbg, #e5f4fa);
+  border-color: var(--brand-primary, var(--mco, #104356));
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 67, 86, 0.08);
 }
 
 .db-quicklink-icon {

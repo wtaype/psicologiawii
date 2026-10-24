@@ -44,7 +44,7 @@
 }
 
 .sp-panel-title i {
-  color: var(--accent);
+  color: var(--brand-primary, var(--mco, #104356));
 }
 
 .sp-panel-subtitle {
@@ -123,7 +123,7 @@
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: clamp(0.95rem, 1.1vw, 1.15rem);
   font-weight: 800;
-  color: var(--accent);
+  color: var(--brand-primary, var(--mco, #104356));
   display: flex;
   align-items: center;
   gap: 9px;
@@ -156,7 +156,7 @@
 }
 
 .sp-form-label i {
-  color: var(--accent);
+  color: var(--brand-primary, var(--mco, #104356));
   font-size: 0.76rem;
 }
 
@@ -185,7 +185,7 @@
 .sp-input:focus,
 .sp-select:focus,
 .sp-textarea:focus {
-  border-color: var(--accent);
+  border-color: var(--brand-primary, var(--mco, #104356));
   box-shadow: 0 0 0 3px var(--brand-soft);
   background: var(--surface);
 }
@@ -204,7 +204,7 @@
 
 .cl-soporte-module .wi-select-trigger:focus-visible,
 .cl-soporte-module .wi-select-trigger.wi-select-open {
-  border-color: var(--accent);
+  border-color: var(--brand-primary, var(--mco, #104356));
   box-shadow: 0 0 0 3px var(--brand-soft);
 }
 
@@ -225,9 +225,9 @@
 .sp-btn-save {
   flex: 1;
   padding: 12px 20px;
-  background: var(--accent);
-  border: none;
-  border-radius: 9px;
+  background: var(--brand-primary, var(--mco, #104356));
+  border: 1px solid var(--brand-primary, var(--mco, #104356));
+  border-radius: 1vh;
   color: #fff;
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 0.92rem;
@@ -242,7 +242,8 @@
 }
 
 .sp-btn-save:hover {
-  background: var(--accent-hover);
+  background: var(--hv, #0a2d3a);
+  border-color: var(--hv, #0a2d3a);
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(16, 67, 86, 0.3);
 }
@@ -292,8 +293,8 @@
 }
 
 .sp-channel-card:hover {
-  border-color: var(--accent);
-  background: var(--brand-soft);
+  border-color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
   transform: translateY(-1px);
 }
 
@@ -315,7 +316,7 @@
   font-family: var(--ff_O, 'Outfit', sans-serif);
   font-size: 0.95rem;
   font-weight: 800;
-  color: var(--accent);
+  color: var(--brand-primary, var(--mco, #104356));
   margin-top: 2px;
 }
 
@@ -460,4 +461,16 @@
   .sp-panel-head {
     width: 100%;
   }
+}
+
+
+/* BADGE CONTADOR DE TICKETS */
+.cd-badge-count {
+  background: var(--mbg);
+  color: var(--brand-primary, var(--mco, #104356));
+  border: 1px solid var(--brd);
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
 }

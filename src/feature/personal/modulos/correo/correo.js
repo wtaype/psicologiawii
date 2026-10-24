@@ -392,7 +392,7 @@ export function inicializarModuloCorreo() {
             margin: 0;
             padding: 32px 24px;
             font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8fafc;
+            background-color: #f4f8fb;
             color: #1e293b;
             line-height: 1.65;
             font-size: 14px;
@@ -412,8 +412,7 @@ export function inicializarModuloCorreo() {
             font-size: 11px;
             font-weight: 600;
             border-radius: 6px;
-            background: #eff6ff;
-            color: #0284c7;
+            background: #e5f4fa; color: #104356;
             text-transform: uppercase;
             letter-spacing: 0.6px;
             margin-bottom: 16px;
@@ -426,8 +425,7 @@ export function inicializarModuloCorreo() {
             line-height: 1.4;
           }
           .mail-meta {
-            background: #f1f5f9;
-            border-left: 4px solid #0284c7;
+            background: #eaf3f8; border-left: 4px solid #104356;
             padding: 12px 16px;
             border-radius: 0 8px 8px 0;
             margin-bottom: 24px;

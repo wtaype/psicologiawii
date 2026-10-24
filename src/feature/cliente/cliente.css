@@ -7,8 +7,8 @@
   --side-w: 230px;
   --side-collapsed-w: 68px;
   --topbar-h: clamp(54px, 6.8vh, 62px);
-  --cl-orange: var(--accent);
-  --cl-orange-hover: var(--accent-hover);
+  --cl-brand: var(--primary);
+  --cl-brand-hover: var(--primary-hover);
   --cl-emerald: #10b981;
   --cl-wa: var(--wa-green, #25d366);
   --cl-wa-hover: #1ebe57;
@@ -90,7 +90,7 @@ body {
   line-height: 1.1;
   color: var(--ink);
 }
-.cl-brand-title span { color: var(--cl-orange); }
+.cl-brand-title span { color: var(--primary); }
 
 .cl-brand-sub {
   font-size: clamp(0.68rem, 0.76vw, 0.78rem);
@@ -135,8 +135,8 @@ body {
   font-family: inherit;
 }
 .cl-search-input:focus {
-  border-color: var(--cl-orange);
-  box-shadow: 0 0 0 3px rgba(158, 123, 79, 0.15);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--mbg);
   background: var(--surface);
 }
 
@@ -196,7 +196,7 @@ body {
   font-family: inherit;
 }
 .cl-mobile-search-bar input:focus {
-  border-color: var(--cl-orange);
+  border-color: var(--primary);
 }
 .cl-mobile-search-icon {
   position: absolute;
@@ -217,7 +217,7 @@ body {
   font-size: 1rem;
 }
 .cl-btn-close-search:hover {
-  color: var(--cl-orange);
+  color: var(--primary);
 }
 
 .cl-topbar-right {
@@ -240,7 +240,7 @@ body {
   font-size: 0.85rem;
   transition: all 0.2s;
 }
-.cl-btn-icon:hover { border-color: var(--cl-orange); color: var(--cl-orange); }
+.cl-btn-icon:hover { border-color: var(--primary); color: var(--primary); }
 
 /* CHIP DE PERFIL CON TOGGLE DE DROPDOWN */
 .cl-user-dropdown-container {
@@ -261,8 +261,8 @@ body {
 }
 .cl-user-chip-btn:hover,
 .cl-user-chip-btn.active {
-  border-color: var(--cl-orange);
-  background: rgba(158, 123, 79, 0.08);
+  border-color: var(--primary);
+  background: var(--mbg);
 }
 
 .cl-avatar-sm {
@@ -288,7 +288,7 @@ body {
 .cl-user-name { font-size: 0.76rem; font-weight: 700; }
 .cl-user-badge { font-size: 0.62rem; color: var(--cl-emerald); font-weight: 600; }
 .cl-chevron { font-size: 0.7rem; color: var(--muted); margin-left: 2px; transition: transform 0.2s; }
-.cl-user-chip-btn.active .cl-chevron { transform: rotate(180deg); color: var(--cl-orange); }
+.cl-user-chip-btn.active .cl-chevron { transform: rotate(180deg); color: var(--primary); }
 
 /* MENU DROPDOWN */
 .cl-dropdown-menu {
@@ -339,18 +339,18 @@ body {
   text-align: left;
 }
 .cl-dd-item:hover {
-  background: rgba(158, 123, 79, 0.1);
-  color: var(--cl-orange);
+  background: var(--mbg);
+  color: var(--primary);
 }
 .cl-dd-item i { width: 16px; text-align: center; font-size: 0.85rem; color: var(--muted); }
-.cl-dd-item:hover i { color: var(--cl-orange); }
+.cl-dd-item:hover i { color: var(--primary); }
 
 .cl-dd-item.destacado {
-  background: rgba(158, 123, 79, 0.12);
-  color: var(--cl-orange);
+  background: var(--mbg);
+  color: var(--primary);
   font-weight: 700;
 }
-.cl-dd-item.destacado i { color: var(--cl-orange); }
+.cl-dd-item.destacado i { color: var(--primary); }
 
 .cl-dd-divider {
   height: 1px;
@@ -411,13 +411,13 @@ html.is-collapsed .cl-sidebar { width: var(--side-collapsed-w); }
 }
 
 .cl-nav-item:hover {
-  background: rgba(158, 123, 79, 0.08);
-  color: var(--ink);
+  background: var(--mbg);
+  color: var(--primary);
 }
 
 .cl-nav-item.active {
-  background: rgba(158, 123, 79, 0.14);
-  color: var(--cl-orange);
+  background: var(--mbg);
+  color: var(--primary);
   font-weight: 700;
 }
 
@@ -570,7 +570,7 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
     background: rgba(15, 23, 42, 0.94);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border-top: 1.5px solid rgba(158, 123, 79, 0.35);
+    border-top: 1.5px solid var(--brd);
     z-index: 95;
     padding: 0 16px;
     align-items: center;
@@ -580,7 +580,7 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
 
   [data-theme="luz"] .cl-mobile-cart-bar {
     background: rgba(255, 255, 255, 0.96);
-    border-top: 1.5px solid rgba(158, 123, 79, 0.3);
+    border-top: 1.5px solid var(--brd);
     box-shadow: 0 -4px 16px rgba(0,0,0,0.09);
   }
 
@@ -598,7 +598,7 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
     font-family: var(--ff_O, 'Outfit', sans-serif);
     font-size: 1.25rem;
     font-weight: 800;
-    color: var(--cl-orange);
+    color: var(--primary);
   }
 
   .cl-m-cart-btn-wa {
@@ -643,6 +643,6 @@ html.is-collapsed .cl-main-shell { margin-left: var(--side-collapsed-w); }
     font-weight: 700;
     cursor: pointer;
   }
-  .cl-m-btn.active { color: var(--cl-orange); }
+  .cl-m-btn.active { color: var(--primary); }
   .cl-m-btn i { font-size: 1.15rem; }
 }

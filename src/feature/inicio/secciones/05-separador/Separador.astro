@@ -21,17 +21,17 @@ const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURICom
 
 <style is:global set:html={separadorCss}></style>
 
-<section class="sos-banner-wrapper" style="background: linear-gradient(135deg, #104356 0%, #1e5e75 60%, #0284c7 100%);">
+<section class="sos-banner-wrapper">
   <div class="pagewii sos-banner-content">
     
     <!-- Bloque Informativo Izquierdo -->
     <div class="sos-info-block">
-      <div class="sos-icon-box" style="background: rgba(255,255,255,0.18); color: #fff;">
+      <div class="sos-icon-box">
         <i class="fa-solid fa-heart-pulse"></i>
       </div>
       <div class="sos-text-box">
-        <h2 class="sos-title" style="color: #fff;">{t.titulo}</h2>
-        <p class="sos-sub" style="color: rgba(255,255,255,0.92);">
+        <h2 class="sos-title">{t.titulo}</h2>
+        <p class="sos-sub">
           {t.sub_1} <strong>{t.sub_destacado}</strong> {t.sub_2} <span>{telefonoMostrado}</span> {t.sub_3}
         </p>
       </div>
@@ -44,7 +44,6 @@ const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURICom
         onclick="window.abrirModalTest && window.abrirModalTest()" 
         class="btn-sos-call"
         title="Realizar Test de Orientación"
-        style="background: #ffffff; color: #104356; font-weight: 700; border-radius: 1vh; cursor: pointer; border: none;"
       >
         <i class="fa-solid fa-clipboard-question"></i>
         <span>Hacer Test</span>
@@ -56,7 +55,6 @@ const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURICom
         rel="noopener noreferrer" 
         class="btn-sos-wa"
         title={t.btn_ws}
-        style="background: #25d366; color: #fff; font-weight: 700; border-radius: 1vh;"
       >
         <i class="fa-brands fa-whatsapp"></i> 
         <span>{t.btn_ws}</span>

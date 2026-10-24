@@ -1,30 +1,31 @@
 /* src/feature/cliente/modulos/03-cuenta/cuenta.css */
 /* Módulo 03: Mi Ficha de Paciente & Cuenta · Consultorio Psicológico América */
-/* 100% Cascade y Tokens de witema.css · Poppins · Radios 1vh / 1.5vh */
+/* 100% Integrado con witema.css · Poppins & Outfit · Radios 1vh · Split Layout */
 
 .cl-cuenta-module {
-  height: auto;
+  height: 100%;
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 1.2vh;
   box-sizing: border-box;
 }
 
 /* ============================================================
-   ENCABEZADO DEL MÓDULO (CABECERA + CHIP IDENTIDAD)
+   1. ENCABEZADO DEL MÓDULO (CABECERA + CHIP IDENTIDAD)
    ============================================================ */
 .ct-panel-head {
-  background: var(--bg_card);
-  border: 1px solid var(--border_card);
-  border-radius: var(--r_l);
-  padding: 1.25rem 1.6rem;
+  background: var(--cl-card-bg);
+  border: 1px solid var(--cl-card-border);
+  border-radius: 1.2vh;
+  padding: 1.2vh 1.4vw;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1.25rem;
-  box-shadow: var(--shadow-card);
+  gap: 1.2vh;
+  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
   width: 100%;
 }
@@ -32,54 +33,53 @@
 .ct-head-left {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .ct-panel-title {
-  font-family: var(--ff_P);
-  font-size: var(--fz_l1);
-  font-weight: 700;
-  color: var(--text_main);
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(1rem, 1.25vw, 1.35rem);
+  font-weight: 800;
+  color: var(--ink);
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin: 0;
 }
 
 .ct-panel-title i {
-  color: var(--accent);
+  color: var(--brand-primary, var(--mco, #104356));
 }
 
 .ct-panel-subtitle {
-  font-size: var(--fz_s3);
-  color: var(--text_muted);
+  font-size: clamp(0.72rem, 0.78vw, 0.82rem);
+  color: var(--muted);
   margin: 0;
 }
 
-/* CHIP DE IDENTIDAD EN LA CABECERA */
+/* CHIP COMPACTO DE IDENTIDAD */
 .ct-head-identity {
   display: flex;
   align-items: center;
-  gap: 12px;
-  background: var(--bg2);
-  border: 1px solid var(--border_card);
-  padding: 6px 14px;
-  border-radius: var(--r_full);
+  gap: 10px;
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  padding: 5px 12px;
+  border-radius: 999px;
 }
 
 .ct-avatar-pill {
-  width: 32px;
-  height: 32px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  background: var(--brand-soft);
-  color: var(--accent);
-  border: 1px solid var(--border_accent);
+  background: var(--mbg);
+  color: var(--brand-primary, var(--mco, #104356));
+  border: 1px solid var(--brd);
   display: grid;
   place-items: center;
-  font-family: var(--ff_P);
-  font-weight: 700;
-  font-size: 0.88rem;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-weight: 800;
+  font-size: 0.85rem;
   flex-shrink: 0;
   overflow: hidden;
 }
@@ -94,283 +94,326 @@
 .ct-identity-meta {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: var(--fz_s3);
+  gap: 6px;
+  font-size: 0.82rem;
 }
 
 .ct-identity-name {
   font-weight: 700;
-  color: var(--text_main);
+  color: var(--ink);
 }
 
 .ct-handle-chip {
-  background: var(--brand-soft);
-  color: var(--accent);
-  border: 1px solid var(--border_accent);
-  padding: 2px 8px;
-  border-radius: var(--r_full);
-  font-size: var(--fz_s1);
+  background: var(--mbg);
+  color: var(--brand-primary, var(--mco, #104356));
+  border: 1px solid var(--brd);
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 0.72rem;
   font-weight: 700;
 }
 
-.ct-coin-pill {
+.ct-puntos-badge {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  color: var(--accent);
+  gap: 5px;
+  font-size: 0.75rem;
   font-weight: 700;
-  font-size: var(--fz_s2);
+  color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
+  border: 1px solid var(--brd);
+  padding: 2px 8px;
+  border-radius: 999px;
 }
 
 /* ============================================================
-   SPLIT LAYOUT PRINCIPAL (2 COLUMNAS 50% / 50%)
+   2. LAYOUT SPLIT (2 COLUMNAS 50% / 50%)
    ============================================================ */
 .ct-layout-split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1.25rem;
-  align-items: start;
-  width: 100%;
+  grid-template-columns: minmax(360px, 48%) 1fr;
+  gap: 1.4vw;
+  flex: 1;
+  min-height: 0;
   box-sizing: border-box;
-}
-
-.ct-card {
-  background: var(--bg_card);
-  border: 1px solid var(--border_card);
-  border-radius: var(--r_l);
-  padding: 1.4rem 1.6rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  box-shadow: var(--shadow-card);
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.ct-card-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding-bottom: 0.65rem;
-  border-bottom: 1px solid var(--border_card);
-}
-
-.ct-card-title {
-  font-family: var(--ff_P);
-  font-size: var(--fz_m3);
-  font-weight: 700;
-  color: var(--text_main);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-}
-
-.ct-card-title i {
-  color: var(--accent);
-}
-
-.ct-card-badge {
-  font-size: var(--fz_s2);
-  font-weight: 700;
-  padding: 3px 10px;
-  border-radius: var(--r_full);
-  background: var(--bg2);
-  color: var(--text_muted);
-  border: 1px solid var(--border_card);
 }
 
 /* ============================================================
-   FORMULARIOS Y CAMPOS
+   3. COLUMNA IZQUIERDA: FORMULARIO PRINCIPAL
+   ============================================================ */
+.ct-card-editor {
+  background: var(--cl-card-bg);
+  border: 1px solid var(--cl-card-border);
+  border-radius: 1.2vh;
+  padding: 2vh 1.6vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8vh;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.ct-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 1.2vh;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+  margin-bottom: 0.4vh;
+}
+
+.ct-card-title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  font-weight: 800;
+  color: var(--brand-primary, var(--mco, #104356));
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  letter-spacing: 0.02em;
+  margin: 0;
+}
+
+/* ============================================================
+   4. FILAS Y CAMPOS DEL FORMULARIO
    ============================================================ */
 .ct-form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 0.85rem;
+  gap: 14px;
+  margin-block: 0.4vh;
   width: 100%;
   box-sizing: border-box;
 }
 
-.ct-field {
+.ct-form-group {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0.8vh;
+  margin-block: 0.4vh;
   width: 100%;
+  box-sizing: border-box;
 }
 
-.ct-field label {
-  font-size: var(--fz_s3);
-  font-weight: 600;
-  color: var(--text_main);
+.ct-form-label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 2px;
+}
+
+.ct-form-label i {
+  color: var(--brand-primary, var(--mco, #104356));
+  font-size: 0.76rem;
+}
+
+.ct-input,
+.ct-select,
+.ct-textarea {
+  width: 100%;
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  padding: 10px 14px;
+  color: var(--ink);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.84rem;
+  outline: none;
+  transition: all 0.18s;
+  box-sizing: border-box;
+}
+
+.ct-input:focus,
+.ct-select:focus,
+.ct-textarea:focus {
+  border-color: var(--brand-primary, var(--mco, #104356));
+  box-shadow: 0 0 0 3px var(--mbg);
+  background: var(--surface);
+}
+
+.ct-input[readonly],
+.ct-input[disabled] {
+  opacity: 0.72;
+  cursor: not-allowed;
+  background: var(--cl-input-bg);
+}
+
+/* CHIPS DE SUGERENCIA DE AVATAR */
+.ct-sug-row {
   display: flex;
   align-items: center;
   gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 4px;
 }
 
-.ct-field label i {
-  color: var(--accent);
+.ct-sug-chip {
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.15s;
 }
 
-.ct-field input,
-.ct-field select,
-.ct-field textarea {
-  font-family: var(--ff_P);
-  background: var(--bg2);
-  border: 1.5px solid var(--border_card);
-  border-radius: var(--r_m);
-  padding: 0.65rem 0.95rem;
-  font-size: var(--fz_s4);
-  color: var(--text_main);
-  transition: all var(--tr_f);
-  box-sizing: border-box;
-  outline: none;
-  width: 100%;
+.ct-sug-chip:hover {
+  border-color: var(--brand-primary, var(--mco, #104356));
+  color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
 }
 
-.ct-field input:focus,
-.ct-field select:focus,
-.ct-field textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
-  background: var(--bg_card);
-}
-
-.ct-field input[readonly],
-.ct-field input[disabled] {
-  opacity: 0.7;
-  cursor: not-allowed;
-  background: var(--bg3);
-}
-
-/* BOTÓN DE ACCIÓN PRINCIPAL */
-.ct-btn-save {
-  width: 100%;
-  padding: 0.85rem 1.4rem;
-  background: var(--primary);
-  border: none;
-  border-radius: var(--r_m);
-  color: var(--white);
-  font-family: var(--ff_P);
-  font-size: var(--fz_m);
+/* SEPARADOR SUNAT */
+.ct-sunat-divider {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
   font-weight: 700;
+  color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
+  border: 1px solid var(--brd);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-block: 0.8vh 0.4vh;
+}
+
+.ct-sunat-divider i {
+  color: var(--brand-primary, var(--mco, #104356));
+  font-size: 0.9rem;
+}
+
+/* ============================================================
+   5. BOTONES DE ACCIÓN
+   ============================================================ */
+.ct-form-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 0.8vh;
+  width: 100%;
+}
+
+.ct-btn-save {
+  flex: 1;
+  padding: 12px 20px;
+  background: var(--brand-primary, var(--mco, #104356));
+  border: 1px solid var(--brand-primary, var(--mco, #104356));
+  border-radius: 1vh;
+  color: #fff;
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: 0.92rem;
+  font-weight: 800;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all var(--tr_f);
-  box-shadow: 0 2px 10px rgba(56, 189, 248, 0.2);
+  transition: all 0.18s;
+  box-shadow: 0 2px 8px rgba(16, 67, 86, 0.2);
   box-sizing: border-box;
 }
 
 .ct-btn-save:hover {
-  background: var(--primary-hover);
+  background: var(--hv, #0a2d3a);
+  border-color: var(--hv, #0a2d3a);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(56, 189, 248, 0.35);
+  box-shadow: 0 4px 12px rgba(16, 67, 86, 0.3);
 }
 
 .ct-btn-save:active {
   transform: translateY(0);
 }
 
-.ct-btn-save.ct-btn-accent {
-  background: var(--accent);
-  color: var(--bg);
-}
-
-.ct-btn-save.ct-btn-accent:hover {
-  background: var(--accent-hover);
-  color: var(--white);
-}
-
 .ct-btn-secondary {
-  padding: 0.85rem 1.25rem;
-  background: var(--bg2);
-  border: 1px solid var(--border_card);
-  border-radius: var(--r_m);
-  color: var(--text_main);
-  font-family: var(--ff_P);
-  font-size: var(--fz_s4);
-  font-weight: 600;
+  padding: 11px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 1vh;
+  color: var(--ink);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 0.84rem;
+  font-weight: 700;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  transition: all var(--tr_f);
+  transition: all 0.18s;
   box-sizing: border-box;
 }
 
 .ct-btn-secondary:hover {
-  border-color: var(--border_accent);
-  color: var(--accent);
-  background: var(--brand-soft);
+  border-color: var(--brand-primary, var(--mco, #104356));
+  color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
 }
 
-/* CHIPS DE SUGERENCIA / ROL */
-.ct-chips-row {
+/* ============================================================
+   6. COLUMNA DERECHA: SEGURIDAD + PREFERENCIAS
+   ============================================================ */
+.ct-right-col {
   display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 0.3rem 0;
+  flex-direction: column;
+  gap: 1.4vw;
+  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
-.ct-chip-btn {
-  padding: 6px 13px;
-  background: var(--bg2);
-  border: 1px solid var(--border_card);
-  border-radius: var(--r_full);
-  color: var(--text_muted);
-  font-size: var(--fz_s3);
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  transition: all var(--tr_f);
+.ct-card-section {
+  background: var(--cl-card-bg);
+  border: 1px solid var(--cl-card-border);
+  border-radius: 1.2vh;
+  padding: 2vh 1.6vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.6vh;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
 }
 
-.ct-chip-btn:hover {
-  border-color: var(--border_accent);
-  color: var(--accent);
-  background: var(--brand-soft);
-}
-
-.ct-chip-btn.active {
-  background: var(--brand-soft);
-  border-color: var(--accent);
-  color: var(--accent);
-  font-weight: 700;
-}
-
-/* CARDS DE PREFERENCIAS CON SWITCH */
+/* CARDS APPLE CON SWITCH */
 .ct-apple-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 0.3rem 0;
+  gap: 12px;
+  margin-block: 0.4vh;
   width: 100%;
   box-sizing: border-box;
 }
 
 .ct-apple-card {
-  background: var(--bg2);
-  border: 1px solid var(--border_card);
-  border-radius: var(--r_m);
+  background: var(--cl-input-bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
   padding: 10px 14px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
-  transition: all var(--tr_f);
+  transition: all 0.18s;
   box-sizing: border-box;
   cursor: pointer;
   user-select: none;
 }
 
 .ct-apple-card:hover {
-  border-color: var(--border_accent);
-  background: var(--bg3);
+  border-color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg);
 }
 
 .ct-apple-card-info {
@@ -380,29 +423,30 @@
 }
 
 .ct-apple-title {
-  font-size: var(--fz_s3);
+  font-size: 0.82rem;
   font-weight: 700;
-  color: var(--text_main);
+  color: var(--ink);
   display: flex;
   align-items: center;
   gap: 6px;
 }
 
 .ct-apple-title i {
-  font-size: 0.8rem;
-  color: var(--accent);
+  font-size: 0.85rem;
+  color: var(--brand-primary, var(--mco, #104356));
 }
 
 .ct-apple-desc {
-  font-size: var(--fz_s1);
-  color: var(--text_muted);
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.35;
 }
 
-/* SWITCH IOS */
+/* SWITCH IOS ESTILO APPLE */
 .ct-apple-switch {
   position: relative;
-  width: 38px;
-  height: 20px;
+  width: 40px;
+  height: 22px;
   flex-shrink: 0;
 }
 
@@ -417,16 +461,16 @@
   position: absolute;
   cursor: pointer;
   inset: 0;
-  background-color: var(--border_card);
+  background-color: var(--line);
   transition: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
-  border-radius: var(--r_full);
+  border-radius: 999px;
 }
 
 .ct-apple-switch .ct-slider:before {
   position: absolute;
   content: "";
-  height: 14px;
-  width: 14px;
+  height: 16px;
+  width: 16px;
   left: 3px;
   bottom: 3px;
   background-color: #fff;
@@ -436,48 +480,18 @@
 }
 
 .ct-apple-switch input:checked + .ct-slider {
-  background-color: var(--success);
+  background-color: #10b981;
 }
 
 .ct-apple-switch input:checked + .ct-slider:before {
   transform: translateX(18px);
 }
 
-.ct-sug-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-  margin-top: 4px;
-}
-
-.ct-sug-chip {
-  background: var(--bg2);
-  border: 1px solid var(--border_card);
-  color: var(--text_muted);
-  border-radius: var(--r_xs);
-  padding: 3px 8px;
-  font-size: var(--fz_s2);
-  font-weight: 600;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  transition: all var(--tr_f);
-}
-
-.ct-sug-chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--brand-soft);
-}
-
 /* ============================================================
-   RESPONSIVE EN MÓVILES (< 900px y < 600px)
+   7. RESPONSIVE EN MÓVILES (< 900px)
    ============================================================ */
 @media (max-width: 900px) {
   .ct-panel-head {
-    padding: 1rem 3.5%;
     flex-direction: column;
     align-items: stretch;
   }
@@ -488,17 +502,14 @@
   }
   .ct-layout-split {
     grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-  .ct-card {
-    padding: 1.1rem 3.5%;
+    gap: 1.2vh;
   }
   .ct-form-row {
     grid-template-columns: 1fr;
-    gap: 0.75rem;
+    gap: 0.8vh;
   }
   .ct-apple-row {
     grid-template-columns: 1fr;
-    gap: 0.65rem;
+    gap: 0.8vh;
   }
 }

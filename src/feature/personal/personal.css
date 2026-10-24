@@ -633,8 +633,8 @@ html.is-collapsed .ps-main-shell {
 }
 
 .ps-btn-primary:hover {
-  background: var(--hv, var(--brand-primary-hover, #ff771a));
-  box-shadow: var(--shadow-hover, 0 4px 14px undefined);
+  background: var(--hv, var(--brand-primary-hover, #0a2d3a));
+  box-shadow: var(--shadow-hover, 0 4px 14px rgba(16, 67, 86, 0.25));
   transform: translateY(-1px);
 }
 
@@ -645,8 +645,9 @@ html.is-collapsed .ps-main-shell {
 }
 
 .ps-btn-secondary:hover {
-  border-color: var(--mco, var(--primary, #104356));
-  color: var(--mco, var(--primary, #104356));
+  border-color: var(--brand-primary, var(--mco, #104356));
+  color: var(--brand-primary, var(--mco, #104356));
+  background: var(--mbg, #e5f4fa);
 }
 
 .ps-btn-danger {
