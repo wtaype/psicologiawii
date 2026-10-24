@@ -29,8 +29,8 @@ for (const code of Object.keys(IDIOMAS)) {
   }
 }
 
-const baseHash = idioma === 'es' ? '' : `/${idioma}`;
-const urlInicio = esPersonal || esCliente ? '/' : `${baseHash}#hero`;
+const urlInicio = buildRuta('/', idioma);
+const navPrefix = (ruta === '/' || ruta === '/en') ? '' : urlInicio;
 const wsNumeroHeader = datosNegocio.whatsappLimpio || '51960332958';
 const wsMsgHeader = encodeURIComponent(
   idioma === 'en'
@@ -96,13 +96,13 @@ const whatsappDirectLink = `https://wa.me/${wsNumeroHeader}?text=${wsMsgHeader}`
       </div>
     ) : (
       <nav class="desktop-only header-nav-desktop">
-        <a href="#servicios" class="header-nav-item">{t.servicios}</a>
-        <a href="#talleres" class="header-nav-item">{t.talleres}</a>
-        <a href="#paquetes" class="header-nav-item">{t.calculadora}</a>
-        <a href="#metodologia" class="header-nav-item">{t.seguridad}</a>
-        <a href="#sedes" class="header-nav-item">{t.ubicacion}</a>
-        <a href="#nosotros" class="header-nav-item">{t.nosotros}</a>
-        <a href="#faq" class="header-nav-item">{t.faq}</a>
+        <a href={`${navPrefix}#servicios`} class="header-nav-item">{t.servicios}</a>
+        <a href={`${navPrefix}#talleres`} class="header-nav-item">{t.talleres}</a>
+        <a href={`${navPrefix}#paquetes`} class="header-nav-item">{t.calculadora}</a>
+        <a href={`${navPrefix}#metodologia`} class="header-nav-item">{t.seguridad}</a>
+        <a href={`${navPrefix}#sedes`} class="header-nav-item">{t.ubicacion}</a>
+        <a href={`${navPrefix}#nosotros`} class="header-nav-item">{t.nosotros}</a>
+        <a href={`${navPrefix}#faq`} class="header-nav-item">{t.faq}</a>
       </nav>
     )}
 

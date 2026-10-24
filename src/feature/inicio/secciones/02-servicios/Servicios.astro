@@ -62,7 +62,7 @@ const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
 
           const esDiagnostico = p.id.includes('diagnostico') || p.id.includes('tdah') || p.id.includes('evaluacion');
 
-          const badgeTexto = (idioma !== 'es' && p[`badge${langSuffix}`]) || (typeof p.badge === 'object' ? (p.badge[idioma] || p.badge.es) : p.badge) || (esDiagnostico ? 'Informe Oficial' : t.pill_popular);
+          const badgeTexto = (idioma !== 'es' && p[`badge${langSuffix}`]) || (typeof p.badge === 'object' ? (p.badge[idioma] || p.badge.es) : p.badge) || (esDiagnostico ? 'Informe C.Ps.P.' : t.pill_popular);
           const pillHighlightClase = p.tagClase || (esDiagnostico ? 'badge-oro' : 'badge-serenidad');
           const pillHighlightIcon = esDiagnostico ? 'fa-solid fa-clipboard-check' : 'fa-solid fa-star';
 

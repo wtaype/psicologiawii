@@ -81,7 +81,7 @@
 @media (max-width: 960px) {
   .calc-split-grid {
     grid-template-columns: 1fr !important;
-    gap: 4vh !important;
+    gap: 2rem !important;
   }
 }
 
@@ -93,7 +93,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 3.5vh 2.2vw;
+  padding: 1.8rem 1.6rem;
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease, box-shadow 0.25s ease;
   box-shadow: 0 4px 16px rgba(16, 67, 86, 0.04);
   box-sizing: border-box;
@@ -286,7 +286,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 2.2vh 1.8vw;
+  padding: 1.8rem 1.6rem;
   box-shadow: 0 4px 16px rgba(16, 67, 86, 0.04);
   box-sizing: border-box;
 }
@@ -294,7 +294,7 @@
 .calc-tips-media {
   border-radius: 1.2vh;
   height: 220px;
-  margin-bottom: 2vh;
+  margin-bottom: 1.5rem;
   display: flex;
   position: relative;
   overflow: hidden;
@@ -331,72 +331,148 @@
 
 .calc-tips-title {
   font-family: var(--ff_O, 'Outfit', sans-serif);
-  font-size: 1.15rem;
+  font-size: 1.18rem;
   font-weight: 800;
   color: var(--text-bright, #071923);
-  margin-bottom: 1.4vh;
+  margin-bottom: 1.2rem;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.55rem;
 }
 
 .calc-tips-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 2vh 0;
+  margin: 0 0 1.5rem 0;
   display: flex;
   flex-direction: column;
-  gap: 0.8vh;
+  gap: 0.85rem;
 }
 
 .calc-tip-item {
   display: flex;
   align-items: flex-start;
-  gap: 0.6rem;
-  font-size: 0.84rem;
+  gap: 0.65rem;
+  font-size: 0.86rem;
   color: var(--text-muted, #486576);
-  line-height: 1.45;
+  line-height: 1.5;
 }
 
 .calc-tip-item i {
   color: #10b981;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   margin-top: 0.15rem;
   flex-shrink: 0;
 }
 
+/* ── 5. FILA DE DUDAS Y ASESORÍA CLÍNICA ── */
 .calc-dudas-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-top: 1.4vh;
+  padding-top: 1.25rem;
   border-top: 1px solid var(--border-card, #dceaf2);
-  gap: 1rem;
+  gap: 1.2rem;
 }
 
 .calc-dudas-text {
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   color: var(--text-muted, #486576);
   font-weight: 600;
+  line-height: 1.45;
 }
 
 .btn-calc-consultar {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
-  padding: 0.6rem 1.2rem;
-  background: var(--brand-primary, #104356);
-  color: #ffffff;
-  border-radius: 0.8vh;
-  font-size: 0.82rem;
+  gap: 0.5rem;
+  padding: 0.7rem 1.35rem;
+  background: var(--brand-sky, #0284c7);
+  color: #ffffff !important;
+  border-radius: 1vh;
+  font-size: 0.88rem;
   font-weight: 700;
   text-decoration: none;
   transition: all 0.2s ease;
   white-space: nowrap;
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
 }
 
 .btn-calc-consultar:hover {
-  background: var(--brand-primary-hover, #0a2d3a);
+  background: #0369a1;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(16, 67, 86, 0.2);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.35);
+}
+
+/* ── 6. ADAPTACIÓN RESPONSIVA PARA MÓVILES (<= 640px) ── */
+@media (max-width: 640px) {
+  .calc-card-controls,
+  .calc-card-tips {
+    padding: 1.35rem 1.25rem !important;
+    border-radius: 1.2vh !important;
+  }
+
+  .calc-tips-media {
+    height: 190px !important;
+    margin-bottom: 1.2rem !important;
+  }
+
+  .calc-tips-title {
+    font-size: 1.12rem !important;
+    line-height: 1.35 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .calc-tips-list {
+    gap: 0.75rem !important;
+    margin-bottom: 1.2rem !important;
+  }
+
+  .calc-tip-item {
+    font-size: 0.84rem !important;
+    line-height: 1.48 !important;
+  }
+
+  /* Bloque de Consulta Reorganizado en Móvil */
+  .calc-dudas-row {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 0.85rem !important;
+    padding: 1.1rem !important;
+    background: rgba(2, 132, 199, 0.05);
+    border: 1px solid var(--border-card, #dceaf2);
+    border-radius: 1vh;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+
+  :root[data-theme="futuro"] .calc-dudas-row,
+  :root[data-theme="dark"] .calc-dudas-row {
+    background: rgba(56, 189, 248, 0.07);
+    border-color: rgba(56, 189, 248, 0.18);
+  }
+
+  .calc-dudas-text {
+    font-size: 0.92rem !important;
+    line-height: 1.45 !important;
+    font-weight: 700 !important;
+    color: var(--text-bright, #071923) !important;
+    text-align: center !important;
+  }
+
+  :root[data-theme="futuro"] .calc-dudas-text,
+  :root[data-theme="dark"] .calc-dudas-text {
+    color: var(--tx, #f1f5f9) !important;
+  }
+
+  .btn-calc-consultar {
+    width: 100% !important;
+    min-height: 48px !important;
+    justify-content: center !important;
+    font-size: 0.92rem !important;
+    border-radius: 1vh !important;
+    padding: 0.8rem 1rem !important;
+    box-sizing: border-box !important;
+  }
 }

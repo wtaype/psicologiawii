@@ -45,7 +45,9 @@ const whatsappDirectLink = `https://wa.me/${wsNumeroDrawer}?text=${wsMsgDrawer}`
 <aside class="mobile-drawer" id="mobileDrawer">
   <div class="drawer-brand-header">
     <div class="drawer-brand-box">
-      <img src="/imgwii/logo_full.webp" alt={datosNegocio.nombre} class="drawer-logo-full" />
+      <a href={buildRuta('/', idioma)} onclick="window.cerrarDrawer && window.cerrarDrawer()" title={datosNegocio.nombre}>
+        <img src="/imgwii/logo_full.webp" alt={datosNegocio.nombre} class="drawer-logo-full" />
+      </a>
     </div>
     
     <div class="flex items-center gap-2">

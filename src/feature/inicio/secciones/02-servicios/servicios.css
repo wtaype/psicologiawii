@@ -81,7 +81,42 @@
   .catalog-grid,
   .sec-prods-grid {
     grid-template-columns: 1fr !important;
-    gap: 3vh !important;
+    gap: 1.5rem !important;
+  }
+
+  .producto-card-box,
+  .card-servicio {
+    padding: 1.35rem 1.25rem !important;
+    border-radius: 1.2vh !important;
+  }
+
+  .card-title {
+    font-size: 1.2rem !important;
+    line-height: 1.32 !important;
+    margin-bottom: 0.6rem !important;
+  }
+
+  .card-desc-snippet {
+    font-size: 0.86rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 0.9rem !important;
+  }
+
+  .card-guarantee-box {
+    padding: 0.85rem 0.95rem !important;
+    border-radius: 1vh !important;
+    margin-bottom: 1.1rem !important;
+  }
+
+  .card-guarantee-item {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .btn-card-ws {
+    min-height: 48px;
+    font-size: 0.92rem;
+    padding-block: 0.85rem;
   }
 }
 
@@ -91,7 +126,7 @@
   background: var(--bg-card, #ffffff);
   border: 1.5px solid var(--border-card, #dceaf2);
   border-radius: 1.5vh;
-  padding: 2vh 1.4vw;
+  padding: 1.5rem 1.35rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -118,8 +153,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.2vh;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
   width: 100%;
 }
 
@@ -127,12 +162,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.25rem 0.65rem;
+  padding: 0.28rem 0.75rem;
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .producto-badge.badge-serenidad {
@@ -148,9 +185,13 @@
 }
 
 .producto-tipo-badge {
-  font-size: 0.72rem;
+  font-size: 0.73rem;
   color: var(--text-muted, #486576);
   font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Marco de Imagen */
@@ -233,14 +274,14 @@
 /* Garantías / Beneficios */
 .card-guarantee-box {
   background: var(--bg-surface-elevated, #eaf3f8);
-  border-radius: 0.8vh;
-  padding: 1vh 0.9vw;
-  margin-bottom: 1.6vh;
+  border-radius: 1vh;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.4vh;
   border: 1px solid var(--border-card, #dceaf2);
 }
 
 .card-guarantee-heading {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
   color: var(--brand-primary, #104356);

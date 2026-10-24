@@ -87,7 +87,41 @@
 @media (max-width: 640px) {
   .sec-talleres-grid {
     grid-template-columns: 1fr !important;
-    gap: 3vh !important;
+    gap: 1.5rem !important;
+  }
+
+  .taller-card-box {
+    padding: 1.35rem 1.25rem !important;
+    border-radius: 1.2vh !important;
+  }
+
+  .taller-title {
+    font-size: 1.2rem !important;
+    line-height: 1.32 !important;
+    margin-bottom: 0.6rem !important;
+  }
+
+  .taller-desc-snippet {
+    font-size: 0.86rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 0.9rem !important;
+  }
+
+  .taller-guarantee-box {
+    padding: 0.85rem 0.95rem !important;
+    border-radius: 1vh !important;
+    margin-bottom: 1.1rem !important;
+  }
+
+  .taller-guarantee-item {
+    font-size: 0.8rem !important;
+    line-height: 1.4 !important;
+  }
+
+  .btn-taller-ws {
+    min-height: 48px;
+    font-size: 0.92rem;
+    padding-block: 0.85rem;
   }
 }
 
@@ -96,7 +130,7 @@
   background: var(--bg-card, #ffffff);
   border: 1.5px solid var(--border-card, #dceaf2);
   border-radius: 1.5vh;
-  padding: 2vh 1.4vw;
+  padding: 1.5rem 1.35rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -122,8 +156,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1.2vh;
+  gap: 0.6rem;
+  margin-bottom: 1rem;
   width: 100%;
 }
 
@@ -131,12 +165,14 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.25rem 0.65rem;
+  padding: 0.28rem 0.75rem;
   border-radius: 999px;
   font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.03em;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .taller-badge.badge-serenidad {
@@ -152,12 +188,16 @@
 }
 
 .taller-tipo-badge {
-  font-size: 0.72rem;
+  font-size: 0.73rem;
   color: var(--brand-sky, #0284c7);
   font-weight: 700;
   background: rgba(2, 132, 199, 0.08);
-  padding: 0.2rem 0.55rem;
-  border-radius: 6px;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Marco de Imagen */
@@ -240,14 +280,14 @@
 /* Beneficios y Aprendizajes Clave */
 .taller-guarantee-box {
   background: var(--bg-surface-elevated, #f0f7fb);
-  border-radius: 0.8vh;
-  padding: 1vh 0.9vw;
-  margin-bottom: 1.6vh;
+  border-radius: 1vh;
+  padding: 0.85rem 1rem;
+  margin-bottom: 1.4vh;
   border: 1px solid var(--border-card, #dceaf2);
 }
 
 .taller-guarantee-heading {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
   color: var(--brand-sky, #0284c7);

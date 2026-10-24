@@ -135,19 +135,26 @@
 
 /* Columna 2: Tarjeta Lateral Ejecutiva */
 .faq-side-card {
-  background: var(--bg-surface-elevated, #101935);
-  border: 2px solid var(--border-accent, rgba(56, 189, 248, 0.45));
+  background: var(--bg-card, #ffffff);
+  border: 1.5px solid var(--border-card, #dceaf2);
   border-radius: 1.5vh;
-  padding: 2vh 1.8vw;
-  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.35);
+  padding: 1.6rem 1.5rem;
+  box-shadow: 0 4px 20px rgba(16, 67, 86, 0.06);
   box-sizing: border-box;
 }
 
+:root[data-theme="futuro"] .faq-side-card,
+:root[data-theme="dark"] .faq-side-card {
+  background: var(--bg-surface-elevated, #101935);
+  border-color: var(--border-accent, rgba(56, 189, 248, 0.45));
+  box-shadow: 0 1vh 3vh rgba(0, 0, 0, 0.35);
+}
+
 .faq-media-box {
-  border-radius: 1vh;
-  height: 38vh;
-  min-height: 340px;
-  margin-bottom: 2vh;
+  border-radius: 1.2vh;
+  height: 320px;
+  min-height: 280px;
+  margin-bottom: 1.4rem;
   position: relative;
   overflow: hidden;
   background: var(--bg-surface, #07131b);
@@ -155,7 +162,7 @@
 
 .faq-media-img {
   object-fit: cover;
-  object-position: center 25%;
+  object-position: center 20%;
   width: 100%;
   height: 100%;
   display: block;
@@ -165,82 +172,169 @@
   position: absolute;
   bottom: 0;
   inset-inline: 0;
-  padding: 1.4vh 1.2vw;
-  background: linear-gradient(to top, rgba(7, 19, 27, 0.92) 0%, rgba(7, 19, 27, 0.45) 60%, transparent 100%);
+  padding: 1.2rem 1rem 0.9rem 1rem;
+  background: linear-gradient(to top, rgba(7, 19, 27, 0.95) 0%, rgba(7, 19, 27, 0.55) 60%, transparent 100%);
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
 }
 
-.faq-badge-fire {
-  color: var(--brand-sky, #38bdf8);
-  background: rgba(2, 132, 199, 0.2);
-  border: 1px solid rgba(56, 189, 248, 0.4);
-  font-size: 0.72rem;
-  padding: 0.3vh 0.7vw;
-  border-radius: 999px;
-  font-weight: 700;
+.faq-badge-pill {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-}
-
-.faq-badge-blue {
-  color: #38bdf8;
-  background: rgba(2, 132, 199, 0.2);
-  border: 1px solid rgba(2, 132, 199, 0.4);
-  font-size: 0.72rem;
-  padding: 0.3vh 0.7vw;
+  gap: 0.4rem;
+  padding: 0.28rem 0.75rem;
   border-radius: 999px;
+  font-size: var(--fz_xs, 0.72rem);
   font-weight: 700;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
 }
 
 .faq-side-title {
-  font-family: var(--ff_O, 'Outfit', sans-serif);
-  font-size: clamp(1.1rem, 1.2vw, 1.3rem);
-  font-weight: 700;
-  color: var(--text-bright, #fff);
-  margin: 0 0 1vh 0;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_l, 1.25rem);
+  font-weight: 800;
+  color: var(--text-bright, #071923);
+  letter-spacing: -0.015em;
+  line-height: 1.32;
+  margin: 0 0 0.65rem 0;
+}
+
+:root[data-theme="futuro"] .faq-side-title,
+:root[data-theme="dark"] .faq-side-title {
+  color: var(--tx, #ffffff);
 }
 
 .faq-side-desc {
   font-family: var(--ff_P, 'Poppins', sans-serif);
-  font-size: 0.86rem;
+  font-size: var(--fz_s2, 0.86rem);
+  color: var(--text-muted, #486576);
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  margin: 0 0 1.2rem 0;
+}
+
+:root[data-theme="futuro"] .faq-side-desc,
+:root[data-theme="dark"] .faq-side-desc {
   color: var(--text-muted, #94a3b8);
-  line-height: 1.5;
-  margin: 0 0 2vh 0;
 }
 
 .faq-meta-list {
   display: flex;
   flex-direction: column;
-  gap: 0.8vh;
-  margin-bottom: 2.2vh;
+  gap: 0.75rem;
+  margin-bottom: 1.4rem;
+  background: var(--bg-subtle, rgba(16, 67, 86, 0.04));
+  border: 1px solid var(--border-card, #dceaf2);
+  border-radius: 1vh;
+  padding: 0.95rem 1rem;
+}
+
+:root[data-theme="futuro"] .faq-meta-list,
+:root[data-theme="dark"] .faq-meta-list {
+  background: rgba(56, 189, 248, 0.05);
+  border-color: rgba(56, 189, 248, 0.15);
 }
 
 .faq-meta-item {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
+  align-items: flex-start;
+  gap: 0.65rem;
   font-family: var(--ff_P, 'Poppins', sans-serif);
-  font-size: 0.86rem;
-  color: var(--text-bright, #fff);
-  font-weight: 700;
+  font-size: var(--fz_s2, 0.84rem);
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--text-main, #0f2735);
+  font-weight: 600;
+}
+
+:root[data-theme="futuro"] .faq-meta-item,
+:root[data-theme="dark"] .faq-meta-item {
+  color: var(--tx, #f1f5f9);
 }
 
 .faq-meta-item i {
-  color: var(--brand-sky, #38bdf8);
+  color: var(--brand-sky, #0284c7);
+  font-size: 0.95rem;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
 }
 
-.faq-side-actions {
+.btn-faq-side {
+  width: 100%;
+  min-height: 50px;
   display: flex;
-  gap: 0.8vw;
-  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: 0.85rem 1.25rem;
+  background: #25d366;
+  color: #ffffff !important;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: var(--fz_m, 0.94rem);
+  font-weight: 700;
+  letter-spacing: 0.015em;
+  line-height: 1.35;
+  border-radius: 1vh;
+  text-decoration: none;
+  box-sizing: border-box;
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+  transition: all 0.25s ease;
+}
+
+.btn-faq-side:hover {
+  background: #1ebd5b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
+}
+
+@media (max-width: 640px) {
+  .faq-side-card {
+    padding: 1.35rem 1.25rem !important;
+    border-radius: 1.2vh !important;
+  }
+
+  .faq-media-box {
+    height: 240px !important;
+    min-height: auto !important;
+    margin-bottom: 1.2rem !important;
+  }
+
+  .faq-side-title {
+    font-size: var(--fz_l, 1.22rem) !important;
+    line-height: 1.35 !important;
+    letter-spacing: -0.015em !important;
+    margin-bottom: 0.65rem !important;
+  }
+
+  .faq-side-desc {
+    font-size: var(--fz_s2, 0.86rem) !important;
+    line-height: 1.58 !important;
+    letter-spacing: 0.01em !important;
+    margin-bottom: 1.2rem !important;
+  }
+
+  .faq-meta-list {
+    padding: 0.85rem 0.95rem !important;
+    gap: 0.7rem !important;
+    margin-bottom: 1.25rem !important;
+  }
+
+  .faq-meta-item {
+    font-size: var(--fz_s3, 0.82rem) !important;
+    line-height: 1.5 !important;
+    letter-spacing: 0.01em !important;
+  }
+
+  .btn-faq-side {
+    width: 100% !important;
+    min-height: 50px !important;
+    padding-block: 0.9rem !important;
+    font-size: var(--fz_m, 0.94rem) !important;
+    letter-spacing: 0.02em !important;
+  }
 }
 
 .faq-btn-call {

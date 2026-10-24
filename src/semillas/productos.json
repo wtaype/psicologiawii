@@ -295,7 +295,7 @@
     },
     "imagen": "/imgwii/servicios/Evaluacion.webp",
     "badge": {
-      "es": "Informe Oficial C.Ps.P.",
+      "es": "Informe C.Ps.P.",
       "en": "Official Report"
     },
     "tagClase": "badge-oro",
@@ -325,8 +325,8 @@
     },
     "enfoque": "Vivencial & Entrenamiento Asertivo",
     "publico": {
-      "es": "Púberes y Adolescentes (11 a 17 años)",
-      "en": "Pre-teens & Adolescents (11 to 17 years)"
+      "es": "Púberes y Adolescentes",
+      "en": "Pre-teens & Adolescents"
     },
     "modalidad": {
       "es": "Grupal Presencial Sede Sur",
@@ -376,8 +376,8 @@
     },
     "enfoque": "Psicoterapéutico & Humanista",
     "publico": {
-      "es": "Adolescentes y Jóvenes (13 a 20 años)",
-      "en": "Teens & Young Adults (13 to 20 years)"
+      "es": "Adolescentes y Jóvenes",
+      "en": "Teens & Young Adults"
     },
     "modalidad": {
       "es": "Presencial y Online",
@@ -427,8 +427,8 @@
     },
     "enfoque": "Cognitivo Conductual & Mindfulness Lúdico",
     "publico": {
-      "es": "Niños y Púberes (6 a 12 años)",
-      "en": "Children & Pre-teens (6 to 12 years)"
+      "es": "Niños y Púberes",
+      "en": "Children & Pre-teens"
     },
     "modalidad": {
       "es": "Grupal Presencial Sede Sur",
@@ -478,8 +478,8 @@
     },
     "enfoque": "Arteterapia & Psicodrama",
     "publico": {
-      "es": "Niños y Adolescentes (7 a 15 años)",
-      "en": "Children & Teens (7 to 15 years)"
+      "es": "Niños y Adolescentes",
+      "en": "Children & Teens"
     },
     "modalidad": {
       "es": "Grupal Presencial Sede Sur",
@@ -529,8 +529,8 @@
     },
     "enfoque": "Comunicación Asertiva & Liderazgo Juvenil",
     "publico": {
-      "es": "Adolescentes y Jóvenes (12 a 22 años)",
-      "en": "Teens & Young Adults (12 to 22 years)"
+      "es": "Adolescentes y Jóvenes",
+      "en": "Teens & Young Adults"
     },
     "modalidad": {
       "es": "Presencial y Online",
@@ -580,8 +580,8 @@
     },
     "enfoque": "Psicología Vocacional & Proyecto de Vida",
     "publico": {
-      "es": "Escolares 4to/5to de Secundaria y Jóvenes",
-      "en": "High School Seniors & Youth"
+      "es": "Escolares y Jóvenes",
+      "en": "High School Students & Youth"
     },
     "modalidad": {
       "es": "Presencial y Online",
