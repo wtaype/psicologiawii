@@ -161,9 +161,9 @@ export function normalizarConfig(c = {}) {
       subtitulo: toMap(cfg.hero?.subtitulo || base.hero?.subtitulo, 'Un espacio clínico seguro, confidencial y sin juicios...', 'A safe, confidential and non-judgmental clinical space...'),
       badge: toMap(cfg.hero?.badge || base.hero?.badge, 'ESPACIO SEGURO Y CONFIDENCIAL', 'SAFE & CONFIDENTIAL SPACE'),
       imgHero: (() => {
-        const rawImg = cfg.hero?.imgHero || base.hero?.imgHero || '/imgwii/psicologa-sofia-reynaga.webp';
-        if (typeof rawImg === 'string' && (rawImg.includes('Psychologist_listening_in_therapy') || rawImg.includes('psicologa-terapia'))) {
-          return '/imgwii/psicologa-sofia-reynaga.webp';
+        const rawImg = cfg.hero?.imgHero || base.hero?.imgHero || '/imgwii/hero.webp';
+        if (typeof rawImg === 'string' && (rawImg.includes('Psychologist_listening_in_therapy') || rawImg.includes('psicologa-terapia') || rawImg.includes('psicologa-sofia-reynaga'))) {
+          return '/imgwii/hero.webp';
         }
         return rawImg;
       })(),
@@ -458,9 +458,9 @@ export const datosNegocio = {
   get metricas() { return this.raw.metricas || { years: '6+', pacientes: '+450', confidencialidad: '100%', satisfaccion: '98%' }; },
   get hero() { return this.raw.hero || {}; },
   get imgHero() {
-    const rawImg = this.raw.hero?.imgHero || '/imgwii/psicologa-sofia-reynaga.webp';
-    if (typeof rawImg === 'string' && (rawImg.includes('Psychologist_listening_in_therapy') || rawImg.includes('psicologa-terapia'))) {
-      return '/imgwii/psicologa-sofia-reynaga.webp';
+    const rawImg = this.raw.hero?.imgHero || '/imgwii/hero.webp';
+    if (typeof rawImg === 'string' && (rawImg.includes('Psychologist_listening_in_therapy') || rawImg.includes('psicologa-terapia') || rawImg.includes('psicologa-sofia-reynaga'))) {
+      return '/imgwii/hero.webp';
     }
     return rawImg;
   },
