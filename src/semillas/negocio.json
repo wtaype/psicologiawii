@@ -173,7 +173,7 @@
       "es": "ESPACIO SEGURO Y CONFIDENCIAL",
       "en": "SAFE & CONFIDENTIAL SPACE"
     },
-    "imgHero": "/imgwii/Psychologist_listening_in_therapy.jpeg",
+    "imgHero": "/imgwii/psicologa-sofia-reynaga.webp",
     "driverTitulo": {
       "es": "Primera Consulta y Evaluación",
       "en": "First Consultation & Clinical Assessment"
@@ -223,7 +223,7 @@
       ]
     },
     "imagen": {
-      "url": "/imgwii/Sofia.jpg",
+      "url": "/imgwii/psicologa-sofia-reynaga.webp",
       "width": 1200,
       "height": 630,
       "type": "image/jpeg",

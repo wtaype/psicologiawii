@@ -43,12 +43,12 @@ const dominioBase = (Astro.url?.origin && Astro.url.origin !== 'null' && !Astro.
 const canonicalEs = dominioBase.replace(/\/$/, '');
 const canonicalEn = `${canonicalEs}/en`;
 
-const seoImg = typeof seo.imagen === 'string' ? seo.imagen : (seo.imagen?.url || '/imgwii/Sofia.jpg');
+const seoImg = typeof seo.imagen === 'string' ? seo.imagen : (seo.imagen?.url || '/imgwii/psicologa-sofia-reynaga.webp');
 const fullSeoImg = (seoImg.startsWith('http://') || seoImg.startsWith('https://'))
   ? (seoImg.includes('psicologiawii.com') ? seoImg.replace(/https?:\/\/[^\/]+/, canonicalEs) : seoImg)
   : `${canonicalEs}${seoImg.startsWith('/') ? '' : '/'}${seoImg}`;
 
-const heroImgRaw = n.hero?.imgHero || '/imgwii/Psychologist_listening_in_therapy.jpeg';
+const heroImgRaw = (n.hero?.imgHero && !n.hero.imgHero.includes('Psychologist_listening_in_therapy')) ? n.hero.imgHero : '/imgwii/psicologa-sofia-reynaga.webp';
 const fullHeroImg = (heroImgRaw.startsWith('http://') || heroImgRaw.startsWith('https://'))
   ? (heroImgRaw.includes('psicologiawii.com') ? heroImgRaw.replace(/https?:\/\/[^\/]+/, canonicalEs) : heroImgRaw)
   : `${canonicalEs}${heroImgRaw.startsWith('/') ? '' : '/'}${heroImgRaw}`;

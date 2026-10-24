@@ -160,7 +160,13 @@ export function normalizarConfig(c = {}) {
       titulo: toMap(cfg.hero?.titulo || base.hero?.titulo, '¿Sientes que el estrés o la ansiedad te sobrepasan?', 'Do you feel overwhelmed by stress or anxiety?'),
       subtitulo: toMap(cfg.hero?.subtitulo || base.hero?.subtitulo, 'Un espacio clínico seguro, confidencial y sin juicios...', 'A safe, confidential and non-judgmental clinical space...'),
       badge: toMap(cfg.hero?.badge || base.hero?.badge, 'ESPACIO SEGURO Y CONFIDENCIAL', 'SAFE & CONFIDENTIAL SPACE'),
-      imgHero: cfg.hero?.imgHero || base.hero?.imgHero || '/imgwii/Psychologist_listening_in_therapy.jpeg',
+      imgHero: (() => {
+        const rawImg = cfg.hero?.imgHero || base.hero?.imgHero || '/imgwii/psicologa-sofia-reynaga.webp';
+        if (typeof rawImg === 'string' && (rawImg.includes('Psychologist_listening_in_therapy') || rawImg.includes('psicologa-terapia'))) {
+          return '/imgwii/psicologa-sofia-reynaga.webp';
+        }
+        return rawImg;
+      })(),
       driverTitulo: toMap(cfg.hero?.driverTitulo || base.hero?.driverTitulo, 'Primera Consulta y Evaluación', 'First Consultation & Clinical Assessment'),
       driverDesc: toMap(cfg.hero?.driverDesc || base.hero?.driverDesc, 'Sesión individual de 50 min presencial u online', '50 min individual session in-person or online'),
       driverPrecio: Number(cfg.hero?.driverPrecio ?? base.hero?.driverPrecio ?? 85.00)
@@ -192,7 +198,7 @@ export function normalizarConfig(c = {}) {
           caption: typeof rawSeo.imagenCaption === 'string' ? rawSeo.imagenCaption : (rawSeo.imagenCaption?.es || cfg.identidad?.slogan || 'Atención psicológica profesional y confidencial')
         };
       } else if (!seoImagen || typeof seoImagen !== 'object' || !seoImagen.url) {
-        const fallbackImg = cfg.identidad?.imagenSede || base.identidad?.imagenSede || '/imgwii/sofia_reynaga.webp';
+        const fallbackImg = cfg.identidad?.imagenSede || base.identidad?.imagenSede || '/imgwii/psicologa-sofia-reynaga.webp';
         seoImagen = {
           url: fallbackImg,
           width: 1200,
@@ -451,7 +457,13 @@ export const datosNegocio = {
   },
   get metricas() { return this.raw.metricas || { years: '6+', pacientes: '+450', confidencialidad: '100%', satisfaccion: '98%' }; },
   get hero() { return this.raw.hero || {}; },
-  get imgHero() { return this.raw.hero?.imgHero || '/imgwii/Psychologist_listening_in_therapy.jpeg'; },
+  get imgHero() {
+    const rawImg = this.raw.hero?.imgHero || '/imgwii/psicologa-sofia-reynaga.webp';
+    if (typeof rawImg === 'string' && (rawImg.includes('Psychologist_listening_in_therapy') || rawImg.includes('psicologa-terapia'))) {
+      return '/imgwii/psicologa-sofia-reynaga.webp';
+    }
+    return rawImg;
+  },
   get redes() { return this.raw.redes || {}; },
   get sedes() { return this.raw.sedes || []; },
   get distritos() { return this.sedes; },

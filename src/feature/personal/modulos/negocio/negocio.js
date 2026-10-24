@@ -366,12 +366,12 @@ export function inicializarNegocio() {
   }
 
   function promptCambiarFotoSeo() {
-    const actual = inputSeoImgEs?.value || ngSerpImgEs?.getAttribute('src') || '/imgwii/Sofia.jpg';
+    const actual = inputSeoImgEs?.value || ngSerpImgEs?.getAttribute('src') || '/imgwii/psicologa-sofia-reynaga.webp';
     const sugeridas = [
-      '/imgwii/Sofia.jpg',
+      '/imgwii/psicologa-sofia-reynaga.webp',
       '/imgwii/hero/psicologa-sofia-reynaga.webp',
       '/imgwii/logo.webp',
-      '/imgwii/Psychologist_listening_in_therapy.jpeg'
+      '/imgwii/psicologa-sofia-reynaga.webp'
     ];
     const nueva = window.prompt(`Ingresa la URL o ruta de la imagen miniatura para Google SERP:\n\nSugerencias frecuentes:\n- ${sugeridas.join('\n- ')}`, actual);
     if (nueva && nueva.trim() && nueva.trim() !== actual) {
@@ -387,16 +387,16 @@ export function inicializarNegocio() {
 
   inputSeoImgEs?.addEventListener('input', () => {
     const val = inputSeoImgEs.value.trim();
-    if (ngSerpImgEs) ngSerpImgEs.src = val || '/imgwii/Sofia.jpg';
+    if (ngSerpImgEs) ngSerpImgEs.src = val || '/imgwii/psicologa-sofia-reynaga.webp';
     if (inputSeoImgEn) inputSeoImgEn.value = val;
-    if (ngSerpImgEn) ngSerpImgEn.src = val || '/imgwii/Sofia.jpg';
+    if (ngSerpImgEn) ngSerpImgEn.src = val || '/imgwii/psicologa-sofia-reynaga.webp';
   });
 
   inputSeoImgEn?.addEventListener('input', () => {
     const val = inputSeoImgEn.value.trim();
-    if (ngSerpImgEn) ngSerpImgEn.src = val || '/imgwii/Sofia.jpg';
+    if (ngSerpImgEn) ngSerpImgEn.src = val || '/imgwii/psicologa-sofia-reynaga.webp';
     if (inputSeoImgEs) inputSeoImgEs.value = val;
-    if (ngSerpImgEs) ngSerpImgEs.src = val || '/imgwii/Sofia.jpg';
+    if (ngSerpImgEs) ngSerpImgEs.src = val || '/imgwii/psicologa-sofia-reynaga.webp';
   });
 
   btnProbarFotoSeoEs?.addEventListener('click', () => {
@@ -1257,7 +1257,7 @@ export function inicializarNegocio() {
     if (inputHeroDescEs) inputHeroDescEs.value = getTxt(cfg.hero?.subtitulo, 'es');
     if (inputHeroTituloEn) inputHeroTituloEn.value = getTxt(cfg.hero?.titulo, 'en') || cfg.hero?.tituloEn || '';
     if (inputHeroDescEn) inputHeroDescEn.value = getTxt(cfg.hero?.subtitulo, 'en') || cfg.hero?.subtituloEn || '';
-    const heroFoto = cfg.hero?.imgHero || actual.hero?.imgHero || '/imgwii/Psychologist_listening_in_therapy.jpeg';
+    const heroFoto = (cfg.hero?.imgHero && !cfg.hero.imgHero.includes('Psychologist_listening_in_therapy')) ? cfg.hero.imgHero : (actual.hero?.imgHero && !actual.hero.imgHero.includes('Psychologist_listening_in_therapy') ? actual.hero.imgHero : '/imgwii/psicologa-sofia-reynaga.webp');
     if (inputHeroImg) inputHeroImg.value = formatearUrlCompleta(heroFoto);
 
     // Más Traducciones y Textos Destacados (Card 3)
@@ -1391,7 +1391,7 @@ export function inicializarNegocio() {
       inputSeoKeywordsEs.value = Array.isArray(kw) ? kw.join(', ') : (kw || '');
     }
     if (inputSeoImgEs) {
-      const seoImgVal = (typeof cfg.seo?.imagen === 'object' ? cfg.seo.imagen?.url : cfg.seo?.imagen) || (typeof actual.seo?.imagen === 'object' ? actual.seo.imagen?.url : actual.seo?.imagen) || '/imgwii/Sofia.jpg';
+      const seoImgVal = (typeof cfg.seo?.imagen === 'object' ? cfg.seo.imagen?.url : cfg.seo?.imagen) || (typeof actual.seo?.imagen === 'object' ? actual.seo.imagen?.url : actual.seo?.imagen) || '/imgwii/psicologa-sofia-reynaga.webp';
       inputSeoImgEs.value = formatearUrlCompleta(seoImgVal);
       if (ngSerpImgEs && seoImgVal) ngSerpImgEs.src = seoImgVal;
     }
@@ -1403,7 +1403,7 @@ export function inicializarNegocio() {
       inputSeoKeywordsEn.value = Array.isArray(kw) ? kw.join(', ') : (kw || '');
     }
     if (inputSeoImgEn) {
-      const seoImgVal = (typeof cfg.seo?.imagen === 'object' ? cfg.seo.imagen?.url : cfg.seo?.imagen) || (typeof actual.seo?.imagen === 'object' ? actual.seo.imagen?.url : actual.seo?.imagen) || '/imgwii/Sofia.jpg';
+      const seoImgVal = (typeof cfg.seo?.imagen === 'object' ? cfg.seo.imagen?.url : cfg.seo?.imagen) || (typeof actual.seo?.imagen === 'object' ? actual.seo.imagen?.url : actual.seo?.imagen) || '/imgwii/psicologa-sofia-reynaga.webp';
       inputSeoImgEn.value = formatearUrlCompleta(seoImgVal);
       if (ngSerpImgEn && seoImgVal) ngSerpImgEn.src = seoImgVal;
     }
@@ -1482,7 +1482,7 @@ export function inicializarNegocio() {
           es: inputHeroBadgeEs?.value?.trim() || (typeof actual.hero?.badge === 'object' ? actual.hero?.badge?.es : actual.hero?.badge) || 'ESPACIO SEGURO Y CONFIDENCIAL',
           en: inputHeroBadgeEn?.value?.trim() || (typeof actual.hero?.badge === 'object' ? actual.hero?.badge?.en : actual.hero?.badgeEn) || 'SAFE & CONFIDENTIAL SPACE'
         },
-        imgHero: normalizarUrlParaGuardar(inputHeroImg?.value?.trim()) || actual.hero?.imgHero || '/imgwii/Psychologist_listening_in_therapy.jpeg',
+        imgHero: normalizarUrlParaGuardar(inputHeroImg?.value?.trim()) || actual.hero?.imgHero || '/imgwii/psicologa-sofia-reynaga.webp',
         driverTitulo: {
           es: inputHeroDriverTituloEs?.value?.trim() || (typeof actual.hero?.driverTitulo === 'object' ? actual.hero?.driverTitulo?.es : actual.hero?.driverTitulo) || 'Primera Consulta y Evaluación',
           en: inputHeroDriverTituloEn?.value?.trim() || (typeof actual.hero?.driverTitulo === 'object' ? actual.hero?.driverTitulo?.en : actual.hero?.driverTituloEn) || 'First Consultation & Clinical Assessment'
@@ -1692,7 +1692,7 @@ export function inicializarNegocio() {
           es: kwEs.length > 0 ? kwEs : (actual.seo?.keywords?.es || []),
           en: kwEn.length > 0 ? kwEn : (actual.seo?.keywords?.en || [])
         },
-        imagen: normalizarUrlParaGuardar(inputSeoImgEs?.value?.trim() || inputSeoImgEn?.value?.trim()) || actual.seo?.imagen || '/imgwii/Sofia.jpg',
+        imagen: normalizarUrlParaGuardar(inputSeoImgEs?.value?.trim() || inputSeoImgEn?.value?.trim()) || actual.seo?.imagen || '/imgwii/psicologa-sofia-reynaga.webp',
         imagenAlt: actual.seo?.imagenAlt || { es: idnt.nombre, en: idnt.nombreEn || idnt.nombre },
         imagenCaption: actual.seo?.imagenCaption || { es: idnt.razonSocial, en: idnt.razonSocial },
         descripcionNegocio: actual.seo?.descripcionNegocio || { es: idnt.bio, en: idnt.bioEn || idnt.bio },

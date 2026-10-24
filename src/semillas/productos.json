@@ -293,7 +293,7 @@
         "Feedback session with therapeutic recommendations roadmap"
       ]
     },
-    "imagen": "/imgwii/servicios/Evaluacion.webp",
+    "imagen": "/imgwii/servicios/evaluacion-diagnostica.webp",
     "badge": {
       "es": "Informe C.Ps.P.",
       "en": "Official Report"
@@ -344,7 +344,7 @@
         "Progress feedback report for parents"
       ]
     },
-    "imagen": "/imgwii/talleres/taller-habilidades-sociales.jpg",
+    "imagen": "/imgwii/talleres/taller-habilidades-sociales.webp",
     "badge": {
       "es": "Más Solicitado",
       "en": "Most Popular"
@@ -395,7 +395,7 @@
         "Workbook and reflective journal included"
       ]
     },
-    "imagen": "/imgwii/talleres/taller-amor-propio-sexualidad.jpg",
+    "imagen": "/imgwii/talleres/taller-amor-propio-sexualidad.webp",
     "badge": {
       "es": "Recomendado",
       "en": "Recommended"
@@ -446,7 +446,7 @@
         "Parental emotional support guide"
       ]
     },
-    "imagen": "/imgwii/talleres/taller-inteligencia-emocional.jpg",
+    "imagen": "/imgwii/talleres/taller-inteligencia-emocional.webp",
     "badge": {
       "es": "Formativo",
       "en": "Formative"
@@ -497,7 +497,7 @@
         "Final experiential presentation with parents"
       ]
     },
-    "imagen": "/imgwii/talleres/taller-expresion-artistica.jpg",
+    "imagen": "/imgwii/talleres/taller-expresion-artistica.webp",
     "badge": {
       "es": "Creativo",
       "en": "Creative"
@@ -548,7 +548,7 @@
         "Certificate of participation in leadership & speech"
       ]
     },
-    "imagen": "/imgwii/talleres/taller-liderazgo-oratoria.jpg",
+    "imagen": "/imgwii/talleres/taller-liderazgo-oratoria.webp",
     "badge": {
       "es": "Liderazgo",
       "en": "Leadership"
@@ -599,7 +599,7 @@
         "Personalized feedback session with parents"
       ]
     },
-    "imagen": "/imgwii/talleres/taller-orientacion-vocacional.jpg",
+    "imagen": "/imgwii/talleres/taller-orientacion-vocacional.webp",
     "badge": {
       "es": "Evaluación Integral",
       "en": "Full Assessment"

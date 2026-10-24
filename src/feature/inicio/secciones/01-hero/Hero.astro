@@ -19,7 +19,10 @@ const precioBase = datosNegocio.hero?.driverPrecio ? datosNegocio.hero.driverPre
 const whatsappTexto = datosNegocio.getWhatsappMensaje(idioma) || datosNegocio.whatsappMensaje;
 const whatsappLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURIComponent(whatsappTexto)}`;
 const colegiaturaNum = datosNegocio.colegiaturaNumero;
-const imagenHero = datosNegocio.imgHero || datosNegocio.hero?.imgHero || '/imgwii/Psychologist_listening_in_therapy.jpeg';
+let imagenHero = datosNegocio.imgHero || datosNegocio.hero?.imgHero || '/imgwii/psicologa-sofia-reynaga.webp';
+if (typeof imagenHero === 'string' && (imagenHero.includes('Psychologist_listening_in_therapy') || imagenHero.includes('psicologa-terapia'))) {
+  imagenHero = '/imgwii/psicologa-sofia-reynaga.webp';
+}
 
 // Datos reactivos del Hero con cascada: Firestore/Local -> semillas/negocio.json -> traducción i18n
 const heroTitulo = (typeof datosNegocio.hero?.titulo === 'object' ? datosNegocio.hero.titulo[idioma] : datosNegocio.hero?.titulo) || `${t.titulo_1} ${t.titulo_resaltado}`;

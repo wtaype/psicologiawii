@@ -51,7 +51,7 @@ const prefix = lang === 'en' ? '/en/' : '/';
         {latest.map((r: any) => (
           <a href={`${prefix}${r.slug || r.id}`} class="po_rel_card" title={r.titulo}>
             <div class="po_rel_img">
-              <img src={r.imagen || '/imgwii/Psychotherapy_office_interior.jpeg'} alt={r.titulo} loading="lazy" />
+              <img src={r.imagen || '/imgwii/consultorio-interior.webp'} alt={r.titulo} loading="lazy" />
             </div>
             <div class="po_rel_info">
               <span class="po_rel_cat">{r.categoria}</span>
@@ -76,7 +76,7 @@ const prefix = lang === 'en' ? '/en/' : '/';
         {related.map((r: any) => (
           <a href={`${prefix}${r.slug || r.id}`} class="po_rel_card" title={r.titulo}>
             <div class="po_rel_img">
-              <img src={r.imagen || '/imgwii/Reception_desk_at_psychology_office.jpeg'} alt={r.titulo} loading="lazy" />
+              <img src={r.imagen || '/imgwii/recepcion-consultorio.webp'} alt={r.titulo} loading="lazy" />
             </div>
             <div class="po_rel_info">
               <span class="po_rel_cat">{r.categoria}</span>

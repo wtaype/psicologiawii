@@ -14,7 +14,7 @@ export const SEO_IMAGEN = {
     const raw = datosNegocio.seo?.imagen;
     if (typeof raw === 'string' && raw.trim()) return raw.trim();
     if (raw && typeof raw === 'object' && raw.url) return raw.url;
-    return datosNegocio.fotoEspecialista || '/imgwii/sofia_reynaga.webp';
+    return datosNegocio.fotoEspecialista || '/imgwii/psicologa-sofia-reynaga.webp';
   },
   get width() {
     const raw = datosNegocio.seo?.imagen;
@@ -44,7 +44,7 @@ export const SEO_IMAGEN = {
 
 export function resolverImagenUrl(imgUrl, urlBase = '') {
   const base = (urlBase || (app.linkweb || 'https://consultorioamerica.com')).replace(/\/$/, '');
-  const url = (imgUrl || SEO_IMAGEN.url || '/imgwii/sofia_reynaga.webp').trim();
+  const url = (imgUrl || SEO_IMAGEN.url || '/imgwii/psicologa-sofia-reynaga.webp').trim();
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
   return `${base}${url.startsWith('/') ? '' : '/'}${url}`;
 }
