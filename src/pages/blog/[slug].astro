@@ -1,0 +1,118 @@
+---
+// src/pages/blog/[slug].astro
+// Enrutador Público de Artículos de Blog en Español
+import Principal from '../../core/layouts/Principal.astro';
+import PostPage from '../../feature/blog/components/PostPage.astro';
+import PostSidebar from '../../feature/blog/components/PostSidebar.astro';
+import { consultarBlogsFirestoreFresco, datosNegocio } from '../../negocio.js';
+
+export async function getStaticPaths() {
+  const blogsData = await consultarBlogsFirestoreFresco();
+  const allPosts = blogsData || [];
+  const posts = allPosts.filter((p: any) => (p.lang === 'es' || !p.lang) && p.activo !== false);
+
+  if (!posts || posts.length === 0) {
+    return [{
+      params: { slug: 'terapia-de-pareja-claves-de-comunicacion-asertiva-y-resolucion-de-conflictos' },
+      props: { post: {}, related: [], latest: [], prevPost: null, nextPost: null, translationSlug: null }
+    }];
+  }
+
+  const paths: any[] = [];
+
+  posts.forEach((post: any, index: number) => {
+    const related = posts.filter((p: any) => p.categoria === post.categoria && p.slug !== post.slug).slice(0, 3);
+    const latest = posts.filter((p: any) => p.slug !== post.slug).slice(0, 5);
+
+    // Buscar traducción en inglés conectada mediante langId
+    const partner = allPosts.find((p: any) => p.lang === 'en' && (p.id === post.langId || p.langId === post.id));
+    const translationSlug = partner ? partner.slug : null;
+
+    // 1. Ruta canónica en español (/blog/[slug])
+    paths.push({
+      params: { slug: post.slug },
+      props: {
+        post,
+        related,
+        latest,
+        prevPost: posts[index + 1] || null,
+        nextPost: posts[index - 1] || null,
+        translationSlug,
+        isRedirect: false,
+        targetUrl: `/blog/${post.slug}`
+      }
+    });
+
+    // 2. Alias de resiliencia: si alguien ingresa con el slug en inglés bajo /blog/, redirigir a /en/blog/
+    if (partner && partner.slug && partner.slug !== post.slug) {
+      paths.push({
+        params: { slug: partner.slug },
+        props: {
+          post,
+          related,
+          latest,
+          prevPost: posts[index + 1] || null,
+          nextPost: posts[index - 1] || null,
+          translationSlug,
+          isRedirect: true,
+          targetUrl: `/en/blog/${partner.slug}`
+        }
+      });
+    }
+  });
+
+  return paths;
+}
+
+interface Props {
+  post: any;
+  related: any[];
+  latest: any[];
+  prevPost: any;
+  nextPost: any;
+  translationSlug: string | null;
+  isRedirect?: boolean;
+  targetUrl?: string;
+}
+
+const { post, related = [], latest = [], prevPost, nextPost, translationSlug, isRedirect = false, targetUrl = '' } = Astro.props;
+
+if (isRedirect && targetUrl) {
+  return Astro.redirect(targetUrl, 301);
+}
+
+const idioma = 'es';
+const ruta = `/blog/${post.slug || post.id}`;
+const rutasIdioma = {
+  es: `/blog/${post.slug || post.id}`,
+  en: translationSlug ? `/en/blog/${translationSlug}` : '/en/blog'
+};
+const pageTitle = `${post.titulo} · ${datosNegocio.nombre}`;
+---
+
+<Principal
+  idioma={idioma}
+  ruta={ruta}
+  rutasIdioma={rutasIdioma}
+  title={pageTitle}
+  description={post.descripcion}
+  keywords={post.metaSEO?.keywords}
+  image={post.imagenTop || post.imagen}
+  type="article"
+>
+  <PostPage 
+    post={post} 
+    prevPost={prevPost} 
+    nextPost={nextPost} 
+    lang={idioma} 
+    translationSlug={translationSlug}
+  >
+    <PostSidebar 
+      post={post} 
+      latest={latest} 
+      related={related} 
+      lang={idioma} 
+      slot="sidebar" 
+    />
+  </PostPage>
+</Principal>

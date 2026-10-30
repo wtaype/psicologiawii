@@ -1,0 +1,150 @@
+[
+  {
+    "id": "ad-01-salud-emocional",
+    "titulo": {
+      "es": "Campaña de Salud Emocional & Primera Consulta",
+      "en": "Emotional Health Campaign & First Consultation"
+    },
+    "badge": {
+      "es": "Evaluación Clínica",
+      "en": "Clinical Assessment"
+    },
+    "fecha": {
+      "es": "Creado el oct 28, 3:19pm",
+      "en": "Created on Oct 28, 3:19pm"
+    },
+    "estado": {
+      "es": "Activo · Finaliza mañana",
+      "en": "Active · Ends tomorrow"
+    },
+    "estadoTipo": "activo",
+    "activo": true,
+    "conversaciones": 11,
+    "costoPorConv": "S/ 7,33",
+    "metricasTexto": {
+      "es": "11 conversaciones iniciadas · Cupos disponibles",
+      "en": "11 conversations started · Spots available"
+    },
+    "flyerImg": "/imgwii/psicologa-sofia-consulta.webp",
+    "thumbImg": "/imgwii/psicologa-sofia-consulta.webp",
+    "descripcion": {
+      "es": "Tarifa especial de evaluación individual para iniciar tu proceso terapéutico presencial u online con la Lic. Sofía Reynaga.",
+      "en": "Special individual evaluation fee to start your therapeutic process in-person or online with Lic. Sofía Reynaga."
+    },
+    "wsMsg": {
+      "es": "¡Hola Lic. Sofía! Vi el anuncio activo de la Campaña de Salud Emocional y deseo agendar mi primera consulta.",
+      "en": "Hello Lic. Sofía! I saw the active Emotional Health Campaign ad and would like to schedule my consultation."
+    }
+  },
+  {
+    "id": "ad-02-visitanos-sedes",
+    "titulo": {
+      "es": "Atención Presencial en Miraflores & Villa El Salvador",
+      "en": "In-Person Care in Miraflores & Villa El Salvador"
+    },
+    "badge": {
+      "es": "Sedes Clínicas",
+      "en": "Clinical Offices"
+    },
+    "fecha": {
+      "es": "Creado el oct 28, 7:35am",
+      "en": "Created on Oct 28, 7:35am"
+    },
+    "estado": {
+      "es": "Vigente · Previa Cita Confirmada",
+      "en": "Active · Confirmed Appointment"
+    },
+    "estadoTipo": "vigente",
+    "activo": true,
+    "conversaciones": 18,
+    "costoPorConv": "S/ 6,80",
+    "metricasTexto": {
+      "es": "18 conversaciones iniciadas · Turnos de tarde disponibles",
+      "en": "18 conversations started · Afternoon slots available"
+    },
+    "flyerImg": "/imgwii/cartel-consultorio.webp",
+    "thumbImg": "/imgwii/cartel-consultorio.webp",
+    "descripcion": {
+      "es": "Consultorios privados, seguros y de fácil acceso en Miraflores y Villa El Salvador. Atención con cita previa confirmada.",
+      "en": "Private, safe, easy-to-access consultation offices in Miraflores and Villa El Salvador. By appointment only."
+    },
+    "wsMsg": {
+      "es": "¡Hola! Vi el anuncio sobre las sedes de Miraflores y Villa El Salvador. Deseo reservar cita presencial.",
+      "en": "Hello! I saw the ad about Miraflores and Villa El Salvador locations. I want to book an in-person visit."
+    }
+  },
+  {
+    "id": "ad-03-taller-parejas",
+    "titulo": {
+      "es": "Taller Vivencial: Vínculos Fuertes y Comunicación en Pareja",
+      "en": "Couples Workshop: Strong Bonds & Communication"
+    },
+    "badge": {
+      "es": "Taller Vivencial",
+      "en": "Live Workshop"
+    },
+    "fecha": {
+      "es": "Creado el oct 27, 11:26pm",
+      "en": "Created on Oct 27, 11:26pm"
+    },
+    "estado": {
+      "es": "Activo · Cupos para sábado",
+      "en": "Active · Saturday spots"
+    },
+    "estadoTipo": "activo",
+    "activo": true,
+    "conversaciones": 8,
+    "costoPorConv": "S/ 8,10",
+    "metricasTexto": {
+      "es": "8 conversaciones iniciadas · Grupo reducido",
+      "en": "8 conversations started · Small group"
+    },
+    "flyerImg": "/imgwii/pareja-terapia.webp",
+    "thumbImg": "/imgwii/pareja-terapia.webp",
+    "descripcion": {
+      "es": "Dinámicas guiadas para resolver bloqueos de comunicación, regular desacuerdos y reconstruir la complicidad afectiva.",
+      "en": "Guided dynamics to resolve communication blocks, manage disagreements, and rebuild emotional connection."
+    },
+    "wsMsg": {
+      "es": "¡Hola Lic. Sofía! Deseo inscribirme en el Taller de Parejas que vi en sus anuncios activos.",
+      "en": "Hello Lic. Sofía! I want to enroll in the Couples Workshop from your active ads."
+    }
+  },
+  {
+    "id": "ad-04-evaluacion-infantil",
+    "titulo": {
+      "es": "Descarte y Evaluación Integral TDAH / TEA en Niños",
+      "en": "Comprehensive ADHD / ASD Assessment for Children"
+    },
+    "badge": {
+      "es": "Psicología Infantil",
+      "en": "Child Psychology"
+    },
+    "fecha": {
+      "es": "Creado el oct 27, 4:59pm",
+      "en": "Created on Oct 27, 4:59pm"
+    },
+    "estado": {
+      "es": "Vigente · Modalidad Mixta",
+      "en": "Active · Hybrid Mode"
+    },
+    "estadoTipo": "vigente",
+    "activo": true,
+    "conversaciones": 14,
+    "costoPorConv": "S/ 7,50",
+    "metricasTexto": {
+      "es": "14 conversaciones iniciadas · Informe con C.Ps.P.",
+      "en": "14 conversations started · Report with C.Ps.P."
+    },
+    "flyerImg": "/imgwii/terapeuta-notas.webp",
+    "thumbImg": "/imgwii/terapeuta-notas.webp",
+    "descripcion": {
+      "es": "Batería diagnóstica neuropsicológica completa, pruebas proyectivas y psicométricas con emisión de informe clínico formal.",
+      "en": "Complete neuropsychological diagnostic battery, projective and psychometric tests with formal clinical report."
+    },
+    "wsMsg": {
+      "es": "¡Hola! Deseo coordinar una evaluación diagnóstica infantil anunciada en su portal.",
+      "en": "Hello! I would like to coordinate a child diagnostic assessment announced on your site."
+    }
+  }
+]

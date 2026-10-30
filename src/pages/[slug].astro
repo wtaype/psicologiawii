@@ -1,0 +1,25 @@
+---
+// src/pages/[slug].astro
+// Redirección Canónica 301 de Slugs Raíz a /blog/[slug]
+import { consultarBlogsFirestoreFresco } from '../negocio.js';
+
+export async function getStaticPaths() {
+  const allPosts = await consultarBlogsFirestoreFresco();
+  const posts = (allPosts || []).filter((p: any) => (p.lang === 'es' || !p.lang) && p.activo !== false);
+
+  if (!posts || posts.length === 0) {
+    return [{
+      params: { slug: 'terapia-de-pareja-claves-de-comunicacion-asertiva-y-resolucion-de-conflictos' },
+      props: { targetUrl: '/blog/terapia-de-pareja-claves-de-comunicacion-asertiva-y-resolucion-de-conflictos' }
+    }];
+  }
+
+  return posts.map((post: any) => ({
+    params: { slug: post.slug },
+    props: { targetUrl: `/blog/${post.slug}` }
+  }));
+}
+
+const { targetUrl = '/blog' } = Astro.props;
+return Astro.redirect(targetUrl, 301);
+---

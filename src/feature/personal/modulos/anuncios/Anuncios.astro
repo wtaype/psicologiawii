@@ -1,0 +1,306 @@
+---
+// src/feature/personal/modulos/anuncios/Anuncios.astro
+// Módulo Oficial de Anuncios y Campañas en Personal Backoffice
+// Réplica inspirada en Meta Ads Manager para control de presupuestos y leads
+import { datosNegocio, resolverTexto } from '@/negocio.js';
+import { imgwii } from '@widev';
+
+interface Props {
+  esActivo?: boolean;
+}
+
+const { esActivo = true } = Astro.props;
+
+const listaAnuncios = datosNegocio.anuncios || [];
+const activosCount = listaAnuncios.filter(a => a.activo).length;
+const totalConversaciones = listaAnuncios.reduce((acc, curr) => acc + (Number(curr.conversaciones) || 0), 0);
+const imagenesDisponibles = [
+  { src: '/imgwii/psicologa-sofia-consulta.webp', label: 'Consulta Presencial' },
+  { src: '/imgwii/cartel-consultorio.webp', label: 'Consultorio Fachada' },
+  { src: '/imgwii/pareja-terapia.webp', label: 'Terapia Pareja' },
+  { src: '/imgwii/terapeuta-notas.webp', label: 'Evaluación / Niños' },
+  { src: '/imgwii/taller-bienestar.webp', label: 'Taller Vivencial' },
+  { src: '/imgwii/pareja-dialogo.webp', label: 'Diálogo Relacional' },
+  { src: '/imgwii/consultorio-interior.webp', label: 'Espacio Clínico' },
+  { src: '/imgwii/terapia-online-laptop.webp', label: 'Terapia Online' },
+  { src: '/imgwii/eventos/01-retrato-congreso-4x3.webp', label: 'Congreso' },
+  { src: '/imgwii/eventos/04-retrato-universidad-4x3.webp', label: 'Universidad' }
+];
+---
+
+<section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-anuncios">
+  <div class="anuncios-admin-shell">
+    
+    <!-- 🏷️ Barra Superior -->
+    <header class="anuncios-admin-topbar">
+      <div class="anuncios-admin-title-group">
+        <div class="anuncios-admin-icon">
+          <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+        </div>
+        <div>
+          <h2 class="anuncios-admin-heading">Gestión de Anuncios & Campañas</h2>
+          <p class="anuncios-admin-sub">Meta Ads Manager · Control de Leads y Mensajes de Citas</p>
+        </div>
+      </div>
+
+      <button type="button" class="anuncios-admin-btn-create" id="btnOpenCreateAd">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        <span>Crear anuncio</span>
+      </button>
+    </header>
+
+    <!-- 📊 KPI Grid -->
+    <div class="anuncios-kpi-grid">
+      <div class="anuncios-kpi-card">
+        <div class="anuncios-kpi-icon anuncios-kpi-icon--active">
+          <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+        </div>
+        <div>
+          <p class="anuncios-kpi-label">Campañas Activas</p>
+          <p class="anuncios-kpi-val">{activosCount} / {listaAnuncios.length}</p>
+        </div>
+      </div>
+
+      <div class="anuncios-kpi-card">
+        <div class="anuncios-kpi-icon anuncios-kpi-icon--convs">
+          <i class="fa-solid fa-comments" aria-hidden="true"></i>
+        </div>
+        <div>
+          <p class="anuncios-kpi-label">Conversaciones Iniciadas</p>
+          <p class="anuncios-kpi-val">{totalConversaciones}</p>
+        </div>
+      </div>
+
+      <div class="anuncios-kpi-card">
+        <div class="anuncios-kpi-icon anuncios-kpi-icon--cost">
+          <i class="fa-solid fa-coins" aria-hidden="true"></i>
+        </div>
+        <div>
+          <p class="anuncios-kpi-label">Costo Promedio Conversación</p>
+          <p class="anuncios-kpi-val">S/ 7,33</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 📋 Tabla / Lista de Campañas -->
+    <div class="anuncios-table-wrap">
+      <div class="anuncios-table-header">
+        <h3 class="anuncios-table-title">Gestión de Anuncios Oficiales</h3>
+        <span class="anuncios-admin-stats-pill">
+          <i class="fa-solid fa-list" aria-hidden="true"></i> {listaAnuncios.length} campañas
+        </span>
+      </div>
+
+      <ul class="anuncios-admin-list" role="list">
+        {listaAnuncios.map((ad) => {
+          const isActivo = ad.activo;
+          const tituloTxt = resolverTexto(ad.titulo, 'es');
+          const fechaTxt = resolverTexto(ad.fecha, 'es');
+          const estadoTxt = resolverTexto(ad.estado, 'es');
+          const estadoTipo = ad.estadoTipo || (isActivo ? 'activo' : 'completado');
+
+          return (
+            <li class="anuncios-admin-item">
+              <div class="anuncios-admin-thumb-wrap">
+                <img
+                  src={ad.thumbImg || ad.flyerImg}
+                  alt={tituloTxt}
+                  class="anuncios-admin-thumb"
+                  loading="lazy"
+                  onerror={`this.onerror=null;this.src='${imgwii.skeleton}';`}
+                />
+              </div>
+
+              <div class="anuncios-admin-info">
+                <h4 class="anuncios-admin-title">{tituloTxt}</h4>
+                <div class="anuncios-admin-meta">
+                  <span><i class="fa-regular fa-clock" aria-hidden="true"></i> {fechaTxt}</span>
+                  <span>·</span>
+                  <span class={`status-tag status-tag--${estadoTipo}`}>
+                    {estadoTxt}
+                  </span>
+                  <span>·</span>
+                  <span><i class="fa-solid fa-tag" aria-hidden="true"></i> {ad.costoPorConv || 'S/ 0,00'}</span>
+                </div>
+              </div>
+
+              <div class="anuncios-admin-stats-pill">
+                <i class="fa-solid fa-comments" aria-hidden="true"></i>
+                <span>{ad.conversaciones} leads</span>
+              </div>
+
+              <div class="anuncios-admin-actions">
+                <button type="button" class="anuncios-admin-btn-action" data-edit-ad={ad.id} title="Editar Anuncio">
+                  <i class="fa-solid fa-pen" aria-hidden="true"></i>
+                </button>
+                <button type="button" class="anuncios-admin-btn-action anuncios-admin-btn-action--del" data-del-ad={ad.id} title="Eliminar Anuncio">
+                  <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+                </button>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+
+  </div>
+
+  <!-- 🪟 Modal Split Bilingüe de Crear / Editar Anuncio -->
+  <div class="anuncios-modal-overlay" id="modalAnuncio" role="dialog" aria-modal="true">
+    <div class="anuncios-modal-box">
+      <header class="anuncios-modal-header">
+        <h3 class="anuncios-modal-title">
+          <i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Ficha de Anuncio & Campaña
+        </h3>
+        <button type="button" class="anuncios-modal-btn-close" id="btnCloseAdModal" aria-label="Cerrar">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </header>
+
+      <form id="formAnuncio">
+        <div class="anuncios-modal-body">
+          <input type="hidden" id="inputAdId" />
+
+          <div class="ad-modal-split">
+            
+            <!-- ── COLUMNA IZQUIERDA: IMAGEN, SELECTOR TÁCTIL Y PARÁMETROS ── -->
+            <div class="ad-col-media">
+              <!-- Vista previa grande -->
+              <div class="ad-preview-box">
+                <img id="adPreviewImg" src="/imgwii/psicologa-sofia-consulta.webp" alt="Vista previa del flyer" class="ad-preview-img" />
+                <span class="ad-preview-badge" id="adPreviewBadge">Evaluación Clínica</span>
+              </div>
+
+              <!-- Selector Visual de Miniaturas WebP -->
+              <div class="ad-picker-group">
+                <label class="anuncios-form-label">
+                  <i class="fa-solid fa-images"></i> Seleccionar Imagen Rápida
+                </label>
+                <div class="ad-gallery-picker" id="adGalleryPicker">
+                  {imagenesDisponibles.map((img) => (
+                    <button
+                      type="button"
+                      class="ad-gallery-thumb-btn"
+                      data-src={img.src}
+                      title={img.label}
+                    >
+                      <img src={img.src} alt={img.label} class="ad-gallery-thumb-img" loading="lazy" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <!-- Campo de ruta editable -->
+              <div class="anuncios-form-group">
+                <label class="anuncios-form-label" for="inputAdFlyer">
+                  <i class="fa-solid fa-link"></i> Ruta de Imagen / Flyer
+                </label>
+                <input type="text" id="inputAdFlyer" class="anuncios-form-input" placeholder="/imgwii/psicologa-sofia-consulta.webp" value="/imgwii/psicologa-sofia-consulta.webp" />
+              </div>
+
+              <!-- Parámetros: Estado, Costo y Conversaciones -->
+              <div class="ad-grid-params">
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdEstado">Estado</label>
+                  <select id="inputAdEstado" class="anuncios-form-select">
+                    <option value="activo">Activo (En curso)</option>
+                    <option value="vigente">Vigente (Con cupos)</option>
+                    <option value="completado">Completado</option>
+                  </select>
+                </div>
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdCosto">Costo / Conv.</label>
+                  <input type="text" id="inputAdCosto" class="anuncios-form-input" placeholder="S/ 7,33" />
+                </div>
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdConversaciones">Leads</label>
+                  <input type="number" id="inputAdConversaciones" class="anuncios-form-input" placeholder="11" min="0" />
+                </div>
+              </div>
+            </div>
+
+            <!-- ── COLUMNA DERECHA: PESTAÑAS BILINGÜES + GEMINI AI ── -->
+            <div class="ad-col-bilingue">
+              
+              <!-- Barra de Pestañas y Botón Gemini -->
+              <div class="ad-tabs-nav-bar">
+                <div class="ad-tabs-pills">
+                  <button type="button" class="ad-tab-pill is-active" data-pane="ad-pane-es" id="adTabEs">
+                    <i class="fa-solid fa-language"></i> Español
+                  </button>
+                  <button type="button" class="ad-tab-pill" data-pane="ad-pane-en" id="adTabEn">
+                    <i class="fa-solid fa-globe"></i> English
+                  </button>
+                </div>
+
+                <button type="button" class="ad-btn-gemini" id="btnTraducirGemini" title="Traducir automáticamente al inglés usando Gemini AI">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                  <span>Traducir con IA</span>
+                </button>
+              </div>
+
+              <!-- PESTAÑA ESPAÑOL -->
+              <div class="ad-pane is-active" id="ad-pane-es">
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdTituloEs">Título de la Campaña (ES) *</label>
+                  <input type="text" id="inputAdTituloEs" class="anuncios-form-input" required placeholder="Ej: Campaña de Salud Emocional..." />
+                </div>
+
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdBadgeEs">Categoría / Badge (ES)</label>
+                  <input type="text" id="inputAdBadgeEs" class="anuncios-form-input" placeholder="Ej: Evaluación Clínica" />
+                </div>
+
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdDescEs">Descripción Corta (ES)</label>
+                  <textarea id="inputAdDescEs" class="anuncios-form-textarea" rows="3" placeholder="Tarifa especial de evaluación individual para iniciar tu proceso terapéutico..."></textarea>
+                </div>
+
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdWsEs">Mensaje Prellenado de WhatsApp (ES)</label>
+                  <input type="text" id="inputAdWsEs" class="anuncios-form-input" placeholder="¡Hola Lic. Sofía! Vi el anuncio y deseo agendar mi consulta." />
+                </div>
+              </div>
+
+              <!-- PESTAÑA ENGLISH -->
+              <div class="ad-pane" id="ad-pane-en">
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdTituloEn">Campaign Title (EN)</label>
+                  <input type="text" id="inputAdTituloEn" class="anuncios-form-input" placeholder="Ex: Emotional Health Campaign & First Consultation" />
+                </div>
+
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdBadgeEn">Badge / Category (EN)</label>
+                  <input type="text" id="inputAdBadgeEn" class="anuncios-form-input" placeholder="Ex: Clinical Assessment" />
+                </div>
+
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdDescEn">Short Description (EN)</label>
+                  <textarea id="inputAdDescEn" class="anuncios-form-textarea" rows="3" placeholder="Special individual evaluation fee to start your therapeutic process..."></textarea>
+                </div>
+
+                <div class="anuncios-form-group">
+                  <label class="anuncios-form-label" for="inputAdWsEn">WhatsApp Pre-filled Message (EN)</label>
+                  <input type="text" id="inputAdWsEn" class="anuncios-form-input" placeholder="Hello Lic. Sofia! I saw the active ad and would like to schedule." />
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <footer class="anuncios-modal-footer">
+          <button type="button" class="anuncios-btn-cancel" id="btnCancelAdModal">Cancelar</button>
+          <button type="submit" class="anuncios-btn-save">
+            <i class="fa-solid fa-floppy-disk"></i> Guardar Anuncio
+          </button>
+        </footer>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  import './anuncios.js';
+</script>

@@ -1,0 +1,295 @@
+---
+// src/feature/inicio/secciones/06-anuncios/Anuncios.astro
+// 📢 SECCIÓN ANUNCIOS & CAMPAÑAS ACTIVAS (ESTILO META ADS MANAGER)
+// Muestra split: Flyer activo a la izquierda + Feed de campañas a la derecha
+import { datosNegocio, resolverTexto } from '../../../../negocio.js';
+import { resolverIdioma, buildRuta } from '../../idioma/idioma.js';
+import { imgwii } from '@widev';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import anunciosCss from './anuncios.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const listaAnuncios = datosNegocio.anuncios || [];
+const anuncioDestacado = listaAnuncios.find(a => a.activo) || listaAnuncios[0] || null;
+const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
+
+const rutaCatalogo = buildRuta('/anuncios', idioma);
+const rutaAdmin = buildRuta('/personal/anuncios', idioma);
+---
+
+<style is:global set:html={anunciosCss}></style>
+
+<section id="anuncios" class="sec-anuncios">
+  <div class="pagewii sec-anuncios__container">
+    
+    <!-- 🏷️ Cabecera -->
+    <header class="sec-anuncios__header">
+      <div class="sec-anuncios__tag">
+        <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+        <span>{t.tag}</span>
+      </div>
+      <h2 class="sec-anuncios__titulo">
+        {t.titulo_1} <span class="sec-anuncios__titulo-accent">{t.titulo_2}</span>
+      </h2>
+      <p class="sec-anuncios__desc">{t.descripcion}</p>
+    </header>
+
+    <!-- 📐 Grilla Split -->
+    <div class="sec-anuncios__grid">
+      
+      <!-- 🖼️ Columna Izquierda: Showcase Campaña Activa -->
+      {anuncioDestacado && (
+        <article class="anuncio-showcase" id="anuncio-showcase">
+          <div class="anuncio-showcase__media-wrap">
+            <img
+              id="showcase-img"
+              src={anuncioDestacado.flyerImg}
+              alt={resolverTexto(anuncioDestacado.titulo, idioma)}
+              class="anuncio-showcase__img"
+              loading="lazy"
+              decoding="async"
+              onerror={`this.onerror=null;this.src='${imgwii.skeleton}';`}
+            />
+            <div class="anuncio-showcase__overlay-top">
+              <span class="anuncio-showcase__badge-status" id="showcase-status">
+                <span class="anuncio-showcase__dot-live"></span>
+                <span id="showcase-status-text">{resolverTexto(anuncioDestacado.estado, idioma)}</span>
+              </span>
+              <span class="anuncio-showcase__badge-cat" id="showcase-badge">
+                {resolverTexto(anuncioDestacado.badge, idioma)}
+              </span>
+            </div>
+          </div>
+
+          <div class="anuncio-showcase__body">
+            <div class="anuncio-showcase__meta-date">
+              <i class="fa-regular fa-clock" aria-hidden="true"></i>
+              <span id="showcase-fecha">{resolverTexto(anuncioDestacado.fecha, idioma)}</span>
+            </div>
+
+            <h3 class="anuncio-showcase__titulo" id="showcase-titulo">
+              {resolverTexto(anuncioDestacado.titulo, idioma)}
+            </h3>
+
+            <p class="anuncio-showcase__desc" id="showcase-desc">
+              {resolverTexto(anuncioDestacado.descripcion, idioma)}
+            </p>
+
+            <div class="anuncio-showcase__pills-bar">
+              <span class="anuncio-showcase__pill">
+                <i class="fa-solid fa-comments" aria-hidden="true"></i>
+                <span id="showcase-conversaciones">{anuncioDestacado.conversaciones}</span> {t.label_conversaciones}
+              </span>
+              <span class="anuncio-showcase__pill">
+                <i class="fa-solid fa-shield-heart" aria-hidden="true"></i>
+                <span>{t.badge_oficial}</span>
+              </span>
+              <span class="anuncio-showcase__pill">
+                <i class="fa-solid fa-hospital-user" aria-hidden="true"></i>
+                <span>{t.detalle_modalidad}</span>
+              </span>
+            </div>
+
+            <div class="anuncio-showcase__actions">
+              <a
+                id="showcase-btn-wa"
+                href={`https://wa.me/${whatsappNumero}?text=${encodeURIComponent(resolverTexto(anuncioDestacado.wsMsg, idioma))}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="anuncio-showcase__btn-wa"
+              >
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                <span>{t.btn_reservar}</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      )}
+
+      <!-- 📱 Columna Derecha: Feed Estilo Meta Ads Manager -->
+      <aside class="anuncios-meta-feed">
+        <div class="anuncios-meta-feed__header">
+          <div class="anuncios-meta-feed__title-group">
+            <h3 class="anuncios-meta-feed__title">{t.meta_feed_titulo}</h3>
+            <i class="fa-solid fa-circle-info anuncios-meta-feed__info-icon" title={t.meta_feed_tooltip} aria-hidden="true"></i>
+          </div>
+          <span class="anuncios-meta-feed__counter">{listaAnuncios.length}</span>
+        </div>
+
+        <ul class="anuncios-meta-feed__list" role="list">
+          {listaAnuncios.map((ad, index) => {
+            const isActivo = ad.activo;
+            const estadoTipo = ad.estadoTipo || (isActivo ? 'activo' : 'completado');
+            const fechaTxt = resolverTexto(ad.fecha, idioma);
+            const estadoTxt = resolverTexto(ad.estado, idioma);
+            const tituloTxt = resolverTexto(ad.titulo, idioma);
+            const descTxt = resolverTexto(ad.descripcion, idioma);
+            const badgeTxt = resolverTexto(ad.badge, idioma);
+            const wsTxt = resolverTexto(ad.wsMsg, idioma);
+
+            return (
+              <li>
+                <div
+                  class={`anuncio-meta-item ${index === 0 ? 'is-selected' : ''}`}
+                  role="button"
+                  tabindex="0"
+                  data-ad-id={ad.id}
+                  data-flyer={ad.flyerImg}
+                  data-titulo={tituloTxt}
+                  data-desc={descTxt}
+                  data-badge={badgeTxt}
+                  data-fecha={fechaTxt}
+                  data-estado={estadoTxt}
+                  data-conversaciones={ad.conversaciones}
+                  data-ws-msg={wsTxt}
+                  data-wa-num={whatsappNumero}
+                >
+                  <div class="anuncio-meta-item__thumb-wrap">
+                    <img
+                      src={ad.thumbImg || ad.flyerImg}
+                      alt={tituloTxt}
+                      class="anuncio-meta-item__thumb"
+                      loading="lazy"
+                      onerror={`this.onerror=null;this.src='${imgwii.skeleton}';`}
+                    />
+                    {isActivo && (
+                      <span class="anuncio-meta-item__check-icon" aria-label="Activo">
+                        <i class="fa-solid fa-check" aria-hidden="true"></i>
+                      </span>
+                    )}
+                  </div>
+
+                  <div class="anuncio-meta-item__content">
+                    <div class="anuncio-meta-item__created">{fechaTxt}</div>
+                    <div class={`anuncio-meta-item__status anuncio-meta-item__status--${estadoTipo}`}>
+                      {estadoTxt}
+                    </div>
+                    <div class="anuncio-meta-item__conversaciones">
+                      {ad.conversaciones} {t.label_conversaciones}
+                    </div>
+                    {ad.costoPorConv && (
+                      <div class="anuncio-meta-item__costo">
+                        {t.label_costo} {ad.costoPorConv}
+                      </div>
+                    )}
+                  </div>
+
+                  <div class="anuncio-meta-item__action" aria-label="Ver anuncio">
+                    <i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+
+        <div class="anuncios-meta-feed__footer">
+          <a href={rutaCatalogo} class="anuncios-meta-feed__btn-catalogo">
+            <i class="fa-solid fa-table-cells-large" aria-hidden="true"></i>
+            <span>{t.btn_ver_todos}</span>
+          </a>
+
+          <a href={rutaAdmin} class="anuncios-meta-feed__btn-crear" id="anunciosBtnCrear">
+            <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            <span>Crear anuncio</span>
+          </a>
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+
+<script is:inline>
+  (function initAnunciosShowcase() {
+    // 1. Control de Visibilidad Segura de '+ Crear anuncio' supeditado a wiSmile
+    function sincronizarAuthCrearAnuncio() {
+      const btn = document.getElementById('anunciosBtnCrear');
+      if (!btn) return;
+      try {
+        const raw = localStorage.getItem('wiSmile');
+        if (!raw) {
+          btn.classList.remove('is-auth-visible');
+          return;
+        }
+        const parsed = JSON.parse(raw);
+        if (parsed && parsed.expiry && Date.now() > parsed.expiry) {
+          btn.classList.remove('is-auth-visible');
+          return;
+        }
+        const u = (parsed && typeof parsed === 'object' && parsed.value) ? parsed.value : parsed;
+        if (u && (u.uid || u.email || u.usuario || u.nombre)) {
+          btn.classList.add('is-auth-visible');
+        } else {
+          btn.classList.remove('is-auth-visible');
+        }
+      } catch (e) {
+        btn.classList.remove('is-auth-visible');
+      }
+    }
+
+    sincronizarAuthCrearAnuncio();
+    document.addEventListener('DOMContentLoaded', sincronizarAuthCrearAnuncio);
+    document.addEventListener('astro:page-load', sincronizarAuthCrearAnuncio);
+    window.addEventListener('storage', function(e) {
+      if (e.key === 'wiSmile') sincronizarAuthCrearAnuncio();
+    });
+    window.addEventListener('wi-auth-cambio', sincronizarAuthCrearAnuncio);
+
+    // 2. Interactividad del Showcase con las campañas
+    const items = document.querySelectorAll('.anuncio-meta-item');
+    if (!items.length) return;
+
+    const showcaseImg = document.getElementById('showcase-img');
+    const showcaseTitulo = document.getElementById('showcase-titulo');
+    const showcaseDesc = document.getElementById('showcase-desc');
+    const showcaseBadge = document.getElementById('showcase-badge');
+    const showcaseFecha = document.getElementById('showcase-fecha');
+    const showcaseStatusText = document.getElementById('showcase-status-text');
+    const showcaseConversaciones = document.getElementById('showcase-conversaciones');
+    const showcaseBtnWa = document.getElementById('showcase-btn-wa');
+
+    items.forEach(function(item) {
+      function activar() {
+        items.forEach(function(el) { el.classList.remove('is-selected'); });
+        item.classList.add('is-selected');
+
+        const flyer = item.getAttribute('data-flyer');
+        const titulo = item.getAttribute('data-titulo');
+        const desc = item.getAttribute('data-desc');
+        const badge = item.getAttribute('data-badge');
+        const fecha = item.getAttribute('data-fecha');
+        const estado = item.getAttribute('data-estado');
+        const conv = item.getAttribute('data-conversaciones');
+        const wsMsg = item.getAttribute('data-ws-msg');
+        const waNum = item.getAttribute('data-wa-num');
+
+        if (showcaseImg && flyer) showcaseImg.src = flyer;
+        if (showcaseTitulo && titulo) showcaseTitulo.textContent = titulo;
+        if (showcaseDesc && desc) showcaseDesc.textContent = desc;
+        if (showcaseBadge && badge) showcaseBadge.textContent = badge;
+        if (showcaseFecha && fecha) showcaseFecha.textContent = fecha;
+        if (showcaseStatusText && estado) showcaseStatusText.textContent = estado;
+        if (showcaseConversaciones && conv) showcaseConversaciones.textContent = conv;
+        if (showcaseBtnWa && wsMsg && waNum) {
+          showcaseBtnWa.href = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(wsMsg);
+        }
+      }
+
+      item.addEventListener('click', activar);
+      item.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          activar();
+        }
+      });
+    });
+  })();
+</script>

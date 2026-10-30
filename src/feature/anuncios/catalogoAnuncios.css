@@ -1,0 +1,394 @@
+/* ============================================================ */
+/* 📢 CATÁLOGO OFICIAL DE ANUNCIOS - ESTILO CARD META ADS       */
+/* 100% Tokens de witema.css · Cero colores fijos · Cero inline */
+/* ============================================================ */
+
+.page-catalogo-anuncios {
+  background: var(--bg);
+  min-height: 85vh;
+  padding: clamp(2.5rem, 5vh, 4rem) clamp(1rem, 3vw, 2.5rem);
+  font-family: var(--ff_P);
+  color: var(--tx1);
+}
+
+.catalogo-anuncios__container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+}
+
+/* 🧭 Breadcrumb */
+.catalogo-anuncios__breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--fz_s3);
+  color: var(--tx3);
+}
+
+.catalogo-anuncios__breadcrumb-link {
+  color: var(--brand-primary);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity var(--tr_f);
+}
+
+.catalogo-anuncios__breadcrumb-link:hover {
+  text-decoration: underline;
+}
+
+.catalogo-anuncios__breadcrumb-sep {
+  color: var(--border-accent);
+}
+
+.catalogo-anuncios__breadcrumb-current {
+  color: var(--tx2);
+  font-weight: 600;
+}
+
+/* 🏷️ Cabecera de Página */
+.catalogo-anuncios__header {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8vh;
+}
+
+.catalogo-anuncios__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4vh 1.2vh;
+  border-radius: var(--r_full);
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border: 1px solid var(--border-card);
+}
+
+.catalogo-anuncios__titulo {
+  font-size: var(--fz_x1);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.catalogo-anuncios__titulo-accent {
+  color: var(--brand-primary);
+}
+
+.catalogo-anuncios__desc {
+  font-size: var(--fz_m);
+  color: var(--tx2);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* 🗂️ Barra de Filtros / Tabs */
+.catalogo-anuncios__tabs {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.catalogo-anuncios__tab-btn {
+  padding: 0.7vh 1.4vh;
+  border-radius: var(--r_full);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  color: var(--tx2);
+  font-size: var(--fz_s3);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--tr_f);
+}
+
+.catalogo-anuncios__tab-btn:hover {
+  background: var(--bg-card-hover);
+  color: var(--tx1);
+}
+
+.catalogo-anuncios__tab-btn.is-active {
+  background: var(--brand-primary);
+  color: var(--txa);
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-card);
+}
+
+/* 📐 Lista / Grid de Tarjetas de Anuncio Estilo Card Meta */
+.catalogo-anuncios__list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 1.8vh, 1.5rem);
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* 🃏 Tarjeta de Anuncio Oficial */
+.ad-feed-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l);
+  box-shadow: var(--shadow-card);
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: clamp(1rem, 2vh, 1.8rem);
+  padding: clamp(1.2rem, 2vh, 1.6rem);
+  transition: transform var(--tr_m), box-shadow var(--tr_m), border-color var(--tr_m);
+}
+
+.ad-feed-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-hover);
+}
+
+/* 🖼️ Miniatura con Checkmark */
+.ad-feed-card__thumb-box {
+  position: relative;
+  width: clamp(74px, 10vw, 92px);
+  height: clamp(74px, 10vw, 92px);
+  border-radius: var(--r_m);
+  overflow: hidden;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  flex-shrink: 0;
+}
+
+.ad-feed-card__thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--tr_s);
+}
+
+.ad-feed-card:hover .ad-feed-card__thumb-img {
+  transform: scale(1.05);
+}
+
+.ad-feed-card__check-pill {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--r_full);
+  background: var(--success);
+  color: var(--txa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  box-shadow: var(--shadow-card);
+}
+
+/* 📝 Información Central */
+.ad-feed-card__main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+  min-width: 0;
+}
+
+.ad-feed-card__top-line {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.ad-feed-card__date {
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  color: var(--tx1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ad-feed-card__status-tag {
+  font-size: var(--fz_s2);
+  font-weight: 700;
+  padding: 0.2vh 0.7vh;
+  border-radius: var(--r_full);
+}
+
+.ad-feed-card__status-tag--activo {
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+}
+
+.ad-feed-card__status-tag--vigente {
+  background: var(--bg-subtle);
+  color: var(--success);
+}
+
+.ad-feed-card__status-tag--completado {
+  background: var(--bg-subtle);
+  color: var(--tx3);
+}
+
+.ad-feed-card__title {
+  font-size: var(--fz_m3);
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.ad-feed-card__desc {
+  font-size: var(--fz_s4);
+  color: var(--tx2);
+  line-height: 1.45;
+  margin: 0;
+}
+
+.ad-feed-card__metrics-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  margin-top: 0.4vh;
+}
+
+.ad-feed-card__metric-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3vh 0.8vh;
+  border-radius: var(--r_s);
+  background: var(--bg-subtle);
+  color: var(--tx2);
+  font-size: var(--fz_s2);
+  font-weight: 600;
+}
+
+.ad-feed-card__metric-pill--badge {
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  font-weight: 700;
+}
+
+/* 🔘 Columna de Acción */
+.ad-feed-card__action-col {
+  flex-shrink: 0;
+}
+
+.ad-feed-card__btn-wa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9vh 1.6vh;
+  border-radius: var(--r_m);
+  background: var(--wa);
+  color: var(--txa);
+  font-size: var(--fz_m);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  box-shadow: var(--shadow-card);
+  transition: background var(--tr_f), transform var(--tr_f);
+}
+
+.ad-feed-card__btn-wa:hover {
+  background: var(--wa_hover);
+  transform: translateY(-1px);
+}
+
+/* 📱 Responsive Móvil: Tarjetas compactas tipo App */
+@media (max-width: 680px) {
+  .ad-feed-card {
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto auto;
+    gap: 0.9rem;
+    padding: 1.1rem;
+  }
+
+  .ad-feed-card__thumb-box {
+    width: 62px;
+    height: 62px;
+  }
+
+  .ad-feed-card__title {
+    font-size: var(--fz_m);
+  }
+
+  .ad-feed-card__action-col {
+    grid-column: 1 / -1;
+    width: 100%;
+  }
+
+  .ad-feed-card__btn-wa {
+    width: 100%;
+  }
+}
+
+/* 📞 Banner de Contacto Inferior */
+.catalogo-anuncios__footer-banner {
+  margin-top: 1vh;
+  padding: clamp(1.5rem, 3vh, 2.2rem);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l);
+  box-shadow: var(--shadow-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.catalogo-anuncios__footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3vh;
+}
+
+.catalogo-anuncios__footer-title {
+  font-size: var(--fz_m4);
+  font-weight: 800;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.catalogo-anuncios__footer-sub {
+  font-size: var(--fz_m);
+  color: var(--tx2);
+  margin: 0;
+}
+
+.catalogo-anuncios__footer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9vh 1.6vh;
+  border-radius: var(--r_m);
+  background: var(--brand-primary);
+  color: var(--txa);
+  font-size: var(--fz_m);
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity var(--tr_f), transform var(--tr_f);
+}
+
+.catalogo-anuncios__footer-btn:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}

@@ -1,15 +1,16 @@
 ---
 // src/feature/inicio/inicioPage.astro
-// Orquestador Principal de Secciones de Inicio (01 a 09) - Consultorio Psicológico América
+// Orquestador Principal de Secciones de Inicio - Consultorio Psicológico América
 import Principal from '../../core/layouts/Principal.astro';
 import type { Idioma } from '../../core/idioma/idioma';
 import { buildRuta } from '../../core/idioma/idioma';
 import Hero from './secciones/01-hero/Hero.astro';
 import Servicios from './secciones/02-servicios/Servicios.astro';
 import Talleres from './secciones/03-talleres/Talleres.astro';
-import Calculadora from './secciones/04-calculadora/Calculadora.astro';
+import BlogInicio from './secciones/10-blog/BlogInicio.astro';
+import Confianza from './secciones/03-confianza/Confianza.astro';
 import Separador from './secciones/05-separador/Separador.astro';
-import Compania from './secciones/06-compania/Compania.astro';
+import Anuncios from './secciones/06-anuncios/Anuncios.astro';
 import Mapa from './secciones/07-mapa/Mapa.astro';
 import Nosotros from './secciones/08-nosotros/Nosotros.astro';
 import Faq from './secciones/09-faq/Faq.astro';
@@ -35,14 +36,17 @@ const ruta = buildRuta('/', idioma);
   <!-- 03. Espacios Vivenciales y Talleres Psicoeducativos (Grilla 3x2 Fija) -->
   <Talleres idioma={idioma} />
 
-  <!-- 04. Tarifas Transparentes y Calculadora de Ahorro Familiar -->
-  <Calculadora idioma={idioma} />
+  <!-- 04. Artículos Clínicos, Psicoeducación y Blog de Salud Mental (SUBE) -->
+  <BlogInicio idioma={idioma} />
 
-  <!-- 05. Separador de Orientación Empática Directa SOS -->
+  <!-- 05. Respaldo Profesional y Razones para Confiar en la Lic. Sofía Reynaga (DESPUÉS DEL BLOG) -->
+  <Confianza idioma={idioma} />
+
+  <!-- 06. Separador de Orientación Empática Directa SOS -->
   <Separador idioma={idioma} />
 
-  <!-- 06. Acompañamiento Terapéutico y Metodología Clínica en 3 Pasos -->
-  <Compania idioma={idioma} />
+  <!-- 07. Anuncios & Campañas Activas (Estilo Meta Ads) -->
+  <Anuncios idioma={idioma} />
 
   <!-- 07. Sedes Oficiales (Miraflores, Villa El Salvador y Online) -->
   <Mapa idioma={idioma} />

@@ -3,6 +3,7 @@
 // 8. SECCIÓN NOSOTROS · TRAYECTORIA Y COMPROMISO PROFESIONAL
 import { datosNegocio } from '../../../../negocio.js';
 import { resolverIdioma } from '../../idioma/idioma.js';
+import { imgwii } from '@widev';
 import es from './idioma/es.json';
 import en from './idioma/en.json';
 import nosotrosCss from './nosotros.css?inline';
@@ -32,10 +33,11 @@ const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURICom
         <div class="nosotros-card-photo">
           <div class="nosotros-img-box">
             <img 
-              src="/imgwii/psicologa-sofia-reynaga.webp" 
+              src={imgwii.svg}
+              data-src="/imgwii/psicologa-sofia-reynaga.webp" 
               alt="Lic. Sofía Reynaga - Psicóloga Colegiada" 
-              class="nosotros-card-img" 
-              loading="lazy"
+              class="nosotros-card-img wi_skeleton" 
+
               decoding="async" 
               width="300" 
               height="220"
@@ -48,10 +50,11 @@ const wsLink = `https://wa.me/${datosNegocio.whatsappLimpio}?text=${encodeURICom
         <div class="nosotros-card-photo">
           <div class="nosotros-img-box">
             <img 
-              src="/imgwii/recepcion-consultorio.webp" 
+              src={imgwii.svg}
+              data-src="/imgwii/recepcion-consultorio.webp" 
               alt="Consultorio Psicológico América" 
-              class="nosotros-card-img" 
-              loading="lazy"
+              class="nosotros-card-img wi_skeleton" 
+
               decoding="async" 
               width="300" 
               height="220"

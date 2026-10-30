@@ -1,0 +1,122 @@
+---
+// src/feature/inicio/secciones/10-blog/BlogInicio.astro
+// 10. SECCIÓN ARTÍCULOS CLÍNICOS & BLOG DE PSICOLOGÍA (GRILLA 4x2)
+// Psicoeducación, guías prácticas y SEO de salud mental con carga diferida imgwii
+import { resolverTexto } from '../../../../negocio.js';
+import { resolverIdioma, buildRuta } from '../../idioma/idioma.js';
+import { imgwii } from '@widev';
+import blogsSemilla from '../../../../semillas/blogs.json';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import blogInicioCss from './blogInicio.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+// Tomar los 8 artículos activos correspondientes al idioma para conformar la grilla 4x2
+const articulos = (blogsSemilla || [])
+  .filter((b: any) => (b.lang === idioma || (!b.lang && idioma === 'es')) && b.activo !== false)
+  .slice(0, 8);
+
+const rutaBlog = buildRuta('/blog', idioma);
+---
+
+<style is:global set:html={blogInicioCss}></style>
+
+<section id="blog" class="sec-blog">
+  <div class="pagewii blog-container">
+    
+    <!-- 🏷️ Encabezado de la Sección -->
+    <header class="blog-header">
+      <div class="blog-badge">
+        <i class="fa-solid fa-book-open-reader" aria-hidden="true"></i>
+        <span>{t.badge}</span>
+      </div>
+      <h2 class="blog-title">
+        {t.titulo_1} <span class="blog-highlight">{t.titulo_resaltado}</span>
+      </h2>
+      <p class="blog-sub">{t.subtitulo}</p>
+    </header>
+
+    <!-- 📐 Grilla de Artículos Clínicos (4 Columnas x 2 Filas) -->
+    <div class="blog-grid-layout">
+      {articulos.map((art: any) => {
+        const linkArticulo = buildRuta(`/blog/${art.slug}`, idioma);
+        const tituloTxt = resolverTexto(art.titulo, idioma);
+        const descTxt = resolverTexto(art.descripcion, idioma);
+        const catTxt = resolverTexto(art.categoria, idioma);
+        const fechaTxt = art.publicado || '2026-10-26';
+        const numVistas = art.vistas || '1.5k';
+        const numLikes = art.likes || 120;
+        const numComments = art.comentarios || 15;
+
+        return (
+          <article class="blog-card-item">
+            <!-- 🖼️ Portada Fotográfica -->
+            <div class="blog-image-box">
+              <img
+                src={art.imagen || '/imgwii/consultorio-interior.webp'}
+                alt={tituloTxt}
+                class="blog-img"
+                loading="lazy"
+                decoding="async"
+                onerror={`this.onerror=null;this.src='${imgwii.skeleton}';`}
+              />
+            </div>
+
+            <!-- 📝 Cuerpo del Artículo -->
+            <div class="blog-content-body">
+              <span class="blog-badge-cat">{catTxt}</span>
+
+              <h3 class="blog-title-h3" title={tituloTxt}>
+                <a href={linkArticulo} class="blog-card-item__link">
+                  {tituloTxt}
+                </a>
+              </h3>
+
+              <p class="blog-excerpt-para">
+                {descTxt}
+              </p>
+
+              <!-- 📊 Footer: Fecha y Clúster de Métricas -->
+              <div class="blog-footer-row">
+                <span class="blog-date-col">
+                  <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                  <span>{fechaTxt}</span>
+                </span>
+
+                <div class="blog-stats-cluster">
+                  <span class="blog-stat-item blog-stat-item--views" title={`${numVistas} ${t.vistas_label}`}>
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                    <span>{numVistas}</span>
+                  </span>
+                  <span class="blog-stat-item blog-stat-item--likes" title={`${numLikes} me gusta`}>
+                    <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                    <span>{numLikes}</span>
+                  </span>
+                  <span class="blog-stat-item blog-stat-item--comments" title={`${numComments} comentarios`}>
+                    <i class="fa-regular fa-comment" aria-hidden="true"></i>
+                    <span>{numComments}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <!-- 🔘 Botón CTA Inferior para ver todos los artículos -->
+    <div class="blog-bottom-cta">
+      <a href={rutaBlog} class="btn-blog-all">
+        <span>{t.btn_ver_todos}</span>
+        <i class="fa-solid fa-arrow-right-long" aria-hidden="true"></i>
+      </a>
+    </div>
+
+  </div>
+</section>

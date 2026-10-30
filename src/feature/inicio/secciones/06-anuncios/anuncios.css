@@ -1,0 +1,496 @@
+/* ============================================================ */
+/* 📢 SECCIÓN ANUNCIOS & CAMPAÑAS OFICIALES - ESTILO META ADS   */
+/* 100% Tokens de witema.css · 0 colores fijos · Cero inline    */
+/* ============================================================ */
+
+.sec-anuncios {
+  position: relative;
+  padding: clamp(3rem, 6vh, 5rem) clamp(1rem, 3vw, 2.5rem);
+  background: var(--bg);
+  font-family: var(--ff_P);
+  color: var(--tx1);
+  overflow: hidden;
+}
+
+.sec-anuncios__container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.8rem, 3.5vh, 2.8rem);
+}
+
+/* 🏷️ Cabecera de Sección */
+.sec-anuncios__header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8vh;
+}
+
+.sec-anuncios__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4vh 1.2vh;
+  border-radius: var(--r_full);
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid var(--border-card);
+}
+
+.sec-anuncios__titulo {
+  font-size: var(--fz_x1);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.sec-anuncios__titulo-accent {
+  color: var(--brand-primary);
+}
+
+.sec-anuncios__desc {
+  font-size: var(--fz_m);
+  color: var(--tx2);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* 📐 Grilla Split (Izquierda Flyer / Derecha Meta Feed) */
+.sec-anuncios__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
+  align-items: stretch;
+}
+
+@media (max-width: 960px) {
+  .sec-anuncios__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 🖼️ Columna Izquierda: Showcase de Campaña Destacada */
+.anuncio-showcase {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l);
+  overflow: hidden;
+  box-shadow: var(--shadow-s);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: transform var(--tr_m), box-shadow var(--tr_m);
+}
+
+.anuncio-showcase:hover {
+  box-shadow: var(--shadow-m);
+}
+
+.anuncio-showcase__media-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--bg-subtle);
+  overflow: hidden;
+}
+
+.anuncio-showcase__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--tr_s), opacity var(--tr_m);
+}
+
+.anuncio-showcase:hover .anuncio-showcase__img {
+  transform: scale(1.02);
+}
+
+.anuncio-showcase__overlay-top {
+  position: absolute;
+  top: 1vh;
+  left: 1vh;
+  right: 1vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.anuncio-showcase__badge-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3vh 0.9vh;
+  border-radius: var(--r_full);
+  background: var(--bg-card);
+  color: var(--tx1);
+  font-size: var(--fz_s2);
+  font-weight: 700;
+  box-shadow: var(--shadow-s);
+  border: 1px solid var(--border-card);
+}
+
+.anuncio-showcase__dot-live {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--r_full);
+  background: var(--success);
+  display: inline-block;
+  box-shadow: 0 0 0 2px var(--bg-card);
+}
+
+.anuncio-showcase__badge-cat {
+  padding: 0.3vh 0.9vh;
+  border-radius: var(--r_full);
+  background: var(--brand-primary);
+  color: var(--txa);
+  font-size: var(--fz_s2);
+  font-weight: 700;
+  box-shadow: var(--shadow-s);
+}
+
+.anuncio-showcase__body {
+  padding: clamp(1.2rem, 2.2vh, 1.8rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+  flex-grow: 1;
+}
+
+.anuncio-showcase__meta-date {
+  font-size: var(--fz_s3);
+  color: var(--tx3);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.anuncio-showcase__titulo {
+  font-size: var(--fz_m4);
+  font-weight: 800;
+  line-height: 1.25;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.anuncio-showcase__desc {
+  font-size: var(--fz_m);
+  color: var(--tx2);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.anuncio-showcase__pills-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 1vh;
+  border-top: 1px solid var(--border-card);
+}
+
+.anuncio-showcase__pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3vh 0.8vh;
+  border-radius: var(--r_s);
+  background: var(--bg-subtle);
+  color: var(--tx2);
+  font-size: var(--fz_s2);
+  font-weight: 600;
+}
+
+.anuncio-showcase__actions {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 1.2vh;
+}
+
+.anuncio-showcase__btn-wa {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.9vh 1.4vh;
+  border-radius: var(--r_m);
+  background: var(--wa);
+  color: var(--txa);
+  font-size: var(--fz_m);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background var(--tr_f), transform var(--tr_f);
+}
+
+.anuncio-showcase__btn-wa:hover {
+  background: var(--wa_hover);
+  transform: translateY(-1px);
+}
+
+/* 📱 Columna Derecha: Feed Estilo Meta Ads Manager */
+.anuncios-meta-feed {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l);
+  box-shadow: var(--shadow-s);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.anuncios-meta-feed__header {
+  padding: 1.5vh 2vh;
+  border-bottom: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+}
+
+.anuncios-meta-feed__title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.anuncios-meta-feed__title {
+  font-size: var(--fz_m3);
+  font-weight: 800;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.anuncios-meta-feed__info-icon {
+  color: var(--tx3);
+  font-size: var(--fz_s4);
+}
+
+.anuncios-meta-feed__counter {
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  padding: 0.2vh 0.7vh;
+  border-radius: var(--r_full);
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+}
+
+/* Lista de Anuncios */
+.anuncios-meta-feed__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.anuncio-meta-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1.2vh;
+  padding: 1.3vh 1.8vh;
+  border-bottom: 1px solid var(--border-card);
+  cursor: pointer;
+  transition: background var(--tr_f);
+  text-decoration: none;
+  color: inherit;
+}
+
+.anuncio-meta-item:last-child {
+  border-bottom: none;
+}
+
+.anuncio-meta-item:hover {
+  background: var(--bg-card-hover);
+}
+
+.anuncio-meta-item.is-selected {
+  background: var(--brand-soft);
+  border-left: 3px solid var(--brand-primary);
+}
+
+/* Thumbnail con Checkmark */
+.anuncio-meta-item__thumb-wrap {
+  position: relative;
+  width: 58px;
+  height: 58px;
+  border-radius: var(--r_s);
+  overflow: hidden;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  flex-shrink: 0;
+}
+
+.anuncio-meta-item__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.anuncio-meta-item__check-icon {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: var(--r_full);
+  background: var(--success);
+  color: var(--txa);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+/* Info Central */
+.anuncio-meta-item__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25vh;
+  min-width: 0;
+}
+
+.anuncio-meta-item__created {
+  font-size: var(--fz_m);
+  font-weight: 700;
+  color: var(--tx1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.anuncio-meta-item__status {
+  font-size: var(--fz_s3);
+  font-weight: 600;
+}
+
+.anuncio-meta-item__status--activo {
+  color: var(--brand-primary);
+}
+
+.anuncio-meta-item__status--vigente {
+  color: var(--success);
+}
+
+.anuncio-meta-item__status--completado {
+  color: var(--tx3);
+}
+
+.anuncio-meta-item__conversaciones {
+  font-size: var(--fz_s2);
+  color: var(--tx2);
+}
+
+.anuncio-meta-item__costo {
+  font-size: var(--fz_s2);
+  color: var(--tx3);
+}
+
+/* Acciones / Menú 3 puntos */
+.anuncio-meta-item__action {
+  color: var(--tx3);
+  padding: 0.5vh;
+  border-radius: var(--r_s);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--tr_f), background var(--tr_f);
+}
+
+.anuncio-meta-item:hover .anuncio-meta-item__action {
+  color: var(--tx1);
+  background: var(--bg-subtle);
+}
+
+/* Pie del Feed */
+.anuncios-meta-feed__footer {
+  padding: 1.2vh 1.8vh;
+  border-top: 1px solid var(--border-card);
+  background: var(--bg-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+}
+
+.anuncios-meta-feed__btn-catalogo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--brand-primary);
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity var(--tr_f);
+}
+
+.anuncios-meta-feed__btn-catalogo:hover {
+  text-decoration: underline;
+}
+
+.anuncios-meta-feed__btn-crear {
+  display: none;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7vh 1.2vh;
+  border-radius: var(--r_full);
+  background: var(--tx1);
+  color: var(--bg);
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform var(--tr_f), opacity var(--tr_f);
+}
+
+.anuncios-meta-feed__btn-crear.is-auth-visible {
+  display: inline-flex;
+}
+
+.anuncios-meta-feed__btn-crear:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
+}
+
+/* 📱 Responsive Móvil */
+@media (max-width: 640px) {
+  .anuncio-meta-item {
+    gap: 1vh;
+    padding: 1vh 1.2vh;
+  }
+
+  .anuncio-meta-item__thumb-wrap {
+    width: 48px;
+    height: 48px;
+  }
+
+  .anuncio-meta-item__created {
+    font-size: var(--fz_s4);
+  }
+
+  .anuncios-meta-feed__footer {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
+  .anuncios-meta-feed__btn-crear {
+    justify-content: center;
+  }
+}

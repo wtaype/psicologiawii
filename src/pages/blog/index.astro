@@ -1,0 +1,30 @@
+---
+// src/pages/blog/index.astro
+// Catálogo Público de Artículos de Blog en Español
+import Principal from '../../core/layouts/Principal.astro';
+import BlogCatalog from '../../feature/blog/components/BlogCatalog.astro';
+import { datosNegocio, consultarBlogsFirestoreFresco } from '../../negocio.js';
+
+const idioma = 'es';
+const ruta = '/blog';
+const rutasIdioma = {
+  es: '/blog',
+  en: '/en/blog'
+};
+
+const blogsData = await consultarBlogsFirestoreFresco();
+const posts = (blogsData || []).filter((p: any) => (p.lang === 'es' || !p.lang) && p.activo !== false);
+
+const pageTitle = `Guías Clínicas & Blog de Salud Mental · ${datosNegocio.nombre}`;
+const pageDesc = 'Artículos clínicos, reflexiones sobre bienestar emocional, crianza respetuosa y claves para tu crecimiento personal escritas por la Lic. Sofía Reynaga.';
+---
+
+<Principal
+  idioma={idioma}
+  ruta={ruta}
+  rutasIdioma={rutasIdioma}
+  title={pageTitle}
+  description={pageDesc}
+>
+  <BlogCatalog posts={posts} idioma={idioma} />
+</Principal>

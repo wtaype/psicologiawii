@@ -1,0 +1,16 @@
+---
+// src/pages/en/anuncios.astro
+// Public Page: Official Announcements & Open Calls Catalog (English)
+import Principal from '../../core/layouts/Principal.astro';
+import CatalogoAnuncios from '../../feature/anuncios/secciones/CatalogoAnuncios.astro';
+import { buildRuta } from '../../core/idioma/idioma';
+import { datosNegocio } from '../../negocio.js';
+
+const idioma = 'en';
+const ruta = buildRuta('/anuncios', idioma);
+const title = `Our Latest Official Announcements · ${datosNegocio.nombre}`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <CatalogoAnuncios idioma={idioma} />
+</Principal>

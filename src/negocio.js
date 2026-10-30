@@ -7,6 +7,8 @@
 
 import negocioSemilla from './semillas/negocio.json';
 import serviciosSemilla from './semillas/servicios.json';
+import anunciosSemilla from './semillas/anuncios.json';
+import blogsSemilla from './semillas/blogs.json';
 import {
   configurarSistema,
   configurarPersonal,
@@ -39,6 +41,10 @@ export const STORAGE_KEY_PRODUCTOS = 'wi_servicios';
 export const OLD_STORAGE_KEY_PRODUCTOS = 'psicologia_servicios';
 export const COLECCION_NEGOCIO = 'negocio';
 export const COLECCION_SERVICIOS = 'servicios';
+export const STORAGE_KEY_ANUNCIOS = 'wi_anuncios';
+export const COLECCION_ANUNCIOS = 'anuncios';
+export const STORAGE_KEY_BLOGS = 'wi_blogs_data_v3';
+export const COLECCION_BLOGS = 'blogs';
 export const DOC_NEGOCIO_ID = 'principal';
 
 // Medios de pago aceptados oficiales
@@ -367,6 +373,201 @@ if (typeof window === 'undefined') {
   await consultarProductosFirestoreFresco();
 }
 
+export function resolverTexto(campo, idioma = 'es') {
+  if (!campo) return '';
+  if (typeof campo === 'object') return campo[idioma] || campo.es || '';
+  return String(campo);
+}
+
+/**
+ * Normaliza cualquier documento de Firestore para anuncios y campañas
+ */
+export function normalizarAnuncioFirestore(docRaw = {}) {
+  const item = docRaw.fields ? parseFirestoreDoc(docRaw.fields || {}) : docRaw;
+  const id = item.id || (docRaw.name ? docRaw.name.split('/').pop() : '');
+
+  const toMap = (v, defaultEs = '', defaultEn = '') => {
+    if (typeof v === 'object' && v !== null) {
+      return {
+        es: v.es || defaultEs,
+        en: v.en || defaultEn || v.es || defaultEs
+      };
+    }
+    return {
+      es: v || defaultEs,
+      en: defaultEn || v || defaultEs
+    };
+  };
+
+  return {
+    id,
+    titulo: toMap(item.titulo, 'Campaña Activa', 'Active Campaign'),
+    badge: toMap(item.badge, 'Anuncio', 'Ad'),
+    fecha: toMap(item.fecha, 'Reciente', 'Recent'),
+    estado: toMap(item.estado, 'Activo', 'Active'),
+    estadoTipo: item.estadoTipo || 'activo',
+    activo: Boolean(item.activo ?? true),
+    conversaciones: Number(item.conversaciones ?? 0),
+    costoPorConv: item.costoPorConv || 'S/ 0,00',
+    metricasTexto: toMap(item.metricasTexto, '', ''),
+    flyerImg: item.flyerImg || '/imgwii/psicologa-sofia-consulta.webp',
+    thumbImg: item.thumbImg || item.flyerImg || '/imgwii/psicologa-sofia-consulta.webp',
+    descripcion: toMap(item.descripcion, '', ''),
+    wsMsg: toMap(item.wsMsg, 'Hola Lic. Sofía, vi el anuncio en su portal web y deseo coordinar una consulta.', 'Hello Lic. Sofia, I saw the ad on your website and would like to arrange a consultation.')
+  };
+}
+
+let _anunciosBuildFirestore = Array.isArray(anunciosSemilla) ? anunciosSemilla.map(a => normalizarAnuncioFirestore(a)) : [];
+
+/**
+ * Consulta y reconcilia anuncios desde Firestore vía REST / LocalStorage / Semillas
+ * Cascada de 3 niveles: Firestore -> LocalStorage -> Semilla -> []
+ */
+export async function consultarAnunciosFirestoreFresco(forzar = false) {
+  const SYNC_THROTTLE_MS = 180000;
+  if (typeof window !== 'undefined' && !forzar) {
+    try {
+      const lastSync = sessionStorage.getItem('wi_sync_anuncios_ts');
+      if (lastSync && (Date.now() - Number(lastSync)) < SYNC_THROTTLE_MS) {
+        const local = localStorage.getItem(STORAGE_KEY_ANUNCIOS);
+        if (local) {
+          const parsed = JSON.parse(local);
+          const lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
+          if (Array.isArray(lista) && lista.length > 0) {
+            return lista;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3500);
+    const projectId = import.meta.env.PUBLIC_FIREBASE_PROJECT_ID || 'psicologiawii';
+    if (projectId) {
+      const res = await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/anuncios`, {
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+      if (res.ok) {
+        const json = await res.json();
+        if (Array.isArray(json.documents) && json.documents.length > 0) {
+          const ads = json.documents.map(d => normalizarAnuncioFirestore(d));
+          _anunciosBuildFirestore = ads;
+          if (typeof window !== 'undefined') {
+            try {
+              localStorage.setItem(STORAGE_KEY_ANUNCIOS, JSON.stringify(ads));
+              sessionStorage.setItem('wi_sync_anuncios_ts', String(Date.now()));
+              window.dispatchEvent(new CustomEvent('wi:anuncios-actualizado', { detail: ads }));
+            } catch (e) {}
+          }
+          return ads;
+        }
+      }
+    }
+  } catch (err) {}
+
+  if (typeof window !== 'undefined') {
+    try {
+      const local = localStorage.getItem(STORAGE_KEY_ANUNCIOS);
+      if (local) {
+        const parsed = JSON.parse(local);
+        const lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
+        if (Array.isArray(lista) && lista.length > 0) {
+          return lista;
+        }
+      }
+    } catch (e) {}
+  }
+
+  return _anunciosBuildFirestore;
+}
+
+if (typeof window === 'undefined') {
+  await consultarAnunciosFirestoreFresco();
+}
+
+
+let _blogsBuildFirestore = Array.isArray(blogsSemilla) ? blogsSemilla : [];
+
+/**
+ * Consulta y reconcilia artículos de blog desde Firestore vía REST / LocalStorage / Semillas
+ * Cascada de 3 niveles: Firestore -> LocalStorage -> Semilla -> []
+ */
+export async function consultarBlogsFirestoreFresco(forzar = false) {
+  const SYNC_THROTTLE_MS = 180000;
+  if (typeof window !== 'undefined' && !forzar) {
+    try {
+      const lastSync = sessionStorage.getItem('wi_sync_blogs_ts');
+      if (lastSync && (Date.now() - Number(lastSync)) < SYNC_THROTTLE_MS) {
+        const local = localStorage.getItem(STORAGE_KEY_BLOGS);
+        if (local) {
+          const parsed = JSON.parse(local);
+          const lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
+          if (Array.isArray(lista) && lista.length > 0) {
+            return lista.filter(b => b.activo !== false);
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
+  try {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 3500);
+    const projectId = import.meta.env.PUBLIC_FIREBASE_PROJECT_ID || 'psicologiawii';
+    if (projectId) {
+      const res = await fetch(`https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/blogs`, {
+        signal: controller.signal
+      });
+      clearTimeout(timer);
+      if (res.ok) {
+        const json = await res.json();
+        if (Array.isArray(json.documents) && json.documents.length > 0) {
+          const blogs = json.documents
+            .map(d => {
+              const parsed = parseFirestoreDoc(d.fields || {});
+              const id = parsed.id || (d.name ? d.name.split('/').pop() : '');
+              return { id, ...parsed };
+            })
+            .filter(b => b.activo !== false);
+          if (blogs.length > 0) {
+            _blogsBuildFirestore = blogs;
+            if (typeof window !== 'undefined') {
+              try {
+                localStorage.setItem(STORAGE_KEY_BLOGS, JSON.stringify(blogs));
+                sessionStorage.setItem('wi_sync_blogs_ts', String(Date.now()));
+                window.dispatchEvent(new CustomEvent('wi:blogs-actualizado', { detail: blogs }));
+              } catch (e) {}
+            }
+            return blogs;
+          }
+        }
+      }
+    }
+  } catch (err) {}
+
+  if (typeof window !== 'undefined') {
+    try {
+      const local = localStorage.getItem(STORAGE_KEY_BLOGS);
+      if (local) {
+        const parsed = JSON.parse(local);
+        const lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
+        if (Array.isArray(lista) && lista.length > 0) {
+          return lista.filter(b => b.activo !== false);
+        }
+      }
+    } catch (e) {}
+  }
+
+  return _blogsBuildFirestore;
+}
+
+if (typeof window === 'undefined') {
+  await consultarBlogsFirestoreFresco();
+}
+
 export const datosNegocio = {
   get raw() { return obtenerDatosNegocio(); },
   get identidad() { return this.raw.identidad || {}; },
@@ -470,6 +671,10 @@ export const datosNegocio = {
   get productos() { return _serviciosBuildFirestore; },
   get servicios() { return _serviciosBuildFirestore.filter(s => s.tipo === 'psicologia'); },
   get talleres() { return _serviciosBuildFirestore.filter(s => s.tipo === 'taller'); },
+  get anuncios() { return _anunciosBuildFirestore; },
+  get anunciosActivos() { return _anunciosBuildFirestore.filter(a => a.activo !== false); },
+  get blogs() { return _blogsBuildFirestore; },
+  get blogsActivos() { return _blogsBuildFirestore.filter(b => b.activo !== false); },
   get seo() { return this.raw.seo || null; },
   get linkweb() {
     return this.raw.linkweb || (typeof window !== 'undefined' && window.location?.origin ? window.location.origin : 'https://psicologiawii.web.app');

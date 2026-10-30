@@ -1,0 +1,188 @@
+---
+// src/feature/anuncios/secciones/CatalogoAnuncios.astro
+// Componente de Catálogo Público Completo de Anuncios y Convocatorias
+import { datosNegocio, resolverTexto } from '../../../negocio.js';
+import { resolverIdioma, buildRuta } from '../../inicio/idioma/idioma.js';
+import { imgwii } from '@widev';
+import es from '../idioma/es.json';
+import en from '../idioma/en.json';
+import catalogoAnunciosCss from '../catalogoAnuncios.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const listaAnuncios = datosNegocio.anuncios || [];
+const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
+const rutaInicio = buildRuta('/', idioma);
+---
+
+<style is:global set:html={catalogoAnunciosCss}></style>
+
+<div class="page-catalogo-anuncios">
+  <div class="pagewii catalogo-anuncios__container">
+    
+    <!-- 🧭 Breadcrumb -->
+    <nav class="catalogo-anuncios__breadcrumb" aria-label="Breadcrumb">
+      <a href={rutaInicio} class="catalogo-anuncios__breadcrumb-link">
+        <i class="fa-solid fa-house" aria-hidden="true"></i> {t.breadcrumb_inicio}
+      </a>
+      <span class="catalogo-anuncios__breadcrumb-sep">/</span>
+      <span class="catalogo-anuncios__breadcrumb-current">{t.breadcrumb_actual}</span>
+    </nav>
+
+    <!-- 🏷️ Cabecera -->
+    <header class="catalogo-anuncios__header">
+      <div class="catalogo-anuncios__tag">
+        <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+        <span>{t.tag}</span>
+      </div>
+      <h1 class="catalogo-anuncios__titulo">
+        {t.titulo_1} <span class="catalogo-anuncios__titulo-accent">{t.titulo_2}</span>
+      </h1>
+      <p class="catalogo-anuncios__desc">{t.descripcion}</p>
+    </header>
+
+    <!-- 🗂️ Filtros por Estado -->
+    <div class="catalogo-anuncios__tabs" role="tablist">
+      <button type="button" class="catalogo-anuncios__tab-btn is-active" data-filter="todos">
+        {t.filtro_todos} ({listaAnuncios.length})
+      </button>
+      <button type="button" class="catalogo-anuncios__tab-btn" data-filter="activo">
+        {t.filtro_activos} ({listaAnuncios.filter(a => a.activo).length})
+      </button>
+      <button type="button" class="catalogo-anuncios__tab-btn" data-filter="completado">
+        {t.filtro_completados} ({listaAnuncios.filter(a => !a.activo).length})
+      </button>
+    </div>
+
+    <!-- 📐 Lista de Anuncios Oficiales (Estilo Card Meta Ads) -->
+    <div class="catalogo-anuncios__list" id="grid-anuncios">
+      {listaAnuncios.map((ad) => {
+        const isActivo = ad.activo;
+        const estadoTipo = ad.estadoTipo || (isActivo ? 'activo' : 'completado');
+        const tituloTxt = resolverTexto(ad.titulo, idioma);
+        const descTxt = resolverTexto(ad.descripcion, idioma);
+        const fechaTxt = resolverTexto(ad.fecha, idioma);
+        const estadoTxt = resolverTexto(ad.estado, idioma);
+        const badgeTxt = resolverTexto(ad.badge, idioma);
+        const wsMsgTxt = resolverTexto(ad.wsMsg, idioma);
+
+        return (
+          <article class="ad-feed-card" data-estado-tipo={estadoTipo}>
+            <!-- 🖼️ Miniatura con Checkmark de Estado -->
+            <div class="ad-feed-card__thumb-box">
+              <img
+                src={ad.thumbImg || ad.flyerImg}
+                alt={tituloTxt}
+                class="ad-feed-card__thumb-img"
+                loading="lazy"
+                decoding="async"
+                onerror={`this.onerror=null;this.src='${imgwii.skeleton}';`}
+              />
+              {isActivo && (
+                <span class="ad-feed-card__check-pill" title="Activo">
+                  <i class="fa-solid fa-check" aria-hidden="true"></i>
+                </span>
+              )}
+            </div>
+
+            <!-- 📝 Información Central del Anuncio -->
+            <div class="ad-feed-card__main-info">
+              <div class="ad-feed-card__top-line">
+                <span class="ad-feed-card__date">
+                  <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                  <span>{fechaTxt}</span>
+                </span>
+                <span class={`ad-feed-card__status-tag ad-feed-card__status-tag--${estadoTipo}`}>
+                  {estadoTxt}
+                </span>
+              </div>
+
+              <h2 class="ad-feed-card__title">{tituloTxt}</h2>
+              <p class="ad-feed-card__desc">{descTxt}</p>
+
+              <div class="ad-feed-card__metrics-bar">
+                <span class="ad-feed-card__metric-pill">
+                  <i class="fa-solid fa-comments" aria-hidden="true"></i>
+                  <span>{ad.conversaciones} {t.label_conversaciones}</span>
+                </span>
+                {ad.costoPorConv && (
+                  <span class="ad-feed-card__metric-pill">
+                    <i class="fa-solid fa-tag" aria-hidden="true"></i>
+                    <span>{t.label_costo} {ad.costoPorConv}</span>
+                  </span>
+                )}
+                <span class="ad-feed-card__metric-pill ad-feed-card__metric-pill--badge">
+                  <i class="fa-solid fa-certificate" aria-hidden="true"></i>
+                  <span>{badgeTxt}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- 🔘 Botón de Acción Directa -->
+            <div class="ad-feed-card__action-col">
+              <a
+                href={`https://wa.me/${whatsappNumero}?text=${encodeURIComponent(wsMsgTxt)}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="ad-feed-card__btn-wa"
+              >
+                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                <span>{t.btn_reservar}</span>
+              </a>
+            </div>
+          </article>
+        );
+      })}
+    </div>
+
+    <!-- 📞 Banner de Contacto Inferior -->
+    <div class="catalogo-anuncios__footer-banner">
+      <div class="catalogo-anuncios__footer-info">
+        <h3 class="catalogo-anuncios__footer-title">{t.label_colegiatura}</h3>
+        <p class="catalogo-anuncios__footer-sub">{t.contacto_subtitulo}</p>
+      </div>
+      <a
+        href={`https://wa.me/${whatsappNumero}?text=${encodeURIComponent('Hola Lic. Sofía, tengo una consulta sobre las convocatorias y talleres.')}`}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="catalogo-anuncios__footer-btn"
+      >
+        <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+        <span>{t.contacto_btn}</span>
+      </a>
+    </div>
+
+  </div>
+</div>
+
+<script is:inline>
+  (function initFiltrosCatalogo() {
+    const tabButtons = document.querySelectorAll('.catalogo-anuncios__tab-btn');
+    const cards = document.querySelectorAll('.ad-feed-card');
+    if (!tabButtons.length || !cards.length) return;
+
+    tabButtons.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        tabButtons.forEach(function(b) { b.classList.remove('is-active'); });
+        btn.classList.add('is-active');
+
+        const filter = btn.getAttribute('data-filter');
+        cards.forEach(function(card) {
+          const tipo = card.getAttribute('data-estado-tipo');
+          if (filter === 'todos') {
+            card.style.display = 'grid';
+          } else if (filter === 'activo') {
+            card.style.display = (tipo === 'activo' || tipo === 'vigente') ? 'grid' : 'none';
+          } else if (filter === 'completado') {
+            card.style.display = (tipo === 'completado' || tipo === 'finalizado') ? 'grid' : 'none';
+          }
+        });
+      });
+    });
+  })();
+</script>

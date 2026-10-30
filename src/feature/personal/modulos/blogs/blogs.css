@@ -997,3 +997,71 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+/* ✨ Botones de Traducción IA con Gemini · 100% Tokens witema */
+.bl-btn-gemini {
+  background: var(--brand-soft);
+  border: 1px solid var(--border-accent);
+  color: var(--brand-primary);
+  font-family: var(--ff_P);
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  padding: 0.7vh 1.4vh;
+  border-radius: var(--r_m);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all var(--tr_f);
+}
+
+.bl-btn-gemini:hover {
+  background: var(--brand-primary);
+  color: var(--txa);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-card);
+}
+
+.bl-btn-gemini:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.bl-btn-translate-card {
+  width: 100%;
+  background: var(--bg-subtle);
+  border: 1px dashed var(--border-accent);
+  color: var(--brand-primary);
+  font-family: var(--ff_P);
+  font-size: var(--fz_s3);
+  font-weight: 600;
+  padding: 0.8vh 1.2vh;
+  border-radius: var(--r_m);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  transition: all var(--tr_f);
+}
+
+.bl-btn-translate-card:hover {
+  background: var(--brand-soft);
+  border-style: solid;
+}
+
+.bl-btn-translate-card:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bl-action-btn.bl-btn-translate-row {
+  color: var(--brand-primary);
+  border-color: var(--border-accent);
+}
+
+.bl-action-btn.bl-btn-translate-row:hover {
+  background: var(--brand-soft);
+}

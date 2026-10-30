@@ -9,9 +9,10 @@ import { getI18n, IDIOMAS, buildRuta, type Idioma } from '../idioma/idioma';
 interface Props {
   idioma?: Idioma;
   ruta?: string;
+  rutasIdioma?: Record<string, string>;
 }
 
-const { idioma = 'es', ruta = '/' } = Astro.props;
+const { idioma = 'es', ruta = '/', rutasIdioma } = Astro.props;
 const t = getI18n(idioma).nav;
 const esPersonal = ruta === '/personal';
 const esCliente = ruta === '/cliente';
@@ -101,9 +102,10 @@ const whatsappDirectLink = `https://wa.me/${wsNumeroHeader}?text=${wsMsgHeader}`
       <nav class="desktop-only header-nav-desktop">
         <a href={`${navPrefix}#servicios`} class="header-nav-item">{t.servicios}</a>
         <a href={`${navPrefix}#talleres`} class="header-nav-item">{t.talleres}</a>
-        <a href={`${navPrefix}#paquetes`} class="header-nav-item">{t.calculadora}</a>
-        <a href={`${navPrefix}#metodologia`} class="header-nav-item">{t.seguridad}</a>
-        <a href={`${navPrefix}#sedes`} class="header-nav-item">{t.ubicacion}</a>
+        <a href={`${navPrefix}#blog`} class="header-nav-item">{t.blog}</a>
+        <a href={`${navPrefix}#confianza`} class="header-nav-item">{t.confianza}</a>
+        <a href={`${navPrefix}#anuncios`} class="header-nav-item">{t.anuncios}</a>
+        <a href={`${navPrefix}#mapa-sede`} class="header-nav-item">{t.ubicacion}</a>
         <a href={`${navPrefix}#nosotros`} class="header-nav-item">{t.nosotros}</a>
         <a href={`${navPrefix}#faq`} class="header-nav-item">{t.faq}</a>
       </nav>
@@ -114,15 +116,18 @@ const whatsappDirectLink = `https://wa.me/${wsNumeroHeader}?text=${wsMsgHeader}`
       
       <!-- Switcher Dinámico de Idiomas (Escalable para N idiomas) -->
       <div class="header-pill-group" title="Idioma / Language">
-        {Object.entries(IDIOMAS).map(([code, info]) => (
-          <a 
-            href={buildRuta(rutaBase, code)} 
-            data-lang={code}
-            class={`header-pill-btn ${idioma === code ? 'active' : ''}`}
-          >
-            {code.toUpperCase()}
-          </a>
-        ))}
+        {Object.entries(IDIOMAS).map(([code, info]) => {
+          const hrefDestino = (rutasIdioma && rutasIdioma[code]) ? rutasIdioma[code] : buildRuta(rutaBase, code);
+          return (
+            <a 
+              href={hrefDestino} 
+              data-lang={code}
+              class={`header-pill-btn ${idioma === code ? 'active' : ''}`}
+            >
+              {code.toUpperCase()}
+            </a>
+          );
+        })}
       </div>
 
       <!-- Switcher Tema (Luz / Futuro) -->

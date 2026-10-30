@@ -29,6 +29,8 @@ import Galeria from './modulos/galeria/Galeria.astro';
 import galeriaCss from './modulos/galeria/galeria.css?inline';
 import Blogs from './modulos/blogs/Blogs.astro';
 import blogsCss from './modulos/blogs/blogs.css?inline';
+import Anuncios from './modulos/anuncios/Anuncios.astro';
+import anunciosCss from './modulos/anuncios/anuncios.css?inline';
 import Personal from './modulos/personal/Personal.astro';
 import personalModCss from './modulos/personal/personalMod.css?inline';
 import Perfil from './modulos/perfil/Perfil.astro';
@@ -61,6 +63,7 @@ const estilosModulos = [
   whatsappCss,
   galeriaCss,
   blogsCss,
+  anunciosCss,
   personalModCss,
   perfilCss,
   ajustesCss,
@@ -102,6 +105,9 @@ const estilosModulos = [
 
   <!-- MÓDULO 10: BLOGS (Redactor Markdown & Gestor de Artículos) -->
   <Blogs esActivo={moduloActivo === 'blogs'} />
+
+  <!-- MÓDULO 11: ANUNCIOS (Meta Ads Manager & Campañas Oficiales) -->
+  <Anuncios esActivo={moduloActivo === 'anuncios'} />
 
   <!-- MÓDULO 12: PERSONAL (Equipo Operativo & Gestión de Flota) -->
   <Personal esActivo={moduloActivo === 'personal'} />

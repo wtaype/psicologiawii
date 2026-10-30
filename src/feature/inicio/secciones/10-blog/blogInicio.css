@@ -1,0 +1,266 @@
+/* ==========================================================================
+   10-BLOG INICIO SECTION STYLES - CONSULTORIO PSICOLÓGICO AMÉRICA
+   Grilla 4x2 Oficial · 100% Tokens Fluidos witema.css · 0 colores fijos · Cero inline
+   ========================================================================== */
+
+#blog, .sec-blog {
+  padding: clamp(3rem, 6vh, 5.5rem) clamp(1rem, 3vw, 2.5rem);
+  background: var(--bg);
+  position: relative;
+  box-sizing: border-box;
+  font-family: var(--ff_P);
+  color: var(--tx1);
+  overflow: hidden;
+}
+
+.blog-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1.8rem, 3.5vh, 2.8rem);
+}
+
+/* 🏷️ Encabezado de la Sección */
+.blog-header {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8vh;
+}
+
+.blog-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4vh 1.2vh;
+  border-radius: var(--r_full);
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  border: 1px solid var(--border-card);
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.blog-title {
+  font-size: var(--fz_x1);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.blog-highlight {
+  color: var(--brand-primary);
+}
+
+.blog-sub {
+  font-size: var(--fz_m);
+  color: var(--tx2);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* 📐 Grilla de 4 Columnas x 2 Filas (4x2) */
+.blog-grid-layout {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: clamp(1rem, 2vh, 1.6rem);
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .blog-grid-layout {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .blog-grid-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 🃏 Tarjeta de Artículo (Estilo Limpio & Profesional) */
+.blog-card-item {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-s);
+  transition: transform var(--tr_m), box-shadow var(--tr_m), border-color var(--tr_m);
+  text-decoration: none;
+  color: inherit;
+}
+
+.blog-card-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-accent);
+  box-shadow: var(--shadow-m);
+}
+
+/* 🖼️ Portada Fotográfica */
+.blog-image-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--bg-subtle);
+  overflow: hidden;
+}
+
+.blog-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform var(--tr_s);
+}
+
+.blog-card-item:hover .blog-img {
+  transform: scale(1.04);
+}
+
+/* 📝 Contenido del Artículo */
+.blog-content-body {
+  padding: clamp(1rem, 1.8vh, 1.4rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.8vh;
+  flex-grow: 1;
+}
+
+/* 🏷️ Badge de Categoría (Pill Suave) */
+.blog-badge-cat {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.3vh 0.8vh;
+  border-radius: var(--r_s);
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  font-size: var(--fz_s2);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* 📰 Título a 2 Líneas */
+.blog-title-h3 {
+  font-size: var(--fz_m2);
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--tx1);
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.6em;
+}
+
+.blog-card-item:hover .blog-title-h3 {
+  color: var(--brand-primary);
+}
+
+.blog-card-item__link {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--tr_f);
+}
+
+/* 📄 Extracto a 2 Líneas */
+.blog-excerpt-para {
+  font-size: var(--fz_s3);
+  color: var(--tx2);
+  line-height: 1.45;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-height: 2.9em;
+}
+
+/* 📊 Barra Inferior de Métricas */
+.blog-footer-row {
+  margin-top: auto;
+  padding-top: 0.9vh;
+  border-top: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: var(--fz_s2);
+  color: var(--tx3);
+}
+
+.blog-date-col {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.blog-stats-cluster {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 600;
+}
+
+.blog-stat-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.blog-stat-item--views {
+  color: var(--tx3);
+}
+
+.blog-stat-item--likes {
+  color: var(--tx2);
+}
+
+.blog-stat-item--comments {
+  color: var(--tx3);
+}
+
+/* 🔘 Botón Inferior para Explorar Todo el Blog */
+.blog-bottom-cta {
+  display: flex;
+  justify-content: center;
+  margin-top: 1vh;
+}
+
+.btn-blog-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.9vh 1.8vh;
+  border-radius: var(--r_full);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  color: var(--tx1);
+  font-size: var(--fz_m);
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: var(--shadow-s);
+  transition: all var(--tr_f);
+}
+
+.btn-blog-all:hover {
+  background: var(--brand-primary);
+  color: var(--txa);
+  border-color: var(--brand-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-m);
+}

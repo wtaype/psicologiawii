@@ -4,6 +4,7 @@
 // Consultorio Psicológico América - Lic. Sofía Reynaga
 import { datosNegocio, consultarProductosFirestoreFresco } from '../../../../negocio.js';
 import { resolverIdioma } from '../../idioma/idioma.js';
+import { imgwii } from '@widev';
 import es from './idioma/es.json';
 import en from './idioma/en.json';
 import talleresCss from './talleres.css?inline';
@@ -95,10 +96,11 @@ const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
                 <!-- Imagen Fotográfica del Taller con Pastilla de Duración -->
                 <div class="taller-img-box">
                   <img 
-                    src={p.imagen || '/imgwii/talleres/taller-habilidades-sociales.webp'} 
+                    src={imgwii.svg}
+                    data-src={p.imagen || '/imgwii/talleres/taller-habilidades-sociales.webp'} 
                     alt={nombre} 
-                    class="taller-img" 
-                    loading="lazy" 
+                    class="taller-img wi_skeleton" 
+ 
                     decoding="async" 
                     width="360" 
                     height="190" 

@@ -1,3 +1,4 @@
+import { consultarJsonGemini } from '../../../../core/servicios/gemini.js';
 // src/feature/personal/modulos/blogs/blogs.js
 // Controlador Cliente del Módulo Blogs en Personal Backoffice
 import { Notificacion, Mensaje, wiSelect } from '@widev';
@@ -45,10 +46,12 @@ export function inicializarBlogs() {
   const inPin = document.getElementById('blCheckPin');
   const btnSubmitPost = document.getElementById('blBtnSubmitPost');
 
-  // Acciones Rápidas: Cargar Markdown y Nuevo
+  // Acciones Rápidas: Cargar Markdown, Nuevo y Traducción IA
   const btnCargarMd = document.getElementById('blBtnCargarMd');
   const btnNuevoPost = document.getElementById('blBtnNuevoPost');
   const inputFileMd = document.getElementById('blInputFileMd');
+  const btnTraducirIA = document.getElementById('blBtnTraducirIA');
+  const btnCardTraducirIA = document.getElementById('blBtnCardTraducirIA');
 
   // Instancias wiSelect
   let instSelectLang = null;
@@ -112,6 +115,103 @@ export function inicializarBlogs() {
   btnTabPublicaciones?.addEventListener('click', () => activarTab('publicaciones'));
 
   // ════════════════════════════════════════════════════════════
+
+  // ══════════════════════════════════════════════════════════════
+  // ✨ TRADUCCIÓN INTELIGENTE CON GOOGLE GEMINI AI
+  // ══════════════════════════════════════════════════════════════
+  async function traducirArticuloConIA() {
+    const titulo = inTitulo?.value.trim() || '';
+    const contenido = inContenido?.value.trim() || '';
+
+    if (!titulo || !contenido) {
+      Notificacion('Ingresa al menos un título y contenido para traducir con IA.', 'warning');
+      return;
+    }
+
+    const langActual = inLang?.value || 'es';
+    const targetLang = langActual === 'es' ? 'en' : 'es';
+    const sourceId = inId?.value || ('art-' + Date.now());
+
+    const botonesAI = [btnTraducirIA, btnCardTraducirIA].filter(Boolean);
+    botonesAI.forEach(btn => {
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Traduciendo con IA...</span>';
+    });
+
+    try {
+      const prompt = `Actúa como psicóloga clínica y especialista bilingüe (español e inglés) y redactora SEO de salud mental para Consultorio Psicológico América.
+Traduce el siguiente artículo de psicología clínica del idioma ${langActual === 'es' ? 'español al inglés' : 'inglés al español'}.
+Mantén el rigor profesional, empatía y calidez clínica.
+Genera un slug optimizado para SEO (en minúsculas con guiones medios, sin acentos ni caracteres especiales).
+
+Datos del artículo original:
+- Título: ${titulo}
+- Resumen: ${inResumen?.value.trim() || ''}
+- Palabras Clave: ${inKeywords?.value.trim() || ''}
+- Categoría: ${inCategoria?.value.trim() || ''}
+- Tags: ${tags.join(', ')}
+- Contenido Markdown:
+${contenido}
+
+Responde ÚNICAMENTE un objeto JSON válido con los campos:
+{
+  "titulo": "string",
+  "slug": "string",
+  "resumen": "string",
+  "keywords": "string",
+  "categoria": "string",
+  "tags": ["string"],
+  "contenido": "string en formato Markdown"
+}`;
+
+      const data = await consultarJsonGemini({
+        prompt,
+        systemInstruction: 'Eres una psicóloga clínica bilingüe y redactora SEO. Traduce con máxima precisión técnica y calidez empática.'
+      });
+
+      if (!data || !data.titulo) {
+        throw new Error('Gemini no devolvió una estructura válida de traducción.');
+      }
+
+      // Asignar los campos traducidos al editor para que el especialista los valide
+      if (inId) inId.value = ''; // Se creará un nuevo artículo al publicar
+      if (inTitulo) inTitulo.value = data.titulo;
+      if (inSlug) inSlug.value = data.slug;
+      if (inResumen) inResumen.value = data.resumen || '';
+      if (inKeywords) inKeywords.value = data.keywords || '';
+      if (inCategoria) inCategoria.value = data.categoria || '';
+      if (inContenido) inContenido.value = data.contenido || '';
+      if (Array.isArray(data.tags) && data.tags.length) {
+        tags = data.tags;
+        renderTags();
+      }
+
+      // Cambiar selector de idioma al idioma destino
+      if (instSelectLang) instSelectLang.setValue(targetLang);
+      else if (inLang) inLang.value = targetLang;
+
+      // Actualizar opciones del selector de hermano y preseleccionar el ID origen
+      actualizarSelectorLangId(targetLang, sourceId);
+
+      actualizarContadores();
+      actualizarPrevisualizacionImagenes();
+      switchSubtab('write');
+
+      Notificacion('✨ Artículo traducido con éxito. Revisa el contenido y haz clic en Publicar para guardarlo.', 'success');
+    } catch (err) {
+      console.error('[blogs.js] Error al traducir con Gemini:', err);
+      Notificacion('Error al traducir: ' + (err.message || 'Consulta fallida'), 'error');
+    } finally {
+      botonesAI.forEach(btn => {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Traducir con IA</span>';
+      });
+      if (btnCardTraducirIA) {
+        btnCardTraducirIA.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>✨ Traducir y Vincular con IA</span>';
+      }
+    }
+  }
+
   // 2. LOGICA DEL REDACTOR DE CONTENIDO (ESTILO NUEVO.ASTRO)
   // ════════════════════════════════════════════════════════════
   function actualizarContadores() {
@@ -547,7 +647,7 @@ export function inicializarBlogs() {
     }
 
     tableBody.innerHTML = filtrados.map(b => {
-      const publicUrl = b.lang === 'en' ? `/en/${b.slug}` : `/${b.slug}`;
+      const publicUrl = b.lang === 'en' ? `/en/blog/${b.slug}` : `/blog/${b.slug}`;
       const langBadgeClass = b.lang === 'en' ? 'bl-badge-lang-en' : 'bl-badge-lang-es';
       const langLabel = b.lang === 'en' ? 'English (EN)' : 'Español (ES)';
 
@@ -605,6 +705,9 @@ export function inicializarBlogs() {
               <button type="button" class="bl-action-btn bl-btn-edit" data-edit-id="${b.id}" title="Editar artículo">
                 <i class="fa-solid fa-pen-to-square"></i> Editar
               </button>
+              <button type="button" class="bl-action-btn bl-btn-translate-row" data-translate-id="${b.id}" title="Traducir con IA a ${b.lang === 'es' ? 'Inglés' : 'Español'}">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+              </button>
               <a href="${publicUrl}" target="_blank" rel="noopener noreferrer" class="bl-action-btn" title="Ver en la web pública">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i>
               </a>
@@ -625,6 +728,16 @@ export function inicializarBlogs() {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-edit-id');
         if (id) cargarParaEditar(id);
+      });
+    });
+
+    tableBody.querySelectorAll('.bl-btn-translate-row').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const id = btn.getAttribute('data-translate-id');
+        if (id) {
+          cargarParaEditar(id);
+          await traducirArticuloConIA();
+        }
       });
     });
 

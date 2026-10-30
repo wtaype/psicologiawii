@@ -1,0 +1,16 @@
+---
+// src/pages/anuncios.astro
+// Página Pública: Catálogo de Anuncios Oficiales y Convocatorias (Español)
+import Principal from '../core/layouts/Principal.astro';
+import CatalogoAnuncios from '../feature/anuncios/secciones/CatalogoAnuncios.astro';
+import { buildRuta } from '../core/idioma/idioma';
+import { datosNegocio } from '../negocio.js';
+
+const idioma = 'es';
+const ruta = buildRuta('/anuncios', idioma);
+const title = `Nuestros Últimos Anuncios Oficiales · ${datosNegocio.nombre}`;
+---
+
+<Principal idioma={idioma} ruta={ruta} title={title}>
+  <CatalogoAnuncios idioma={idioma} />
+</Principal>

@@ -4,6 +4,7 @@
 // Consultorio Psicológico América - Lic. Sofía Reynaga
 import { datosNegocio, consultarProductosFirestoreFresco } from '../../../../negocio.js';
 import { resolverIdioma } from '../../idioma/idioma.js';
+import { imgwii } from '@widev';
 import es from './idioma/es.json';
 import en from './idioma/en.json';
 import serviciosCss from './servicios.css?inline';
@@ -97,10 +98,11 @@ const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
                 <!-- Imagen Fotográfica con Pastilla de Duración -->
                 <div class="producto-media-frame card-img-box">
                   <img 
-                    src={p.imagen || '/imgwii/psicologa-sofia-reynaga.webp'} 
+                    src={imgwii.svg}
+                    data-src={p.imagen || '/imgwii/psicologa-sofia-reynaga.webp'} 
                     alt={nombre} 
-                    class="producto-img-tag card-img" 
-                    loading="lazy" 
+                    class="producto-img-tag card-img wi_skeleton" 
+ 
                     decoding="async" 
                     width="360" 
                     height="190" 

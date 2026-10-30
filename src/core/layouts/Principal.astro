@@ -20,11 +20,39 @@ const globalCss = googleCss + '\n' + awesomeCss + '\n' + witemaCss + '\n' + appC
 interface Props {
   idioma?: Idioma;
   ruta?: string;
+  rutasIdioma?: Record<string, string>;
+  title?: string;
+  description?: string;
+  keywords?: string;
+  image?: string;
+  type?: string;
 }
 
-const { idioma = 'es', ruta = '/' } = Astro.props;
+const { 
+  idioma = 'es', 
+  ruta = '/', 
+  rutasIdioma,
+  title: customTitle,
+  description: customDesc,
+  keywords: customKeywords,
+  image: customImage,
+  type: customType
+} = Astro.props;
+
 const meta = getMeta(ruta, idioma);
 const jsonLd = getJsonLd(ruta, idioma);
+
+const finalTitle = customTitle || meta.title;
+const finalDesc = customDesc || meta.description;
+const finalKeywords = customKeywords || meta.keywords;
+const finalImage = customImage || meta.ogImage;
+const finalType = customType || meta.ogType;
+
+const siteOrigin = 'https://consultorioamerica.com/';
+const hreflangEs = rutasIdioma?.es ? `${siteOrigin}${rutasIdioma.es}` : meta.hreflang.es;
+const hreflangEn = rutasIdioma?.en ? `${siteOrigin}${rutasIdioma.en}` : meta.hreflang.en;
+const hreflangDefault = rutasIdioma?.es ? `${siteOrigin}${rutasIdioma.es}` : meta.hreflang.default;
+const canonicalUrl = `${siteOrigin}${ruta}`;
 ---
 
 <!DOCTYPE html>
@@ -33,10 +61,10 @@ const jsonLd = getJsonLd(ruta, idioma);
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
   <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-  <title>{meta.title}</title>
-  <meta name="description" content={meta.description} />
-  <meta name="keywords" content={meta.keywords} />
-  <link rel="canonical" href={meta.canonical} />
+  <title>{finalTitle}</title>
+  <meta name="description" content={finalDesc} />
+  <meta name="keywords" content={finalKeywords} />
+  <link rel="canonical" href={canonicalUrl} />
 
   <!-- Directivas para Rastreadores de Google y Miniaturas SERP -->
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
@@ -44,29 +72,29 @@ const jsonLd = getJsonLd(ruta, idioma);
   <meta name="thumbnail" content={meta.ogImage} />
 
   <!-- Hreflang cruzado para SEO Internacional y Local -->
-  <link rel="alternate" hreflang="es" href={meta.hreflang.es} />
-  <link rel="alternate" hreflang="en" href={meta.hreflang.en} />
-  <link rel="alternate" hreflang="x-default" href={meta.hreflang.default} />
+  <link rel="alternate" hreflang="es" href={hreflangEs} />
+  <link rel="alternate" hreflang="en" href={hreflangEn} />
+  <link rel="alternate" hreflang="x-default" href={hreflangDefault} />
 
   <!-- OpenGraph y Twitter Cards Enriquecidos con Dimensiones y Alt -->
-  <meta property="og:type" content={meta.ogType} />
+  <meta property="og:type" content={finalType} />
   <meta property="og:site_name" content={meta.siteName} />
-  <meta property="og:title" content={meta.ogTitle} />
-  <meta property="og:description" content={meta.ogDescription} />
-  <meta property="og:image" content={meta.ogImage} />
-  <meta property="og:image:secure_url" content={meta.ogImage} />
+  <meta property="og:title" content={finalTitle} />
+  <meta property="og:description" content={finalDesc} />
+  <meta property="og:image" content={finalImage} />
+  <meta property="og:image:secure_url" content={finalImage} />
   <meta property="og:image:type" content={meta.ogImageType} />
   <meta property="og:image:width" content={String(meta.ogImageWidth)} />
   <meta property="og:image:height" content={String(meta.ogImageHeight)} />
   <meta property="og:image:alt" content={meta.ogImageAlt} />
-  <meta property="og:url" content={meta.canonical} />
+  <meta property="og:url" content={canonicalUrl} />
   <meta property="og:locale" content={meta.locale} />
   <meta property="og:locale:alternate" content={meta.localeAlternate} />
   
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content={meta.ogTitle} />
-  <meta name="twitter:description" content={meta.ogDescription} />
-  <meta name="twitter:image" content={meta.ogImage} />
+  <meta name="twitter:title" content={finalTitle} />
+  <meta name="twitter:description" content={finalDesc} />
+  <meta name="twitter:image" content={finalImage} />
   <meta name="twitter:image:alt" content={meta.ogImageAlt} />
 
   <!-- Schema.org JSON-LD para Google Rich Snippets -->
@@ -92,10 +120,10 @@ const jsonLd = getJsonLd(ruta, idioma);
   <Topbar idioma={idioma} />
 
   <!-- 2. Header Sticky Bilingüe con Botones de Acción -->
-  <Header idioma={idioma} ruta={ruta} />
+  <Header idioma={idioma} ruta={ruta} rutasIdioma={rutasIdioma} />
 
   <!-- 3. Drawer Móvil con Navegación y Llamada Rápida -->
-  <MobileDrawer idioma={idioma} ruta={ruta} />
+  <MobileDrawer idioma={idioma} ruta={ruta} rutasIdioma={rutasIdioma} />
 
   <!-- 4. Contenido Principal de la Página (Estándar Workwii #wimain) -->
   <main id="wimain">

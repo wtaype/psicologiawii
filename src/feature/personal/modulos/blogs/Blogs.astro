@@ -30,6 +30,9 @@ const { esActivo = true } = Astro.props;
       </div>
 
       <div class="bl-tabs-actions" id="blTabsActions">
+        <button type="button" class="bl-btn-gemini" id="blBtnTraducirIA" title="Traducir automáticamente al idioma contrario y vincular con langId">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Traducir con IA</span>
+        </button>
         <button type="submit" form="blFormEditor" class="bl-btn-submit" id="blBtnSubmitPost">
           <i class="fa-solid fa-paper-plane"></i> Publicar
         </button>
@@ -203,6 +206,12 @@ const { esActivo = true } = Astro.props;
                 <select id="blSelectLangId" class="bl-select">
                   <option value="">-- Ninguno (Post Base Original) --</option>
                 </select>
+              </div>
+
+              <div style="margin-top: 10px;">
+                <button type="button" class="bl-btn-translate-card" id="blBtnCardTraducirIA" title="Generar versión traducida de este artículo con Gemini">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> <span>✨ Traducir y Vincular con IA</span>
+                </button>
               </div>
             </div>
 

@@ -1,0 +1,593 @@
+/* ============================================================ */
+/* 📢 MÓDULO BACKOFFICE ANUNCIOS & CAMPAÑAS (PERSONAL)          */
+/* 100% Tokens de witema.css · Cero colores fijos · Cero inline */
+/* ============================================================ */
+
+.anuncios-admin-shell {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(1rem, 2vh, 1.8rem);
+  font-family: var(--ff_P);
+  color: var(--tx1);
+}
+
+/* 🏷️ Cabecera y Barra de Métricas */
+.anuncios-admin-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.2vh 1.8vh;
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l);
+  box-shadow: var(--shadow-s);
+}
+
+.anuncios-admin-title-group {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.anuncios-admin-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--r_m);
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fz_m4);
+}
+
+.anuncios-admin-heading {
+  font-size: var(--fz_m4);
+  font-weight: 800;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.anuncios-admin-sub {
+  font-size: var(--fz_s3);
+  color: var(--tx2);
+  margin: 0;
+}
+
+.anuncios-admin-btn-create {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8vh 1.6vh;
+  border-radius: var(--r_full);
+  background: var(--tx1);
+  color: var(--bg);
+  border: none;
+  font-size: var(--fz_m);
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform var(--tr_f), opacity var(--tr_f);
+}
+
+.anuncios-admin-btn-create:hover {
+  transform: translateY(-2px);
+  opacity: 0.92;
+}
+
+/* 📊 Tarjetas de Métricas Rápidas */
+.anuncios-kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(0.8rem, 1.5vh, 1.4rem);
+}
+
+@media (max-width: 768px) {
+  .anuncios-kpi-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.anuncios-kpi-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_m);
+  padding: 1.2vh 1.6vh;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: var(--shadow-s);
+}
+
+.anuncios-kpi-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r_s);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fz_m2);
+}
+
+.anuncios-kpi-icon--active {
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+}
+
+.anuncios-kpi-icon--convs {
+  background: var(--bg-subtle);
+  color: var(--success);
+}
+
+.anuncios-kpi-icon--cost {
+  background: var(--bg-subtle);
+  color: var(--warning);
+}
+
+.anuncios-kpi-label {
+  font-size: var(--fz_s2);
+  color: var(--tx3);
+  font-weight: 600;
+  margin: 0;
+}
+
+.anuncios-kpi-val {
+  font-size: var(--fz_m4);
+  font-weight: 800;
+  color: var(--tx1);
+  margin: 0;
+}
+
+/* 📋 Tabla / Lista de Campañas */
+.anuncios-table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l);
+  overflow: hidden;
+  box-shadow: var(--shadow-s);
+}
+
+.anuncios-table-header {
+  padding: 1.2vh 1.8vh;
+  border-bottom: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.anuncios-table-title {
+  font-size: var(--fz_m2);
+  font-weight: 800;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.anuncios-admin-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.anuncios-admin-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: 1.2vh;
+  padding: 1.2vh 1.8vh;
+  border-bottom: 1px solid var(--border-card);
+  transition: background var(--tr_f);
+}
+
+.anuncios-admin-item:last-child {
+  border-bottom: none;
+}
+
+.anuncios-admin-item:hover {
+  background: var(--bg-card-hover);
+}
+
+.anuncios-admin-thumb-wrap {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  border-radius: var(--r_s);
+  overflow: hidden;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+}
+
+.anuncios-admin-thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.anuncios-admin-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2vh;
+  min-width: 0;
+}
+
+.anuncios-admin-title {
+  font-size: var(--fz_m);
+  font-weight: 700;
+  color: var(--tx1);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0;
+}
+
+.anuncios-admin-meta {
+  font-size: var(--fz_s2);
+  color: var(--tx3);
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.anuncios-admin-stats-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  color: var(--tx1);
+  padding: 0.3vh 0.8vh;
+  border-radius: var(--r_full);
+  background: var(--bg-subtle);
+}
+
+.anuncios-admin-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.anuncios-admin-btn-action {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--r_s);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  color: var(--tx2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--tr_f);
+}
+
+.anuncios-admin-btn-action:hover {
+  background: var(--brand-primary);
+  color: var(--txa);
+  border-color: var(--brand-primary);
+}
+
+.anuncios-admin-btn-action--del:hover {
+  background: var(--error);
+  color: var(--txa);
+  border-color: var(--error);
+}
+
+/* 🪟 Modal Split Bilingüe de Crear / Editar */
+.anuncios-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.anuncios-modal-overlay.is-open {
+  display: flex;
+}
+
+.anuncios-modal-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_l);
+  width: 100%;
+  max-width: 880px;
+  box-shadow: var(--shadow-l);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.anuncios-modal-header {
+  padding: 1.4vh 1.8vh;
+  border-bottom: 1px solid var(--border-card);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.anuncios-modal-title {
+  font-size: var(--fz_m3);
+  font-weight: 800;
+  color: var(--tx1);
+  margin: 0;
+}
+
+.anuncios-modal-btn-close {
+  background: transparent;
+  border: none;
+  color: var(--tx3);
+  font-size: var(--fz_m2);
+  cursor: pointer;
+  padding: 0.3vh;
+}
+
+.anuncios-modal-body {
+  padding: 1.6vh 1.8vh;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  max-height: 75vh;
+}
+
+/* 📐 Grilla Split 2 Columnas */
+.ad-modal-split {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: clamp(1rem, 2vh, 1.8rem);
+  align-items: start;
+}
+
+@media (max-width: 768px) {
+  .ad-modal-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Columna Izquierda: Media & Parámetros */
+.ad-col-media {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2vh;
+}
+
+.ad-preview-box {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--r_m);
+  overflow: hidden;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  box-shadow: var(--shadow-s);
+}
+
+.ad-preview-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ad-preview-badge {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  padding: 0.3vh 0.8vh;
+  border-radius: var(--r_full);
+  background: var(--brand-primary);
+  color: var(--txa);
+  font-size: var(--fz_s2);
+  font-weight: 700;
+  box-shadow: var(--shadow-s);
+}
+
+/* Selector Táctil de Fotos WebP */
+.ad-picker-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+}
+
+.ad-gallery-picker {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+}
+
+.ad-gallery-thumb-btn {
+  aspect-ratio: 1;
+  border-radius: var(--r_s);
+  border: 2px solid var(--border-card);
+  background: var(--bg-subtle);
+  cursor: pointer;
+  padding: 0;
+  overflow: hidden;
+  transition: transform var(--tr_f), border-color var(--tr_f);
+}
+
+.ad-gallery-thumb-btn:hover {
+  transform: scale(1.05);
+  border-color: var(--brand-primary);
+}
+
+.ad-gallery-thumb-btn.is-selected {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 2px var(--brand-soft);
+}
+
+.ad-gallery-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ad-grid-params {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+}
+
+/* Columna Derecha: Pestañas Bilingües + Botón Gemini */
+.ad-col-bilingue {
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  border-left: 1px solid var(--border-card);
+  padding-left: clamp(0.8rem, 1.8vh, 1.5rem);
+}
+
+@media (max-width: 768px) {
+  .ad-col-bilingue {
+    border-left: none;
+    padding-left: 0;
+    border-top: 1px solid var(--border-card);
+    padding-top: 1.5vh;
+  }
+}
+
+.ad-tabs-nav-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  padding-bottom: 0.8vh;
+  border-bottom: 1px solid var(--border-card);
+}
+
+.ad-tabs-pills {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.ad-tab-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5vh 1.1vh;
+  border-radius: var(--r_s);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  color: var(--tx2);
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--tr_f);
+}
+
+.ad-tab-pill:hover {
+  background: var(--bg-card-hover);
+  color: var(--tx1);
+}
+
+.ad-tab-pill.is-active {
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+/* 🤖 Botón de Traducción con Gemini AI */
+.ad-btn-gemini {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6vh 1.2vh;
+  border-radius: var(--r_full);
+  background: var(--brand-primary);
+  color: var(--txa);
+  border: none;
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-s);
+  transition: transform var(--tr_f), opacity var(--tr_f);
+}
+
+.ad-btn-gemini:hover {
+  transform: translateY(-1px);
+  opacity: 0.94;
+}
+
+.ad-btn-gemini:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Paneles de Idioma */
+.ad-pane {
+  display: none;
+  flex-direction: column;
+  gap: 0.9vh;
+}
+
+.ad-pane.is-active {
+  display: flex;
+}
+
+.anuncios-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3vh;
+}
+
+.anuncios-form-label {
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  color: var(--tx2);
+}
+
+.anuncios-form-input,
+.anuncios-form-select,
+.anuncios-form-textarea {
+  width: 100%;
+  padding: 0.8vh 1vh;
+  border-radius: var(--r_s);
+  border: 1px solid var(--border-card);
+  background: var(--bg);
+  color: var(--tx1);
+  font-family: inherit;
+  font-size: var(--fz_m);
+  outline: none;
+  transition: border-color var(--tr_f);
+}
+
+.anuncios-form-input:focus,
+.anuncios-form-textarea:focus {
+  border-color: var(--brand-primary);
+}
+
+.anuncios-modal-footer {
+  padding: 1.2vh 1.8vh;
+  border-top: 1px solid var(--border-card);
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.8rem;
+}
+
+.anuncios-btn-cancel {
+  padding: 0.7vh 1.4vh;
+  border-radius: var(--r_s);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  color: var(--tx2);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.anuncios-btn-save {
+  padding: 0.7vh 1.6vh;
+  border-radius: var(--r_s);
+  background: var(--brand-primary);
+  border: none;
+  color: var(--txa);
+  font-weight: 700;
+  cursor: pointer;
+}

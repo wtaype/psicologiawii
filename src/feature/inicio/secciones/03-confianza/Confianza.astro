@@ -1,0 +1,182 @@
+---
+// src/feature/inicio/secciones/03-confianza/Confianza.astro
+// 3. SECCIÓN ¿POR QUÉ CONFIAR EN LA LIC. SOFÍA REYNAGA?
+// Respaldo profesional, galería clínica con carga diferida imgwii y 5 pilares de ética
+import { datosNegocio } from '../../../../negocio.js';
+import { resolverIdioma } from '../../idioma/idioma.js';
+import { imgwii } from '@widev';
+import es from './idioma/es.json';
+import en from './idioma/en.json';
+import confianzaCss from './confianza.css?inline';
+
+interface Props {
+  idioma?: string;
+}
+
+const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
+const t = resolverIdioma({ es, en }, idioma);
+
+const nombreEspecialista = datosNegocio.especialista || 'Lic. Sofía Reynaga';
+
+const fotoPrincipal = '/imgwii/eventos/04-retrato-universidad-4x3.webp';
+const miniaturas = [
+  { src: '/imgwii/eventos/04-retrato-universidad-4x3.webp', alt: t.foto_thumb_4_alt, title: t.foto_thumb_4_title },
+  { src: '/imgwii/eventos/01-retrato-congreso-4x3.webp', alt: t.foto_thumb_1_alt, title: t.foto_thumb_1_title },
+  { src: '/imgwii/eventos/03-auditorio-4x3.webp', alt: t.foto_thumb_3_alt, title: t.foto_thumb_3_title },
+  { src: '/imgwii/eventos/02-selfie-4x3.webp', alt: t.foto_thumb_2_alt, title: t.foto_thumb_2_title }
+];
+
+const diferenciadores = [
+  {
+    icono: 'fa-solid fa-graduation-cap',
+    titulo: t.dif_1_titulo,
+    desc: t.dif_1_desc
+  },
+  {
+    icono: 'fa-solid fa-user-shield',
+    titulo: t.dif_2_titulo,
+    desc: t.dif_2_desc
+  },
+  {
+    icono: 'fa-solid fa-brain',
+    titulo: t.dif_3_titulo,
+    desc: t.dif_3_desc
+  },
+  {
+    icono: 'fa-solid fa-hand-holding-heart',
+    titulo: t.dif_4_titulo,
+    desc: t.dif_4_desc
+  },
+  {
+    icono: 'fa-solid fa-hospital-user',
+    titulo: t.dif_5_titulo,
+    desc: t.dif_5_desc
+  }
+];
+---
+
+<style is:global set:html={confianzaCss}></style>
+
+<section id="confianza" class="sec-confianza">
+  <div class="pagewii confianza-container">
+    
+    <!-- Encabezado de Autoridad y Respaldo -->
+    <header class="confianza-header">
+      <div class="confianza-badge">
+        <i class="fa-solid fa-shield-halved"></i> <span>{t.badge}</span>
+      </div>
+      <h2 class="confianza-title">
+        {t.titulo_1} <span class="confianza-highlight">{t.titulo_resaltado}</span>
+      </h2>
+      <p class="confianza-sub">
+        {t.subtitulo}
+      </p>
+    </header>
+
+    <!-- Layout Dividido: Galería Interactiva + Diferenciadores -->
+    <div class="confianza-layout-grid">
+      
+      <!-- Columna Izquierda: Galería Fotográfica Clínica -->
+      <div class="confianza-gallery-cluster" id="confianzaGaleria">
+        
+        <!-- Marco Principal de la Foto -->
+        <div class="confianza-main-frame">
+          <img 
+            id="confianzaImgPrincipal"
+            src={imgwii.svg} 
+            data-src={fotoPrincipal} 
+            alt={t.foto_principal_alt} 
+            width="580" 
+            height="410" 
+            decoding="async" 
+            class="confianza-main-img wi_skeleton"
+          />
+          <div class="confianza-main-overlay">
+            <span class="confianza-overlay-title">
+              <i class="fa-solid fa-certificate"></i> <span>{nombreEspecialista}</span>
+            </span>
+            <span class="confianza-overlay-badge">
+              <i class="fa-solid fa-circle-check"></i> Colegiada C.Ps.P. 49425
+            </span>
+          </div>
+        </div>
+
+        <!-- Fila de Miniaturas Interactivas -->
+        <div class="confianza-thumbs-row">
+          {miniaturas.map((thumb, index) => (
+            <button 
+              type="button" 
+              class={`confianza-thumb-item ${index === 0 ? 'active' : ''}`}
+              data-src-full={thumb.src}
+              data-alt={thumb.alt}
+              title={thumb.title}
+            >
+              <img 
+                src={imgwii.svg} 
+                data-src={thumb.src} 
+                alt={thumb.alt} 
+                width="180" 
+                height="85" 
+                decoding="async" 
+                class="confianza-thumb-img wi_skeleton"
+              />
+            </button>
+          ))}
+        </div>
+
+      </div>
+
+      <!-- Columna Derecha: 5 Diferenciadores Oficiales -->
+      <div class="confianza-diferenciadores-list">
+        {diferenciadores.map((dif) => (
+          <div class="confianza-dif-row">
+            <div class="confianza-dif-icon">
+              <i class={dif.icono}></i>
+            </div>
+            <div class="confianza-dif-content">
+              <h3 class="confianza-dif-title">{dif.titulo}</h3>
+              <p class="confianza-dif-desc">{dif.desc}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<script is:inline>
+  function setupConfianzaGaleria() {
+    const contenedor = document.getElementById('confianzaGaleria');
+    if (!contenedor) return;
+
+    const imgPrincipal = document.getElementById('confianzaImgPrincipal');
+    const thumbs = contenedor.querySelectorAll('.confianza-thumb-item');
+
+    thumbs.forEach(thumb => {
+      thumb.addEventListener('click', () => {
+        const targetSrc = thumb.getAttribute('data-src-full');
+        const targetAlt = thumb.getAttribute('data-alt');
+        if (!targetSrc || !imgPrincipal) return;
+
+        thumbs.forEach(t => t.classList.remove('active'));
+        thumb.classList.add('active');
+
+        imgPrincipal.classList.add('is-switching');
+        setTimeout(() => {
+          imgPrincipal.src = targetSrc;
+          if (targetAlt) imgPrincipal.alt = targetAlt;
+          imgPrincipal.classList.remove('is-switching');
+        }, 120);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupConfianzaGaleria);
+  } else {
+    setupConfianzaGaleria();
+  }
+  document.addEventListener('astro:page-load', setupConfianzaGaleria);
+</script>

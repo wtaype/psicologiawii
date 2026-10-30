@@ -13,15 +13,16 @@ export const configurarSistema = {
 
   // 🧭 Menú de Navegación Dinámico y Desacoplado
   navegacion: [
-    { id: 'hero',        label: { es: 'Inicio',       en: 'Home' },         href: '#hero',        icono: 'fa-house',            color: 'color-brand-blue' },
-    { id: 'servicios',   label: { es: 'Especialidades', en: 'Specialties' }, href: '#servicios',   icono: 'fa-brain',            color: 'color-primary' },
-    { id: 'talleres',    label: { es: 'Talleres',     en: 'Workshops' },    href: '#talleres',    icono: 'fa-people-group',     color: 'color-emerald' },
-    { id: 'paquetes',    label: { es: 'Cotizador',    en: 'Calculator' },   href: '#paquetes',    icono: 'fa-calculator',       color: 'color-gold' },
-    { id: 'consultorio', label: { es: 'Consultorio',  en: 'Clinic' },       href: '#consultorio', icono: 'fa-building',         color: 'color-primary' },
-    { id: 'mapa-sede',   label: { es: 'Ubicación',    en: 'Location' },     href: '#mapa-sede',   icono: 'fa-location-dot',     color: 'color-brand-blue' },
-    { id: 'nosotros',    label: { es: 'Especialista', en: 'Specialist' },   href: '#nosotros',    icono: 'fa-user-doctor',      color: 'color-emerald' },
-    { id: 'faq',         label: { es: 'Preguntas',    en: 'FAQ' },          href: '#faq',         icono: 'fa-circle-question',  color: 'color-gold' },
-    { id: 'redes',       label: { es: 'Enlaces',      en: 'Bio-Link' },     href: '/redes',       icono: 'fa-link',             color: 'color-brand-blue' }
+    { id: 'hero',        label: { es: 'Inicio',         en: 'Home' },           href: '#hero',        icono: 'fa-house',            color: 'color-brand-blue' },
+    { id: 'servicios',   label: { es: 'Especialidades', en: 'Specialties' },   href: '#servicios',   icono: 'fa-brain',            color: 'color-primary' },
+    { id: 'talleres',    label: { es: 'Talleres',       en: 'Workshops' },      href: '#talleres',    icono: 'fa-people-group',     color: 'color-emerald' },
+    { id: 'blog',        label: { es: 'Blog Clínico',   en: 'Clinical Blog' },  href: '#blog',        icono: 'fa-newspaper',        color: 'color-primary' },
+    { id: 'confianza',   label: { es: 'Confianza',      en: 'Why Trust Us' },   href: '#confianza',   icono: 'fa-shield-halved',    color: 'color-gold' },
+    { id: 'anuncios',    label: { es: 'Anuncios',       en: 'Announcements' },  href: '#anuncios',    icono: 'fa-bullhorn',         color: 'color-brand-blue' },
+    { id: 'mapa-sede',   label: { es: 'Ubicación',      en: 'Location' },       href: '#mapa-sede',   icono: 'fa-location-dot',     color: 'color-brand-blue' },
+    { id: 'nosotros',    label: { es: 'Especialista',   en: 'Specialist' },     href: '#nosotros',    icono: 'fa-user-doctor',      color: 'color-emerald' },
+    { id: 'faq',         label: { es: 'Preguntas',      en: 'FAQ' },            href: '#faq',         icono: 'fa-circle-question',  color: 'color-gold' },
+    { id: 'redes',       label: { es: 'Enlaces',        en: 'Bio-Link' },       href: '/redes',       icono: 'fa-link',             color: 'color-brand-blue' }
   ],
 
   // 🚀 Control de Versión, Dominio y Despliegues (MMNNPP: 02.00.00 -> 200000)
@@ -73,7 +74,8 @@ export const configurarSistema = {
     correos: 'correos',
     entradas: 'entradas',
     galeria: 'galeria',
-    notepad: 'notepad'
+    notepad: 'notepad',
+    anuncios: 'anuncios'
   },
 
   // 🗺️ Rutas Maestras del Sistema
@@ -139,6 +141,7 @@ export const configurarPersonal = {
     { id: 'correo',    nombre: 'Correo',      icono: 'envelope',            activo: true },
     { id: 'galeria',   nombre: 'Galería',     icono: 'images',              activo: true },
     { id: 'blogs',     nombre: 'Blogs',       icono: 'newspaper',           activo: true },
+    { id: 'anuncios',  nombre: 'Anuncios',    icono: 'bullhorn',            activo: true, badge: 'Meta' },
     { id: 'personal',  nombre: 'Equipo',      icono: 'users',               activo: true },
     { id: 'perfil',    nombre: 'Mi perfil',   icono: 'user-gear',           activo: true },
     { id: 'ajustes',   nombre: 'Ajustes',     icono: 'gear',                activo: true },
