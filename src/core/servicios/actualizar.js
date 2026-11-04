@@ -659,12 +659,9 @@ export async function actualizarCentral({
   try {
     savels(storageKey, aGuardar);
 
-    // Guardar en claves alias de retrocompatibilidad
     if (modulo === 'negocio') {
       try { savels('minegocio', aGuardar); } catch (e) {}
-      try { savels('gaswii_negocio', aGuardar); } catch (e) {}
-    } else if (modulo === 'productos') {
-      try { savels('gaswii_productos', aGuardar); } catch (e) {}
+    } else if (modulo === 'productos' || modulo === 'servicios') {
       try { savels('wi_servicios', aGuardar); } catch (e) {}
     }
 
@@ -674,10 +671,7 @@ export async function actualizarCentral({
 
       // Eventos específicos por módulo
       if (modulo === 'negocio') {
-        window.dispatchEvent(new CustomEvent('gaswii:negocio-actualizado', { detail: aGuardar }));
         hidratarNegocioEnDOM(datos);
-      } else if (modulo === 'productos') {
-        window.dispatchEvent(new CustomEvent('gaswii:productos-actualizado', { detail: aGuardar }));
       } else if (modulo === 'blogs') {
         window.dispatchEvent(new CustomEvent('wi:blogs-actualizado', { detail: aGuardar }));
       } else if (modulo === 'anuncios') {

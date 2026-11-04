@@ -144,13 +144,17 @@ export function normalizarBlog(p = {}) {
   const autorDinamico = p.autor || datosNegocio.especialista || datosNegocio.nombre || 'Autor';
   const categoriaDinamica = p.categoria || 'General';
 
+  // Estado canónico (Borrador vs Publicado)
+  const esBorrador = p.activo === false || p.estado === 'borrador';
+
   return {
     id: String(idFinal),
     postId: String(idFinal),
     slug: slugify(p.slug || p.titulo || 'articulo'),
     lang: p.lang || 'es',
     langId: clusterUid,
-    activo: p.activo !== false,
+    estado: esBorrador ? 'borrador' : (p.estado || 'publicado'),
+    activo: !esBorrador,
     pin: Boolean(p.pin),
     userId: p.userId || '',
     autor: autorDinamico,
@@ -178,7 +182,7 @@ export function normalizarBlog(p = {}) {
 function calcularSeedFingerprint() {
   try {
     const keys = Object.keys(blogsSemilla || {}).sort();
-    return keys.map(k => `${k}:${blogsSemilla[k]?.actualizado || blogsSemilla[k]?.creado || ''}`).join('|');
+    return keys.map(k => `${k}:${blogsSemilla[k]?.actualizado || blogsSemilla[k]?.creado || ''}:${blogsSemilla[k]?.activo}:${blogsSemilla[k]?.estado || ''}`).join('|');
   } catch(e) {
     return 'seed_v1';
   }
@@ -355,6 +359,7 @@ export function toggleActivoBlog(id) {
   const post = blogs.find(b => b.id === id);
   if (!post) return null;
   post.activo = !post.activo;
+  post.estado = post.activo ? 'publicado' : 'borrador';
   return guardarBlog(post);
 }
 

@@ -1,6 +1,6 @@
 // src/feature/personal/modulos/galeria/dataGaleria.js
 // Gestor Canónico de Medios y Fotos para el Módulo Galería
-// Sincronización Ultra Eficiente: Cloudflare R2 + Firestore 1 Read (galeria/principal) con serverTimestamp()
+// Sincronización Ultra Eficiente: Cloudflare R2 + Firestore 1 Read (galeria/principal en Map de fotos) con serverTimestamp()
 // Modelo Enriquecido: creado, actualizado, fechaSubida (YYYY-MM-DD), pin, estado, userId
 // 100% JS Nativo · Integrado con @widev
 
@@ -19,6 +19,45 @@ export const CACHE_TTL_MS = 10 * 60 * 1000; // 10 minutos de frescura en caché 
 const IMAGENES_SEMILLA = Array.isArray(semillasGaleria) ? semillasGaleria : [];
 
 let _sincronizando = false;
+
+/**
+ * Serializa la lista plana a un Map (objeto clave-valor por id) para Firestore
+ * Cumple con la arquitectura 1 solo doc y mapitas para máximo ahorro de reads/writes
+ */
+export function serializarGaleriaAMap(lista = []) {
+  const map = {};
+  lista.forEach(img => {
+    if (!img || !img.id) return;
+    map[img.id] = {
+      id: img.id,
+      url: img.url || '',
+      titulo: img.titulo || '',
+      alt: img.alt || '',
+      categoria: img.categoria || 'otros',
+      pesoKb: typeof img.pesoKb === 'number' ? img.pesoKb : 38,
+      dimensiones: img.dimensiones || 'Optimizado WebP',
+      pin: Boolean(img.pin),
+      estado: img.estado || 'activo',
+      fechaSubida: img.fechaSubida || '',
+      creado: img.creado || '',
+      actualizado: img.actualizado || ''
+    };
+  });
+  return map;
+}
+
+/**
+ * Deserializa datos de Firestore soportando tanto el formato canónico Map (imagenes) como array legacy (items)
+ */
+export function deserializarGaleriaDeFirestore(data = {}) {
+  if (data.imagenes && typeof data.imagenes === 'object' && !Array.isArray(data.imagenes)) {
+    return Object.values(data.imagenes).map(normalizarImagen);
+  }
+  if (Array.isArray(data.items)) {
+    return data.items.map(normalizarImagen);
+  }
+  return [];
+}
 
 export function obtenerUsuarioActualId() {
   if (auth?.currentUser?.uid) return auth.currentUser.uid;
@@ -158,7 +197,7 @@ export async function sincronizarGaleriaConFirestore(forzar = false) {
     if (!snap.exists()) {
       const listaLocal = (getls(STORAGE_KEY) || IMAGENES_SEMILLA).map(normalizarImagen);
       await setDoc(docRef, {
-        items: listaLocal,
+        imagenes: serializarGaleriaAMap(listaLocal),
         total: listaLocal.filter(x => x.estado !== 'eliminado').length,
         actualizado: serverTimestamp(),
         version: 1
@@ -169,7 +208,7 @@ export async function sincronizarGaleriaConFirestore(forzar = false) {
     }
 
     const data = snap.data() || {};
-    const itemsFirestore = (Array.isArray(data.items) ? data.items : []).map(normalizarImagen);
+    const itemsFirestore = deserializarGaleriaDeFirestore(data);
 
     // 🎯 Sincronización Inteligente:
     // Las semillas oficiales actualizadas (nuevos KB y URLs) refrescan automáticamente sus homólogos en Firestore
@@ -204,10 +243,10 @@ export async function sincronizarGaleriaConFirestore(forzar = false) {
     savels(STORAGE_KEY, consolidado);
     savels(CACHE_KEY, ahora.toString());
 
-    // Si hubo cambios o se forzó manualmente (clic en botón Sincronizar), guardar de inmediato en Firestore (1 Write atómico)
+    // Si hubo cambios o se forzó manualmente (clic en botón Sincronizar), guardar de inmediato en Firestore (1 Write atómico en Map)
     if (forzar || huboCambios) {
       await setDoc(docRef, {
-        items: consolidado,
+        imagenes: serializarGaleriaAMap(consolidado),
         total: consolidado.filter(x => x.estado !== 'eliminado').length,
         actualizado: serverTimestamp(),
         version: Date.now()
@@ -241,7 +280,7 @@ async function persistirGaleriaCompleta(lista) {
   try {
     const { doc, setDoc, serverTimestamp } = await import('firebase/firestore');
     await setDoc(doc(db, COLECCION_GALERIA, DOC_GALERIA_ID), {
-      items: lista,
+      imagenes: serializarGaleriaAMap(lista),
       total: lista.filter(x => x.estado !== 'eliminado').length,
       actualizado: serverTimestamp(),
       version: Date.now()

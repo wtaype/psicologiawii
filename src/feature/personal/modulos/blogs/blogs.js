@@ -674,6 +674,18 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
   inImagen?.addEventListener('input', actualizarPrevisualizacionImagenes);
   inImagenTop?.addEventListener('input', actualizarPrevisualizacionImagenes);
 
+  inActivo?.addEventListener('change', () => {
+    if (inActivo.checked) {
+      if (btnSubmitText) btnSubmitText.textContent = isEditing ? 'Actualizar' : 'Publicar';
+      if (btnSubmitIcon) btnSubmitIcon.className = isEditing ? 'fa-solid fa-floppy-disk' : 'fa-solid fa-paper-plane';
+      btnSubmitPost?.setAttribute('data-witip', isEditing ? 'Guardar cambios del artículo' : 'Publicar artículo');
+    } else {
+      if (btnSubmitText) btnSubmitText.textContent = 'Publicar';
+      if (btnSubmitIcon) btnSubmitIcon.className = 'fa-solid fa-paper-plane';
+      btnSubmitPost?.setAttribute('data-witip', 'Publicar artículo en vivo y en Firebase');
+    }
+  });
+
   btnCopyImgThumb?.addEventListener('click', async () => {
     const url = resolverUrlCompleta(inImagen?.value.trim() || '/smile.avif');
     try {
@@ -735,12 +747,13 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
     if (inAutor) inAutor.value = getAutorPorDefecto();
     if (inImagen) inImagen.value = resolverUrlCompleta('/smile.avif');
     if (inImagenTop) inImagenTop.value = resolverUrlCompleta('/smile.avif');
-    if (inActivo) inActivo.checked = true;
+    if (inActivo) inActivo.checked = false;
     if (inPin) inPin.checked = false;
 
     // Cambiar botón a Publicar
     if (btnSubmitText) btnSubmitText.textContent = 'Publicar';
     if (btnSubmitIcon) btnSubmitIcon.className = 'fa-solid fa-paper-plane';
+    btnSubmitPost?.setAttribute('data-witip', 'Publicar artículo en vivo y en Firebase');
 
     if (instSelectLang) {
       instSelectLang.setValue('es');
@@ -783,13 +796,21 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
     const candidatePostId = (inPostId?.value || inId?.value || '').trim().padStart(8, '0');
     const clusterUid = currentClusterUid || generarClusterUid();
 
+    // Si el botón muestra 'Publicar' o el usuario pulsó publicar en un borrador, se activa canónicamente
+    const esAccionPublicar = btnSubmitText?.textContent === 'Publicar';
+    const activoFinal = esAccionPublicar ? true : (inActivo ? inActivo.checked : true);
+    const estadoFinal = activoFinal ? 'publicado' : 'borrador';
+
+    if (inActivo) inActivo.checked = activoFinal;
+
     const payload = {
       id: candidatePostId,
       postId: candidatePostId,
       slug: slugVal,
       lang: inLang?.value || 'es',
       langId: clusterUid,
-      activo: inActivo ? inActivo.checked : true,
+      estado: estadoFinal,
+      activo: activoFinal,
       pin: inPin ? inPin.checked : false,
       userId: 'admin',
       autor: inAutor?.value.trim() || getAutorPorDefecto(),
@@ -823,9 +844,10 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
 
     validarIdEnTiempoReal();
 
-    // Cambiar botón a Actualizar
+    // Conmutar botón a Actualizar una vez publicado
     if (btnSubmitText) btnSubmitText.textContent = 'Actualizar';
     if (btnSubmitIcon) btnSubmitIcon.className = 'fa-solid fa-floppy-disk';
+    btnSubmitPost?.setAttribute('data-witip', 'Guardar cambios del artículo publicado');
 
     syncUrlParams(guardado.id, 'redactor');
     actualizarEstadoVinculacion(guardado);
@@ -833,7 +855,10 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
     actualizarCardIdiomaHeader(guardado.id);
     renderizarPublicaciones();
 
-    Notificacion(`¡Artículo "${guardado.titulo}" (ID: ${guardado.id}) guardado con éxito!`, 'success');
+    const msj = activoFinal 
+      ? `¡Artículo "${guardado.titulo}" (ID: ${guardado.id}) publicado con éxito en Firebase!` 
+      : `Borrador "${guardado.titulo}" (ID: ${guardado.id}) guardado con éxito.`;
+    Notificacion(msj, 'success');
   });
 
   // ════════════════════════════════════════════════════════════
@@ -865,12 +890,21 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
     if (inAutor) inAutor.value = post.autor || getAutorPorDefecto();
     if (inImagen) inImagen.value = resolverUrlCompleta(post.imagen || '/smile.avif');
     if (inImagenTop) inImagenTop.value = resolverUrlCompleta(post.imagenTop || post.imagen || '/smile.avif');
-    if (inActivo) inActivo.checked = post.activo !== false;
+    
+    const esBorrador = post.activo === false || post.estado === 'borrador';
+    if (inActivo) inActivo.checked = !esBorrador;
     if (inPin) inPin.checked = Boolean(post.pin);
 
-    // Cambiar botón a Actualizar
-    if (btnSubmitText) btnSubmitText.textContent = 'Actualizar';
-    if (btnSubmitIcon) btnSubmitIcon.className = 'fa-solid fa-floppy-disk';
+    // Contextualizar botón: Borrador -> 'Publicar' (avión), Publicado -> 'Actualizar' (disquete)
+    if (esBorrador) {
+      if (btnSubmitText) btnSubmitText.textContent = 'Publicar';
+      if (btnSubmitIcon) btnSubmitIcon.className = 'fa-solid fa-paper-plane';
+      btnSubmitPost?.setAttribute('data-witip', 'Publicar este borrador en vivo y en Firebase');
+    } else {
+      if (btnSubmitText) btnSubmitText.textContent = 'Actualizar';
+      if (btnSubmitIcon) btnSubmitIcon.className = 'fa-solid fa-floppy-disk';
+      btnSubmitPost?.setAttribute('data-witip', 'Guardar cambios del artículo publicado');
+    }
 
     if (instSelectLang) {
       instSelectLang.setValue(post.lang || 'es');
@@ -1036,8 +1070,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
           </td>
           <td>
             <div style="display:flex; align-items:center;">
-              <span class="bl-badge-status ${b.activo !== false ? 'bl-badge-active' : 'bl-badge-draft'}">
-                ${b.activo !== false ? 'Publicado' : 'Borrador'}
+              <span class="bl-badge-status ${(b.activo && b.estado !== 'borrador') ? 'bl-badge-active' : 'bl-badge-draft'}">
+                ${(b.activo && b.estado !== 'borrador') ? 'Publicado' : 'Borrador'}
               </span>
               ${b.pin ? '<span class="bl-badge-pin" data-witip="Fijado en portada" data-wtipo="top"><i class="fa-solid fa-thumbtack"></i></span>' : ''}
             </div>

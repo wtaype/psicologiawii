@@ -32,6 +32,12 @@ service cloud.firestore {
       allow write: if esPersonal();
     }
 
+    // Galería Oficial de Medios (1 Documento 'principal' con Map de imágenes para Spark Free Tier)
+    match /galeria/{id} {
+      allow read: if true;
+      allow write: if esPersonal();
+    }
+
     match /productos/{id} {
       allow read: if true;
       allow write: if esPersonal();
