@@ -472,7 +472,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
         counterpartPost.imagenTop = currentPost.imagenTop;
         counterpartPost.lang = targetLang;
         counterpartPost.langId = clusterUid;
-        counterpartPost = guardarBlog(counterpartPost);
+        counterpartPost = await guardarBlog(counterpartPost, { forzarWrite: true });
       } else {
         // Crear nuevo post en el idioma opuesto heredando exactamente el mismo langId (Cluster UID)
         const nuevoPostId = generarSiguientePostId(blogs);
@@ -482,6 +482,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
           slug: data.slug || slugify(data.titulo),
           lang: targetLang,
           langId: clusterUid,
+          estado: 'borrador',
           activo: false, // Inicia como Borrador para revisión clínica previa a publicación
           pin: Boolean(currentPost.pin),
           userId: 'admin',
@@ -500,8 +501,8 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
           contenido: data.contenido || '',
           contenidoMD: data.contenido || ''
         };
-        counterpartPost = guardarBlog(nuevoPost);
-        guardarBlog(currentPost);
+        counterpartPost = await guardarBlog(nuevoPost, { forzarWrite: true });
+        await guardarBlog(currentPost, { forzarWrite: true });
       }
 
       // Cargar el artículo traducido para que el usuario pueda revisarlo
@@ -773,7 +774,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
   // ════════════════════════════════════════════════════════════
   // 13. GUARDAR / ACTUALIZAR PUBLICACIÓN (CON VALIDACIÓN DE ID)
   // ════════════════════════════════════════════════════════════
-  formEditor?.addEventListener('submit', (e) => {
+  formEditor?.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     // Validar ID disponible
@@ -829,7 +830,7 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
       contenidoMD: contenidoVal
     };
 
-    const guardado = guardarBlog(payload);
+    const guardado = await guardarBlog(payload, { forzarWrite: true });
     isEditing = true;
     currentEditingPostId = guardado.id;
 
@@ -854,11 +855,6 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
     actualizarSelectorLangId(guardado.lang, guardado.langId);
     actualizarCardIdiomaHeader(guardado.id);
     renderizarPublicaciones();
-
-    const msj = activoFinal 
-      ? `¡Artículo "${guardado.titulo}" (ID: ${guardado.id}) publicado con éxito en Firebase!` 
-      : `Borrador "${guardado.titulo}" (ID: ${guardado.id}) guardado con éxito.`;
-    Notificacion(msj, 'success');
   });
 
   // ════════════════════════════════════════════════════════════

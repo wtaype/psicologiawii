@@ -263,7 +263,7 @@ export function sincronizarConSemilla() {
 /**
  * Guarda o actualiza un artículo de blog
  */
-export function guardarBlog(blogData = {}) {
+export async function guardarBlog(blogData = {}, { forzarWrite = true } = {}) {
   const blogs = obtenerBlogs();
   const normalizado = normalizarBlog(blogData);
   normalizado.actualizado = Date.now();
@@ -301,7 +301,7 @@ export function guardarBlog(blogData = {}) {
   }
 
   // Sincronización universal (Local-First + Firestore + Cloudflare Deploy con Dock)
-  actualizarCentral({
+  await actualizarCentral({
     modulo: 'blogs',
     coleccion: 'blogs',
     docId: normalizado.id,
@@ -310,7 +310,8 @@ export function guardarBlog(blogData = {}) {
     datos: normalizado,
     listaStorage: actualizados,
     redeploy: true,
-    mensajeExito: `Artículo "${normalizado.titulo}" publicado con éxito`
+    forzarWrite: Boolean(forzarWrite),
+    mensajeExito: `Artículo "${normalizado.titulo}" ${normalizado.activo ? 'publicado' : 'guardado'} con éxito`
   });
 
   return normalizado;

@@ -626,6 +626,20 @@ export function dispararDeploySilencioso(motivo = 'cambio') {
 // 5. MOTOR CENTRAL DE ACTUALIZACIÓN (LOCAL-FIRST + FIRESTORE + SMART DOCK)
 // =============================================================================
 
+function limpiarParaFirestore(obj) {
+  if (obj === null || typeof obj !== 'object') return obj;
+  if (Array.isArray(obj)) return obj.map(limpiarParaFirestore);
+  const limpio = {};
+  for (const [k, v] of Object.entries(obj)) {
+    if (v !== undefined) {
+      limpio[k] = (typeof v === 'object' && v !== null && !(v instanceof Date) && typeof v.toDate !== 'function') 
+        ? limpiarParaFirestore(v) 
+        : v;
+    }
+  }
+  return limpio;
+}
+
 export async function actualizarCentral({
   modulo = 'negocio',
   coleccion = 'negocio',
@@ -689,16 +703,21 @@ export async function actualizarCentral({
     if (db) {
       const docRef = doc(db, coleccion, docId);
       const firestorePayload = {
-        ...datos,
+        ...limpiarParaFirestore(datos),
         actualizado: serverTimestamp()
       };
       if (!datos.creado) {
         firestorePayload.creado = serverTimestamp();
       }
       await setDoc(docRef, firestorePayload, { merge: true });
+      console.log(`[actualizarCentral] ✓ Firestore sincronizado con éxito en ${coleccion}/${docId}`);
+    } else {
+      console.warn(`[actualizarCentral] Firestore db no está inicializado`);
     }
   } catch (err) {
-    console.warn(`[actualizarCentral] Error silencioso al escribir en ${coleccion}/${docId}:`, err?.message || err);
+    console.error(`[actualizarCentral] ❌ Error al escribir en Firestore (${coleccion}/${docId}):`, err);
+    Notificacion(`Error en Firebase (${coleccion}/${docId}): ${err?.message || err}`, 'error', 5000);
+    return { ok: false, error: err, datos };
   }
 
   // 4. ACTIVAR SMART DOCK (Control de Cuotas Cloudflare + 0ms Live)
