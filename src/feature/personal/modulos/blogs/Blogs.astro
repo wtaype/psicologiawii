@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { esActivo = true } = Astro.props;
+const autorPorDefecto = datosNegocio.especialista || datosNegocio.nombre || 'Autor';
 ---
 
 <!-- Inyección de estilos de lectura del Feature Blog para Vista Previa 100% fiel -->
@@ -18,31 +19,33 @@ const { esActivo = true } = Astro.props;
 <section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-blogs">
   <div class="bl-admin-shell">
     
-    <!-- 1. BARRA SUPERIOR DE PESTAÑAS (REDACTOR POR DEFECTO) -->
+    <!-- ══════════════════════════════════════════════════════════ -->
+    <!-- 1. BARRA SUPERIOR DE NAVEGACIÓN (SOLO 2 PESTAÑAS + VER BLOG)-->
+    <!-- ══════════════════════════════════════════════════════════ -->
     <div class="bl-main-tabs-bar">
       <div class="bl-tabs-nav">
-        <button type="button" class="bl-tab-btn active" id="blBtnTabRedactor">
-          <i class="fa-solid fa-file-pen"></i> Redactor de Publicación
+        <button type="button" class="bl-tab-btn active" id="blBtnTabRedactor" data-witip="Redactor de artículos y editor markdown" data-wtipo="bottom">
+          <i class="fa-solid fa-file-pen"></i> <span>Redactor de Publicación</span>
         </button>
-        <button type="button" class="bl-tab-btn" id="blBtnTabPublicaciones">
-          <i class="fa-solid fa-table-list"></i> Publicaciones
+        <button type="button" class="bl-tab-btn" id="blBtnTabPublicaciones" data-witip="Ver tabla de artículos publicados y borradores" data-wtipo="bottom">
+          <i class="fa-solid fa-table-list"></i> <span>Publicaciones</span>
         </button>
       </div>
 
-      <div class="bl-tabs-actions" id="blTabsActions">
-        <button type="button" class="bl-btn-gemini" id="blBtnTraducirIA" title="Traducir automáticamente al idioma contrario y vincular con langId">
-          <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Traducir con IA</span>
-        </button>
-        <button type="submit" form="blFormEditor" class="bl-btn-submit" id="blBtnSubmitPost">
-          <i class="fa-solid fa-paper-plane"></i> Publicar
-        </button>
+      <div class="bl-tabs-actions">
+        <!-- Ver Catálogo Público en nueva pestaña -->
+        <a href="/blog" target="_blank" rel="noopener noreferrer" class="bl-btn-sec" id="blLinkVerBlogTop" data-witip="Ver catálogo público de blogs en nueva pestaña" data-wtipo="bottom">
+          <i class="fa-solid fa-arrow-up-right-from-square"></i>
+          <span>Ver blog</span>
+        </a>
       </div>
     </div>
 
     <!-- ══════════════════════════════════════════════════════════ -->
     <!-- 2. PESTAÑA 1: REDACTOR DE CONTENIDO (ACTIVO POR DEFECTO)   -->
     <!-- ══════════════════════════════════════════════════════════ -->
-    <div id="blViewRedactor" style="display: block;">
+    <div id="blViewRedactor" class="bl-view-pane">
+
       <form id="blFormEditor" autocomplete="off">
         <input type="hidden" id="blInputId" value="" />
 
@@ -80,7 +83,7 @@ const { esActivo = true } = Astro.props;
             </div>
 
             <!-- Resumen y Palabras Clave (SEO) -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div class="bl-meta-grid">
               <div class="bl-card">
                 <div class="bl-card-title">
                   <span><i class="fa-solid fa-align-left"></i> Resumen de Lectura</span>
@@ -113,7 +116,7 @@ const { esActivo = true } = Astro.props;
             <!-- Redactor Markdown y Vista Previa en Vivo -->
             <div class="bl-card">
               <div class="bl-subtabs-head">
-                <div class="bl-card-title" style="margin-bottom:0;">
+                <div class="bl-card-title bl-mb-0">
                   <span><i class="fa-solid fa-keyboard"></i> Contenido del Artículo</span>
                 </div>
                 <div class="bl-subtabs-nav">
@@ -127,24 +130,24 @@ const { esActivo = true } = Astro.props;
               </div>
 
               <!-- Panel Escritura -->
-              <div id="blPanelWrite" style="display: block;">
+              <div id="blPanelWrite" class="bl-panel-pane">
                 <!-- Barra de Herramientas Markdown -->
                 <div class="bl-toolbar">
-                  <button type="button" class="bl-tool" data-cmd="bold" title="Negrita"><strong>B</strong></button>
-                  <button type="button" class="bl-tool" data-cmd="italic" title="Cursiva"><em>I</em></button>
+                  <button type="button" class="bl-tool" data-cmd="bold" data-witip="Negrita (**texto**)" data-wtipo="top"><strong>B</strong></button>
+                  <button type="button" class="bl-tool" data-cmd="italic" data-witip="Cursiva (*texto*)" data-wtipo="top"><em>I</em></button>
                   <div class="bl-tool-sep"></div>
-                  <button type="button" class="bl-tool" data-cmd="h2" title="Título H2">H2</button>
-                  <button type="button" class="bl-tool" data-cmd="h3" title="Subtítulo H3">H3</button>
+                  <button type="button" class="bl-tool" data-cmd="h2" data-witip="Encabezado H2 (## Título)" data-wtipo="top">H2</button>
+                  <button type="button" class="bl-tool" data-cmd="h3" data-witip="Subtítulo H3 (### Título)" data-wtipo="top">H3</button>
                   <div class="bl-tool-sep"></div>
-                  <button type="button" class="bl-tool" data-cmd="link" title="Enlace"><i class="fa-solid fa-link"></i></button>
-                  <button type="button" class="bl-tool" data-cmd="quote" title="Cita"><i class="fa-solid fa-quote-left"></i></button>
-                  <button type="button" class="bl-tool" data-cmd="code" title="Código"><i class="fa-solid fa-code"></i></button>
-                  <button type="button" class="bl-tool" data-cmd="table" title="Tabla"><i class="fa-solid fa-table"></i></button>
-                  <button type="button" class="bl-tool" data-cmd="image" title="Imagen"><i class="fa-solid fa-image"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="link" data-witip="Insertar enlace web" data-wtipo="top"><i class="fa-solid fa-link"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="quote" data-witip="Cita textual (> cita)" data-wtipo="top"><i class="fa-solid fa-quote-left"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="code" data-witip="Bloque de código" data-wtipo="top"><i class="fa-solid fa-code"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="table" data-witip="Insertar tabla" data-wtipo="top"><i class="fa-solid fa-table"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="image" data-witip="Insertar imagen markdown" data-wtipo="top"><i class="fa-solid fa-image"></i></button>
                   <div class="bl-tool-sep"></div>
-                  <button type="button" class="bl-tool" data-cmd="note" title="Alerta Azul: Nota"><i class="fa-solid fa-circle-info" style="color:#0284c7;"></i></button>
-                  <button type="button" class="bl-tool" data-cmd="tip" title="Alerta Verde: Consejo"><i class="fa-solid fa-lightbulb" style="color:#10b981;"></i></button>
-                  <button type="button" class="bl-tool" data-cmd="warning" title="Alerta Naranja: Advertencia"><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="note" data-witip="Alerta clínica: Nota informativa" data-wtipo="top"><i class="fa-solid fa-circle-info bl-icon-info"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="tip" data-witip="Alerta clínica: Consejo terapéutico" data-wtipo="top"><i class="fa-solid fa-lightbulb bl-icon-tip"></i></button>
+                  <button type="button" class="bl-tool" data-cmd="warning" data-witip="Alerta clínica: Advertencia importante" data-wtipo="top"><i class="fa-solid fa-triangle-exclamation bl-icon-warning"></i></button>
                 </div>
 
                 <textarea 
@@ -160,10 +163,10 @@ const { esActivo = true } = Astro.props;
                 </div>
               </div>
 
-              <!-- Panel Vista Previa (Comparte estilos del feature blog con po_contenido) -->
-              <div id="blPanelPreview" style="display: none;">
+              <!-- Panel Vista Previa -->
+              <div id="blPanelPreview" class="bl-panel-pane is-hidden">
                 <div class="bl-preview-box po_contenido" id="blPreviewBody">
-                  <p style="color:var(--muted); font-style:italic;">Escribe contenido en el editor para previsualizar aquí en tiempo real...</p>
+                  <p class="bl-preview-placeholder">Escribe contenido en el editor para previsualizar aquí en tiempo real...</p>
                 </div>
               </div>
 
@@ -174,48 +177,75 @@ const { esActivo = true } = Astro.props;
           <!-- COLUMNA LATERAL DE CONFIGURACIÓN Y METADATOS (30%) -->
           <div class="bl-editor-col-side">
             
-            <!-- 1. Botones de Acción Rápida: Cargar y Nuevo -->
+            <!-- 1. Botones de Acción: Publicar / Actualizar y Nuevo -->
             <div class="bl-card bl-top-actions-card">
               <div class="bl-actions-duo">
-                <button type="button" class="bl-btn-action" id="blBtnCargarMd" title="Cargar archivo Markdown (.md)">
-                  <i class="fa-solid fa-file-arrow-up"></i> Cargar
+                <button type="submit" form="blFormEditor" class="bl-btn-submit" id="blBtnSubmitPost" data-witip="Publicar o guardar cambios del artículo" data-wtipo="top">
+                  <i class="fa-solid fa-paper-plane" id="blBtnSubmitIcon"></i> <span id="blBtnSubmitText">Publicar</span>
                 </button>
-                <button type="button" class="bl-btn-action" id="blBtnNuevoPost" title="Nuevo borrador / limpiar formulario">
-                  <i class="fa-solid fa-plus"></i> Nuevo
+                <button type="button" class="bl-btn-action" id="blBtnNuevoPost" data-witip="Iniciar nueva publicación en blanco" data-wtipo="top">
+                  <i class="fa-solid fa-plus"></i> <span>Nuevo</span>
                 </button>
-                <input type="file" id="blInputFileMd" accept=".md,.markdown,.txt" style="display:none;" />
               </div>
             </div>
 
-            <!-- 2. Idioma & Enlace Bilingüe con wiSelect -->
-            <div class="bl-card">
+            <!-- 2. Idioma del Artículo & Identificador Editable -->
+            <div class="bl-card bl-card-idioma">
               <div class="bl-card-title">
-                <span><i class="fa-solid fa-language"></i> Idioma & Enlace Bilingüe</span>
+                <span><i class="fa-solid fa-language"></i> <span id="blCardIdiomaTitle">Idioma & Identificador</span></span>
+              </div>
+
+              <!-- ID del Artículo Editable con Validación en Tiempo Real -->
+              <div class="bl-post-id-group">
+                <div class="bl-post-id-header">
+                  <label class="bl-field-label">ID de Publicación (8 dígitos):</label>
+                </div>
+                <div class="bl-input-icon-wrapper">
+                  <input 
+                    type="text" 
+                    id="blInputPostId" 
+                    class="bl-input bl-input-post-id" 
+                    maxlength="8" 
+                    placeholder="00000001" 
+                    spellcheck="false"
+                    required 
+                  />
+                  <span class="bl-id-status" id="blIdStatusIndicator" data-witip="Verificando disponibilidad..." data-wtipo="top">
+                    <i class="fa-solid fa-circle-check bl-id-icon is-available"></i>
+                  </span>
+                </div>
               </div>
               
-              <div style="margin-bottom: 12px;">
-                <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Idioma del Artículo:</label>
+              <div class="bl-field-block with-mt">
+                <label class="bl-field-label">Idioma del Artículo:</label>
                 <select id="blSelectLang" class="bl-select">
                   <option value="es" selected>Español (ES)</option>
                   <option value="en">English (EN)</option>
                 </select>
               </div>
 
-              <div>
-                <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Vincular con Post Hermano (langId):</label>
+              <div class="bl-field-block">
+                <label class="bl-field-label">Vincular Artículo:</label>
                 <select id="blSelectLangId" class="bl-select">
-                  <option value="">-- Ninguno (Post Base Original) --</option>
+                  <option value="">-- Sin vincular (Base original) --</option>
                 </select>
               </div>
 
-              <div style="margin-top: 10px;">
-                <button type="button" class="bl-btn-translate-card" id="blBtnCardTraducirIA" title="Generar versión traducida de este artículo con Gemini">
-                  <i class="fa-solid fa-wand-magic-sparkles"></i> <span>✨ Traducir y Vincular con IA</span>
+              <!-- Acciones Lingüísticas en 2 Columnas -->
+              <div class="bl-lang-actions-grid">
+                <button type="button" class="bl-btn-vincular" id="blBtnSoloVincular" data-witip="Vincular con el artículo seleccionado en la lista" data-wtipo="top">
+                  <i class="fa-solid fa-link"></i> <span>Vincular artículo</span>
+                </button>
+                <button type="button" class="bl-btn-gemini" id="blBtnTraducirIA" disabled data-witip="Publica primero el artículo para poder traducirlo y vincularlo con IA" data-wtipo="top">
+                  <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Traducir</span>
                 </button>
               </div>
+
+              <!-- Indicador de Estado de Vinculación -->
+              <div id="blLangStatusBadge" class="bl-lang-status-wrap is-hidden"></div>
             </div>
 
-            <!-- 3. Categoría y Tags -->
+            <!-- 3. Categoría y Etiquetas (sin tags entre paréntesis) -->
             <div class="bl-card">
               <div class="bl-card-title">
                 <span><i class="fa-solid fa-folder"></i> Categoría</span>
@@ -229,21 +259,21 @@ const { esActivo = true } = Astro.props;
                 required 
               />
 
-              <div style="margin-top: 14px;">
-                <div class="bl-card-title" style="margin-bottom:6px;">
-                  <span><i class="fa-solid fa-tags"></i> Etiquetas (Tags)</span>
+              <div class="bl-field-mt">
+                <div class="bl-card-title bl-mb-6">
+                  <span><i class="fa-solid fa-tags"></i> Etiquetas</span>
                 </div>
                 <input 
                   type="text" 
                   id="blInputTagsText" 
                   class="bl-input" 
-                  placeholder="Escribe un tag y presiona Enter..." 
+                  placeholder="Añadir etiqueta (Enter o coma)..." 
                 />
                 <div class="bl-tags-box" id="blBoxTagsChips"></div>
               </div>
             </div>
 
-            <!-- 4. Imágenes del Artículo con Previsualización Abajo y Enlace Externo -->
+            <!-- 4. Imágenes del Artículo con URLs Completas Dinámicas y Copia Rápida -->
             <div class="bl-card">
               <div class="bl-card-title">
                 <span><i class="fa-solid fa-images"></i> Imágenes del Artículo</span>
@@ -253,69 +283,69 @@ const { esActivo = true } = Astro.props;
               <div class="bl-img-field-group">
                 <div class="bl-img-field-header">
                   <label class="bl-img-label">Miniatura / Card (334x208px):</label>
+                  <button type="button" class="bl-btn-copy-url" id="blBtnCopyImgThumb" data-witip="Copiar URL completa de la miniatura" data-wtipo="top">
+                    <i class="fa-regular fa-copy"></i> Copiar URL
+                  </button>
+                </div>
+                <div class="bl-img-input-row">
+                  <input 
+                    type="text" 
+                    id="blInputImagen" 
+                    class="bl-input bl-input-url" 
+                    value="/smile.avif" 
+                    required 
+                  />
                   <a id="blLinkVerImagen" href="/smile.avif" target="_blank" rel="noopener noreferrer" class="bl-img-link-open" title="Abrir imagen en nueva pestaña">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver imagen
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
                   </a>
                 </div>
-                <input 
-                  type="text" 
-                  id="blInputImagen" 
-                  class="bl-input" 
-                  value="/smile.avif" 
-                  required 
-                />
-                <!-- Vista previa abajo -->
+                <!-- Vista previa -->
                 <div class="bl-img-preview-box">
                   <img id="blPreviewThumb" src="/smile.avif" alt="Miniatura" loading="lazy" />
-                  <div class="bl-img-preview-overlay">
-                    <a id="blLinkVerImagenOverlay" href="/smile.avif" target="_blank" rel="noopener noreferrer" class="bl-img-preview-btn">
-                      <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir en nueva pestaña
-                    </a>
-                  </div>
                 </div>
               </div>
 
               <!-- Cabecera Panorámica -->
-              <div class="bl-img-field-group" style="margin-bottom:0;">
+              <div class="bl-img-field-group bl-mb-0">
                 <div class="bl-img-field-header">
                   <label class="bl-img-label">Cabecera Panorámica (1200x450px):</label>
+                  <button type="button" class="bl-btn-copy-url" id="blBtnCopyImgTop" data-witip="Copiar URL completa de la cabecera" data-wtipo="top">
+                    <i class="fa-regular fa-copy"></i> Copiar URL
+                  </button>
+                </div>
+                <div class="bl-img-input-row">
+                  <input 
+                    type="text" 
+                    id="blInputImagenTop" 
+                    class="bl-input bl-input-url" 
+                    value="/smile.avif" 
+                  />
                   <a id="blLinkVerImagenTop" href="/smile.avif" target="_blank" rel="noopener noreferrer" class="bl-img-link-open" title="Abrir cabecera en nueva pestaña">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver cabecera
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
                   </a>
                 </div>
-                <input 
-                  type="text" 
-                  id="blInputImagenTop" 
-                  class="bl-input" 
-                  value="/smile.avif" 
-                />
-                <!-- Vista previa abajo -->
+                <!-- Vista previa -->
                 <div class="bl-img-preview-box panoramic">
                   <img id="blPreviewThumbTop" src="/smile.avif" alt="Cabecera Panorámica" loading="lazy" />
-                  <div class="bl-img-preview-overlay">
-                    <a id="blLinkVerImagenTopOverlay" href="/smile.avif" target="_blank" rel="noopener noreferrer" class="bl-img-preview-btn">
-                      <i class="fa-solid fa-arrow-up-right-from-square"></i> Abrir en nueva pestaña
-                    </a>
-                  </div>
                 </div>
               </div>
 
             </div>
 
-            <!-- 5. Autor & Estado de Publicación -->
+            <!-- 5. Autor de la entrada & Estado de Publicación -->
             <div class="bl-card">
               <div class="bl-card-title">
-                <span><i class="fa-solid fa-user-pen"></i> Autor & Estado</span>
+                <span><i class="fa-solid fa-user-pen"></i> Autor de la entrada & Estado</span>
               </div>
 
-              <div style="margin-bottom: 14px;">
-                <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Ingresar Autor:</label>
+              <div class="bl-field-mb">
+                <label class="bl-field-label">Autor de la entrada:</label>
                 <input 
                   type="text" 
                   id="blInputAutor" 
                   class="bl-input" 
-                  placeholder="Ej: Lic. Sofia Reynaga Pachas" 
-                  value={datosNegocio.identidad?.especialista || (typeof datosNegocio.nombreCorto === 'string' ? datosNegocio.nombreCorto : 'Lic. Sofia Reynaga Pachas')} 
+                  value={autorPorDefecto}
+                  placeholder="Nombre del autor o redactor" 
                   required
                 />
               </div>
@@ -329,7 +359,7 @@ const { esActivo = true } = Astro.props;
               </div>
 
               <div class="bl-switch-row">
-                <span>Destacar Artículo (Pin)</span>
+                <span>Fijar en Portada (Pin)</span>
                 <label class="bl-ios-switch">
                   <input type="checkbox" id="blCheckPin" />
                   <span class="bl-ios-slider"></span>
@@ -344,68 +374,63 @@ const { esActivo = true } = Astro.props;
     </div>
 
     <!-- ══════════════════════════════════════════════════════════ -->
-    <!-- 3. PESTAÑA 2: PUBLICACIONES (TABLA ORGANIZADA)             -->
+    <!-- 3. PESTAÑA 2: PUBLICACIONES (TABLA LIMPIA Y OPTIMIZADA)     -->
     <!-- ══════════════════════════════════════════════════════════ -->
-    <div id="blViewPublicaciones" style="display: none;">
+    <div id="blViewPublicaciones" class="bl-view-pane bl-view-pane-hidden">
       
       <!-- Barra de Búsqueda y Filtros -->
       <div class="bl-filter-bar">
         <div class="bl-filter-left">
-          <div style="position:relative; width:100%;">
-            <i class="fa-solid fa-magnifying-glass" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:12px;"></i>
+          <div class="bl-search-wrapper">
+            <i class="fa-solid fa-magnifying-glass bl-search-icon"></i>
             <input 
               type="text" 
               id="blSearchInput" 
-              class="bl-input" 
-              placeholder="Buscar por título, slug, categoría o tags..." 
-              style="padding-left:34px;" 
+              class="bl-input bl-search-input-field" 
+              placeholder="Buscar por título, ID o categoría..." 
             />
           </div>
         </div>
 
-        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+        <div class="bl-filter-right">
           <div class="bl-filter-pills">
             <button type="button" class="bl-pill-btn active" data-filter-lang="todos">Todos</button>
             <button type="button" class="bl-pill-btn" data-filter-lang="es">Español (ES)</button>
             <button type="button" class="bl-pill-btn" data-filter-lang="en">English (EN)</button>
           </div>
 
-          <select id="blSelectCategoriaFilter" class="bl-select" style="width:auto; padding:6px 12px; font-size:12px;">
+          <select id="blSelectCategoriaFilter" class="bl-select bl-select-filter">
             <option value="todas">Todas las categorías</option>
             <option value="Salud Emocional">Salud Emocional</option>
             <option value="Terapia & Bienestar">Terapia & Bienestar</option>
             <option value="Desarrollo Personal">Desarrollo Personal</option>
-            <option value="Emotional Health">Emotional Health</option>
           </select>
 
-          <button type="button" class="bl-pill-btn" id="blBtnSyncSemillas" title="Recargar artículos desde blogs.json">
+          <button type="button" class="bl-pill-btn" id="blBtnSyncSemillas" data-witip="Recargar artículos desde la base de datos blogs.json" data-wtipo="top">
             <i class="fa-solid fa-arrows-rotate"></i> Sincronizar JSON
           </button>
 
-          <button type="button" class="bl-pill-btn" id="blBtnDescargarSemilla" title="Descargar blogs.json actualizado con todos los cambios">
-            <i class="fa-solid fa-download"></i> Descargar Semilla
+          <button type="button" class="bl-pill-btn" id="blBtnExportarJson" data-witip="Descargar copia de blogs.json en formato Map/Object" data-wtipo="top">
+            <i class="fa-solid fa-download"></i> Exportar JSON
           </button>
-
-          <a href="/blog" target="_blank" rel="noopener noreferrer" class="bl-pill-btn" title="Ver catálogo público de blogs">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver /blog
-          </a>
 
           <span id="blTableTotalBadge" class="bl-table-count-badge">0 publicaciones</span>
         </div>
       </div>
 
-      <!-- Tabla Organizada de Publicaciones -->
+      <!-- Tabla Limpia de Publicaciones -->
       <div class="bl-table-container">
         <div class="bl-table-responsive">
           <table class="bl-table">
             <thead>
               <tr>
-                <th style="width:40%;">Artículo / Publicación</th>
-                <th style="width:14%;">Idioma & Vínculo</th>
-                <th style="width:16%;">Categoría</th>
-                <th style="width:12%;">Publicado</th>
-                <th style="width:8%;">Estado</th>
-                <th style="width:10%; text-align:right;">Acciones</th>
+                <th class="bl-th-post">Artículo / Publicación</th>
+                <th class="bl-th-lang">Idioma y Vinculación</th>
+                <th class="bl-th-date">Fecha y Hora</th>
+                <th class="bl-th-views">Vistas</th>
+                <th class="bl-th-likes">Likes</th>
+                <th class="bl-th-status">Estado</th>
+                <th class="bl-th-actions">Acciones</th>
               </tr>
             </thead>
             <tbody id="blTablePublicacionesBody">
@@ -421,7 +446,5 @@ const { esActivo = true } = Astro.props;
 </section>
 
 <script>
-  import { inicializarBlogs } from './blogs.js';
-  inicializarBlogs();
-  document.addEventListener('astro:page-load', inicializarBlogs);
+  import './blogs.js';
 </script>

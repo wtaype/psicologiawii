@@ -8,9 +8,10 @@ import { datosNegocio } from '../negocio.js';
 
 const idioma = 'es';
 const ruta = buildRuta('/anuncios', idioma);
-const title = `Nuestros Últimos Anuncios Oficiales · ${datosNegocio.nombre}`;
+const title = `Anuncios y Convocatorias Clínicas · ${datosNegocio.nombre}`;
+const description = 'Campañas de salud emocional, evaluaciones psicológicas y talleres vivenciales impartidos por la Lic. Sofía Reynaga (C.Ps.P. 49425) en Lima y online.';
 ---
 
-<Principal idioma={idioma} ruta={ruta} title={title}>
+<Principal idioma={idioma} ruta={ruta} title={title} description={description}>
   <CatalogoAnuncios idioma={idioma} />
 </Principal>

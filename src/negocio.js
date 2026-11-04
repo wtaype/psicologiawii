@@ -43,7 +43,7 @@ export const COLECCION_NEGOCIO = 'negocio';
 export const COLECCION_SERVICIOS = 'servicios';
 export const STORAGE_KEY_ANUNCIOS = 'wi_anuncios';
 export const COLECCION_ANUNCIOS = 'anuncios';
-export const STORAGE_KEY_BLOGS = 'wi_blogs_data_v3';
+export const STORAGE_KEY_BLOGS = 'wi_blogs_data_v8';
 export const COLECCION_BLOGS = 'blogs';
 export const DOC_NEGOCIO_ID = 'principal';
 
@@ -314,8 +314,8 @@ export async function consultarProductosFirestoreFresco(forzar = false) {
         const local = localStorage.getItem(STORAGE_KEY_PRODUCTOS) || localStorage.getItem(OLD_STORAGE_KEY_PRODUCTOS);
         if (local) {
           const parsed = JSON.parse(local);
-          const lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
-          if (Array.isArray(lista) && lista.length > 0) {
+          const lista = arrayizarBlogsLocal(parsed);
+          if (lista && lista.length > 0) {
             return lista.filter(p => p.activo !== false);
           }
         }
@@ -348,6 +348,10 @@ export async function consultarProductosFirestoreFresco(forzar = false) {
             } catch (e) {}
           }
           return prods;
+        }
+      } else {
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('wi_sync_servicios_ts', String(Date.now()));
         }
       }
     }
@@ -405,25 +409,48 @@ export function normalizarAnuncioFirestore(docRaw = {}) {
     badge: toMap(item.badge, 'Anuncio', 'Ad'),
     fecha: toMap(item.fecha, 'Reciente', 'Recent'),
     estado: toMap(item.estado, 'Activo', 'Active'),
+    fechaInicio: item.fechaInicio || '',
+    fechaFin: item.fechaFin || '',
     estadoTipo: item.estadoTipo || 'activo',
     activo: Boolean(item.activo ?? true),
+    pin: Boolean(item.pin ?? false),
     conversaciones: Number(item.conversaciones ?? 0),
     costoPorConv: item.costoPorConv || 'S/ 0,00',
     metricasTexto: toMap(item.metricasTexto, '', ''),
     flyerImg: item.flyerImg || '/imgwii/psicologa-sofia-consulta.webp',
     thumbImg: item.thumbImg || item.flyerImg || '/imgwii/psicologa-sofia-consulta.webp',
     descripcion: toMap(item.descripcion, '', ''),
-    wsMsg: toMap(item.wsMsg, 'Hola Lic. Sofía, vi el anuncio en su portal web y deseo coordinar una consulta.', 'Hello Lic. Sofia, I saw the ad on your website and would like to arrange a consultation.')
+    wsMsg: toMap(item.wsMsg, 'Hola Lic. Sofía, vi el anuncio en su portal web y deseo coordinar una consulta.', 'Hello Lic. Sofia, I saw the ad on your website and would like to arrange a consultation.'),
+    creado: item.creado || Date.now(),
+    actualizado: item.actualizado || Date.now(),
+    userId: item.userId || 'admin_sofia'
   };
 }
 
-let _anunciosBuildFirestore = Array.isArray(anunciosSemilla) ? anunciosSemilla.map(a => normalizarAnuncioFirestore(a)) : [];
+export function ordenarAnuncios(lista = []) {
+  if (!Array.isArray(lista)) return [];
+  return [...lista].sort((a, b) => {
+    const pinA = Boolean(a.pin);
+    const pinB = Boolean(b.pin);
+    if (pinA !== pinB) return pinB ? 1 : -1;
+    const timeB = Number(b.actualizado || b.creado || 0);
+    const timeA = Number(a.actualizado || a.creado || 0);
+    return timeB - timeA;
+  });
+}
+
+let _anunciosBuildFirestore = Array.isArray(anunciosSemilla) ? ordenarAnuncios(anunciosSemilla.map(a => normalizarAnuncioFirestore(a))) : [];
 
 /**
  * Consulta y reconcilia anuncios desde Firestore vía REST / LocalStorage / Semillas
  * Cascada de 3 niveles: Firestore -> LocalStorage -> Semilla -> []
  */
 export async function consultarAnunciosFirestoreFresco(forzar = false) {
+  const semillasNormalizadas = Array.isArray(anunciosSemilla)
+    ? ordenarAnuncios(anunciosSemilla.map(a => normalizarAnuncioFirestore(a)))
+    : [];
+  _anunciosBuildFirestore = semillasNormalizadas;
+
   const SYNC_THROTTLE_MS = 180000;
   if (typeof window !== 'undefined' && !forzar) {
     try {
@@ -432,9 +459,20 @@ export async function consultarAnunciosFirestoreFresco(forzar = false) {
         const local = localStorage.getItem(STORAGE_KEY_ANUNCIOS);
         if (local) {
           const parsed = JSON.parse(local);
-          const lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
-          if (Array.isArray(lista) && lista.length > 0) {
-            return lista;
+          let lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
+          if (lista && lista.length > 0) {
+            const idsExistentes = new Set(lista.map(a => a.id));
+            let huboCambios = false;
+            semillasNormalizadas.forEach(sem => {
+              if (sem && sem.id && !idsExistentes.has(sem.id)) {
+                lista.push(sem);
+                huboCambios = true;
+              }
+            });
+            if (huboCambios) {
+              localStorage.setItem(STORAGE_KEY_ANUNCIOS, JSON.stringify(lista));
+            }
+            return ordenarAnuncios(lista);
           }
         }
       }
@@ -464,6 +502,10 @@ export async function consultarAnunciosFirestoreFresco(forzar = false) {
           }
           return ads;
         }
+      } else {
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('wi_sync_anuncios_ts', String(Date.now()));
+        }
       }
     }
   } catch (err) {}
@@ -473,9 +515,20 @@ export async function consultarAnunciosFirestoreFresco(forzar = false) {
       const local = localStorage.getItem(STORAGE_KEY_ANUNCIOS);
       if (local) {
         const parsed = JSON.parse(local);
-        const lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
+        let lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
         if (Array.isArray(lista) && lista.length > 0) {
-          return lista;
+          const idsExistentes = new Set(lista.map(a => a.id));
+          let huboCambios = false;
+          semillasNormalizadas.forEach(sem => {
+            if (sem && sem.id && !idsExistentes.has(sem.id)) {
+              lista.push(sem);
+              huboCambios = true;
+            }
+          });
+          if (huboCambios) {
+            localStorage.setItem(STORAGE_KEY_ANUNCIOS, JSON.stringify(lista));
+          }
+          return ordenarAnuncios(lista);
         }
       }
     } catch (e) {}
@@ -489,7 +542,19 @@ if (typeof window === 'undefined') {
 }
 
 
-let _blogsBuildFirestore = Array.isArray(blogsSemilla) ? blogsSemilla : [];
+function arrayizarBlogsLocal(datos) {
+  if (!datos) return [];
+  if (Array.isArray(datos)) return datos;
+  if (typeof datos === 'object') {
+    return Object.keys(datos).map(k => ({
+      ...datos[k],
+      id: datos[k]?.id || k
+    }));
+  }
+  return [];
+}
+
+let _blogsBuildFirestore = arrayizarBlogsLocal(blogsSemilla);
 
 /**
  * Consulta y reconcilia artículos de blog desde Firestore vía REST / LocalStorage / Semillas
@@ -504,8 +569,8 @@ export async function consultarBlogsFirestoreFresco(forzar = false) {
         const local = localStorage.getItem(STORAGE_KEY_BLOGS);
         if (local) {
           const parsed = JSON.parse(local);
-          const lista = Array.isArray(parsed) ? parsed : (parsed?.value || null);
-          if (Array.isArray(lista) && lista.length > 0) {
+          const lista = arrayizarBlogsLocal(parsed);
+          if (lista && lista.length > 0) {
             return lista.filter(b => b.activo !== false);
           }
         }
@@ -671,8 +736,8 @@ export const datosNegocio = {
   get productos() { return _serviciosBuildFirestore; },
   get servicios() { return _serviciosBuildFirestore.filter(s => s.tipo === 'psicologia'); },
   get talleres() { return _serviciosBuildFirestore.filter(s => s.tipo === 'taller'); },
-  get anuncios() { return _anunciosBuildFirestore; },
-  get anunciosActivos() { return _anunciosBuildFirestore.filter(a => a.activo !== false); },
+  get anuncios() { return ordenarAnuncios(_anunciosBuildFirestore); },
+  get anunciosActivos() { return ordenarAnuncios(_anunciosBuildFirestore.filter(a => a.activo !== false)); },
   get blogs() { return _blogsBuildFirestore; },
   get blogsActivos() { return _blogsBuildFirestore.filter(b => b.activo !== false); },
   get seo() { return this.raw.seo || null; },

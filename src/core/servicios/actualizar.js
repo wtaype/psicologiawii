@@ -680,6 +680,8 @@ export async function actualizarCentral({
         window.dispatchEvent(new CustomEvent('gaswii:productos-actualizado', { detail: aGuardar }));
       } else if (modulo === 'blogs') {
         window.dispatchEvent(new CustomEvent('wi:blogs-actualizado', { detail: aGuardar }));
+      } else if (modulo === 'anuncios') {
+        window.dispatchEvent(new CustomEvent('wi:anuncios-actualizado', { detail: aGuardar }));
       }
     }
   } catch (err) {
@@ -720,18 +722,25 @@ export async function eliminarCentral({
   storageKey = 'wi_productos',
   evento = 'wi:productos-actualizado',
   listaActualizada = [],
+  listaStorage = undefined,
   redeploy = true,
   mensajeExito = 'Elemento eliminado con éxito'
 }) {
   if (!docId) return { ok: false, error: 'Sin docId' };
 
+  const listaFinal = (Array.isArray(listaActualizada) && listaActualizada.length > 0)
+    ? listaActualizada
+    : (Array.isArray(listaStorage) ? listaStorage : []);
+
   // 1. Local-First inmediato
   try {
-    savels(storageKey, listaActualizada);
+    savels(storageKey, listaFinal);
     if (typeof window !== 'undefined') {
-      window.dispatchEvent(new CustomEvent(evento, { detail: listaActualizada }));
+      window.dispatchEvent(new CustomEvent(evento, { detail: listaFinal }));
       if (modulo === 'blogs') {
-        window.dispatchEvent(new CustomEvent('wi:blogs-actualizado', { detail: listaActualizada }));
+        window.dispatchEvent(new CustomEvent('wi:blogs-actualizado', { detail: listaFinal }));
+      } else if (modulo === 'anuncios') {
+        window.dispatchEvent(new CustomEvent('wi:anuncios-actualizado', { detail: listaFinal }));
       }
     }
   } catch (e) {}

@@ -244,6 +244,38 @@
   color: var(--mco);
 }
 
+.po_meta_like_btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: color var(--tr_f);
+}
+
+.po_meta_like_btn:hover {
+  color: #fe0149;
+}
+
+.po_meta_like_btn.active {
+  color: #fe0149;
+  font-weight: 600;
+}
+
+.po_meta_like_btn i {
+  color: #fe0149 !important;
+  transition: transform 0.2s ease;
+}
+
+.po_meta_like_btn:hover i {
+  transform: scale(1.15);
+}
+
 /* ── TABLA DE CONTENIDOS (TOC ESTILO WORKWII) ── */
 .po_toc_box {
   background: var(--bg4);
@@ -802,6 +834,17 @@
   border-radius: 1.8vh;
   padding: 3vh 3.5vh;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+
+.po_comments_box {
+  padding: 1vh 0;
+  font-size: var(--fz_m1);
+  color: var(--tx2);
+  text-align: center;
+}
+.po_comments_desc {
+  margin-bottom: 2vh;
+  line-height: 1.6;
 }
 
 .po_comments_title {

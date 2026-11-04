@@ -79,26 +79,67 @@
 
 @media (max-width: 1024px) {
   .sec-talleres-grid {
-    grid-template-columns: repeat(2, 1fr) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
     gap: 2.5vh !important;
   }
 }
 
 @media (max-width: 640px) {
   .sec-talleres-grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: minmax(0, 1fr) !important;
     gap: 1.5rem !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 
-  .taller-card-box {
-    padding: 1.35rem 1.25rem !important;
+  .taller-card-box,
+  .card-taller {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: clamp(1.1rem, 4vw, 1.35rem) clamp(0.85rem, 3.5vw, 1.25rem) !important;
     border-radius: 1.2vh !important;
+    box-sizing: border-box !important;
+  }
+
+  .taller-main-content,
+  .taller-footer-content {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .taller-header-pills {
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 0.4rem;
+  }
+
+  .taller-tipo-badge {
+    min-width: 0;
+    max-width: 60%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .taller-price-row {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .taller-price-col-right {
+    min-width: 0;
+    text-align: right;
   }
 
   .taller-title {
     font-size: 1.2rem !important;
     line-height: 1.32 !important;
     margin-bottom: 0.6rem !important;
+    word-break: break-word;
   }
 
   .taller-desc-snippet {
@@ -111,17 +152,22 @@
     padding: 0.85rem 0.95rem !important;
     border-radius: 1vh !important;
     margin-bottom: 1.1rem !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
   }
 
   .taller-guarantee-item {
     font-size: 0.8rem !important;
     line-height: 1.4 !important;
+    word-break: break-word;
   }
 
   .btn-taller-ws {
     min-height: 48px;
     font-size: 0.92rem;
     padding-block: 0.85rem;
+    width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 

@@ -2,6 +2,7 @@
 // src/feature/inicio/secciones/06-anuncios/Anuncios.astro
 // 📢 SECCIÓN ANUNCIOS & CAMPAÑAS ACTIVAS (ESTILO META ADS MANAGER)
 // Muestra split: Flyer activo a la izquierda + Feed de campañas a la derecha
+// 100% Reactivo · Local-First (0ms) · Sincronizado con Firestore y Cloudflare
 import { datosNegocio, resolverTexto } from '../../../../negocio.js';
 import { resolverIdioma, buildRuta } from '../../idioma/idioma.js';
 import { imgwii } from '@widev';
@@ -17,7 +18,7 @@ const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.pro
 const t = resolverIdioma({ es, en }, idioma);
 
 const listaAnuncios = datosNegocio.anuncios || [];
-const anuncioDestacado = listaAnuncios.find(a => a.activo) || listaAnuncios[0] || null;
+const anuncioDestacado = listaAnuncios.find(a => a.pin && a.activo) || listaAnuncios.find(a => a.activo) || listaAnuncios[0] || null;
 const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
 
 const rutaCatalogo = buildRuta('/anuncios', idioma);
@@ -26,7 +27,17 @@ const rutaAdmin = buildRuta('/personal/anuncios', idioma);
 
 <style is:global set:html={anunciosCss}></style>
 
-<section id="anuncios" class="sec-anuncios">
+<section
+  id="anuncios"
+  class="sec-anuncios"
+  data-idioma={idioma}
+  data-wa-num={whatsappNumero}
+  data-label-convs={t.label_conversaciones}
+  data-label-costo={t.label_costo}
+  data-badge-oficial={t.badge_oficial}
+  data-detalle-modalidad={t.detalle_modalidad}
+  data-btn-reservar={t.btn_reservar}
+>
   <div class="pagewii sec-anuncios__container">
     
     <!-- 🏷️ Cabecera -->
@@ -84,8 +95,8 @@ const rutaAdmin = buildRuta('/personal/anuncios', idioma);
 
             <div class="anuncio-showcase__pills-bar">
               <span class="anuncio-showcase__pill">
-                <i class="fa-solid fa-comments" aria-hidden="true"></i>
-                <span id="showcase-conversaciones">{anuncioDestacado.conversaciones}</span> {t.label_conversaciones}
+                <i class="fa-solid fa-calendar-check" aria-hidden="true"></i>
+                <span id="showcase-vigencia">{resolverTexto(anuncioDestacado.fecha, idioma)}</span>
               </span>
               <span class="anuncio-showcase__pill">
                 <i class="fa-solid fa-shield-heart" aria-hidden="true"></i>
@@ -147,7 +158,7 @@ const rutaAdmin = buildRuta('/personal/anuncios', idioma);
                   data-badge={badgeTxt}
                   data-fecha={fechaTxt}
                   data-estado={estadoTxt}
-                  data-conversaciones={ad.conversaciones}
+                  data-pin={Boolean(ad.pin)}
                   data-ws-msg={wsTxt}
                   data-wa-num={whatsappNumero}
                 >
@@ -171,14 +182,10 @@ const rutaAdmin = buildRuta('/personal/anuncios', idioma);
                     <div class={`anuncio-meta-item__status anuncio-meta-item__status--${estadoTipo}`}>
                       {estadoTxt}
                     </div>
-                    <div class="anuncio-meta-item__conversaciones">
-                      {ad.conversaciones} {t.label_conversaciones}
+                    <div class="anuncio-meta-item__badge">
+                      <i class="fa-solid fa-certificate" aria-hidden="true"></i>
+                      <span>{badgeTxt}</span>
                     </div>
-                    {ad.costoPorConv && (
-                      <div class="anuncio-meta-item__costo">
-                        {t.label_costo} {ad.costoPorConv}
-                      </div>
-                    )}
                   </div>
 
                   <div class="anuncio-meta-item__action" aria-label="Ver anuncio">
@@ -207,8 +214,24 @@ const rutaAdmin = buildRuta('/personal/anuncios', idioma);
   </div>
 </section>
 
-<script is:inline>
+<script>
+  import { consultarAnunciosFirestoreFresco, STORAGE_KEY_ANUNCIOS } from '../../../../negocio.js';
+
   (function initAnunciosShowcase() {
+    const sec = document.getElementById('anuncios');
+    if (!sec) return;
+
+    const idioma = sec.getAttribute('data-idioma') || 'es';
+    const waNumGlobal = sec.getAttribute('data-wa-num') || '51960332958';
+    const lblConvs = sec.getAttribute('data-label-convs') || 'conversaciones iniciadas';
+    const lblCosto = sec.getAttribute('data-label-costo') || 'Costo por conversación:';
+
+    function resolverTxt(val, lang = idioma) {
+      if (!val) return '';
+      if (typeof val === 'string') return val;
+      return val[lang] || val.es || val.en || '';
+    }
+
     // 1. Control de Visibilidad Segura de '+ Crear anuncio' supeditado a wiSmile
     function sincronizarAuthCrearAnuncio() {
       const btn = document.getElementById('anunciosBtnCrear');
@@ -238,58 +261,180 @@ const rutaAdmin = buildRuta('/personal/anuncios', idioma);
     sincronizarAuthCrearAnuncio();
     document.addEventListener('DOMContentLoaded', sincronizarAuthCrearAnuncio);
     document.addEventListener('astro:page-load', sincronizarAuthCrearAnuncio);
-    window.addEventListener('storage', function(e) {
+    window.addEventListener('storage', (e) => {
       if (e.key === 'wiSmile') sincronizarAuthCrearAnuncio();
     });
     window.addEventListener('wi-auth-cambio', sincronizarAuthCrearAnuncio);
 
-    // 2. Interactividad del Showcase con las campañas
-    const items = document.querySelectorAll('.anuncio-meta-item');
-    if (!items.length) return;
+    // 2. Vinculación del Showcase con las campañas
+    function vincularItems() {
+      const items = document.querySelectorAll('.anuncio-meta-item');
+      if (!items.length) return;
 
-    const showcaseImg = document.getElementById('showcase-img');
-    const showcaseTitulo = document.getElementById('showcase-titulo');
-    const showcaseDesc = document.getElementById('showcase-desc');
-    const showcaseBadge = document.getElementById('showcase-badge');
-    const showcaseFecha = document.getElementById('showcase-fecha');
-    const showcaseStatusText = document.getElementById('showcase-status-text');
-    const showcaseConversaciones = document.getElementById('showcase-conversaciones');
-    const showcaseBtnWa = document.getElementById('showcase-btn-wa');
+      const showcaseImg = document.getElementById('showcase-img') as HTMLImageElement;
+      const showcaseTitulo = document.getElementById('showcase-titulo');
+      const showcaseDesc = document.getElementById('showcase-desc');
+      const showcaseBadge = document.getElementById('showcase-badge');
+      const showcaseFecha = document.getElementById('showcase-fecha');
+      const showcaseStatusText = document.getElementById('showcase-status-text');
+      const showcaseVigencia = document.getElementById('showcase-vigencia');
+      const showcaseBtnWa = document.getElementById('showcase-btn-wa') as HTMLAnchorElement;
 
-    items.forEach(function(item) {
-      function activar() {
-        items.forEach(function(el) { el.classList.remove('is-selected'); });
-        item.classList.add('is-selected');
+      items.forEach((item) => {
+        function activar() {
+          items.forEach(el => el.classList.remove('is-selected'));
+          item.classList.add('is-selected');
 
-        const flyer = item.getAttribute('data-flyer');
-        const titulo = item.getAttribute('data-titulo');
-        const desc = item.getAttribute('data-desc');
-        const badge = item.getAttribute('data-badge');
-        const fecha = item.getAttribute('data-fecha');
-        const estado = item.getAttribute('data-estado');
-        const conv = item.getAttribute('data-conversaciones');
-        const wsMsg = item.getAttribute('data-ws-msg');
-        const waNum = item.getAttribute('data-wa-num');
+          const flyer = item.getAttribute('data-flyer');
+          const titulo = item.getAttribute('data-titulo');
+          const desc = item.getAttribute('data-desc');
+          const badge = item.getAttribute('data-badge');
+          const fecha = item.getAttribute('data-fecha');
+          const estado = item.getAttribute('data-estado');
+          const wsMsg = item.getAttribute('data-ws-msg');
+          const waNum = item.getAttribute('data-wa-num') || waNumGlobal;
 
-        if (showcaseImg && flyer) showcaseImg.src = flyer;
-        if (showcaseTitulo && titulo) showcaseTitulo.textContent = titulo;
-        if (showcaseDesc && desc) showcaseDesc.textContent = desc;
-        if (showcaseBadge && badge) showcaseBadge.textContent = badge;
-        if (showcaseFecha && fecha) showcaseFecha.textContent = fecha;
-        if (showcaseStatusText && estado) showcaseStatusText.textContent = estado;
-        if (showcaseConversaciones && conv) showcaseConversaciones.textContent = conv;
-        if (showcaseBtnWa && wsMsg && waNum) {
-          showcaseBtnWa.href = 'https://wa.me/' + waNum + '?text=' + encodeURIComponent(wsMsg);
+          if (showcaseImg && flyer) showcaseImg.src = flyer;
+          if (showcaseTitulo && titulo) showcaseTitulo.textContent = titulo;
+          if (showcaseDesc && desc) showcaseDesc.textContent = desc;
+          if (showcaseBadge && badge) showcaseBadge.textContent = badge;
+          if (showcaseFecha && fecha) showcaseFecha.textContent = fecha;
+          if (showcaseStatusText && estado) showcaseStatusText.textContent = estado;
+          if (showcaseVigencia && fecha) showcaseVigencia.textContent = fecha;
+          if (showcaseBtnWa && wsMsg) {
+            showcaseBtnWa.href = `https://wa.me/${waNum}?text=${encodeURIComponent(wsMsg)}`;
+          }
+        }
+
+        item.addEventListener('click', activar);
+        item.addEventListener('keydown', (e: any) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            activar();
+          }
+        });
+      });
+    }
+
+    // 3. Hidratación Dinámica en Vivo (0ms) ante cambios en caliente
+    function hidratarAnunciosDOM(lista: any[]) {
+      if (!Array.isArray(lista) || lista.length === 0) return;
+
+      const ul = document.querySelector('.anuncios-meta-feed__list');
+      const counter = document.querySelector('.anuncios-meta-feed__counter');
+      if (counter) counter.textContent = String(lista.length);
+
+      if (ul) {
+        ul.innerHTML = lista.map((ad, index) => {
+          const isActivo = ad.activo;
+          const estadoTipo = ad.estadoTipo || (isActivo ? 'activo' : 'completado');
+          const fechaTxt = resolverTxt(ad.fecha);
+          const estadoTxt = resolverTxt(ad.estado);
+          const tituloTxt = resolverTxt(ad.titulo);
+          const descTxt = resolverTxt(ad.descripcion);
+          const badgeTxt = resolverTxt(ad.badge);
+          const wsTxt = resolverTxt(ad.wsMsg);
+
+          return `
+            <li>
+              <div
+                class="anuncio-meta-item ${index === 0 ? 'is-selected' : ''}"
+                role="button"
+                tabindex="0"
+                data-ad-id="${ad.id}"
+                data-flyer="${ad.flyerImg || '/imgwii/psicologa-sofia-consulta.webp'}"
+                data-titulo="${tituloTxt}"
+                data-desc="${descTxt}"
+                data-badge="${badgeTxt}"
+                data-fecha="${fechaTxt}"
+                data-estado="${estadoTxt}"
+                data-pin="${Boolean(ad.pin)}"
+                data-ws-msg="${wsTxt}"
+                data-wa-num="${waNumGlobal}"
+              >
+                <div class="anuncio-meta-item__thumb-wrap">
+                  <img
+                    src="${ad.thumbImg || ad.flyerImg || '/imgwii/psicologa-sofia-consulta.webp'}"
+                    alt="${tituloTxt}"
+                    class="anuncio-meta-item__thumb"
+                    loading="lazy"
+                  />
+                  ${isActivo ? '<span class="anuncio-meta-item__check-icon" aria-label="Activo"><i class="fa-solid fa-check" aria-hidden="true"></i></span>' : ''}
+                </div>
+
+                <div class="anuncio-meta-item__content">
+                  <div class="anuncio-meta-item__created">${fechaTxt}</div>
+                  <div class="anuncio-meta-item__status anuncio-meta-item__status--${estadoTipo}">
+                    ${estadoTxt}
+                  </div>
+                  <div class="anuncio-meta-item__badge">
+                    <i class="fa-solid fa-certificate" aria-hidden="true"></i>
+                    <span>${badgeTxt}</span>
+                  </div>
+                </div>
+
+                <div class="anuncio-meta-item__action" aria-label="Ver anuncio">
+                  <i class="fa-solid fa-ellipsis-vertical" aria-hidden="true"></i>
+                </div>
+              </div>
+            </li>
+          `;
+        }).join('');
+
+        // Actualizar el showcase con el primer anuncio activo
+        const destacado = lista.find(a => a.activo) || lista[0];
+        if (destacado) {
+          const showcaseImg = document.getElementById('showcase-img') as HTMLImageElement;
+          const showcaseTitulo = document.getElementById('showcase-titulo');
+          const showcaseDesc = document.getElementById('showcase-desc');
+          const showcaseBadge = document.getElementById('showcase-badge');
+          const showcaseFecha = document.getElementById('showcase-fecha');
+          const showcaseStatusText = document.getElementById('showcase-status-text');
+          const showcaseVigencia = document.getElementById('showcase-vigencia');
+          const showcaseBtnWa = document.getElementById('showcase-btn-wa') as HTMLAnchorElement;
+
+          if (showcaseImg) showcaseImg.src = destacado.flyerImg || '/imgwii/psicologa-sofia-consulta.webp';
+          if (showcaseTitulo) showcaseTitulo.textContent = resolverTxt(destacado.titulo);
+          if (showcaseDesc) showcaseDesc.textContent = resolverTxt(destacado.descripcion);
+          if (showcaseBadge) showcaseBadge.textContent = resolverTxt(destacado.badge);
+          if (showcaseFecha) showcaseFecha.textContent = resolverTxt(destacado.fecha);
+          if (showcaseStatusText) showcaseStatusText.textContent = resolverTxt(destacado.estado);
+          if (showcaseVigencia) showcaseVigencia.textContent = resolverTxt(destacado.fecha);
+          if (showcaseBtnWa) {
+            showcaseBtnWa.href = `https://wa.me/${waNumGlobal}?text=${encodeURIComponent(resolverTxt(destacado.wsMsg))}`;
+          }
+        }
+
+        vincularItems();
+      }
+    }
+
+    // Inicializar listeners iniciales
+    vincularItems();
+
+    // 4. Escuchar evento reactivo canónico de Workwii
+    window.addEventListener('wi:anuncios-actualizado', (e: any) => {
+      if (Array.isArray(e.detail)) {
+        hidratarAnunciosDOM(e.detail);
+      }
+    });
+
+    // 5. Reconciliación con Firestore en segundo plano
+    try {
+      const local = localStorage.getItem(STORAGE_KEY_ANUNCIOS);
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          hidratarAnunciosDOM(parsed);
         }
       }
+    } catch (e) {}
 
-      item.addEventListener('click', activar);
-      item.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          activar();
-        }
-      });
-    });
+    // Refrescar en background desde Firestore si expiró el throttle
+    consultarAnunciosFirestoreFresco().then((frescos) => {
+      if (Array.isArray(frescos) && frescos.length > 0) {
+        hidratarAnunciosDOM(frescos);
+      }
+    }).catch(() => {});
   })();
 </script>

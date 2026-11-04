@@ -1,25 +1,103 @@
 ---
 // src/pages/en/[slug].astro
-// Canonical 301 Redirect from English Root Slugs to /en/blog/[slug]
-import { consultarBlogsFirestoreFresco } from '../../negocio.js';
+// ⚡ Native English Blog Post Renderer · Consultorio Psicológico América
+// Zero Redirect Latency · Direct URLs /en/:slug
+import Principal from '../../core/layouts/Principal.astro';
+import PostPage from '../../feature/blog/components/PostPage.astro';
+import PostSidebar from '../../feature/blog/components/PostSidebar.astro';
+import { consultarBlogsFirestoreFresco, datosNegocio } from '../../negocio.js';
+import { IDIOMAS, buildRuta, DEFAULT_LANG } from '../../core/idioma/idioma';
 
 export async function getStaticPaths() {
-  const allPosts = await consultarBlogsFirestoreFresco();
-  const posts = (allPosts || []).filter((p: any) => p.lang === 'en' && p.activo !== false);
+  const blogsData = await consultarBlogsFirestoreFresco();
+  const allPosts = blogsData || [];
+  const posts = allPosts.filter((p: any) => p.lang === 'en' && p.activo !== false);
 
   if (!posts || posts.length === 0) {
     return [{
       params: { slug: 'couples-therapy-assertive-communication-conflict-resolution' },
-      props: { targetUrl: '/en/blog/couples-therapy-assertive-communication-conflict-resolution' }
+      props: { post: {}, related: [], latest: [], prevPost: null, nextPost: null, translationSlug: null, partnerLang: null, rutasIdioma: { en: '/en' } }
     }];
   }
 
-  return posts.map((post: any) => ({
-    params: { slug: post.slug },
-    props: { targetUrl: `/en/blog/${post.slug}` }
-  }));
+  return posts.map((post: any, index: number) => {
+    const related = posts.filter((p: any) => p.categoria === post.categoria && p.slug !== post.slug).slice(0, 5);
+    const latest = posts.filter((p: any) => p.slug !== post.slug).slice(0, 5);
+
+    // Dynamic search for linked counterpart post (Shared cluster langId or legacy)
+    const partner = allPosts.find((p: any) => p.lang !== 'en' && (p.langId === post.langId || p.id === post.langId || p.langId === post.id));
+    const translationSlug = partner ? partner.slug : null;
+    const partnerLang = partner ? (partner.lang || DEFAULT_LANG) : null;
+
+    // Dynamic generation of language routes for the Header
+    const rutasIdioma: Record<string, string> = {
+      en: `/en/${post.slug || post.id}`
+    };
+
+    Object.keys(IDIOMAS).forEach((code) => {
+      if (code === 'en') return;
+      if (partner && (partner.lang || DEFAULT_LANG) === code) {
+        rutasIdioma[code] = buildRuta(`/${partner.slug || partner.id}`, code);
+      } else {
+        rutasIdioma[code] = buildRuta('/blog', code);
+      }
+    });
+
+    return {
+      params: { slug: post.slug },
+      props: {
+        post,
+        related,
+        latest,
+        prevPost: posts[index + 1] || null,
+        nextPost: posts[index - 1] || null,
+        translationSlug,
+        partnerLang,
+        rutasIdioma
+      }
+    };
+  });
 }
 
-const { targetUrl = '/en/blog' } = Astro.props;
-return Astro.redirect(targetUrl, 301);
+interface Props {
+  post: any;
+  related: any[];
+  latest: any[];
+  prevPost: any;
+  nextPost: any;
+  translationSlug: string | null;
+  partnerLang: string | null;
+  rutasIdioma: Record<string, string>;
+}
+
+const { post, related = [], latest = [], prevPost, nextPost, translationSlug, partnerLang, rutasIdioma } = Astro.props;
+
+const idioma = 'en';
+const ruta = `/en/${post.slug || post.id}`;
+const pageTitle = `${post.titulo} · ${datosNegocio.nombre}`;
+const pageDesc = post.descripcion || datosNegocio.slogan;
+const pageImg = post.imagenTop || post.imagen || '/imgwii/servicios/psicoterapia-pareja.webp';
 ---
+
+<Principal
+  idioma={idioma}
+  ruta={ruta}
+  rutasIdioma={rutasIdioma}
+  title={pageTitle}
+  description={pageDesc}
+  keywords={Array.isArray(post.keywords) ? post.keywords.join(', ') : (post.keywords || '')}
+  image={pageImg}
+  type="article"
+  articleData={post}
+>
+  <PostPage 
+    post={post} 
+    prevPost={prevPost} 
+    nextPost={nextPost} 
+    lang={idioma} 
+    translationSlug={translationSlug}
+    partnerLang={partnerLang}
+  >
+    <PostSidebar slot="sidebar" post={post} latest={latest} related={related} lang={idioma} />
+  </PostPage>
+</Principal>

@@ -1,6 +1,7 @@
 /* ============================================================ */
-/* 📢 CATÁLOGO OFICIAL DE ANUNCIOS - ESTILO CARD META ADS       */
-/* 100% Tokens de witema.css · Cero colores fijos · Cero inline */
+/* 📢 CATÁLOGO OFICIAL DE ANUNCIOS Y CONVOCATORIAS CLÍNICAS     */
+/* Cards con Imagen 100% de Ancho · Estilo Producto / Flyer    */
+/* 100% Tokens de witema.css · Cero inline CSS · Cero hardcoded */
 /* ============================================================ */
 
 .page-catalogo-anuncios {
@@ -13,49 +14,22 @@
 
 .catalogo-anuncios__container {
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: clamp(1.5rem, 3vh, 2.5rem);
+  gap: clamp(1.8rem, 3.5vh, 2.8rem);
 }
 
-/* 🧭 Breadcrumb */
-.catalogo-anuncios__breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: var(--fz_s3);
-  color: var(--tx3);
-}
-
-.catalogo-anuncios__breadcrumb-link {
-  color: var(--brand-primary);
-  text-decoration: none;
-  font-weight: 600;
-  transition: opacity var(--tr_f);
-}
-
-.catalogo-anuncios__breadcrumb-link:hover {
-  text-decoration: underline;
-}
-
-.catalogo-anuncios__breadcrumb-sep {
-  color: var(--border-accent);
-}
-
-.catalogo-anuncios__breadcrumb-current {
-  color: var(--tx2);
-  font-weight: 600;
-}
-
-/* 🏷️ Cabecera de Página */
+/* 🏷️ Cabecera SEO de Google */
 .catalogo-anuncios__header {
   text-align: center;
-  max-width: 780px;
+  max-width: 820px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8vh;
+  gap: clamp(0.5rem, 1vh, 0.9rem);
 }
 
 .catalogo-anuncios__tag {
@@ -88,11 +62,11 @@
 .catalogo-anuncios__desc {
   font-size: var(--fz_m);
   color: var(--tx2);
-  line-height: 1.5;
+  line-height: 1.55;
   margin: 0;
 }
 
-/* 🗂️ Barra de Filtros / Tabs */
+/* 🗂️ Filtros Cortos / Tabs */
 .catalogo-anuncios__tabs {
   display: flex;
   justify-content: center;
@@ -101,13 +75,13 @@
 }
 
 .catalogo-anuncios__tab-btn {
-  padding: 0.7vh 1.4vh;
+  padding: 0.7vh 1.6vh;
   border-radius: var(--r_full);
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   color: var(--tx2);
   font-size: var(--fz_s3);
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
   transition: all var(--tr_f);
 }
@@ -124,49 +98,42 @@
   box-shadow: var(--shadow-card);
 }
 
-/* 📐 Lista / Grid de Tarjetas de Anuncio Estilo Card Meta */
-.catalogo-anuncios__list {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(1rem, 1.8vh, 1.5rem);
-  max-width: 1000px;
-  margin: 0 auto;
+/* 📐 Grid de Tarjetas de Anuncio (2 Columnas Desktop, 1 Columna Móvil) */
+.catalogo-anuncios__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.4rem, 2.5vw, 2.2rem);
   width: 100%;
 }
 
-/* 🃏 Tarjeta de Anuncio Oficial */
-.ad-feed-card {
+/* 🃏 Tarjeta de Anuncio Estilo Producto con Imagen 100% de Ancho */
+.ad-full-card {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--r_l);
   box-shadow: var(--shadow-card);
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  gap: clamp(1rem, 2vh, 1.8rem);
-  padding: clamp(1.2rem, 2vh, 1.6rem);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   transition: transform var(--tr_m), box-shadow var(--tr_m), border-color var(--tr_m);
 }
 
-.ad-feed-card:hover {
-  transform: translateY(-2px);
+.ad-full-card:hover {
+  transform: translateY(-4px);
   border-color: var(--border-accent);
   box-shadow: var(--shadow-hover);
 }
 
-/* 🖼️ Miniatura con Checkmark */
-.ad-feed-card__thumb-box {
+/* 🖼️ Contenedor de Imagen al 100% de Ancho */
+.ad-full-card__media {
   position: relative;
-  width: clamp(74px, 10vw, 92px);
-  height: clamp(74px, 10vw, 92px);
-  border-radius: var(--r_m);
+  width: 100%;
+  aspect-ratio: 16 / 10;
   overflow: hidden;
   background: var(--bg-subtle);
-  border: 1px solid var(--border-card);
-  flex-shrink: 0;
 }
 
-.ad-feed-card__thumb-img {
+.ad-full-card__img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -174,185 +141,172 @@
   transition: transform var(--tr_s);
 }
 
-.ad-feed-card:hover .ad-feed-card__thumb-img {
-  transform: scale(1.05);
+.ad-full-card:hover .ad-full-card__img {
+  transform: scale(1.03);
 }
 
-.ad-feed-card__check-pill {
+/* 🏷️ Badges Flotantes sobre la Imagen */
+.ad-full-card__overlays {
   position: absolute;
-  top: 4px;
-  left: 4px;
-  width: 18px;
-  height: 18px;
+  top: clamp(0.6rem, 1.2vh, 0.9rem);
+  left: clamp(0.6rem, 1.2vh, 0.9rem);
+  right: clamp(0.6rem, 1.2vh, 0.9rem);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.ad-full-card__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35vh 0.85vh;
+  border-radius: var(--r_full);
+  background: rgba(5, 14, 28, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid var(--border-card);
+  font-size: var(--fz_s2);
+  font-weight: 700;
+  color: var(--tx1);
+}
+
+.ad-full-card__dot {
+  width: 8px;
+  height: 8px;
   border-radius: var(--r_full);
   background: var(--success);
-  color: var(--txa);
-  display: flex;
+  box-shadow: 0 0 8px var(--success);
+}
+
+.ad-full-card__status--completado .ad-full-card__dot,
+.ad-full-card__status--finalizado .ad-full-card__dot {
+  background: var(--tx3);
+  box-shadow: none;
+}
+
+.ad-full-card__badge {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  font-size: 10px;
+  padding: 0.35vh 0.85vh;
+  border-radius: var(--r_full);
+  background: var(--brand-primary);
+  color: var(--txa);
+  font-size: var(--fz_s2);
+  font-weight: 700;
   box-shadow: var(--shadow-card);
 }
 
-/* 📝 Información Central */
-.ad-feed-card__main-info {
+/* 📝 Cuerpo Informativo de la Tarjeta */
+.ad-full-card__body {
+  padding: clamp(1.2rem, 2vh, 1.6rem);
   display: flex;
   flex-direction: column;
-  gap: 0.5vh;
-  min-width: 0;
+  flex: 1;
+  gap: 0.7vh;
 }
 
-.ad-feed-card__top-line {
+.ad-full-card__meta-bar {
   display: flex;
   align-items: center;
-  gap: 0.8rem;
-  flex-wrap: wrap;
-}
-
-.ad-feed-card__date {
+  gap: 0.5rem;
   font-size: var(--fz_s3);
-  font-weight: 700;
-  color: var(--tx1);
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.ad-feed-card__status-tag {
-  font-size: var(--fz_s2);
-  font-weight: 700;
-  padding: 0.2vh 0.7vh;
-  border-radius: var(--r_full);
-}
-
-.ad-feed-card__status-tag--activo {
-  background: var(--brand-soft);
-  color: var(--brand-primary);
-}
-
-.ad-feed-card__status-tag--vigente {
-  background: var(--bg-subtle);
-  color: var(--success);
-}
-
-.ad-feed-card__status-tag--completado {
-  background: var(--bg-subtle);
+  font-weight: 600;
   color: var(--tx3);
 }
 
-.ad-feed-card__title {
-  font-size: var(--fz_m3);
+.ad-full-card__date {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ad-full-card__title {
+  font-size: var(--fz_m2);
   font-weight: 800;
-  line-height: 1.3;
+  line-height: 1.25;
   color: var(--tx1);
   margin: 0;
 }
 
-.ad-feed-card__desc {
-  font-size: var(--fz_s4);
+.ad-full-card__desc {
+  font-size: var(--fz_m);
   color: var(--tx2);
-  line-height: 1.45;
+  line-height: 1.5;
   margin: 0;
+  flex: 1;
 }
 
-.ad-feed-card__metrics-bar {
+/* 🛡️ Sub-box de Respaldo Clínico (Similar a Compromiso Terapéutico) */
+.ad-full-card__clinical-box {
   display: flex;
-  align-items: center;
-  gap: 0.6rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 0.4vh;
+  padding: 0.8vh 1.1vh;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_m);
   margin-top: 0.4vh;
 }
 
-.ad-feed-card__metric-pill {
-  display: inline-flex;
+.ad-full-card__clinical-item {
+  display: flex;
   align-items: center;
-  gap: 0.35rem;
-  padding: 0.3vh 0.8vh;
-  border-radius: var(--r_s);
-  background: var(--bg-subtle);
+  gap: 0.5rem;
+  font-size: var(--fz_s3);
   color: var(--tx2);
-  font-size: var(--fz_s2);
   font-weight: 600;
 }
 
-.ad-feed-card__metric-pill--badge {
-  background: var(--brand-soft);
+.ad-full-card__clinical-item i {
   color: var(--brand-primary);
-  font-weight: 700;
+  font-size: var(--fz_s2);
 }
 
-/* 🔘 Columna de Acción */
-.ad-feed-card__action-col {
-  flex-shrink: 0;
+/* 🔘 Acciones: Botón de WhatsApp */
+.ad-full-card__actions {
+  margin-top: 0.8vh;
+  display: flex;
+  gap: 0.8rem;
 }
 
-.ad-feed-card__btn-wa {
+.ad-full-card__btn-wa {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.9vh 1.6vh;
+  gap: 0.6rem;
+  width: 100%;
+  padding: 1.1vh 1.8vh;
   border-radius: var(--r_m);
   background: var(--wa);
   color: var(--txa);
   font-size: var(--fz_m);
   font-weight: 700;
   text-decoration: none;
-  white-space: nowrap;
   box-shadow: var(--shadow-card);
   transition: background var(--tr_f), transform var(--tr_f);
 }
 
-.ad-feed-card__btn-wa:hover {
+.ad-full-card__btn-wa:hover {
   background: var(--wa_hover);
   transform: translateY(-1px);
 }
 
-/* 📱 Responsive Móvil: Tarjetas compactas tipo App */
-@media (max-width: 680px) {
-  .ad-feed-card {
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    gap: 0.9rem;
-    padding: 1.1rem;
-  }
-
-  .ad-feed-card__thumb-box {
-    width: 62px;
-    height: 62px;
-  }
-
-  .ad-feed-card__title {
-    font-size: var(--fz_m);
-  }
-
-  .ad-feed-card__action-col {
-    grid-column: 1 / -1;
-    width: 100%;
-  }
-
-  .ad-feed-card__btn-wa {
-    width: 100%;
-  }
-}
-
-/* 📞 Banner de Contacto Inferior */
+/* 📞 Banner Inferior de Contacto */
 .catalogo-anuncios__footer-banner {
-  margin-top: 1vh;
-  padding: clamp(1.5rem, 3vh, 2.2rem);
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--r_l);
-  box-shadow: var(--shadow-card);
+  padding: clamp(1.4rem, 2.5vh, 2rem) clamp(1.2rem, 2.5vw, 2.5rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 1.5rem;
   flex-wrap: wrap;
-  max-width: 1000px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
+  box-shadow: var(--shadow-card);
+  margin-top: 1vh;
 }
 
 .catalogo-anuncios__footer-info {
@@ -362,7 +316,7 @@
 }
 
 .catalogo-anuncios__footer-title {
-  font-size: var(--fz_m4);
+  font-size: var(--fz_m2);
   font-weight: 800;
   color: var(--tx1);
   margin: 0;
@@ -378,17 +332,35 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.9vh 1.6vh;
+  padding: 1vh 1.8vh;
   border-radius: var(--r_m);
-  background: var(--brand-primary);
+  background: var(--wa);
   color: var(--txa);
   font-size: var(--fz_m);
   font-weight: 700;
   text-decoration: none;
-  transition: opacity var(--tr_f), transform var(--tr_f);
+  transition: background var(--tr_f), transform var(--tr_f);
 }
 
 .catalogo-anuncios__footer-btn:hover {
-  opacity: 0.92;
+  background: var(--wa_hover);
   transform: translateY(-1px);
+}
+
+/* 📱 Responsive Móvil: 1 Columna y 92vw fluido */
+@media (max-width: 860px) {
+  .catalogo-anuncios__grid {
+    grid-template-columns: 1fr;
+    gap: clamp(1.2rem, 2vh, 1.8rem);
+  }
+
+  .catalogo-anuncios__footer-banner {
+    flex-direction: column;
+    text-align: center;
+    align-items: stretch;
+  }
+
+  .catalogo-anuncios__footer-btn {
+    justify-content: center;
+  }
 }

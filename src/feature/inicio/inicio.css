@@ -13,14 +13,18 @@
 
 @media (max-width: 1024px) {
   .pagewii {
-    max-width: 92vw;
+    max-width: 90vw;
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .pagewii {
-    max-width: 94vw;
-    padding: 0 10px;
+    width: 100% !important;
+    max-width: min(92vw, calc(100% - 24px)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
   }
 }
 

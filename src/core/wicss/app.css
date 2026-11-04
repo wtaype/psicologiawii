@@ -1579,52 +1579,43 @@ img {
 }
 
 
-/* Optimización Smart Desktop Intermedio (901px - 1200px) */
-@media (min-width: 901px) and (max-width: 1050px) {
-  .header-container {
-    max-width: 94vw !important;
-    gap: 1vw !important;
-  }
-  .header-nav-desktop {
-    gap: 0.8vw !important;
-    font-size: 0.82rem !important;
-  }
-  .header-brand-sub {
-    display: none !important;
-  }
-}
-
-/* 16. RESPONSIVIDAD Y VISIBILIDAD */
-@media (min-width: 901px) {
+/* 16. RESPONSIVIDAD Y VISIBILIDAD (Breakpoint oficial 1100px) */
+@media (min-width: 1101px) {
   .desktop-only { display: flex !important; }
   span.desktop-only { display: block !important; }
   .mobile-only { display: none !important; }
   .mobile-sticky-bar { display: none !important; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
+  /* Desactivar scrollbars visibles en móviles para evitar barra cyan flotante */
+  html, body {
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+  }
+  html::-webkit-scrollbar, body::-webkit-scrollbar {
+    display: none !important;
+  }
+
   .desktop-only { display: none !important; }
   .mobile-only { display: flex !important; }
   .mobile-sticky-bar { display: flex !important; }
-  .page-container {
+
+  /* Estandarización fluida y simétrica en % y vw (92vw = 4vw margen izq + 4vw der) */
+  .page-container,
+  .container-wide,
+  .topbar-content,
+  .header-container {
     width: 100% !important;
-    max-width: 94% !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    box-sizing: border-box !important;
-  }
-  .container-wide {
-    width: 100% !important;
-    max-width: 94% !important;
+    max-width: min(92vw, calc(100% - 24px)) !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
     box-sizing: border-box !important;
   }
   .topbar-content,
   .header-container {
-    width: 100% !important;
-    max-width: 94% !important;
-    box-sizing: border-box !important;
     gap: 0.8rem;
   }
   main {
@@ -1632,6 +1623,11 @@ img {
     max-width: 100% !important;
     overflow-x: clip !important;
     padding-bottom: 8vh;
+    box-sizing: border-box !important;
+  }
+  .clean-card {
+    min-width: 0 !important;
+    max-width: 100% !important;
     box-sizing: border-box !important;
   }
   .footer-grid-layout { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 3vh; }
@@ -1642,17 +1638,31 @@ img {
   .container-wide,
   .topbar-content,
   .header-container {
-    max-width: 94% !important;
+    max-width: min(92vw, calc(100% - 24px)) !important;
   }
   .topbar-content {
     flex-wrap: nowrap !important;
     justify-content: space-between !important;
+    gap: 0.3rem !important;
+  }
+  .topbar-group {
+    min-width: 0;
+    overflow: hidden;
   }
   .topbar-auth-pill {
-    font-size: clamp(0.66rem, 2.4vw, 0.72rem);
-    padding: 0.3vh 0.55rem;
+    font-size: clamp(0.62rem, 2.2vw, 0.72rem);
+    padding: 0.3vh 0.45rem;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     border-radius: 1vh;
+  }
+  .topbar-group-right {
+    flex-shrink: 0;
+  }
+  .topbar-phone-link {
+    font-size: clamp(0.64rem, 2.3vw, 0.75rem);
+    padding: 0.35vh 0.5rem;
   }
   .topbar-phone-link {
     font-size: clamp(0.68rem, 2.5vw, 0.75rem);

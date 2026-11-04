@@ -1,0 +1,386 @@
+/* src/feature/blog/blogCatalog.css */
+/* Catálogo Público de Artículos de Blog · Estilo Workwii Pro */
+/* Integrado con witema.css, Poppins, Outfit y 100% responsivo */
+
+.bl_catalog_wrap {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 4vh 20px 8vh;
+  box-sizing: border-box;
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+}
+
+/* ── 1. Hero del Catálogo ── */
+.bl_catalog_header {
+  text-align: center;
+  max-width: 760px;
+  margin: 0 auto 3.5vh;
+}
+.bl_hero_badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8vh;
+  background: var(--bg5, rgba(56, 189, 248, 0.1));
+  color: var(--mco);
+  padding: 0.6vh 1.4vh;
+  border-radius: 5vh;
+  font-size: var(--fz_s3, 0.82rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 1.5vh;
+  border: 1px solid var(--brd);
+}
+.bl_hero_title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_l2, 2.4rem);
+  font-weight: 800;
+  color: var(--tx1);
+  line-height: 1.2;
+  margin: 0 0 1.5vh 0;
+}
+.bl_hero_desc {
+  font-size: var(--fz_m2, 1rem);
+  color: var(--tx3);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── 2. Barra de Búsqueda y Filtros ── */
+.bl_controls_bar {
+  display: flex;
+  flex-direction: column;
+  gap: 2.2vh;
+  margin-bottom: 4vh;
+}
+.bl_search_box {
+  position: relative;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+}
+.bl_search_icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--tx3);
+  font-size: var(--fz_m2, 1rem);
+  pointer-events: none;
+}
+.bl_search_input {
+  width: 100%;
+  padding: 1.2vh 4.5vh 1.2vh 5vh;
+  background: var(--wb);
+  border: 1px solid var(--brd);
+  border-radius: 5vh;
+  font-family: inherit;
+  font-size: var(--fz_m3, 0.95rem);
+  color: var(--tx1);
+  outline: none;
+  box-sizing: border-box;
+  transition: all var(--tr_f, 0.2s ease);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+}
+.bl_search_input:focus {
+  border-color: var(--mco);
+  box-shadow: 0 0 0 3px rgba(16, 67, 86, 0.15);
+}
+.bl_search_clear {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: var(--tx3);
+  font-size: var(--fz_m3, 0.95rem);
+  cursor: pointer;
+  padding: 4px;
+  display: none;
+}
+.bl_search_clear:hover {
+  color: var(--mco);
+}
+
+.bl_categories_scroll {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1vh;
+}
+.bl_cat_pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6vh;
+  padding: 0.8vh 1.6vh;
+  background: var(--wb);
+  border: 1px solid var(--brd);
+  border-radius: 5vh;
+  font-family: inherit;
+  font-size: var(--fz_s3, 0.85rem);
+  font-weight: 600;
+  color: var(--tx2);
+  cursor: pointer;
+  transition: all var(--tr_f, 0.2s ease);
+}
+.bl_cat_pill:hover {
+  background: var(--bg4);
+  color: var(--tx1);
+  transform: translateY(-0.2vh);
+}
+.bl_cat_pill.active {
+  background: var(--mco) !important;
+  border-color: var(--mco) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.bl_cat_count {
+  opacity: 0.75;
+  font-size: var(--fz_s1, 0.75rem);
+}
+
+/* ── 3. Grilla y Tarjetas ── */
+.bl_grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 3.5vh;
+  align-items: stretch;
+}
+.bl_card {
+  background: var(--wb);
+  border: 1px solid var(--brd);
+  border-radius: 1.8vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+  transition: all var(--tr_m, 0.3s cubic-bezier(0.4, 0, 0.2, 1));
+  height: 100%;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+.bl_card:hover {
+  transform: translateY(-0.6vh);
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.08);
+  border-color: var(--mco);
+}
+.bl_card_cover_link {
+  display: block;
+  text-decoration: none;
+  overflow: hidden;
+  position: relative;
+}
+.bl_card_img_wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: var(--bg4);
+  overflow: hidden;
+}
+.bl_card_img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+.bl_card:hover .bl_card_img {
+  transform: scale(1.05);
+}
+.bl_card_badges {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.5) 0%, transparent 60%);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 1.4vh;
+  pointer-events: none;
+}
+.bl_badge_cat {
+  background: var(--mco);
+  color: #ffffff;
+  font-size: var(--fz_s2, 0.78rem);
+  font-weight: 700;
+  padding: 0.5vh 1vh;
+  border-radius: 0.8vh;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5vh;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+.bl_badge_pin {
+  width: 3.2vh;
+  height: 3.2vh;
+  border-radius: 50%;
+  background: var(--warning, #f59e0b);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--fz_s3, 0.82rem);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+
+.bl_card_body {
+  padding: 2.2vh;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  background: transparent;
+}
+.bl_card_meta_top {
+  display: flex;
+  align-items: center;
+  gap: 1.5vh;
+  font-size: var(--fz_s3, 0.82rem);
+  color: var(--tx3);
+  margin-bottom: 1.2vh;
+}
+.bl_card_meta_top span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5vh;
+}
+.bl_card_meta_top .bl_meta_vistas {
+  color: var(--tx3);
+}
+.bl_card_meta_top .bl_meta_vistas i {
+  color: var(--tx3);
+  font-size: 11px;
+}
+.bl_card_meta_top .bl_meta_likes {
+  color: var(--tx3);
+}
+.bl_card_meta_top .bl_meta_likes i {
+  color: #fe0149;
+  font-size: 11px;
+}
+.bl_card_title {
+  font-family: var(--ff_O, 'Outfit', sans-serif);
+  font-size: var(--fz_m1, 1.2rem);
+  font-weight: 750;
+  line-height: 1.35;
+  margin: 0 0 1.2vh 0;
+  color: var(--tx1);
+}
+.bl_title_link {
+  color: var(--tx1);
+  text-decoration: none;
+  transition: color var(--tr_f, 0.2s ease);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.bl_title_link:hover {
+  color: var(--mco);
+}
+.bl_card_desc {
+  font-size: var(--fz_s4, 0.88rem);
+  color: var(--tx3);
+  line-height: 1.55;
+  margin: 0 0 2.2vh 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+.bl_card_footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--brd);
+  padding-top: 1.5vh;
+  margin-top: auto;
+}
+.bl_author_mini {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6vh;
+  font-size: var(--fz_s3, 0.82rem);
+  color: var(--tx3);
+}
+.bl_author_mini i {
+  color: var(--mco);
+}
+.bl_btn_leer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6vh;
+  color: var(--mco);
+  font-size: var(--fz_s3, 0.85rem);
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform var(--tr_f, 0.2s ease);
+}
+.bl_card:hover .bl_btn_leer {
+  transform: translateX(0.4vh);
+}
+
+/* ── 4. Estado Vacío ── */
+.bl_empty_state {
+  text-align: center;
+  padding: 6vh 2vh;
+  background: var(--wb);
+  border: 1px solid var(--brd);
+  border-radius: 1.8vh;
+  max-width: 500px;
+  margin: 4vh auto;
+}
+.bl_empty_icon {
+  font-size: 3rem;
+  color: var(--tx3);
+  margin-bottom: 1.5vh;
+}
+.bl_empty_title {
+  font-size: var(--fz_m2, 1rem);
+  color: var(--tx2);
+  margin-bottom: 2vh;
+}
+.bl_btn_reset {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8vh;
+  background: var(--mco);
+  color: #ffffff;
+  border: none;
+  padding: 1vh 2vh;
+  border-radius: 5vh;
+  font-size: var(--fz_s3, 0.85rem);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--tr_f, 0.2s ease);
+}
+.bl_btn_reset:hover {
+  filter: brightness(1.1);
+}
+
+/* ── 5. Responsive Móvil ── */
+@media (max-width: 768px) {
+  .bl_catalog_wrap {
+    padding: 2vh 16px 6vh;
+  }
+  .bl_hero_title {
+    font-size: 1.8rem;
+  }
+  .bl_grid {
+    grid-template-columns: 1fr;
+    gap: 2.5vh;
+  }
+  .bl_categories_scroll {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 0.5vh;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .bl_categories_scroll::-webkit-scrollbar {
+    display: none;
+  }
+}

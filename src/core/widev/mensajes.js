@@ -96,6 +96,12 @@ export function Notificacion(msg, tipo = 'error', tiempo = 3000) {
 
   // Obtener o crear el contenedor apilador (Bajo Demanda - Singleton)
   let container = document.getElementById('notificationsContainer');
+  if (container) {
+    const textoLimpio = String(msg || '').replace(/<[^>]*>/g, '').trim();
+    for (const s of container.querySelectorAll('.notification span')) {
+      if (s.textContent.trim() === textoLimpio) return;
+    }
+  }
   if (!container) {
     container = document.createElement('div');
     container.id = 'notificationsContainer';

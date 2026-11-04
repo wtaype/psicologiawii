@@ -1,0 +1,811 @@
+---
+// src/pages/2.astro
+// 🎨 Prototipo Creativo UI/UX: MODO ACTUALIZAR (Artículo Guardado y Bilingüe)
+// Auto-contenido: HTML, CSS y JS reactivo en un solo archivo
+import Header from '@/feature/personal/components/Header.astro';
+import Sidebar from '@/feature/personal/components/Sidebar.astro';
+import { datosNegocio } from '@/negocio.js';
+import blogsSemilla from '@/semillas/blogs.json';
+const listaBlogs: any[] = Array.isArray(blogsSemilla) ? blogsSemilla : Object.values(blogsSemilla);
+
+import witemaCss from '@/core/wicss/witema.css?inline';
+import personalCss from '@/feature/personal/personal.css?inline';
+import blogCss from '@/feature/blog/blog.css?inline';
+import blogsCss from '@/feature/personal/modulos/blogs/blogs.css?inline';
+
+// Post muestra en español (Terapia de Pareja)
+const postEs = listaBlogs.find(b => b.slug.includes('terapia-de-pareja')) || listaBlogs[0] || {};
+// Hermano en inglés
+const postEn = listaBlogs.find(b => b.id === postEs.langId || (b.lang === 'en' && b.langId === postEs.id)) || listaBlogs.find(b => b.lang === 'en') || {};
+---
+
+<!DOCTYPE html>
+<html lang="es" data-theme="futuro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Vista 2: Actualizar Artículo (Guardado & Bilingüe) · Consultorio Psicológico América</title>
+  <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+
+  <link rel="stylesheet" href="/google/fonts.css" />
+  <link rel="stylesheet" href="/fontawesome/css/all.min.css" />
+
+  <!-- Estilos Maestros Inyectados -->
+  <style is:global set:html={witemaCss}></style>
+  <style is:global set:html={personalCss}></style>
+  <style is:global set:html={blogCss}></style>
+  <style is:global set:html={blogsCss}></style>
+
+  <!-- Estilos Específicos del Prototipo 2 (Actualizar) -->
+  <style is:global>
+    /* Barra Superior Flotante de Navegación de Prototipos */
+    .bl-proto-banner {
+      background: linear-gradient(90deg, rgba(16, 67, 86, 0.95), rgba(7, 21, 38, 0.95));
+      border-bottom: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 8px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: var(--topbar-h, 62px);
+      z-index: 40;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+    }
+    .bl-proto-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--ff_O, 'Outfit', sans-serif);
+      font-size: 13px;
+      font-weight: 700;
+      color: #38bdf8;
+      letter-spacing: 0.3px;
+    }
+    .bl-proto-brand span {
+      color: var(--ink, #ffffff);
+    }
+    .bl-proto-switcher {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 1vh;
+      padding: 3px;
+      gap: 4px;
+    }
+    .bl-proto-btn {
+      color: var(--muted, #8ea3b7);
+      text-decoration: none;
+      font-family: var(--ff_P, 'Poppins', sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 0.8vh;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .bl-proto-btn:hover {
+      color: var(--ink, #ffffff);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .bl-proto-btn.active {
+      background: #38bdf8;
+      color: #071526;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.4);
+    }
+
+    /* Barra Superior Unificada */
+    .bl-main-tabs-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+      background: var(--surface, #0d1e33);
+      padding: 12px 18px;
+      border: 1px solid var(--line, rgba(255, 255, 255, 0.08));
+      border-radius: 1.2vh;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+      flex-wrap: wrap;
+    }
+    .bl-tabs-actions-unified {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    /* Conmutador Bilingüe Compacto en Cabecera */
+    .bl-bilingual-switch-top {
+      display: inline-flex;
+      align-items: center;
+      background: var(--canvas, #071526);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 3px 6px;
+      border-radius: 1vh;
+      gap: 5px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+    .bl-switch-pill {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--muted, #8ea3b7);
+      font-family: var(--ff_P, 'Poppins', sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 0.7vh;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bl-switch-pill:hover {
+      color: var(--ink, #ffffff);
+      background: rgba(255, 255, 255, 0.05);
+    }
+    .bl-switch-pill.active {
+      background: linear-gradient(135deg, #104356, #0284c7);
+      color: #ffffff;
+      border-color: #38bdf8;
+      box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
+    }
+    .bl-switch-arrow {
+      color: var(--muted, #8ea3b7);
+      font-size: 10px;
+    }
+
+    /* Botón Traducir con IA con Pulso Brillante Activo (.is-ready) */
+    .bl-btn-gemini-ready {
+      background: linear-gradient(135deg, #104356, #0284c7);
+      color: #ffffff;
+      border: 1px solid rgba(56, 189, 248, 0.5);
+      font-family: var(--ff_P, 'Poppins', sans-serif);
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 1vh;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+      animation: pulseGlow 2.4s infinite;
+      transition: all 0.2s ease;
+    }
+    .bl-btn-gemini-ready:hover {
+      filter: brightness(1.15);
+      transform: translateY(-1px);
+    }
+
+    @keyframes pulseGlow {
+      0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.6); }
+      70% { box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+
+    /* Botón de Actualizar en Sidebar Hero */
+    .bl-btn-update-hero {
+      width: 100%;
+      background: linear-gradient(135deg, #0d9488, #14b8a6);
+      color: #ffffff;
+      border: none;
+      font-family: var(--ff_P, 'Poppins', sans-serif);
+      font-size: 13.5px;
+      font-weight: 700;
+      padding: 11px 18px;
+      border-radius: 1vh;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 16px rgba(20, 184, 166, 0.35);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .bl-btn-update-hero:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(20, 184, 166, 0.45);
+    }
+
+    .bl-btn-nuevo-clean {
+      width: 100%;
+      background: var(--canvas, #071526);
+      border: 1px solid var(--line, rgba(255, 255, 255, 0.1));
+      color: var(--muted, #8ea3b7);
+      font-family: var(--ff_P, 'Poppins', sans-serif);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 1vh;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.18s ease;
+    }
+    .bl-btn-nuevo-clean:hover {
+      color: var(--ink, #ffffff);
+      background: var(--surface);
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Estado de sincronización en la tarjeta superior */
+    .bl-sync-status-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      color: #34d399;
+      margin-top: 8px;
+    }
+    .bl-sync-status-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+
+    /* Badge de Éxito de Vínculo Bilingüe */
+    .bl-linked-success-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 0.8vh;
+      padding: 9px 12px;
+      font-size: 11.5px;
+      color: #6ee7b7;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    /* Botón de Vincular */
+    .bl-btn-vincular {
+      width: 100%;
+      background: var(--canvas, #071526);
+      border: 1px solid var(--line, rgba(255, 255, 255, 0.12));
+      color: var(--ink, #ffffff);
+      font-family: var(--ff_P, 'Poppins', sans-serif);
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 8px 14px;
+      border-radius: 1vh;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+    .bl-btn-vincular:hover {
+      background: var(--surface, #0d1e33);
+      border-color: #38bdf8;
+      color: #38bdf8;
+      transform: translateY(-1px);
+    }
+
+    /* Toast Notification de prueba */
+    .bl-proto-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0d1e33;
+      border: 1px solid #10b981;
+      color: #ffffff;
+      padding: 14px 20px;
+      border-radius: 1vh;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      z-index: 1000;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
+    }
+    .bl-proto-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Topbar Unificada del Consultorio -->
+  <Header />
+
+  <!-- Barra de Switcher de Prototipos para Testeo Rápido -->
+  <div class="bl-proto-banner">
+    <div class="bl-proto-brand">
+      <i class="fa-solid fa-sparkles"></i>
+      <span>Laboratorio UI/UX · Módulo Blogs</span>
+      <span style="color:var(--muted); font-size:11.5px; font-weight:400;">(Lic. Sofía Reynaga)</span>
+    </div>
+    <div class="bl-proto-switcher">
+      <a href="/1" class="bl-proto-btn" title="Prototipo para crear un nuevo artículo">
+        <i class="fa-solid fa-file-circle-plus"></i> Vista 1: Modo Crear
+      </a>
+      <a href="/2" class="bl-proto-btn active" title="Prototipo para editar y actualizar artículo existente">
+        <i class="fa-solid fa-pen-to-square"></i> Vista 2: Modo Actualizar
+      </a>
+    </div>
+  </div>
+
+  <!-- Sidebar con los Módulos Operacionales -->
+  <Sidebar moduloActivo="blogs" />
+
+  <!-- Shell Principal -->
+  <main class="ps-main-shell">
+    <section class="ps-panel active" id="panel-blogs">
+      <div class="bl-admin-shell">
+
+        <!-- 1. BARRA SUPERIOR DE PESTAÑAS Y ACCIONES UNIFICADAS -->
+        <div class="bl-main-tabs-bar">
+          <div class="bl-tabs-nav">
+            <button type="button" class="bl-tab-btn active" id="blBtnTabRedactor" title="Editando artículo guardado">
+              <i class="fa-solid fa-file-pen"></i> Redactor de Publicación
+            </button>
+            <button type="button" class="bl-tab-btn" id="blBtnTabPublicaciones" title="Ver catálogo completo de publicaciones">
+              <i class="fa-solid fa-table-list"></i> Publicaciones (16)
+            </button>
+          </div>
+
+          <!-- Acciones de Cabecera: Conmutador Bilingüe + Traducir IA Activo + Ver en Web -->
+          <div class="bl-tabs-actions-unified">
+            <!-- Conmutador Bilingüe Interactivo -->
+            <div class="bl-bilingual-switch-top" id="blBilingualSwitchTop" title="Cambiar versión de idioma al instante">
+              <button type="button" class="bl-switch-pill active" id="blBtnLangEs" title="Ver / Editar versión en Español">
+                <span>🇪🇸</span> <span id="blLblEs">Español</span>
+              </button>
+              <i class="fa-solid fa-arrow-right-arrow-left bl-switch-arrow"></i>
+              <button type="button" class="bl-switch-pill" id="blBtnLangEn" title="Ver / Editar versión en Inglés">
+                <span>🇺🇸</span> <span id="blLblEn">English</span>
+              </button>
+            </div>
+
+            <!-- Botón Traducir con IA Activo y Pulsante -->
+            <button 
+              type="button" 
+              class="bl-btn-gemini-ready" 
+              id="blBtnTraducirIA" 
+              title="Re-traducir y actualizar versión en inglés con Gemini IA"
+            >
+              <i class="fa-solid fa-wand-magic-sparkles"></i> <span>Traducir con IA</span>
+            </button>
+
+            <!-- Ver en Web Pública Directo al Artículo -->
+            <a 
+              href={`/${postEs.slug}`} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="bl-btn-ver-publicado" 
+              id="blLinkLivePost"
+              title="Abrir artículo publicado en vivo en nueva pestaña"
+            >
+              <i class="fa-solid fa-arrow-up-right-from-square"></i>
+              <span>Ver en web</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- 2. REDACTOR CON DATOS CARGADOS (POST EXISTENTE) -->
+        <div id="blViewRedactor">
+          <form id="blFormEditor" autocomplete="off">
+            <input type="hidden" id="blInputId" value={postEs.id} />
+
+            <div class="bl-editor-layout">
+              
+              <!-- COLUMNA PRINCIPAL DE REDACCIÓN (70%) -->
+              <div class="bl-editor-col-main">
+                
+                <!-- Título y Slug -->
+                <div class="bl-card">
+                  <div class="bl-card-title">
+                    <span><i class="fa-solid fa-heading"></i> Título del Artículo (H1 SEO)</span>
+                    <span class="bl-counter-badge" id="blCntTitulo">{postEs.titulo.length}/60</span>
+                  </div>
+                  <input 
+                    type="text" 
+                    id="blInputTitulo" 
+                    class="bl-input bl-title-input" 
+                    value={postEs.titulo}
+                    maxlength="60" 
+                    required 
+                  />
+                  
+                  <div class="bl-slug-box">
+                    <i class="fa-solid fa-link bl-slug-icon"></i>
+                    <input 
+                      type="text" 
+                      id="blInputSlug" 
+                      class="bl-slug-input" 
+                      value={postEs.slug}
+                      spellcheck="false" 
+                      required 
+                    />
+                  </div>
+                </div>
+
+                <!-- Resumen y Palabras Clave (SEO) -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                  <div class="bl-card">
+                    <div class="bl-card-title">
+                      <span><i class="fa-solid fa-align-left"></i> Resumen de Lectura</span>
+                      <span class="bl-counter-badge" id="blCntResumen">{(postEs.descripcion || '').length}/200</span>
+                    </div>
+                    <textarea 
+                      id="blInputResumen" 
+                      class="bl-textarea" 
+                      rows="3" 
+                      maxlength="200"
+                    >{postEs.descripcion}</textarea>
+                  </div>
+
+                  <div class="bl-card">
+                    <div class="bl-card-title">
+                      <span><i class="fa-solid fa-key"></i> Palabras Clave (SEO)</span>
+                      <span class="bl-counter-badge" id="blCntKeywords">{(postEs.metaSEO?.keywords || '').length}/160</span>
+                    </div>
+                    <textarea 
+                      id="blInputKeywords" 
+                      class="bl-textarea" 
+                      rows="3" 
+                      maxlength="160"
+                    >{postEs.metaSEO?.keywords || (postEs.tags || []).join(', ')}</textarea>
+                  </div>
+                </div>
+
+                <!-- Redactor Markdown y Vista Previa en Vivo -->
+                <div class="bl-card">
+                  <div class="bl-subtabs-head">
+                    <div class="bl-card-title" style="margin-bottom:0;">
+                      <span><i class="fa-solid fa-keyboard"></i> Contenido del Artículo</span>
+                    </div>
+                    <div class="bl-subtabs-nav">
+                      <button type="button" class="bl-subtab-btn active" id="blSubtabWrite">
+                        <i class="fa-solid fa-pen-nib"></i> Editor Markdown
+                      </button>
+                      <button type="button" class="bl-subtab-btn" id="blSubtabPreview">
+                        <i class="fa-solid fa-eye"></i> Vista Previa en Vivo
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Panel Escritura -->
+                  <div id="blPanelWrite" style="display: block;">
+                    <!-- Barra de Herramientas Markdown -->
+                    <div class="bl-toolbar">
+                      <button type="button" class="bl-tool" data-cmd="bold" title="Negrita"><strong>B</strong></button>
+                      <button type="button" class="bl-tool" data-cmd="italic" title="Cursiva"><em>I</em></button>
+                      <div class="bl-tool-sep"></div>
+                      <button type="button" class="bl-tool" data-cmd="h2" title="Encabezado H2">H2</button>
+                      <button type="button" class="bl-tool" data-cmd="h3" title="Subtítulo H3">H3</button>
+                      <div class="bl-tool-sep"></div>
+                      <button type="button" class="bl-tool" data-cmd="link" title="Enlace web"><i class="fa-solid fa-link"></i></button>
+                      <button type="button" class="bl-tool" data-cmd="quote" title="Cita textual"><i class="fa-solid fa-quote-left"></i></button>
+                      <button type="button" class="bl-tool" data-cmd="code" title="Código"><i class="fa-solid fa-code"></i></button>
+                      <button type="button" class="bl-tool" data-cmd="table" title="Tabla"><i class="fa-solid fa-table"></i></button>
+                      <button type="button" class="bl-tool" data-cmd="image" title="Imagen"><i class="fa-solid fa-image"></i></button>
+                      <div class="bl-tool-sep"></div>
+                      <button type="button" class="bl-tool" data-cmd="note" title="Nota informativa"><i class="fa-solid fa-circle-info" style="color:#0284c7;"></i></button>
+                      <button type="button" class="bl-tool" data-cmd="tip" title="Consejo terapéutico"><i class="fa-solid fa-lightbulb" style="color:#10b981;"></i></button>
+                      <button type="button" class="bl-tool" data-cmd="warning" title="Advertencia"><i class="fa-solid fa-triangle-exclamation" style="color:#f59e0b;"></i></button>
+                    </div>
+
+                    <textarea 
+                      id="blInputContenido" 
+                      class="bl-textarea bl-textarea-content" 
+                      rows="14"
+                      required
+                    >{postEs.contenidoMD || postEs.contenido}</textarea>
+
+                    <div class="bl-editor-footer">
+                      <span id="blLivePalabras"><i class="fa-solid fa-font"></i> 842 palabras</span>
+                      <span id="blLiveLectura"><i class="fa-solid fa-clock"></i> 4 min de lectura</span>
+                    </div>
+                  </div>
+
+                  <!-- Panel Vista Previa -->
+                  <div id="blPanelPreview" style="display: none;">
+                    <div class="bl-preview-box po_contenido" id="blPreviewBody"></div>
+                  </div>
+
+                </div>
+
+              </div>
+
+              <!-- COLUMNA LATERAL DE CONFIGURACIÓN Y METADATOS (30%) -->
+              <div class="bl-editor-col-side">
+                
+                <!-- 1. Botón Principal: Actualizar y Nuevo (Sin Cargar) -->
+                <div class="bl-card bl-top-actions-card">
+                  <div class="bl-actions-duo-clean">
+                    <button type="submit" form="blFormEditor" class="bl-btn-update-hero" id="blBtnSubmitPost" title="Guardar cambios de la publicación">
+                      <i class="fa-solid fa-floppy-disk"></i> <span>Actualizar Artículo</span>
+                    </button>
+                    <a href="/1" class="bl-btn-nuevo-clean" title="Redactar nuevo artículo desde cero">
+                      <i class="fa-solid fa-plus"></i> <span>Nuevo Borrador</span>
+                    </a>
+                  </div>
+                  <div class="bl-sync-status-badge">
+                    <span class="dot"></span>
+                    <span>Guardado y sincronizado en la nube</span>
+                  </div>
+                </div>
+
+                <!-- 2. Idioma & Enlace Bilingüe con Botón 'Vincular Hermano' -->
+                <div class="bl-card">
+                  <div class="bl-card-title">
+                    <span><i class="fa-solid fa-language"></i> Idioma & Enlace Bilingüe</span>
+                  </div>
+                  
+                  <div style="margin-bottom: 12px;">
+                    <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Idioma del Artículo:</label>
+                    <select id="blSelectLang" class="bl-select">
+                      <option value="es" selected={postEs.lang === 'es'}>Español (ES)</option>
+                      <option value="en" selected={postEs.lang === 'en'}>English (EN)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Vincular con Post Hermano (langId):</label>
+                    <select id="blSelectLangId" class="bl-select">
+                      <option value="">-- Ninguno (Post Base Original) --</option>
+                      {listaBlogs.filter((b: any) => b.lang === 'en').map((b: any) => (
+                        <option value={b.id} selected={b.id === postEs.langId || b.id === postEn.id}>
+                          [EN] {b.titulo}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div style="margin-top: 12px;">
+                    <button type="button" class="bl-btn-vincular" id="blBtnSoloVincular" title="Actualizar o cambiar el vínculo con el artículo hermano">
+                      <i class="fa-solid fa-link"></i> <span>Vincular Hermano</span>
+                    </button>
+                  </div>
+
+                  <!-- Banner de Vínculo Activo -->
+                  <div class="bl-linked-success-box" id="blLinkedStatusBox">
+                    <i class="fa-solid fa-circle-check" style="color:#10b981; font-size:14px;"></i>
+                    <div>
+                      <strong>Vínculo Activo:</strong> Conectado a la versión en inglés por <code>langId</code>.
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 3. Categoría y Tags -->
+                <div class="bl-card">
+                  <div class="bl-card-title">
+                    <span><i class="fa-solid fa-folder"></i> Categoría</span>
+                  </div>
+                  <input 
+                    type="text" 
+                    id="blInputCategoria" 
+                    class="bl-input" 
+                    value={postEs.categoria || 'Terapia de Pareja'} 
+                    required 
+                  />
+
+                  <div style="margin-top: 14px;">
+                    <div class="bl-card-title" style="margin-bottom:6px;">
+                      <span><i class="fa-solid fa-tags"></i> Etiquetas (Tags)</span>
+                    </div>
+                    <input 
+                      type="text" 
+                      id="blInputTagsText" 
+                      class="bl-input" 
+                      placeholder="Escribe un tag y presiona Enter..." 
+                    />
+                    <div class="bl-tags-box" id="blBoxTagsChips">
+                      {(postEs.tags || ['terapia de pareja', 'comunicacion asertiva', 'relaciones']).map(t => (
+                        <span class="bl-tag-chip">
+                          #{t} <i class="fa-solid fa-xmark bl-tag-rm"></i>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 4. Imágenes del Artículo -->
+                <div class="bl-card">
+                  <div class="bl-card-title">
+                    <span><i class="fa-solid fa-images"></i> Imágenes del Artículo</span>
+                  </div>
+
+                  <!-- Imagen Miniatura -->
+                  <div class="bl-img-field-group">
+                    <div class="bl-img-field-header">
+                      <label class="bl-img-label">Miniatura / Card (334x208px):</label>
+                      <a id="blLinkVerImagen" href={postEs.imagen || '/smile.avif'} target="_blank" rel="noopener noreferrer" class="bl-img-link-open">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver
+                      </a>
+                    </div>
+                    <input type="text" id="blInputImagen" class="bl-input" value={postEs.imagen || '/smile.avif'} required />
+                    <div class="bl-img-preview-box">
+                      <img id="blPreviewThumb" src={postEs.imagen || '/smile.avif'} alt="Miniatura" loading="lazy" />
+                    </div>
+                  </div>
+
+                  <!-- Cabecera Panorámica -->
+                  <div class="bl-img-field-group" style="margin-bottom:0;">
+                    <div class="bl-img-field-header">
+                      <label class="bl-img-label">Cabecera Panorámica (1200x450px):</label>
+                      <a id="blLinkVerImagenTop" href={postEs.imagenTop || postEs.imagen || '/smile.avif'} target="_blank" rel="noopener noreferrer" class="bl-img-link-open">
+                        <i class="fa-solid fa-arrow-up-right-from-square"></i> Ver
+                      </a>
+                    </div>
+                    <input type="text" id="blInputImagenTop" class="bl-input" value={postEs.imagenTop || postEs.imagen || '/smile.avif'} />
+                    <div class="bl-img-preview-box panoramic">
+                      <img id="blPreviewThumbTop" src={postEs.imagenTop || postEs.imagen || '/smile.avif'} alt="Cabecera Panorámica" loading="lazy" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- 5. Autor & Estado de Publicación -->
+                <div class="bl-card">
+                  <div class="bl-card-title">
+                    <span><i class="fa-solid fa-user-pen"></i> Autor & Estado</span>
+                  </div>
+
+                  <div style="margin-bottom: 14px;">
+                    <label style="font-size:11.5px; font-weight:600; color:var(--muted); display:block; margin-bottom:4px;">Especialista:</label>
+                    <input 
+                      type="text" 
+                      id="blInputAutor" 
+                      class="bl-input" 
+                      value={postEs.autor || 'Lic. Sofia Reynaga Pachas'} 
+                      required 
+                    />
+                  </div>
+
+                  <div class="bl-switch-row">
+                    <span>Estado del Artículo (Activo)</span>
+                    <label class="bl-ios-switch">
+                      <input type="checkbox" id="blCheckActivo" checked={postEs.activo !== false} />
+                      <span class="bl-ios-slider"></span>
+                    </label>
+                  </div>
+
+                  <div class="bl-switch-row">
+                    <span>Fijar en Portada (Pin)</span>
+                    <label class="bl-ios-switch">
+                      <input type="checkbox" id="blCheckPin" checked={Boolean(postEs.pin)} />
+                      <span class="bl-ios-slider"></span>
+                    </label>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Notifier para demostración interactiva -->
+  <div class="bl-proto-toast" id="blProtoToast">
+    <i class="fa-solid fa-circle-check" style="color:#10b981; font-size:16px;"></i>
+    <span id="blToastMessage">Mensaje</span>
+  </div>
+
+  <script define:vars={{ postEs, postEn }}>
+    function showToast(msg) {
+      const toast = document.getElementById('blProtoToast');
+      const text = document.getElementById('blToastMessage');
+      if (toast && text) {
+        text.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3500);
+      }
+    }
+
+    let currentLang = 'es';
+
+    const inTitulo = document.getElementById('blInputTitulo');
+    const inSlug = document.getElementById('blInputSlug');
+    const inResumen = document.getElementById('blInputResumen');
+    const inKeywords = document.getElementById('blInputKeywords');
+    const inContenido = document.getElementById('blInputContenido');
+    const inCategoria = document.getElementById('blInputCategoria');
+    const selLang = document.getElementById('blSelectLang');
+    const linkLive = document.getElementById('blLinkLivePost');
+
+    const btnLangEs = document.getElementById('blBtnLangEs');
+    const btnLangEn = document.getElementById('blBtnLangEn');
+
+    function actualizarVistasIdioma(targetLang) {
+      currentLang = targetLang;
+      btnLangEs?.classList.toggle('active', targetLang === 'es');
+      btnLangEn?.classList.toggle('active', targetLang === 'en');
+
+      const data = targetLang === 'en' ? postEn : postEs;
+      if (!data) return;
+
+      if (inTitulo) inTitulo.value = data.titulo || '';
+      if (inSlug) inSlug.value = data.slug || '';
+      if (inResumen) inResumen.value = data.descripcion || '';
+      if (inKeywords) inKeywords.value = data.metaSEO?.keywords || (data.tags || []).join(', ');
+      if (inContenido) inContenido.value = data.contenidoMD || data.contenido || '';
+      if (inCategoria) inCategoria.value = data.categoria || '';
+      if (selLang) selLang.value = targetLang;
+      if (linkLive) linkLive.href = targetLang === 'en' ? `/en/blog/${data.slug}` : `/blog/${data.slug}`;
+
+      showToast(`Cargada versión en ${targetLang === 'en' ? 'Inglés (EN)' : 'Español (ES)'}`);
+    }
+
+    btnLangEs?.addEventListener('click', () => actualizarVistasIdioma('es'));
+    btnLangEn?.addEventListener('click', () => actualizarVistasIdioma('en'));
+
+    // Botón Traducir con IA
+    document.getElementById('blBtnTraducirIA')?.addEventListener('click', () => {
+      const btn = document.getElementById('blBtnTraducirIA');
+      if (btn) {
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> <span>Traduciendo con IA...</span>';
+        setTimeout(() => {
+          btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Traducir con IA</span>';
+          showToast('✨ ¡Traducción con IA completada! Se sincronizó la versión en inglés.');
+          actualizarVistasIdioma('en');
+        }, 1500);
+      }
+    });
+
+    // Botón Vincular Hermano en Sidebar
+    document.getElementById('blBtnSoloVincular')?.addEventListener('click', () => {
+      showToast('✔ ¡Artículo vinculado y sincronizado con éxito con su versión hermana!');
+    });
+
+    // Submit Actualizar
+    document.getElementById('blFormEditor')?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      showToast('💾 ¡Cambios guardados exitosamente en Local-First y Firestore!');
+    });
+
+    // Subtabs Editor / Vista Previa
+    const btnWrite = document.getElementById('blSubtabWrite');
+    const btnPrev = document.getElementById('blSubtabPreview');
+    const pWrite = document.getElementById('blPanelWrite');
+    const pPrev = document.getElementById('blPanelPreview');
+    const prevBody = document.getElementById('blPreviewBody');
+
+    btnWrite?.addEventListener('click', () => {
+      btnWrite.classList.add('active');
+      btnPrev?.classList.remove('active');
+      if (pWrite) pWrite.style.display = 'block';
+      if (pPrev) pPrev.style.display = 'none';
+    });
+
+    btnPrev?.addEventListener('click', () => {
+      btnPrev.classList.add('active');
+      btnWrite?.classList.remove('active');
+      if (pWrite) pWrite.style.display = 'none';
+      if (pPrev) pPrev.style.display = 'block';
+      if (prevBody) {
+        prevBody.innerHTML = inContenido?.value 
+          ? `<h2>${inTitulo?.value}</h2><p>${inContenido.value.replace(/\n/g, '<br>')}</p>` 
+          : `<p style="color:var(--muted); font-style:italic; padding:20px;">Escribe contenido en el editor...</p>`;
+      }
+    });
+  </script>
+
+</body>
+</html>

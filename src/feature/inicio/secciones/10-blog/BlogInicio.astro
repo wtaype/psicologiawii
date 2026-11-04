@@ -2,6 +2,7 @@
 // src/feature/inicio/secciones/10-blog/BlogInicio.astro
 // 10. SECCIÓN ARTÍCULOS CLÍNICOS & BLOG DE PSICOLOGÍA (GRILLA 4x2)
 // Psicoeducación, guías prácticas y SEO de salud mental con carga diferida imgwii
+// 100% Reactivo · Local-First (0ms) · Sincronizado con Firestore y Cloudflare
 import { resolverTexto } from '../../../../negocio.js';
 import { resolverIdioma, buildRuta } from '../../idioma/idioma.js';
 import { imgwii } from '@widev';
@@ -17,8 +18,9 @@ interface Props {
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
 const t = resolverIdioma({ es, en }, idioma);
 
-// Tomar los 8 artículos activos correspondientes al idioma para conformar la grilla 4x2
-const articulos = (blogsSemilla || [])
+// Tomar los artículos activos correspondientes al idioma para conformar la grilla
+const listaSemilla: any[] = Array.isArray(blogsSemilla) ? blogsSemilla : Object.values(blogsSemilla || {});
+const articulos = listaSemilla
   .filter((b: any) => (b.lang === idioma || (!b.lang && idioma === 'es')) && b.activo !== false)
   .slice(0, 8);
 
@@ -27,7 +29,12 @@ const rutaBlog = buildRuta('/blog', idioma);
 
 <style is:global set:html={blogInicioCss}></style>
 
-<section id="blog" class="sec-blog">
+<section
+  id="blog"
+  class="sec-blog"
+  data-idioma={idioma}
+  data-vistas-label={t.vistas_label}
+>
   <div class="pagewii blog-container">
     
     <!-- 🏷️ Encabezado de la Sección -->
@@ -43,9 +50,9 @@ const rutaBlog = buildRuta('/blog', idioma);
     </header>
 
     <!-- 📐 Grilla de Artículos Clínicos (4 Columnas x 2 Filas) -->
-    <div class="blog-grid-layout">
+    <div class="blog-grid-layout" id="blogInicioGrid">
       {articulos.map((art: any) => {
-        const linkArticulo = buildRuta(`/blog/${art.slug}`, idioma);
+        const linkArticulo = buildRuta(`/${art.slug}`, idioma);
         const tituloTxt = resolverTexto(art.titulo, idioma);
         const descTxt = resolverTexto(art.descripcion, idioma);
         const catTxt = resolverTexto(art.categoria, idioma);
@@ -120,3 +127,122 @@ const rutaBlog = buildRuta('/blog', idioma);
 
   </div>
 </section>
+
+<script>
+  import { consultarBlogsFirestoreFresco, STORAGE_KEY_BLOGS } from '../../../../negocio.js';
+
+  (function initBlogInicioReactivo() {
+    const sec = document.getElementById('blog');
+    if (!sec) return;
+
+    const idioma = sec.getAttribute('data-idioma') || 'es';
+    const vistasLabel = sec.getAttribute('data-vistas-label') || 'vistas';
+
+    function resolverTxt(val: any, lang = idioma) {
+      if (!val) return '';
+      if (typeof val === 'string') return val;
+      return val[lang] || val.es || val.en || '';
+    }
+
+    function hidratarGrid(posts: any[]) {
+      if (!Array.isArray(posts) || posts.length === 0) return;
+
+      const grid = document.getElementById('blogInicioGrid');
+      if (!grid) return;
+
+      // Filtrar por idioma y estado activo
+      const filtrados = posts
+        .filter((b: any) => (b.lang === idioma || (!b.lang && idioma === 'es')) && b.activo !== false)
+        .slice(0, 8);
+
+      if (filtrados.length === 0) return;
+
+      grid.innerHTML = filtrados.map((art: any) => {
+        const linkArticulo = (idioma && idioma !== 'es') ? `/${idioma}/${art.slug}` : `/${art.slug}`;
+        const tituloTxt = resolverTxt(art.titulo);
+        const descTxt = resolverTxt(art.descripcion);
+        const catTxt = resolverTxt(art.categoria || 'General');
+        const fechaTxt = art.publicado || '2026-10-26';
+        const numVistas = art.vistas || '1.5k';
+        const numLikes = art.likes || 120;
+        const numComments = art.comentarios || 15;
+        const img = art.imagen || art.imagenTop || '/imgwii/consultorio-interior.webp';
+
+        return `
+          <article class="blog-card-item">
+            <div class="blog-image-box">
+              <img
+                src="${img}"
+                alt="${tituloTxt}"
+                class="blog-img"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+
+            <div class="blog-content-body">
+              <span class="blog-badge-cat">${catTxt}</span>
+
+              <h3 class="blog-title-h3" title="${tituloTxt}">
+                <a href="${linkArticulo}" class="blog-card-item__link">
+                  ${tituloTxt}
+                </a>
+              </h3>
+
+              <p class="blog-excerpt-para">
+                ${descTxt}
+              </p>
+
+              <div class="blog-footer-row">
+                <span class="blog-date-col">
+                  <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+                  <span>${fechaTxt}</span>
+                </span>
+
+                <div class="blog-stats-cluster">
+                  <span class="blog-stat-item blog-stat-item--views" title="${numVistas} ${vistasLabel}">
+                    <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                    <span>${numVistas}</span>
+                  </span>
+                  <span class="blog-stat-item blog-stat-item--likes" title="${numLikes} me gusta">
+                    <i class="fa-regular fa-heart" aria-hidden="true"></i>
+                    <span>${numLikes}</span>
+                  </span>
+                  <span class="blog-stat-item blog-stat-item--comments" title="${numComments} comentarios">
+                    <i class="fa-regular fa-comment" aria-hidden="true"></i>
+                    <span>${numComments}</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // 1. Escuchar actualizaciones en caliente
+    window.addEventListener('wi:blogs-actualizado', (e: any) => {
+      if (Array.isArray(e.detail)) {
+        hidratarGrid(e.detail);
+      }
+    });
+
+    // 2. Reconciliación con localStorage (0ms)
+    try {
+      const local = localStorage.getItem(STORAGE_KEY_BLOGS);
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          hidratarGrid(parsed);
+        }
+      }
+    } catch (e) {}
+
+    // 3. Sincronización en segundo plano con Firestore
+    consultarBlogsFirestoreFresco().then((frescos) => {
+      if (Array.isArray(frescos) && frescos.length > 0) {
+        hidratarGrid(frescos);
+      }
+    }).catch(() => {});
+  })();
+</script>

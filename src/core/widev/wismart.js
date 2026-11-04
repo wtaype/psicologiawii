@@ -23,7 +23,14 @@ export const wiSmart = (() => {
         }
       } else if (typeof it === 'function' && !ok.has(k)) {
         ok.add(k);
-        it().catch?.(e => console.error('wiSmart:', e));
+        try {
+          const res = it();
+          if (res && typeof res.catch === 'function') {
+            res.catch(e => console.error('wiSmart async error:', e));
+          }
+        } catch (e) {
+          console.error('wiSmart sync error:', e);
+        }
       }
     }));
     savels('wiSmart', 1);

@@ -1,5 +1,6 @@
 /* ============================================================ */
 /* 📢 MÓDULO BACKOFFICE ANUNCIOS & CAMPAÑAS (PERSONAL)          */
+/* Modal Amplio (1140px / 92vw) · Sin clutter de sufijos (ES)   */
 /* 100% Tokens de witema.css · Cero colores fijos · Cero inline */
 /* ============================================================ */
 
@@ -12,7 +13,7 @@
   color: var(--tx1);
 }
 
-/* 🏷️ Cabecera y Barra de Métricas */
+/* 🏷️ Cabecera del Módulo */
 .anuncios-admin-topbar {
   display: flex;
   justify-content: space-between;
@@ -23,7 +24,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--r_l);
-  box-shadow: var(--shadow-s);
+  box-shadow: var(--shadow-card);
 }
 
 .anuncios-admin-title-group {
@@ -33,8 +34,8 @@
 }
 
 .anuncios-admin-icon {
-  width: 42px;
-  height: 42px;
+  width: 44px;
+  height: 44px;
   border-radius: var(--r_m);
   background: var(--brand-soft);
   color: var(--brand-primary);
@@ -61,23 +62,24 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.8vh 1.6vh;
+  padding: 0.9vh 1.8vh;
   border-radius: var(--r_full);
-  background: var(--tx1);
-  color: var(--bg);
+  background: var(--brand-primary);
+  color: var(--txa);
   border: none;
   font-size: var(--fz_m);
   font-weight: 700;
   cursor: pointer;
-  transition: transform var(--tr_f), opacity var(--tr_f);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--tr_f), background var(--tr_f);
 }
 
 .anuncios-admin-btn-create:hover {
   transform: translateY(-2px);
-  opacity: 0.92;
+  background: var(--brand-primary-hover, var(--brand-primary));
 }
 
-/* 📊 Tarjetas de Métricas Rápidas */
+/* 📊 KPI Grid Limpio y Relevante */
 .anuncios-kpi-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -98,12 +100,12 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  box-shadow: var(--shadow-s);
+  box-shadow: var(--shadow-card);
 }
 
 .anuncios-kpi-icon {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: var(--r_s);
   display: flex;
   align-items: center;
@@ -116,14 +118,14 @@
   color: var(--brand-primary);
 }
 
-.anuncios-kpi-icon--convs {
-  background: var(--bg-subtle);
-  color: var(--success);
-}
-
-.anuncios-kpi-icon--cost {
+.anuncios-kpi-icon--pin {
   background: var(--bg-subtle);
   color: var(--warning);
+}
+
+.anuncios-kpi-icon--total {
+  background: var(--bg-subtle);
+  color: var(--success);
 }
 
 .anuncios-kpi-label {
@@ -134,7 +136,7 @@
 }
 
 .anuncios-kpi-val {
-  font-size: var(--fz_m4);
+  font-size: var(--fz_m3);
   font-weight: 800;
   color: var(--tx1);
   margin: 0;
@@ -146,7 +148,7 @@
   border: 1px solid var(--border-card);
   border-radius: var(--r_l);
   overflow: hidden;
-  box-shadow: var(--shadow-s);
+  box-shadow: var(--shadow-card);
 }
 
 .anuncios-table-header {
@@ -155,13 +157,24 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: var(--bg-subtle);
 }
 
 .anuncios-table-title {
-  font-size: var(--fz_m2);
-  font-weight: 800;
+  font-size: var(--fz_m);
+  font-weight: 700;
   color: var(--tx1);
   margin: 0;
+}
+
+.anuncios-admin-stats-pill {
+  font-size: var(--fz_s3);
+  color: var(--tx2);
+  font-weight: 600;
+  background: var(--bg-card);
+  padding: 0.3vh 0.8vh;
+  border-radius: var(--r_full);
+  border: 1px solid var(--border-card);
 }
 
 .anuncios-admin-list {
@@ -173,10 +186,9 @@
 }
 
 .anuncios-admin-item {
-  display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  display: flex;
   align-items: center;
-  gap: 1.2vh;
+  gap: clamp(0.8rem, 1.5vw, 1.5rem);
   padding: 1.2vh 1.8vh;
   border-bottom: 1px solid var(--border-card);
   transition: background var(--tr_f);
@@ -192,67 +204,112 @@
 
 .anuncios-admin-thumb-wrap {
   position: relative;
-  width: 54px;
-  height: 54px;
-  border-radius: var(--r_s);
+  width: 60px;
+  height: 60px;
+  border-radius: var(--r_m);
   overflow: hidden;
   background: var(--bg-subtle);
   border: 1px solid var(--border-card);
+  flex-shrink: 0;
 }
 
 .anuncios-admin-thumb {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
+}
+
+.anuncios-admin-pin-badge {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 18px;
+  height: 18px;
+  border-radius: var(--r_full);
+  background: var(--warning);
+  color: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  box-shadow: var(--shadow-card);
 }
 
 .anuncios-admin-info {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.2vh;
-  min-width: 0;
+  gap: 0.3vh;
+}
+
+.anuncios-admin-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
 }
 
 .anuncios-admin-title {
   font-size: var(--fz_m);
   font-weight: 700;
   color: var(--tx1);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
   margin: 0;
 }
 
-.anuncios-admin-meta {
+.anuncios-admin-category-pill {
   font-size: var(--fz_s2);
-  color: var(--tx3);
+  font-weight: 700;
+  padding: 0.2vh 0.6vh;
+  border-radius: var(--r_full);
+  background: var(--brand-soft);
+  color: var(--brand-primary);
+}
+
+.anuncios-admin-meta {
   display: flex;
-  gap: 0.8rem;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--fz_s3);
+  color: var(--tx3);
   flex-wrap: wrap;
 }
 
-.anuncios-admin-stats-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: var(--fz_s3);
+.status-tag {
+  font-size: var(--fz_s2);
   font-weight: 700;
-  color: var(--tx1);
-  padding: 0.3vh 0.8vh;
+  padding: 0.2vh 0.6vh;
   border-radius: var(--r_full);
+}
+
+.status-tag--activo,
+.status-tag--vigente {
+  background: rgba(34, 197, 94, 0.15);
+  color: var(--success);
+}
+
+.status-tag--suspendido {
+  background: rgba(234, 179, 8, 0.15);
+  color: var(--warning);
+}
+
+.status-tag--finalizado,
+.status-tag--completado {
   background: var(--bg-subtle);
+  color: var(--tx3);
 }
 
 .anuncios-admin-actions {
   display: flex;
   align-items: center;
   gap: 0.4rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
 }
 
 .anuncios-admin-btn-action {
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: var(--r_s);
   background: var(--bg-subtle);
   border: 1px solid var(--border-card);
@@ -270,46 +327,107 @@
   border-color: var(--brand-primary);
 }
 
+.anuncios-admin-btn-action.is-pinned {
+  background: var(--warning);
+  color: var(--bg);
+  border-color: var(--warning);
+  box-shadow: 0 0 8px rgba(234, 179, 8, 0.4);
+}
+
+.anuncios-admin-btn-action.is-active-btn {
+  color: var(--success);
+}
+
+.anuncios-admin-btn-action.is-active-btn:hover {
+  background: var(--success);
+  color: var(--txa);
+  border-color: var(--success);
+}
+
+.anuncios-admin-btn-action.is-paused-btn {
+  color: var(--warning);
+  opacity: 0.85;
+}
+
+.anuncios-admin-btn-action.is-paused-btn:hover {
+  background: var(--warning);
+  color: var(--bg);
+  border-color: var(--warning);
+}
+
 .anuncios-admin-btn-action--del:hover {
   background: var(--error);
   color: var(--txa);
   border-color: var(--error);
 }
 
-/* 🪟 Modal Split Bilingüe de Crear / Editar */
+/* ============================================================ */
+/* 🪟 MODAL AMPLIO (1140px / 92vw) - ESTILO PRODUCTOS BACKOFFICE */
+/* ============================================================ */
+
 .anuncios-modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: rgba(5, 14, 28, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   display: none;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: clamp(1rem, 2vh, 2rem);
 }
 
 .anuncios-modal-overlay.is-open {
   display: flex;
 }
 
+.anuncios-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(5, 14, 28, 0.78);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 2.5vh 7.5vw;
+}
+
 .anuncios-modal-box {
   background: var(--bg-card);
   border: 1px solid var(--border-card);
   border-radius: var(--r_l);
-  width: 100%;
-  max-width: 880px;
+  width: 85vw;
+  max-width: 85vw;
+  height: 95vh;
+  max-height: 95vh;
   box-shadow: var(--shadow-l);
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  animation: modalFadeIn var(--tr_m) ease-out;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
 }
 
 .anuncios-modal-header {
-  padding: 1.4vh 1.8vh;
+  padding: 1.4vh 2vh;
   border-bottom: 1px solid var(--border-card);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: var(--bg-card);
 }
 
 .anuncios-modal-title {
@@ -317,6 +435,13 @@
   font-weight: 800;
   color: var(--tx1);
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.anuncios-modal-title i {
+  color: var(--brand-primary);
 }
 
 .anuncios-modal-btn-close {
@@ -325,32 +450,134 @@
   color: var(--tx3);
   font-size: var(--fz_m2);
   cursor: pointer;
-  padding: 0.3vh;
+  padding: 0.4vh;
+  border-radius: var(--r_s);
+  transition: color var(--tr_f);
+}
+
+.anuncios-modal-btn-close:hover {
+  color: var(--tx1);
+}
+
+/* 🌐 Barra Contextual de Idioma (Dentro de la Columna Bilingüe) */
+.ad-col-bilingue .ad-lang-context-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  padding: 0.7vh 1.2vh;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_m);
+  margin-bottom: 1.2vh;
+}
+
+.ad-lang-tabs {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.ad-lang-tab-btn {
+  padding: 0.5vh 1.2vh;
+  border-radius: var(--r_full);
+  background: transparent;
+  border: 1px solid var(--border-card);
+  color: var(--tx2);
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  transition: all var(--tr_f);
+}
+
+.ad-lang-tab-btn:hover {
+  background: var(--bg-card);
+  color: var(--tx1);
+}
+
+.ad-lang-tab-btn.is-active {
+  background: var(--brand-primary);
+  color: var(--txa);
+  border-color: var(--brand-primary);
+}
+
+.ad-lang-helper {
+  font-size: var(--fz_s3);
+  color: var(--tx2);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.ad-lang-helper strong {
+  color: var(--brand-primary);
+}
+
+.ad-btn-gemini {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5vh 1.2vh;
+  border-radius: var(--r_full);
+  background: var(--brand-primary);
+  color: var(--txa);
+  border: none;
+  font-size: var(--fz_s3);
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--tr_f), opacity var(--tr_f);
+}
+
+.ad-btn-gemini:hover {
+  transform: translateY(-1px);
+  opacity: 0.92;
 }
 
 .anuncios-modal-body {
-  padding: 1.6vh 1.8vh;
-  display: flex;
-  flex-direction: column;
+  padding: clamp(1.2rem, 2vh, 2rem);
   overflow-y: auto;
-  max-height: 75vh;
+  flex: 1;
+  max-height: none;
 }
 
-/* 📐 Grilla Split 2 Columnas */
+/* 📐 Grilla Split 2 Columnas Amplias */
 .ad-modal-split {
   display: grid;
-  grid-template-columns: 1fr 1.25fr;
-  gap: clamp(1rem, 2vh, 1.8rem);
+  grid-template-columns: 1fr 1.35fr;
+  gap: clamp(1.2rem, 2.5vw, 2.2rem);
   align-items: start;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 860px) {
   .ad-modal-split {
     grid-template-columns: 1fr;
   }
 }
 
-/* Columna Izquierda: Media & Parámetros */
+@media (max-width: 768px) {
+  .anuncios-modal-overlay {
+    padding: 0 !important;
+  }
+
+  .anuncios-modal-box {
+    width: 100vw !important;
+    max-width: 100vw !important;
+    height: 100vh !important;
+    max-height: 100vh !important;
+    border-radius: 0 !important;
+    border: none !important;
+  }
+
+  .anuncios-modal-body {
+    padding: 1.2rem;
+  }
+}
+
+/* 🖼️ Columna Izquierda: Media & Parámetros */
 .ad-col-media {
   display: flex;
   flex-direction: column;
@@ -365,7 +592,6 @@
   overflow: hidden;
   background: var(--bg-subtle);
   border: 1px solid var(--border-card);
-  box-shadow: var(--shadow-s);
 }
 
 .ad-preview-img {
@@ -375,20 +601,51 @@
   display: block;
 }
 
-.ad-preview-badge {
+.ad-preview-overlay {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  padding: 0.3vh 0.8vh;
+  top: 0.6rem;
+  left: 0.6rem;
+  right: 0.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.ad-preview-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3vh 0.7vh;
+  border-radius: var(--r_full);
+  background: rgba(5, 14, 28, 0.82);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--border-card);
+  font-size: var(--fz_s2);
+  font-weight: 700;
+  color: var(--tx1);
+}
+
+.ad-preview-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: var(--r_full);
+  background: var(--success);
+}
+
+.ad-preview-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3vh 0.7vh;
   border-radius: var(--r_full);
   background: var(--brand-primary);
   color: var(--txa);
   font-size: var(--fz_s2);
   font-weight: 700;
-  box-shadow: var(--shadow-s);
 }
 
-/* Selector Táctil de Fotos WebP */
+/* Selector Rápido de Fotos */
 .ad-picker-group {
   display: flex;
   flex-direction: column;
@@ -404,12 +661,12 @@
 .ad-gallery-thumb-btn {
   aspect-ratio: 1;
   border-radius: var(--r_s);
+  overflow: hidden;
   border: 2px solid var(--border-card);
   background: var(--bg-subtle);
-  cursor: pointer;
   padding: 0;
-  overflow: hidden;
-  transition: transform var(--tr_f), border-color var(--tr_f);
+  cursor: pointer;
+  transition: border-color var(--tr_f), transform var(--tr_f);
 }
 
 .ad-gallery-thumb-btn:hover {
@@ -429,165 +686,251 @@
   display: block;
 }
 
-.ad-grid-params {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.6rem;
+/* Input con URL Dinámica Completa */
+.ad-url-input-container {
+  display: flex;
+  gap: 0.4rem;
 }
 
-/* Columna Derecha: Pestañas Bilingües + Botón Gemini */
-.ad-col-bilingue {
+.ad-btn-copy-url {
+  padding: 0 1rem;
+  border-radius: var(--r_m);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  color: var(--tx2);
+  cursor: pointer;
+  transition: all var(--tr_f);
+}
+
+.ad-btn-copy-url:hover {
+  background: var(--brand-primary);
+  color: var(--txa);
+  border-color: var(--brand-primary);
+}
+
+/* Parámetros: Estado, Pin y Fechas */
+.ad-params-box {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-card);
+  border-radius: var(--r_m);
+  padding: 1vh 1.2vh;
   display: flex;
   flex-direction: column;
-  gap: 1vh;
-  border-left: 1px solid var(--border-card);
-  padding-left: clamp(0.8rem, 1.8vh, 1.5rem);
+  gap: 0.8vh;
 }
 
-@media (max-width: 768px) {
-  .ad-col-bilingue {
-    border-left: none;
-    padding-left: 0;
-    border-top: 1px solid var(--border-card);
-    padding-top: 1.5vh;
-  }
-}
-
-.ad-tabs-nav-bar {
+.ad-params-row {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.6rem;
-  padding-bottom: 0.8vh;
-  border-bottom: 1px solid var(--border-card);
+  gap: 0.8rem;
+  align-items: flex-end;
 }
 
-.ad-tabs-pills {
+.ad-dates-box {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5vh;
+  margin-top: 0.4vh;
+}
+
+.ad-duration-pills {
   display: flex;
   gap: 0.4rem;
+  flex-wrap: wrap;
 }
 
-.ad-tab-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.5vh 1.1vh;
-  border-radius: var(--r_s);
-  background: var(--bg-subtle);
+.ad-pill-btn {
+  padding: 0.45vh 0.9vh;
+  border-radius: var(--r_full);
+  background: var(--bg-card);
   border: 1px solid var(--border-card);
   color: var(--tx2);
   font-size: var(--fz_s3);
   font-weight: 700;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   transition: all var(--tr_f);
 }
 
-.ad-tab-pill:hover {
+.ad-pill-btn:hover {
   background: var(--bg-card-hover);
   color: var(--tx1);
+  border-color: var(--border-accent);
 }
 
-.ad-tab-pill.is-active {
-  background: var(--brand-soft);
-  color: var(--brand-primary);
-  border-color: var(--brand-primary);
-}
-
-/* 🤖 Botón de Traducción con Gemini AI */
-.ad-btn-gemini {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.6vh 1.2vh;
-  border-radius: var(--r_full);
+.ad-pill-btn.is-active {
   background: var(--brand-primary);
   color: var(--txa);
-  border: none;
+  border-color: var(--brand-primary);
+  box-shadow: var(--shadow-card);
+}
+
+.ad-dates-inputs-row {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.4vh;
+}
+
+.anuncios-form-sublabel {
+  font-size: var(--fz_s2);
+  color: var(--tx3);
+  font-weight: 600;
+  margin-bottom: 0.2vh;
+}
+
+@media (max-width: 580px) {
+  .ad-params-row,
+  .ad-dates-inputs-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+.ad-flex-1 {
+  flex: 1;
+}
+
+.ad-pin-group {
+  flex-shrink: 0;
+}
+
+.ad-toggle-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
   font-size: var(--fz_s3);
   font-weight: 700;
+  color: var(--tx1);
+  padding: 0.7vh 0;
+}
+
+.ad-toggle-switch input {
+  width: 18px;
+  height: 18px;
   cursor: pointer;
-  box-shadow: var(--shadow-s);
-  transition: transform var(--tr_f), opacity var(--tr_f);
+  accent-color: var(--brand-primary);
 }
 
-.ad-btn-gemini:hover {
-  transform: translateY(-1px);
-  opacity: 0.94;
+.ad-toggle-text i {
+  color: var(--warning);
 }
 
-.ad-btn-gemini:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-  transform: none;
+.ad-meta-audit-bar {
+  font-size: var(--fz_s2);
+  color: var(--tx3);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  padding: 0.4vh 0;
 }
 
-/* Paneles de Idioma */
+/* 📝 Columna Derecha: Campos de Contenido Clínico */
+.ad-col-bilingue {
+  display: flex;
+  flex-direction: column;
+}
+
 .ad-pane {
   display: none;
   flex-direction: column;
-  gap: 0.9vh;
+  gap: 1vh;
 }
 
 .ad-pane.is-active {
   display: flex;
 }
 
+/* Estilos de Formulario */
 .anuncios-form-group {
   display: flex;
   flex-direction: column;
-  gap: 0.3vh;
+  gap: 0.35vh;
 }
 
 .anuncios-form-label {
   font-size: var(--fz_s3);
   font-weight: 700;
-  color: var(--tx2);
+  color: var(--tx1);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .anuncios-form-input,
 .anuncios-form-select,
 .anuncios-form-textarea {
   width: 100%;
-  padding: 0.8vh 1vh;
-  border-radius: var(--r_s);
+  padding: 0.9vh 1.2vh;
+  border-radius: var(--r_m);
+  background: var(--bg-card);
   border: 1px solid var(--border-card);
-  background: var(--bg);
   color: var(--tx1);
-  font-family: inherit;
+  font-family: var(--ff_P);
   font-size: var(--fz_m);
-  outline: none;
-  transition: border-color var(--tr_f);
+  box-sizing: border-box;
+  transition: border-color var(--tr_f), box-shadow var(--tr_f);
 }
 
 .anuncios-form-input:focus,
+.anuncios-form-select:focus,
 .anuncios-form-textarea:focus {
+  outline: none;
   border-color: var(--brand-primary);
+  box-shadow: 0 0 0 3px var(--brand-soft);
 }
 
+.anuncios-form-textarea {
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Footer del Modal */
 .anuncios-modal-footer {
-  padding: 1.2vh 1.8vh;
+  padding: 1.2vh 2vh;
   border-top: 1px solid var(--border-card);
   display: flex;
   justify-content: flex-end;
   gap: 0.8rem;
+  background: var(--bg-card);
 }
 
 .anuncios-btn-cancel {
-  padding: 0.7vh 1.4vh;
-  border-radius: var(--r_s);
+  padding: 0.8vh 1.6vh;
+  border-radius: var(--r_m);
   background: var(--bg-subtle);
   border: 1px solid var(--border-card);
   color: var(--tx2);
-  font-weight: 600;
+  font-size: var(--fz_m);
+  font-weight: 700;
   cursor: pointer;
+  transition: all var(--tr_f);
+}
+
+.anuncios-btn-cancel:hover {
+  background: var(--bg-card-hover);
+  color: var(--tx1);
 }
 
 .anuncios-btn-save {
-  padding: 0.7vh 1.6vh;
-  border-radius: var(--r_s);
+  padding: 0.8vh 1.8vh;
+  border-radius: var(--r_m);
   background: var(--brand-primary);
-  border: none;
   color: var(--txa);
+  border: none;
+  font-size: var(--fz_m);
   font-weight: 700;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: var(--shadow-card);
+  transition: transform var(--tr_f), background var(--tr_f);
+}
+
+.anuncios-btn-save:hover {
+  transform: translateY(-1px);
+  background: var(--brand-primary-hover, var(--brand-primary));
 }

@@ -1,7 +1,8 @@
 ---
 // src/feature/personal/modulos/anuncios/Anuncios.astro
 // Módulo Oficial de Anuncios y Campañas en Personal Backoffice
-// Réplica inspirada en Meta Ads Manager para control de presupuestos y leads
+// Modal Amplio (1140px / 92vw) · Barra de idioma integrada en columna derecha
+// Selector rápido de duración (7d, 30d, sin límite, específico) · Acciones rápidas (pin, estado, renovar)
 import { datosNegocio, resolverTexto } from '@/negocio.js';
 import { imgwii } from '@widev';
 
@@ -11,21 +12,32 @@ interface Props {
 
 const { esActivo = true } = Astro.props;
 
+import galeriaSemilla from '../../../../semillas/galeria.json';
+
 const listaAnuncios = datosNegocio.anuncios || [];
 const activosCount = listaAnuncios.filter(a => a.activo).length;
-const totalConversaciones = listaAnuncios.reduce((acc, curr) => acc + (Number(curr.conversaciones) || 0), 0);
-const imagenesDisponibles = [
-  { src: '/imgwii/psicologa-sofia-consulta.webp', label: 'Consulta Presencial' },
-  { src: '/imgwii/cartel-consultorio.webp', label: 'Consultorio Fachada' },
-  { src: '/imgwii/pareja-terapia.webp', label: 'Terapia Pareja' },
-  { src: '/imgwii/terapeuta-notas.webp', label: 'Evaluación / Niños' },
-  { src: '/imgwii/taller-bienestar.webp', label: 'Taller Vivencial' },
-  { src: '/imgwii/pareja-dialogo.webp', label: 'Diálogo Relacional' },
-  { src: '/imgwii/consultorio-interior.webp', label: 'Espacio Clínico' },
-  { src: '/imgwii/terapia-online-laptop.webp', label: 'Terapia Online' },
-  { src: '/imgwii/eventos/01-retrato-congreso-4x3.webp', label: 'Congreso' },
-  { src: '/imgwii/eventos/04-retrato-universidad-4x3.webp', label: 'Universidad' }
-];
+const pinnedCount = listaAnuncios.filter(a => a.pin).length;
+
+// 100% Dinámico (CERO datos fijos o hardcodeados): Recolectar imágenes desde anuncios y galería oficial
+const mapaImagenes = new Map();
+
+(listaAnuncios || []).forEach((ad) => {
+  const src = ad.flyerImg || ad.thumbImg;
+  if (src && !mapaImagenes.has(src)) {
+    mapaImagenes.set(src, resolverTexto(ad.titulo, 'es') || 'Campaña');
+  }
+});
+
+(Array.isArray(galeriaSemilla) ? galeriaSemilla : []).forEach((g) => {
+  if (g.url && !mapaImagenes.has(g.url)) {
+    mapaImagenes.set(g.url, g.titulo || g.alt || 'Consultorio');
+  }
+});
+
+const imagenesDisponibles = Array.from(mapaImagenes.entries()).map(([src, label]) => ({
+  src,
+  label
+}));
 ---
 
 <section class={`ps-panel ${esActivo ? 'active' : ''}`} id="panel-anuncios">
@@ -39,17 +51,17 @@ const imagenesDisponibles = [
         </div>
         <div>
           <h2 class="anuncios-admin-heading">Gestión de Anuncios & Campañas</h2>
-          <p class="anuncios-admin-sub">Meta Ads Manager · Control de Leads y Mensajes de Citas</p>
+          <p class="anuncios-admin-sub">Convocatorias Oficiales · Evaluaciones y Talleres Vivenciales</p>
         </div>
       </div>
 
-      <button type="button" class="anuncios-admin-btn-create" id="btnOpenCreateAd">
+      <button type="button" class="anuncios-admin-btn-create" id="btnOpenCreateAd" data-witip="Crear una nueva campaña oficial" data-wtipo="bottom">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
         <span>Crear anuncio</span>
       </button>
     </header>
 
-    <!-- 📊 KPI Grid -->
+    <!-- 📊 KPI Grid Limpio -->
     <div class="anuncios-kpi-grid">
       <div class="anuncios-kpi-card">
         <div class="anuncios-kpi-icon anuncios-kpi-icon--active">
@@ -57,35 +69,35 @@ const imagenesDisponibles = [
         </div>
         <div>
           <p class="anuncios-kpi-label">Campañas Activas</p>
-          <p class="anuncios-kpi-val">{activosCount} / {listaAnuncios.length}</p>
+          <p class="anuncios-kpi-val" id="kpiActivosCount">{activosCount} / {listaAnuncios.length}</p>
         </div>
       </div>
 
       <div class="anuncios-kpi-card">
-        <div class="anuncios-kpi-icon anuncios-kpi-icon--convs">
-          <i class="fa-solid fa-comments" aria-hidden="true"></i>
+        <div class="anuncios-kpi-icon anuncios-kpi-icon--pin">
+          <i class="fa-solid fa-thumbtack" aria-hidden="true"></i>
         </div>
         <div>
-          <p class="anuncios-kpi-label">Conversaciones Iniciadas</p>
-          <p class="anuncios-kpi-val">{totalConversaciones}</p>
+          <p class="anuncios-kpi-label">Anuncios Fijados (Pin)</p>
+          <p class="anuncios-kpi-val" id="kpiPinnedCount">{pinnedCount} destacados</p>
         </div>
       </div>
 
       <div class="anuncios-kpi-card">
-        <div class="anuncios-kpi-icon anuncios-kpi-icon--cost">
-          <i class="fa-solid fa-coins" aria-hidden="true"></i>
+        <div class="anuncios-kpi-icon anuncios-kpi-icon--total">
+          <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
         </div>
         <div>
-          <p class="anuncios-kpi-label">Costo Promedio Conversación</p>
-          <p class="anuncios-kpi-val">S/ 7,33</p>
+          <p class="anuncios-kpi-label">Total Convocatorias</p>
+          <p class="anuncios-kpi-val" id="kpiTotalCount">{listaAnuncios.length} registradas</p>
         </div>
       </div>
     </div>
 
-    <!-- 📋 Tabla / Lista de Campañas -->
+    <!-- 📋 Tabla / Lista de Campañas Oficiales con Acciones Rápidas -->
     <div class="anuncios-table-wrap">
       <div class="anuncios-table-header">
-        <h3 class="anuncios-table-title">Gestión de Anuncios Oficiales</h3>
+        <h3 class="anuncios-table-title">Convocatorias y Campañas Registradas</h3>
         <span class="anuncios-admin-stats-pill">
           <i class="fa-solid fa-list" aria-hidden="true"></i> {listaAnuncios.length} campañas
         </span>
@@ -97,7 +109,9 @@ const imagenesDisponibles = [
           const tituloTxt = resolverTexto(ad.titulo, 'es');
           const fechaTxt = resolverTexto(ad.fecha, 'es');
           const estadoTxt = resolverTexto(ad.estado, 'es');
-          const estadoTipo = ad.estadoTipo || (isActivo ? 'activo' : 'completado');
+          const badgeTxt = resolverTexto(ad.badge, 'es');
+          const estadoTipo = ad.estadoTipo || (isActivo ? 'activo' : 'finalizado');
+          const isPinned = Boolean(ad.pin);
 
           return (
             <li class="anuncios-admin-item">
@@ -109,31 +123,82 @@ const imagenesDisponibles = [
                   loading="lazy"
                   onerror={`this.onerror=null;this.src='${imgwii.skeleton}';`}
                 />
+                {isPinned && (
+                  <span class="anuncios-admin-pin-badge" title="Fijado en portada">
+                    <i class="fa-solid fa-thumbtack" aria-hidden="true"></i>
+                  </span>
+                )}
               </div>
 
               <div class="anuncios-admin-info">
-                <h4 class="anuncios-admin-title">{tituloTxt}</h4>
+                <div class="anuncios-admin-title-row">
+                  <h4 class="anuncios-admin-title">{tituloTxt}</h4>
+                  <span class="anuncios-admin-category-pill">{badgeTxt}</span>
+                </div>
                 <div class="anuncios-admin-meta">
                   <span><i class="fa-regular fa-clock" aria-hidden="true"></i> {fechaTxt}</span>
                   <span>·</span>
                   <span class={`status-tag status-tag--${estadoTipo}`}>
                     {estadoTxt}
                   </span>
-                  <span>·</span>
-                  <span><i class="fa-solid fa-tag" aria-hidden="true"></i> {ad.costoPorConv || 'S/ 0,00'}</span>
+                  {ad.fechaInicio && (
+                    <>
+                      <span>·</span>
+                      <span><i class="fa-regular fa-calendar" aria-hidden="true"></i> {ad.fechaInicio} al {ad.fechaFin || 'indefinido'}</span>
+                    </>
+                  )}
                 </div>
               </div>
 
-              <div class="anuncios-admin-stats-pill">
-                <i class="fa-solid fa-comments" aria-hidden="true"></i>
-                <span>{ad.conversaciones} leads</span>
-              </div>
-
+              <!-- ⚡ Acciones Rápidas Externas (Pin, Estado, Renovar, Editar, Borrar con wiTip) -->
               <div class="anuncios-admin-actions">
-                <button type="button" class="anuncios-admin-btn-action" data-edit-ad={ad.id} title="Editar Anuncio">
+                <button
+                  type="button"
+                  class={`anuncios-admin-btn-action ${isPinned ? 'is-pinned' : ''}`}
+                  data-quick-pin={ad.id}
+                  data-witip={isPinned ? 'Desfijar de portada' : 'Fijar en primer lugar (Pin)'}
+                  data-wtipo="top"
+                >
+                  <i class="fa-solid fa-thumbtack" aria-hidden="true"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class={`anuncios-admin-btn-action ${isActivo ? 'is-active-btn' : 'is-paused-btn'}`}
+                  data-quick-status={ad.id}
+                  data-witip={isActivo ? 'Pausar publicación de campaña' : 'Activar publicación de campaña'}
+                  data-wtipo="top"
+                >
+                  <i class={`fa-solid ${isActivo ? 'fa-circle-check' : 'fa-circle-pause'}`} aria-hidden="true"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="anuncios-admin-btn-action"
+                  data-quick-renew={ad.id}
+                  data-witip="Renovar vigencia (+30 días)"
+                  data-wtipo="top"
+                >
+                  <i class="fa-solid fa-calendar-plus" aria-hidden="true"></i>
+                </button>
+
+                <button
+                  type="button"
+                  class="anuncios-admin-btn-action"
+                  data-edit-ad={ad.id}
+                  data-witip="Editar ficha completa"
+                  data-wtipo="top"
+                >
                   <i class="fa-solid fa-pen" aria-hidden="true"></i>
                 </button>
-                <button type="button" class="anuncios-admin-btn-action anuncios-admin-btn-action--del" data-del-ad={ad.id} title="Eliminar Anuncio">
+
+                <button
+                  type="button"
+                  class="anuncios-admin-btn-action anuncios-admin-btn-action--del"
+                  data-del-ad={ad.id}
+                  data-witip="Eliminar campaña"
+                  data-wtipo="top"
+                >
                   <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
                 </button>
               </div>
@@ -145,14 +210,15 @@ const imagenesDisponibles = [
 
   </div>
 
-  <!-- 🪟 Modal Split Bilingüe de Crear / Editar Anuncio -->
+  <!-- 🪟 Modal Amplio (1140px / 92vw) de Crear / Editar Anuncio -->
   <div class="anuncios-modal-overlay" id="modalAnuncio" role="dialog" aria-modal="true">
     <div class="anuncios-modal-box">
       <header class="anuncios-modal-header">
         <h3 class="anuncios-modal-title">
-          <i class="fa-solid fa-bullhorn" aria-hidden="true"></i> Ficha de Anuncio & Campaña
+          <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
+          <span id="adModalTitleTxt">Crear o Editar Campaña de Anuncio</span>
         </h3>
-        <button type="button" class="anuncios-modal-btn-close" id="btnCloseAdModal" aria-label="Cerrar">
+        <button type="button" class="anuncios-modal-btn-close" id="btnCloseAdModal" aria-label="Cerrar modal" data-witip="Cerrar ventana" data-wtipo="left">
           <i class="fa-solid fa-xmark" aria-hidden="true"></i>
         </button>
       </header>
@@ -163,18 +229,24 @@ const imagenesDisponibles = [
 
           <div class="ad-modal-split">
             
-            <!-- ── COLUMNA IZQUIERDA: IMAGEN, SELECTOR TÁCTIL Y PARÁMETROS ── -->
+            <!-- ── COLUMNA IZQUIERDA: IMAGEN, DOMINIO DINÁMICO & PARÁMETROS ── -->
             <div class="ad-col-media">
-              <!-- Vista previa grande -->
+              <!-- Vista previa grande del flyer -->
               <div class="ad-preview-box">
                 <img id="adPreviewImg" src="/imgwii/psicologa-sofia-consulta.webp" alt="Vista previa del flyer" class="ad-preview-img" />
-                <span class="ad-preview-badge" id="adPreviewBadge">Evaluación Clínica</span>
+                <div class="ad-preview-overlay">
+                  <span class="ad-preview-status-pill" id="adPreviewStatusPill">
+                    <span class="ad-preview-dot"></span>
+                    <span id="adPreviewStatusTxt">Activo</span>
+                  </span>
+                  <span class="ad-preview-badge" id="adPreviewBadge">Evaluación Clínica</span>
+                </div>
               </div>
 
-              <!-- Selector Visual de Miniaturas WebP -->
+              <!-- Selector Rápido de Fotos del Consultorio -->
               <div class="ad-picker-group">
                 <label class="anuncios-form-label">
-                  <i class="fa-solid fa-images"></i> Seleccionar Imagen Rápida
+                  <i class="fa-solid fa-images" aria-hidden="true"></i> Seleccionar Imagen del Consultorio
                 </label>
                 <div class="ad-gallery-picker" id="adGalleryPicker">
                   {imagenesDisponibles.map((img) => (
@@ -182,7 +254,8 @@ const imagenesDisponibles = [
                       type="button"
                       class="ad-gallery-thumb-btn"
                       data-src={img.src}
-                      title={img.label}
+                      data-witip={img.label}
+                      data-wtipo="top"
                     >
                       <img src={img.src} alt={img.label} class="ad-gallery-thumb-img" loading="lazy" />
                     </button>
@@ -190,51 +263,111 @@ const imagenesDisponibles = [
                 </div>
               </div>
 
-              <!-- Campo de ruta editable -->
+              <!-- Ruta de imagen con dominio dinámico completo -->
               <div class="anuncios-form-group">
                 <label class="anuncios-form-label" for="inputAdFlyer">
-                  <i class="fa-solid fa-link"></i> Ruta de Imagen / Flyer
+                  <i class="fa-solid fa-link" aria-hidden="true"></i> URL de Imagen (Dominio Completo)
                 </label>
-                <input type="text" id="inputAdFlyer" class="anuncios-form-input" placeholder="/imgwii/psicologa-sofia-consulta.webp" value="/imgwii/psicologa-sofia-consulta.webp" />
+                <div class="ad-url-input-container">
+                  <input
+                    type="text"
+                    id="inputAdFlyer"
+                    class="anuncios-form-input"
+                    placeholder="http://localhost:4321/imgwii/psicologa-sofia-consulta.webp"
+                    value=""
+                  />
+                  <button type="button" class="ad-btn-copy-url" id="btnCopyAdUrl" data-witip="Copiar URL completa de imagen" data-wtipo="top">
+                    <i class="fa-regular fa-copy" aria-hidden="true"></i>
+                  </button>
+                </div>
               </div>
 
-              <!-- Parámetros: Estado, Costo y Conversaciones -->
-              <div class="ad-grid-params">
-                <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdEstado">Estado</label>
-                  <select id="inputAdEstado" class="anuncios-form-select">
-                    <option value="activo">Activo (En curso)</option>
-                    <option value="vigente">Vigente (Con cupos)</option>
-                    <option value="completado">Completado</option>
-                  </select>
+              <!-- Parámetros: Estado y Pin -->
+              <div class="ad-params-box">
+                <div class="ad-params-row">
+                  <div class="anuncios-form-group ad-flex-1">
+                    <label class="anuncios-form-label" for="inputAdEstado">Estado de Publicación</label>
+                    <select id="inputAdEstado" class="anuncios-form-select">
+                      <option value="activo">Activo (Visible en portada)</option>
+                      <option value="suspendido">Suspendido (Pausado)</option>
+                      <option value="finalizado">Finalizado (Histórico)</option>
+                    </select>
+                  </div>
+
+                  <div class="anuncios-form-group ad-pin-group">
+                    <label class="anuncios-form-label" for="inputAdPin">Destacado</label>
+                    <label class="ad-toggle-switch">
+                      <input type="checkbox" id="inputAdPin" />
+                      <span class="ad-toggle-slider"></span>
+                      <span class="ad-toggle-text"><i class="fa-solid fa-thumbtack" aria-hidden="true"></i> Fijar en portada</span>
+                    </label>
+                  </div>
                 </div>
-                <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdCosto">Costo / Conv.</label>
-                  <input type="text" id="inputAdCosto" class="anuncios-form-input" placeholder="S/ 7,33" />
+
+                <!-- ⏱️ Selector Rápido de Duración (7d, 30d, sin límite, específico) -->
+                <div class="ad-dates-box">
+                  <label class="anuncios-form-label">
+                    <i class="fa-regular fa-calendar-days" aria-hidden="true"></i> Duración y Vigencia
+                  </label>
+                  <div class="ad-duration-pills" id="adDurationPills">
+                    <button type="button" class="ad-pill-btn" data-duration="7" data-witip="Vigencia rápida de 7 días" data-wtipo="top">
+                      <i class="fa-solid fa-bolt" aria-hidden="true"></i> 7 días
+                    </button>
+                    <button type="button" class="ad-pill-btn is-active" data-duration="30" data-witip="Vigencia estándar de 30 días" data-wtipo="top">
+                      <i class="fa-solid fa-calendar-check" aria-hidden="true"></i> 30 días
+                    </button>
+                    <button type="button" class="ad-pill-btn" data-duration="unlimited" data-witip="Campaña continua sin fecha límite" data-wtipo="top">
+                      <i class="fa-solid fa-infinity" aria-hidden="true"></i> Sin límite
+                    </button>
+                    <button type="button" class="ad-pill-btn" data-duration="custom" data-witip="Personalizar fechas de inicio y fin" data-wtipo="top">
+                      <i class="fa-solid fa-sliders" aria-hidden="true"></i> Específico
+                    </button>
+                  </div>
+
+                  <div class="ad-dates-inputs-row" id="adDatesInputsRow">
+                    <div class="anuncios-form-group ad-flex-1">
+                      <label class="anuncios-form-sublabel" for="inputAdFechaInicio">Fecha de Inicio</label>
+                      <input type="date" id="inputAdFechaInicio" class="anuncios-form-input" />
+                    </div>
+                    <div class="anuncios-form-group ad-flex-1">
+                      <label class="anuncios-form-sublabel" for="inputAdFechaFin">Fecha de Cierre</label>
+                      <input type="date" id="inputAdFechaFin" class="anuncios-form-input" />
+                    </div>
+                  </div>
                 </div>
-                <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdConversaciones">Leads</label>
-                  <input type="number" id="inputAdConversaciones" class="anuncios-form-input" placeholder="11" min="0" />
-                </div>
+              </div>
+
+              <!-- Metadatos de Auditoría -->
+              <div class="ad-meta-audit-bar">
+                <span id="adAuditId">ID: nuevo</span>
+                <span>·</span>
+                <span id="adAuditUser">Admin: Lic. Sofía</span>
+                <span>·</span>
+                <span id="adAuditUpdated">Actualizado: hoy</span>
               </div>
             </div>
 
-            <!-- ── COLUMNA DERECHA: PESTAÑAS BILINGÜES + GEMINI AI ── -->
+            <!-- ── COLUMNA DERECHA: CAMPOS DE CONTENIDO CLÍNICO CON BARRA DE IDIOMA INTEGRADA ── -->
             <div class="ad-col-bilingue">
               
-              <!-- Barra de Pestañas y Botón Gemini -->
-              <div class="ad-tabs-nav-bar">
-                <div class="ad-tabs-pills">
-                  <button type="button" class="ad-tab-pill is-active" data-pane="ad-pane-es" id="adTabEs">
-                    <i class="fa-solid fa-language"></i> Español
+              <!-- 🌐 Barra Contextual de Idioma (Dentro de la columna de texto) -->
+              <div class="ad-lang-context-bar">
+                <div class="ad-lang-tabs">
+                  <button type="button" class="ad-lang-tab-btn is-active" data-pane="ad-pane-es" id="adTabEs" data-witip="Redactar campaña en Español" data-wtipo="top">
+                    <i class="fa-solid fa-language" aria-hidden="true"></i> Español
                   </button>
-                  <button type="button" class="ad-tab-pill" data-pane="ad-pane-en" id="adTabEn">
-                    <i class="fa-solid fa-globe"></i> English
+                  <button type="button" class="ad-lang-tab-btn" data-pane="ad-pane-en" id="adTabEn" data-witip="Redactar campaña en Inglés" data-wtipo="top">
+                    <i class="fa-solid fa-globe" aria-hidden="true"></i> English
                   </button>
                 </div>
 
-                <button type="button" class="ad-btn-gemini" id="btnTraducirGemini" title="Traducir automáticamente al inglés usando Gemini AI">
-                  <i class="fa-solid fa-wand-magic-sparkles"></i>
+                <div class="ad-lang-helper" id="adLangHelper">
+                  <i class="fa-solid fa-pen-nib" aria-hidden="true"></i>
+                  <span id="adLangHelperText">Editando en <strong>Español (ES)</strong></span>
+                </div>
+
+                <button type="button" class="ad-btn-gemini" id="btnTraducirGemini" data-witip="Traducir automáticamente al inglés con Gemini AI" data-wtipo="bottom">
+                  <i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i>
                   <span>Traducir con IA</span>
                 </button>
               </div>
@@ -242,46 +375,87 @@ const imagenesDisponibles = [
               <!-- PESTAÑA ESPAÑOL -->
               <div class="ad-pane is-active" id="ad-pane-es">
                 <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdTituloEs">Título de la Campaña (ES) *</label>
-                  <input type="text" id="inputAdTituloEs" class="anuncios-form-input" required placeholder="Ej: Campaña de Salud Emocional..." />
+                  <label class="anuncios-form-label" for="inputAdTituloEs">Título de la Campaña *</label>
+                  <input
+                    type="text"
+                    id="inputAdTituloEs"
+                    class="anuncios-form-input"
+                    required
+                    placeholder="Ej: Campaña de Salud Emocional & Primera Consulta"
+                  />
                 </div>
 
                 <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdBadgeEs">Categoría / Badge (ES)</label>
-                  <input type="text" id="inputAdBadgeEs" class="anuncios-form-input" placeholder="Ej: Evaluación Clínica" />
+                  <label class="anuncios-form-label" for="inputAdBadgeEs">Categoría o Especialidad</label>
+                  <input
+                    type="text"
+                    id="inputAdBadgeEs"
+                    class="anuncios-form-input"
+                    placeholder="Ej: Evaluación Clínica / Taller Vivencial"
+                  />
                 </div>
 
                 <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdDescEs">Descripción Corta (ES)</label>
-                  <textarea id="inputAdDescEs" class="anuncios-form-textarea" rows="3" placeholder="Tarifa especial de evaluación individual para iniciar tu proceso terapéutico..."></textarea>
+                  <label class="anuncios-form-label" for="inputAdDescEs">Descripción Clínica del Anuncio</label>
+                  <textarea
+                    id="inputAdDescEs"
+                    class="anuncios-form-textarea"
+                    rows="4"
+                    placeholder="Detalla el objetivo terapéutico, a quién está dirigido y el beneficio de la campaña..."
+                  ></textarea>
                 </div>
 
                 <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdWsEs">Mensaje Prellenado de WhatsApp (ES)</label>
-                  <input type="text" id="inputAdWsEs" class="anuncios-form-input" placeholder="¡Hola Lic. Sofía! Vi el anuncio y deseo agendar mi consulta." />
+                  <label class="anuncios-form-label" for="inputAdWsEs">Mensaje Prellenado de WhatsApp</label>
+                  <input
+                    type="text"
+                    id="inputAdWsEs"
+                    class="anuncios-form-input"
+                    placeholder="¡Hola Lic. Sofía! Vi el anuncio y deseo agendar mi consulta."
+                  />
                 </div>
               </div>
 
               <!-- PESTAÑA ENGLISH -->
               <div class="ad-pane" id="ad-pane-en">
                 <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdTituloEn">Campaign Title (EN)</label>
-                  <input type="text" id="inputAdTituloEn" class="anuncios-form-input" placeholder="Ex: Emotional Health Campaign & First Consultation" />
+                  <label class="anuncios-form-label" for="inputAdTituloEn">Campaign Title</label>
+                  <input
+                    type="text"
+                    id="inputAdTituloEn"
+                    class="anuncios-form-input"
+                    placeholder="Ex: Emotional Health Campaign & First Consultation"
+                  />
                 </div>
 
                 <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdBadgeEn">Badge / Category (EN)</label>
-                  <input type="text" id="inputAdBadgeEn" class="anuncios-form-input" placeholder="Ex: Clinical Assessment" />
+                  <label class="anuncios-form-label" for="inputAdBadgeEn">Category / Specialty</label>
+                  <input
+                    type="text"
+                    id="inputAdBadgeEn"
+                    class="anuncios-form-input"
+                    placeholder="Ex: Clinical Assessment / Live Workshop"
+                  />
                 </div>
 
                 <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdDescEn">Short Description (EN)</label>
-                  <textarea id="inputAdDescEn" class="anuncios-form-textarea" rows="3" placeholder="Special individual evaluation fee to start your therapeutic process..."></textarea>
+                  <label class="anuncios-form-label" for="inputAdDescEn">Campaign Clinical Description</label>
+                  <textarea
+                    id="inputAdDescEn"
+                    class="anuncios-form-textarea"
+                    rows="4"
+                    placeholder="Describe the therapeutic goals, target patients, and key benefits..."
+                  ></textarea>
                 </div>
 
                 <div class="anuncios-form-group">
-                  <label class="anuncios-form-label" for="inputAdWsEn">WhatsApp Pre-filled Message (EN)</label>
-                  <input type="text" id="inputAdWsEn" class="anuncios-form-input" placeholder="Hello Lic. Sofia! I saw the active ad and would like to schedule." />
+                  <label class="anuncios-form-label" for="inputAdWsEn">WhatsApp Pre-filled Message</label>
+                  <input
+                    type="text"
+                    id="inputAdWsEn"
+                    class="anuncios-form-input"
+                    placeholder="Hello Lic. Sofia! I saw the active ad and would like to schedule."
+                  />
                 </div>
               </div>
 
@@ -291,9 +465,9 @@ const imagenesDisponibles = [
         </div>
 
         <footer class="anuncios-modal-footer">
-          <button type="button" class="anuncios-btn-cancel" id="btnCancelAdModal">Cancelar</button>
-          <button type="submit" class="anuncios-btn-save">
-            <i class="fa-solid fa-floppy-disk"></i> Guardar Anuncio
+          <button type="button" class="anuncios-btn-cancel" id="btnCancelAdModal" data-witip="Descartar cambios y cerrar" data-wtipo="top">Cancelar</button>
+          <button type="submit" class="anuncios-btn-save" data-witip="Guardar y publicar campaña en vivo" data-wtipo="top">
+            <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i> Guardar Campaña
           </button>
         </footer>
       </form>

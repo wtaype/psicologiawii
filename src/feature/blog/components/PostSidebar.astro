@@ -1,8 +1,12 @@
 ---
 // src/feature/blog/components/PostSidebar.astro
-// Barra Lateral del Artículo: Ficha de Autor, Últimas Historias y Relacionados
+// Barra Lateral del Artículo · Consultorio Psicológico América
+// 1. Agenda tu Sesión Psicológica (Fijo / Prioritario)
+// 2. Recomendados (por Categoría)
+// 3. Últimas Publicaciones (hasta 5 ordenadas por fecha)
 import { getBlogI18n } from '../idioma/idioma.js';
 import { datosNegocio } from '../../../negocio.js';
+import { buildRuta } from '../../../core/idioma/idioma';
 
 interface Props {
   post: any;
@@ -20,61 +24,36 @@ const formatShortDate = (dateVal: any) => {
   const locale = lang === 'en' ? 'en-US' : 'es-PE';
   return d.toLocaleDateString(locale, { day: 'numeric', month: 'short', year: 'numeric' });
 };
-
-const prefix = lang === 'en' ? '/en/blog/' : '/blog/';
 ---
 
 <aside class="po_sidebar">
-  <!-- 1. Tarjeta del Autor -->
-  <div class="po_side_card">
-    <div class="po_side_title">
-      <i class="fa-solid fa-user-pen"></i> {t.meta_author}
+  <!-- 1. Agenda tu Sesión Psicológica (Fijo y Prioritario al inicio) -->
+  <div class="po_side_banner">
+    <div class="po_side_banner_icon">
+      <i class="fa-solid fa-calendar-check icon-brand-orange"></i>
     </div>
-    <div class="po_autor_box">
-      <div class="po_autor_av">
-        <img src="/smile.avif" alt={post.autor || datosNegocio.nombre} />
-      </div>
-      <div class="po_autor_info">
-        <strong>{post.autor || datosNegocio.nombreCorto || datosNegocio.nombre}</strong>
-        <span>{t.brand_badge} <i class="fa-solid fa-shield-check" style="color:var(--brand-primary, #104356);"></i></span>
-      </div>
+    <div class="po_side_banner_title">
+      {lang === 'en' ? 'Book Your Psychological Session' : 'Agenda tu Sesión Psicológica'}
     </div>
+    <p class="po_side_banner_desc">
+      {lang === 'en' 
+        ? 'Professional psychological support in-person and online. Safe, confidential and evidence-based.' 
+        : 'Atención psicológica profesional presencial y virtual. Un espacio seguro, confidencial y sin juicios.'}
+    </p>
+    <a href={datosNegocio.linkWhatsapp} target="_blank" rel="noopener noreferrer" class="po_side_banner_btn">
+      <i class="fa-brands fa-whatsapp"></i> {lang === 'en' ? 'Book via WhatsApp' : 'Agendar por WhatsApp'}
+    </a>
   </div>
 
-  <!-- 2. Últimas Historias -->
-  {latest.length > 0 && (
-    <div class="po_side_card">
-      <div class="po_side_title">
-        <i class="fa-solid fa-clock"></i> {t.latest_stories}
-      </div>
-      <div class="po_relacionados">
-        {latest.map((r: any) => (
-          <a href={`${prefix}${r.slug || r.id}`} class="po_rel_card" title={r.titulo}>
-            <div class="po_rel_img">
-              <img src={r.imagen || '/imgwii/consultorio-interior.webp'} alt={r.titulo} loading="lazy" />
-            </div>
-            <div class="po_rel_info">
-              <span class="po_rel_cat">{r.categoria}</span>
-              <strong>{r.titulo}</strong>
-              <span class="po_rel_meta">
-                <i class="fa-solid fa-calendar-days"></i> {r.publicado || formatShortDate(r.creado)} · <i class="fa-solid fa-eye"></i> {r.vistas || 0} · <i class="fa-solid fa-heart" style="color:#fe0149;"></i> {r.likes || 0}
-              </span>
-            </div>
-          </a>
-        ))}
-      </div>
-    </div>
-  )}
-
-  <!-- 3. Artículos Relacionados -->
+  <!-- 2. Artículos Recomendados (por Categoría) -->
   {related.length > 0 && (
     <div class="po_side_card">
       <div class="po_side_title">
-        <i class="fa-solid fa-tags"></i> {t.related_stories}
+        <i class="fa-solid fa-tags icon-brand-orange"></i> {t.related_stories || (lang === 'en' ? 'Recommended Articles' : 'Recomendados')}
       </div>
       <div class="po_relacionados">
         {related.map((r: any) => (
-          <a href={`${prefix}${r.slug || r.id}`} class="po_rel_card" title={r.titulo}>
+          <a href={buildRuta(`/${r.slug || r.id}`, lang)} class="po_rel_card" title={r.titulo}>
             <div class="po_rel_img">
               <img src={r.imagen || '/imgwii/recepcion-consultorio.webp'} alt={r.titulo} loading="lazy" />
             </div>
@@ -91,21 +70,28 @@ const prefix = lang === 'en' ? '/en/blog/' : '/blog/';
     </div>
   )}
 
-  <!-- 4. Banner Institucional Consultorio Psicológico América -->
-  <div class="po_side_banner">
-    <div class="po_side_banner_icon">
-      <i class="fa-solid fa-calendar-check"></i>
+  <!-- 3. Últimas Publicaciones (hasta 5 ordenadas por fecha) -->
+  {latest.length > 0 && (
+    <div class="po_side_card">
+      <div class="po_side_title">
+        <i class="fa-solid fa-clock icon-brand-orange"></i> {t.latest_stories || (lang === 'en' ? 'Latest Publications' : 'Últimas Publicaciones')}
+      </div>
+      <div class="po_relacionados">
+        {latest.slice(0, 5).map((r: any) => (
+          <a href={buildRuta(`/${r.slug || r.id}`, lang)} class="po_rel_card" title={r.titulo}>
+            <div class="po_rel_img">
+              <img src={r.imagen || '/imgwii/consultorio-interior.webp'} alt={r.titulo} loading="lazy" />
+            </div>
+            <div class="po_rel_info">
+              <span class="po_rel_cat">{r.categoria}</span>
+              <strong>{r.titulo}</strong>
+              <span class="po_rel_meta">
+                <i class="fa-solid fa-calendar-days"></i> {r.publicado || formatShortDate(r.creado)} · <i class="fa-solid fa-eye"></i> {r.vistas || 0} · <i class="fa-solid fa-heart" style="color:#fe0149;"></i> {r.likes || 0}
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
     </div>
-    <div class="po_side_banner_title">
-      {lang === 'en' ? 'Book Your Psychological Session' : 'Agenda tu Sesión Psicológica'}
-    </div>
-    <p class="po_side_banner_desc">
-      {lang === 'en' 
-        ? 'Professional psychological support in-person and online. Safe, confidential and evidence-based.' 
-        : 'Atención psicológica profesional presencial y virtual. Un espacio seguro, confidencial y sin juicios.'}
-    </p>
-    <a href={datosNegocio.linkWhatsapp} target="_blank" rel="noopener noreferrer" class="po_side_banner_btn">
-      <i class="fa-brands fa-whatsapp"></i> {lang === 'en' ? 'Book via WhatsApp' : 'Agendar por WhatsApp'}
-    </a>
-  </div>
+  )}
 </aside>

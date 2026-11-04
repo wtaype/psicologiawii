@@ -6,6 +6,7 @@ import { getBlogI18n } from '../idioma/idioma.js';
 import { mdToHtml, wiSanihtml, extraerHeadings } from '../lib/procesarmd.js';
 import PostComent from './PostComent.astro';
 import blogCss from '../blog.css?inline';
+import { buildRuta } from '../../../core/idioma/idioma';
 
 interface Props {
   post: any;
@@ -14,22 +15,25 @@ interface Props {
   nextPost?: any;
   lang?: string;
   translationSlug?: string | null;
+  partnerLang?: string | null;
 }
 
-const { post, headings: propHeadings, prevPost, nextPost, lang = 'es', translationSlug } = Astro.props;
+const { post, headings: propHeadings, prevPost, nextPost, lang = 'es', translationSlug, partnerLang } = Astro.props;
 const t = getBlogI18n(lang);
 
-// Procesar el contenido Markdown a HTML
+// Priorizar HTML pre-renderizado (0ms) o compilar Markdown sanitizado
 const rawMarkdown = post.contenidoMD || post.contenido || '';
-const htmlContent = wiSanihtml(mdToHtml(rawMarkdown, lang));
+const htmlContent = post.contenido && post.contenido.includes('<h2') 
+  ? post.contenido 
+  : wiSanihtml(mdToHtml(rawMarkdown, lang));
 
 // Calcular headings para TOC si no vienen calculados
 const headings = propHeadings && propHeadings.length > 0 ? propHeadings : extraerHeadings(rawMarkdown);
 
-const prefix = lang === 'en' ? '/en/blog' : '/blog';
-
+const catalogUrl = buildRuta('/blog', lang);
 const postSlug = post.slug || post.id;
 const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
+const fechaPublicado = (post.publicado || '2026/11/02').toString().replace(/-/g, '/');
 ---
 
 <!-- Inyección limpia de estilos del Blog (0 peticiones bloqueantes) -->
@@ -38,7 +42,7 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
 <!-- Barra de progreso de lectura en el viewport (en el fondo, estilo Workwii) -->
 <div class="po_progress_bar" id="po_progress"></div>
 
-<div class="po_wrap page-container" data-slug={postSlug} data-lang={lang} data-id={post.id} data-translation-slug={translationSlug || ''}>
+<div class="po_wrap page-container" data-slug={postSlug} data-lang={lang} data-id={post.id} data-translation-slug={translationSlug || ''} data-partner-lang={partnerLang || ''}>
   <div class="po_layout">
     
     <!-- COLUMNA PRINCIPAL DE LECTURA (IZQUIERDA) -->
@@ -55,7 +59,7 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
             fetchpriority="high"
           />
           <div class="po_hero_over">
-            <a href={prefix} class="po_back" title={t.nav_back}>
+            <a href={catalogUrl} class="po_back" title={t.nav_back}>
               <i class="fa-solid fa-arrow-left"></i> {t.nav_back}
             </a>
 
@@ -87,11 +91,11 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
 
           <div class="po_meta">
             <span><i class="fa-solid fa-user-pen"></i> {post.autor}</span>
-            <span><i class="fa-solid fa-calendar-days"></i> {post.publicado || '2026-10-15'}</span>
-            <span><i class="fa-solid fa-clock"></i> {post.lecturaTM || '5 min'}</span>
-            <span><i class="fa-solid fa-eye"></i> {post.vistas || 0} {t.meta_views.toLowerCase()}</span>
-            <button type="button" class="po_like_btn po_like_sync" style="background:transparent; border:none; padding:0; color:inherit; font-size:inherit;" title={t.meta_likes}>
-              <i class="fa-solid fa-heart" style="color:#fe0149;"></i> <span class="po_likes_count_text">{post.likes || 0}</span> {t.meta_likes.toLowerCase()}
+            <span><i class="fa-solid fa-calendar-days"></i> {fechaPublicado}</span>
+            <span><i class="fa-solid fa-clock"></i> {post.lecturaTM || '7 min'}</span>
+            <span><i class="fa-solid fa-eye"></i> <span class="po_vistas_count_text">{post.vistas || 0}</span> {t.meta_views.toLowerCase()}</span>
+            <button type="button" class="po_meta_like_btn po_like_sync" title={t.meta_likes}>
+              <i class="fa-solid fa-heart"></i> <span class="po_likes_count_text">{post.likes || 0}</span> {t.meta_likes.toLowerCase()}
             </button>
           </div>
         </header>
@@ -112,14 +116,14 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
           </nav>
         )}
 
-        <!-- 4. Cuerpo del Artículo en Markdown Sanitizado -->
+        <!-- 4. Cuerpo del Artículo en HTML Limpio Sanitizado -->
         <div class="po_contenido" set:html={htmlContent}></div>
 
         <!-- 5. Navegación Anterior / Siguiente (Tarjetas estilo Workwii) -->
         {(prevPost || nextPost) && (
           <div class="po_pn_box">
             {prevPost ? (
-              <a href={`${prefix}${prevPost.slug || prevPost.id}`} class="po_pn_card pn_prev" title={prevPost.titulo}>
+              <a href={buildRuta(`/${prevPost.slug || prevPost.id}`, lang)} class="po_pn_card pn_prev" title={prevPost.titulo}>
                 <div class="po_pn_img">
                   <img src={prevPost.imagen || '/imgwii/consultorio-interior.webp'} alt="" loading="lazy" />
                 </div>
@@ -131,7 +135,7 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
             ) : (<div></div>)}
 
             {nextPost ? (
-              <a href={`${prefix}${nextPost.slug || nextPost.id}`} class="po_pn_card pn_next" title={nextPost.titulo}>
+              <a href={buildRuta(`/${nextPost.slug || nextPost.id}`, lang)} class="po_pn_card pn_next" title={nextPost.titulo}>
                 <div class="po_pn_info">
                   <span class="po_pn_lb">{t.next_post} <i class="fa-solid fa-arrow-right"></i></span>
                   <strong class="po_pn_tit">{nextPost.titulo}</strong>
@@ -179,7 +183,7 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
 
       </article>
 
-      <!-- 7. Comentarios de la Comunidad con Carga Diferida (IntersectionObserver) -->
+      <!-- 7. Comentarios de la Comunidad con Carga Diferida (IntersectionObserver + superwii) -->
       <PostComent slug={postSlug} titulo={post.titulo} lang={lang} />
     </div>
 
@@ -192,7 +196,7 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
 <script>
   import { initModalImgs, cleanupModalImgs } from '../lib/modalimgs.js';
   import { initYtModal, cleanupYtModal } from '../lib/modalyt.js';
-  import { wicopy } from '../../../core/widev/widev.js';
+  import { wicopy, getls, savels } from '../../../core/widev/widev.js';
   import { wiInit } from '../../../core/widev/wiinit.js';
 
   let scrollListener: any = null;
@@ -201,28 +205,41 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
     const postEl = document.querySelector('.po_wrap') as HTMLElement;
     if (!postEl) return;
     const slug = postEl.dataset.slug;
+    const postId = postEl.dataset.id;
     if (!slug) return;
 
-    // 0. Sincronizar Switcher de Idioma del Header con el post traducido (estilo Workwii)
+    // 0. Sincronizar Switcher de Idioma del Header con el post traducido (Escalable para N idiomas)
     const tSlug = postEl.dataset.translationSlug;
-    const pLang = postEl.dataset.lang || 'es';
-    if (tSlug) {
-      document.querySelectorAll('.header-pill-group').forEach((group: any) => {
-        if (pLang === 'es') {
-          const btnEn = group.querySelector('[data-lang="en"]');
-          if (btnEn) btnEn.setAttribute('href', `/en/${tSlug}`);
-        } else {
-          const btnEs = group.querySelector('[data-lang="es"]');
-          if (btnEs) btnEs.setAttribute('href', `/${tSlug}`);
-        }
+    const partnerLang = postEl.dataset.partnerLang;
+    if (tSlug && partnerLang) {
+      const targetHref = partnerLang === 'es' ? `/${tSlug}` : `/${partnerLang}/${tSlug}`;
+      document.querySelectorAll(`.header-pill-group [data-lang="${partnerLang}"]`).forEach((btn: any) => {
+        btn.setAttribute('href', targetHref);
       });
     }
 
-    // 1. Galería Lightbox Picasa v2.2 y Modal YouTube
+    // 1. Registro de Vista Real (1 vista por sesión de usuario para evitar spam de recargas)
+    const postIdentificador = postId || slug;
+    const viewSessionKey = `wi_view_${postIdentificador}`;
+    if (!sessionStorage.getItem(viewSessionKey)) {
+      sessionStorage.setItem(viewSessionKey, '1');
+      document.querySelectorAll('.po_vistas_count_text').forEach((el: any) => {
+        const cur = parseInt(el.textContent || '0', 10) || 0;
+        el.textContent = String(cur + 1);
+      });
+      if (postId) {
+        import('../../../core/servicios/firebase.js').then(async ({ db }) => {
+          const { doc, updateDoc, increment } = await import('firebase/firestore');
+          updateDoc(doc(db, 'blogs', postId), { vistas: increment(1) }).catch(() => {});
+        }).catch(() => {});
+      }
+    }
+
+    // 2. Galería Lightbox Picasa v2.2 y Modal YouTube
     initModalImgs('.po_contenido');
     initYtModal();
 
-    // 2. Barra de progreso de lectura en bottom
+    // 3. Barra de progreso de lectura en bottom
     const progress = document.getElementById('po_progress');
     if (progress) {
       scrollListener = () => {
@@ -233,34 +250,56 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
       scrollListener();
     }
 
-    // 3. Sistema de likes optimistas sincronizado
-    const likeKey = `wi_like_${slug}`;
-    const hasLiked = localStorage.getItem(likeKey);
-    if (hasLiked) {
+    // 4. Sistema de Likes Local-First (0 ms) centralizado con @widev
+    const LIKES_KEY = 'wi_liked_blogs';
+
+    const getStoredLikes = (): string[] => {
+      const stored = getls(LIKES_KEY);
+      return Array.isArray(stored) ? stored : [];
+    };
+
+    const initialLikes = getStoredLikes();
+    const isLikedInitial = initialLikes.includes(postIdentificador) || (slug ? initialLikes.includes(slug) : false);
+
+    if (isLikedInitial) {
       document.querySelectorAll('.po_like_sync').forEach((btn: any) => btn.classList.add('active'));
     }
 
     document.querySelectorAll('.po_like_sync').forEach((btn: any) => {
       btn.addEventListener('click', () => {
-        const currentlyLiked = localStorage.getItem(likeKey);
+        const currentLikes = getStoredLikes();
+        const currentlyLiked = currentLikes.includes(postIdentificador) || (slug ? currentLikes.includes(slug) : false);
         const diff = currentlyLiked ? -1 : 1;
 
+        let nextLikes: string[];
         if (currentlyLiked) {
-          localStorage.removeItem(likeKey);
+          nextLikes = currentLikes.filter((id: string) => id !== postIdentificador && id !== slug);
           document.querySelectorAll('.po_like_sync').forEach((b: any) => b.classList.remove('active'));
         } else {
-          localStorage.setItem(likeKey, '1');
+          nextLikes = [...currentLikes.filter((id: string) => id !== postIdentificador && id !== slug), postIdentificador];
           document.querySelectorAll('.po_like_sync').forEach((b: any) => b.classList.add('active'));
         }
 
+        // Guardar sin caducidad (horas = false) de forma centralizada y eficiente
+        savels(LIKES_KEY, nextLikes, false);
+
+        // Actualización optimista de contadores en el DOM (0 ms)
         document.querySelectorAll('.po_likes_count_text').forEach((el: any) => {
           const cur = parseInt(el.textContent || '0', 10) || 0;
           el.textContent = String(Math.max(0, cur + diff));
         });
+
+        // Sincronización atómica con Firestore en segundo plano
+        if (postId) {
+          import('../../../core/servicios/firebase.js').then(async ({ db }) => {
+            const { doc, updateDoc, increment } = await import('firebase/firestore');
+            updateDoc(doc(db, 'blogs', postId), { likes: increment(diff) }).catch(() => {});
+          }).catch(() => {});
+        }
       });
     });
 
-    // 4. Copiar enlace con wicopy
+    // 5. Copiar enlace con wicopy
     document.querySelectorAll('.po_copy').forEach((btn: any) => {
       btn.addEventListener('click', () => {
         const currentLang = postEl.dataset.lang || 'es';
@@ -268,6 +307,18 @@ const shareUrl = typeof Astro.url !== 'undefined' ? Astro.url.href : '';
         wicopy(window.location.href, btn, msg);
       });
     });
+
+    // 6. Conteo en vivo de comentarios de Disqus vía count.js
+    const win = window as any;
+    if (win.DISQUSWIDGETS) {
+      win.DISQUSWIDGETS.getCount({ reset: true });
+    } else if (!document.querySelector('script[src*="disqus.com/count.js"]')) {
+      const countScript = document.createElement('script');
+      countScript.src = 'https://superwii.disqus.com/count.js';
+      countScript.id = 'dsq-count-scr';
+      countScript.async = true;
+      document.head.appendChild(countScript);
+    }
   };
 
   const cleanupPost = () => {

@@ -13,18 +13,15 @@
       "es": "Creado el oct 28, 3:19pm",
       "en": "Created on Oct 28, 3:19pm"
     },
+    "fechaInicio": "2026-10-28",
+    "fechaFin": "2026-11-30",
     "estado": {
       "es": "Activo · Finaliza mañana",
       "en": "Active · Ends tomorrow"
     },
     "estadoTipo": "activo",
     "activo": true,
-    "conversaciones": 11,
-    "costoPorConv": "S/ 7,33",
-    "metricasTexto": {
-      "es": "11 conversaciones iniciadas · Cupos disponibles",
-      "en": "11 conversations started · Spots available"
-    },
+    "pin": true,
     "flyerImg": "/imgwii/psicologa-sofia-consulta.webp",
     "thumbImg": "/imgwii/psicologa-sofia-consulta.webp",
     "descripcion": {
@@ -34,7 +31,10 @@
     "wsMsg": {
       "es": "¡Hola Lic. Sofía! Vi el anuncio activo de la Campaña de Salud Emocional y deseo agendar mi primera consulta.",
       "en": "Hello Lic. Sofía! I saw the active Emotional Health Campaign ad and would like to schedule my consultation."
-    }
+    },
+    "creado": 1792984000000,
+    "actualizado": 1792984000000,
+    "userId": "admin_sofia"
   },
   {
     "id": "ad-02-visitanos-sedes",
@@ -50,18 +50,15 @@
       "es": "Creado el oct 28, 7:35am",
       "en": "Created on Oct 28, 7:35am"
     },
+    "fechaInicio": "2026-10-28",
+    "fechaFin": "2026-12-15",
     "estado": {
       "es": "Vigente · Previa Cita Confirmada",
       "en": "Active · Confirmed Appointment"
     },
-    "estadoTipo": "vigente",
+    "estadoTipo": "activo",
     "activo": true,
-    "conversaciones": 18,
-    "costoPorConv": "S/ 6,80",
-    "metricasTexto": {
-      "es": "18 conversaciones iniciadas · Turnos de tarde disponibles",
-      "en": "18 conversations started · Afternoon slots available"
-    },
+    "pin": false,
     "flyerImg": "/imgwii/cartel-consultorio.webp",
     "thumbImg": "/imgwii/cartel-consultorio.webp",
     "descripcion": {
@@ -71,7 +68,10 @@
     "wsMsg": {
       "es": "¡Hola! Vi el anuncio sobre las sedes de Miraflores y Villa El Salvador. Deseo reservar cita presencial.",
       "en": "Hello! I saw the ad about Miraflores and Villa El Salvador locations. I want to book an in-person visit."
-    }
+    },
+    "creado": 1792960000000,
+    "actualizado": 1792960000000,
+    "userId": "admin_sofia"
   },
   {
     "id": "ad-03-taller-parejas",
@@ -87,18 +87,15 @@
       "es": "Creado el oct 27, 11:26pm",
       "en": "Created on Oct 27, 11:26pm"
     },
+    "fechaInicio": "2026-10-27",
+    "fechaFin": "2026-11-20",
     "estado": {
       "es": "Activo · Cupos para sábado",
       "en": "Active · Saturday spots"
     },
     "estadoTipo": "activo",
     "activo": true,
-    "conversaciones": 8,
-    "costoPorConv": "S/ 8,10",
-    "metricasTexto": {
-      "es": "8 conversaciones iniciadas · Grupo reducido",
-      "en": "8 conversations started · Small group"
-    },
+    "pin": false,
     "flyerImg": "/imgwii/pareja-terapia.webp",
     "thumbImg": "/imgwii/pareja-terapia.webp",
     "descripcion": {
@@ -108,7 +105,10 @@
     "wsMsg": {
       "es": "¡Hola Lic. Sofía! Deseo inscribirme en el Taller de Parejas que vi en sus anuncios activos.",
       "en": "Hello Lic. Sofía! I want to enroll in the Couples Workshop from your active ads."
-    }
+    },
+    "creado": 1792940000000,
+    "actualizado": 1792940000000,
+    "userId": "admin_sofia"
   },
   {
     "id": "ad-04-evaluacion-infantil",
@@ -124,18 +124,15 @@
       "es": "Creado el oct 27, 4:59pm",
       "en": "Created on Oct 27, 4:59pm"
     },
+    "fechaInicio": "2026-10-27",
+    "fechaFin": "2026-11-25",
     "estado": {
       "es": "Vigente · Modalidad Mixta",
       "en": "Active · Hybrid Mode"
     },
-    "estadoTipo": "vigente",
+    "estadoTipo": "activo",
     "activo": true,
-    "conversaciones": 14,
-    "costoPorConv": "S/ 7,50",
-    "metricasTexto": {
-      "es": "14 conversaciones iniciadas · Informe con C.Ps.P.",
-      "en": "14 conversations started · Report with C.Ps.P."
-    },
+    "pin": false,
     "flyerImg": "/imgwii/terapeuta-notas.webp",
     "thumbImg": "/imgwii/terapeuta-notas.webp",
     "descripcion": {
@@ -145,6 +142,83 @@
     "wsMsg": {
       "es": "¡Hola! Deseo coordinar una evaluación diagnóstica infantil anunciada en su portal.",
       "en": "Hello! I would like to coordinate a child diagnostic assessment announced on your site."
-    }
+    },
+    "creado": 1792920000000,
+    "actualizado": 1792920000000,
+    "userId": "admin_sofia"
+  },
+  {
+    "id": "ad-05-respaldo-urp",
+    "titulo": {
+      "es": "Respaldo Profesional: Formación y Ética Universidad Ricardo Palma",
+      "en": "Professional Standing: Training & Ethics Ricardo Palma University"
+    },
+    "badge": {
+      "es": "Garantía & Respaldo",
+      "en": "Ethics & Credentials"
+    },
+    "fecha": {
+      "es": "Creado el oct 26, 6:00pm",
+      "en": "Created on Oct 26, 6:00pm"
+    },
+    "fechaInicio": "2026-10-26",
+    "fechaFin": "2026-12-31",
+    "estado": {
+      "es": "Activo · Respaldado",
+      "en": "Active · Certified"
+    },
+    "estadoTipo": "activo",
+    "activo": true,
+    "pin": false,
+    "flyerImg": "/imgwii/eventos/04-retrato-universidad-4x3.webp",
+    "thumbImg": "/imgwii/eventos/04-retrato-universidad-4x3.webp",
+    "descripcion": {
+      "es": "Atención psicológica con rigurosidad científica, ética clínica colegiada C.Ps.P. 49425 y sólida formación académica universitaria.",
+      "en": "Psychological care with scientific rigor, certified clinical ethics C.Ps.P. 49425, and solid academic university background."
+    },
+    "wsMsg": {
+      "es": "¡Hola Lic. Sofía! Vi el anuncio sobre su respaldo académico y deseo coordinar una consulta.",
+      "en": "Hello Lic. Sofía! I saw the announcement regarding your academic standing and would like to schedule."
+    },
+    "creado": 1792900000000,
+    "actualizado": 1792900000000,
+    "userId": "admin_sofia"
+  },
+  {
+    "id": "ad-06-congresos-talleres",
+    "titulo": {
+      "es": "Jornadas Clínicas y Talleres Vivenciales de Salud Emocional",
+      "en": "Clinical Conferences & Experiential Emotional Health Workshops"
+    },
+    "badge": {
+      "es": "Conferencias & Salud",
+      "en": "Conferences & Health"
+    },
+    "fecha": {
+      "es": "Creado el oct 25, 4:30pm",
+      "en": "Created on Oct 25, 4:30pm"
+    },
+    "fechaInicio": "2026-10-25",
+    "fechaFin": "2026-12-31",
+    "estado": {
+      "es": "Vigente · Cupos Abiertos",
+      "en": "Active · Open Spots"
+    },
+    "estadoTipo": "activo",
+    "activo": true,
+    "pin": false,
+    "flyerImg": "/imgwii/eventos/01-retrato-congreso-4x3.webp",
+    "thumbImg": "/imgwii/eventos/01-retrato-congreso-4x3.webp",
+    "descripcion": {
+      "es": "Espacios vivenciales y psicoeducación grupal para la gestión de ansiedad, inteligencia emocional y superación del estrés cotidiano.",
+      "en": "Experiential spaces and group psychoeducation for anxiety management, emotional intelligence, and stress relief."
+    },
+    "wsMsg": {
+      "es": "¡Hola Lic. Sofía! Vi su anuncio sobre las jornadas clínicas y deseo información para participar.",
+      "en": "Hello Lic. Sofía! I saw your announcement about clinical conferences and want details to participate."
+    },
+    "creado": 1792880000000,
+    "actualizado": 1792880000000,
+    "userId": "admin_sofia"
   }
 ]

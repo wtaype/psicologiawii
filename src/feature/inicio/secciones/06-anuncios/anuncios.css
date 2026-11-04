@@ -5,11 +5,13 @@
 
 .sec-anuncios {
   position: relative;
-  padding: clamp(3rem, 6vh, 5rem) clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(3rem, 6vh, 5rem) 0;
   background: var(--bg);
   font-family: var(--ff_P);
   color: var(--tx1);
   overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .sec-anuncios__container {
@@ -74,7 +76,15 @@
 
 @media (max-width: 960px) {
   .sec-anuncios__grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 2rem;
+  }
+  .anuncio-showcase,
+  .anuncios-meta-feed {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
   }
 }
 
@@ -393,14 +403,18 @@
   color: var(--tx3);
 }
 
-.anuncio-meta-item__conversaciones {
+.anuncio-meta-item__badge {
   font-size: var(--fz_s2);
   color: var(--tx2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 500;
 }
 
-.anuncio-meta-item__costo {
-  font-size: var(--fz_s2);
-  color: var(--tx3);
+.anuncio-meta-item__badge i {
+  color: var(--brand-primary);
+  font-size: var(--fz_s1);
 }
 
 /* Acciones / Menú 3 puntos */
@@ -471,6 +485,7 @@
 /* 📱 Responsive Móvil */
 @media (max-width: 640px) {
   .anuncio-meta-item {
+    grid-template-columns: auto minmax(0, 1fr) auto;
     gap: 1vh;
     padding: 1vh 1.2vh;
   }

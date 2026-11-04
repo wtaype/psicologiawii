@@ -1,6 +1,6 @@
 ---
 // src/feature/blog/components/PostComent.astro
-// Módulo de Comentarios e Interacción con Carga Perezosa WPO (IntersectionObserver 300px)
+// Módulo de Comentarios e Interacción con Carga Inteligente (IntersectionObserver 300px + superwii)
 import { getBlogI18n } from '../idioma/idioma.js';
 
 interface Props {
@@ -15,11 +15,11 @@ const t = getBlogI18n(lang);
 
 <div id="wi_comments" class="po_comments" data-slug={slug} data-title={titulo} data-lang={lang}>
   <div class="po_comments_title">
-    <i class="fa-solid fa-comments" style="color:var(--mco);"></i> {t.comments}
+    <i class="fa-solid fa-comments icon-brand-orange"></i> {t.comments}
   </div>
   
-  <div id="comments_box" style="padding: 1vh 0; font-size: var(--fz_m1); color: var(--tx2); text-align: center;">
-    <p style="margin-bottom: 2vh; line-height: 1.6;">
+  <div id="comments_box" class="po_comments_box">
+    <p class="po_comments_desc">
       {lang === 'en' 
         ? 'Share your thoughts, ask a question about psychological wellness, or leave a message for our clinical team.' 
         : 'Comparte tu reflexión, realiza una consulta sobre bienestar emocional o déjanos un comentario con total confianza.'}
@@ -55,8 +55,8 @@ const t = getBlogI18n(lang);
       commentsContainer.removeEventListener('touchstart', loadDisqusRef);
 
       const dCfg = function (this: any) {
-        this.page.url = window.location.href;
-        this.page.identifier = slug;
+        this.page.url = window.location.href.split('#')[0].split('?')[0];
+        this.page.identifier = 'psicologia_' + slug;
         this.page.title = title || '';
       };
 
@@ -65,12 +65,13 @@ const t = getBlogI18n(lang);
         win.DISQUS.reset({ reload: true, config: dCfg });
       } else {
         win.disqus_config = dCfg;
-        const script = document.createElement('script');
-        const shortname = import.meta.env.PUBLIC_DISQUS_SHORTNAME || 'psicologiaamerica';
-        script.src = `https://${shortname}.disqus.com/embed.js`;
-        script.setAttribute('data-timestamp', String(+new Date()));
-        script.async = true;
-        document.body.appendChild(script);
+        if (!document.querySelector('script[src*="disqus.com/embed.js"]')) {
+          const script = document.createElement('script');
+          script.src = 'https://superwii.disqus.com/embed.js';
+          script.setAttribute('data-timestamp', String(+new Date()));
+          script.async = true;
+          document.head.appendChild(script);
+        }
       }
     };
 
@@ -111,6 +112,7 @@ const t = getBlogI18n(lang);
     delete win.DISQUS;
   };
 
+  initDisqus();
   document.addEventListener('astro:page-load', initDisqus);
   document.addEventListener('astro:before-preparation', cleanupDisqus);
 </script>

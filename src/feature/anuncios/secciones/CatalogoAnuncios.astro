@@ -1,8 +1,10 @@
 ---
 // src/feature/anuncios/secciones/CatalogoAnuncios.astro
 // Componente de Catálogo Público Completo de Anuncios y Convocatorias
+// 100% Reactivo · Local-First (0ms) · Sincronizado con Firestore y Cloudflare
+// Imagen al 100% estilo Producto / Servicio · SEO Google Optimizado
 import { datosNegocio, resolverTexto } from '../../../negocio.js';
-import { resolverIdioma, buildRuta } from '../../inicio/idioma/idioma.js';
+import { resolverIdioma } from '../../inicio/idioma/idioma.js';
 import { imgwii } from '@widev';
 import es from '../idioma/es.json';
 import en from '../idioma/en.json';
@@ -17,24 +19,25 @@ const t = resolverIdioma({ es, en }, idioma);
 
 const listaAnuncios = datosNegocio.anuncios || [];
 const whatsappNumero = datosNegocio.whatsappLimpio || '51960332958';
-const rutaInicio = buildRuta('/', idioma);
 ---
 
 <style is:global set:html={catalogoAnunciosCss}></style>
 
-<div class="page-catalogo-anuncios">
+<div
+  class="page-catalogo-anuncios"
+  id="catalogoAnunciosRoot"
+  data-idioma={idioma}
+  data-wa-num={whatsappNumero}
+  data-lbl-todos={t.filtro_todos}
+  data-lbl-activos={t.filtro_activos}
+  data-lbl-completados={t.filtro_completados}
+  data-lbl-oficial={t.badge_oficial}
+  data-lbl-modalidad={t.badge_modalidad}
+  data-btn-reservar={t.btn_reservar}
+>
   <div class="pagewii catalogo-anuncios__container">
     
-    <!-- 🧭 Breadcrumb -->
-    <nav class="catalogo-anuncios__breadcrumb" aria-label="Breadcrumb">
-      <a href={rutaInicio} class="catalogo-anuncios__breadcrumb-link">
-        <i class="fa-solid fa-house" aria-hidden="true"></i> {t.breadcrumb_inicio}
-      </a>
-      <span class="catalogo-anuncios__breadcrumb-sep">/</span>
-      <span class="catalogo-anuncios__breadcrumb-current">{t.breadcrumb_actual}</span>
-    </nav>
-
-    <!-- 🏷️ Cabecera -->
+    <!-- 🏷️ Cabecera SEO de Google -->
     <header class="catalogo-anuncios__header">
       <div class="catalogo-anuncios__tag">
         <i class="fa-solid fa-bullhorn" aria-hidden="true"></i>
@@ -46,21 +49,21 @@ const rutaInicio = buildRuta('/', idioma);
       <p class="catalogo-anuncios__desc">{t.descripcion}</p>
     </header>
 
-    <!-- 🗂️ Filtros por Estado -->
-    <div class="catalogo-anuncios__tabs" role="tablist">
-      <button type="button" class="catalogo-anuncios__tab-btn is-active" data-filter="todos">
+    <!-- 🗂️ Filtros Cortos por Estado -->
+    <div class="catalogo-anuncios__tabs" role="tablist" aria-label="Filtros de anuncios">
+      <button type="button" class="catalogo-anuncios__tab-btn is-active" data-filter="todos" id="tabAnunciosTodos">
         {t.filtro_todos} ({listaAnuncios.length})
       </button>
-      <button type="button" class="catalogo-anuncios__tab-btn" data-filter="activo">
+      <button type="button" class="catalogo-anuncios__tab-btn" data-filter="activo" id="tabAnunciosActivos">
         {t.filtro_activos} ({listaAnuncios.filter(a => a.activo).length})
       </button>
-      <button type="button" class="catalogo-anuncios__tab-btn" data-filter="completado">
+      <button type="button" class="catalogo-anuncios__tab-btn" data-filter="completado" id="tabAnunciosCompletados">
         {t.filtro_completados} ({listaAnuncios.filter(a => !a.activo).length})
       </button>
     </div>
 
-    <!-- 📐 Lista de Anuncios Oficiales (Estilo Card Meta Ads) -->
-    <div class="catalogo-anuncios__list" id="grid-anuncios">
+    <!-- 📐 Grid de Anuncios con Imagen 100% de Ancho (Estilo Producto / Tarjeta Clínica) -->
+    <div class="catalogo-anuncios__grid" id="grid-anuncios">
       {listaAnuncios.map((ad) => {
         const isActivo = ad.activo;
         const estadoTipo = ad.estadoTipo || (isActivo ? 'activo' : 'completado');
@@ -70,70 +73,65 @@ const rutaInicio = buildRuta('/', idioma);
         const estadoTxt = resolverTexto(ad.estado, idioma);
         const badgeTxt = resolverTexto(ad.badge, idioma);
         const wsMsgTxt = resolverTexto(ad.wsMsg, idioma);
+        const imagenUrl = ad.flyerImg || ad.thumbImg || '/imgwii/psicologa-sofia-consulta.webp';
 
         return (
-          <article class="ad-feed-card" data-estado-tipo={estadoTipo}>
-            <!-- 🖼️ Miniatura con Checkmark de Estado -->
-            <div class="ad-feed-card__thumb-box">
+          <article class="ad-full-card" data-estado-tipo={estadoTipo}>
+            <!-- 🖼️ Imagen al 100% de Ancho con Badges Flotantes -->
+            <div class="ad-full-card__media">
               <img
-                src={ad.thumbImg || ad.flyerImg}
+                src={imagenUrl}
                 alt={tituloTxt}
-                class="ad-feed-card__thumb-img"
+                class="ad-full-card__img"
                 loading="lazy"
                 decoding="async"
                 onerror={`this.onerror=null;this.src='${imgwii.skeleton}';`}
               />
-              {isActivo && (
-                <span class="ad-feed-card__check-pill" title="Activo">
-                  <i class="fa-solid fa-check" aria-hidden="true"></i>
+              <div class="ad-full-card__overlays">
+                <span class={`ad-full-card__status ad-full-card__status--${estadoTipo}`}>
+                  <span class="ad-full-card__dot"></span>
+                  <span>{estadoTxt}</span>
                 </span>
-              )}
+                <span class="ad-full-card__badge">{badgeTxt}</span>
+              </div>
             </div>
 
-            <!-- 📝 Información Central del Anuncio -->
-            <div class="ad-feed-card__main-info">
-              <div class="ad-feed-card__top-line">
-                <span class="ad-feed-card__date">
+            <!-- 📝 Cuerpo Informativo de la Campaña -->
+            <div class="ad-full-card__body">
+              <div class="ad-full-card__meta-bar">
+                <span class="ad-full-card__date">
                   <i class="fa-regular fa-clock" aria-hidden="true"></i>
                   <span>{fechaTxt}</span>
                 </span>
-                <span class={`ad-feed-card__status-tag ad-feed-card__status-tag--${estadoTipo}`}>
-                  {estadoTxt}
-                </span>
               </div>
 
-              <h2 class="ad-feed-card__title">{tituloTxt}</h2>
-              <p class="ad-feed-card__desc">{descTxt}</p>
+              <h2 class="ad-full-card__title">{tituloTxt}</h2>
+              <p class="ad-full-card__desc">{descTxt}</p>
 
-              <div class="ad-feed-card__metrics-bar">
-                <span class="ad-feed-card__metric-pill">
-                  <i class="fa-solid fa-comments" aria-hidden="true"></i>
-                  <span>{ad.conversaciones} {t.label_conversaciones}</span>
-                </span>
-                {ad.costoPorConv && (
-                  <span class="ad-feed-card__metric-pill">
-                    <i class="fa-solid fa-tag" aria-hidden="true"></i>
-                    <span>{t.label_costo} {ad.costoPorConv}</span>
-                  </span>
-                )}
-                <span class="ad-feed-card__metric-pill ad-feed-card__metric-pill--badge">
+              <!-- 🛡️ Respaldo Clínico -->
+              <div class="ad-full-card__clinical-box">
+                <div class="ad-full-card__clinical-item">
                   <i class="fa-solid fa-certificate" aria-hidden="true"></i>
-                  <span>{badgeTxt}</span>
-                </span>
+                  <span>{t.badge_oficial}</span>
+                </div>
+                <div class="ad-full-card__clinical-item">
+                  <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                  <span>{t.badge_modalidad}</span>
+                </div>
               </div>
-            </div>
 
-            <!-- 🔘 Botón de Acción Directa -->
-            <div class="ad-feed-card__action-col">
-              <a
-                href={`https://wa.me/${whatsappNumero}?text=${encodeURIComponent(wsMsgTxt)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="ad-feed-card__btn-wa"
-              >
-                <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-                <span>{t.btn_reservar}</span>
-              </a>
+              <!-- 🔘 Botón de Acción Principal Directo a WhatsApp -->
+              <div class="ad-full-card__actions">
+                <a
+                  href={`https://wa.me/${whatsappNumero}?text=${encodeURIComponent(wsMsgTxt)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ad-full-card__btn-wa"
+                >
+                  <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                  <span>{t.btn_reservar}</span>
+                </a>
+              </div>
             </div>
           </article>
         );
@@ -160,29 +158,179 @@ const rutaInicio = buildRuta('/', idioma);
   </div>
 </div>
 
-<script is:inline>
-  (function initFiltrosCatalogo() {
-    const tabButtons = document.querySelectorAll('.catalogo-anuncios__tab-btn');
-    const cards = document.querySelectorAll('.ad-feed-card');
-    if (!tabButtons.length || !cards.length) return;
+<script>
+  import { consultarAnunciosFirestoreFresco, STORAGE_KEY_ANUNCIOS } from '../../../negocio.js';
 
-    tabButtons.forEach(function(btn) {
-      btn.addEventListener('click', function() {
-        tabButtons.forEach(function(b) { b.classList.remove('is-active'); });
-        btn.classList.add('is-active');
+  (function initCatalogoAnunciosReactivo() {
+    const root = document.getElementById('catalogoAnunciosRoot');
+    if (!root) return;
 
-        const filter = btn.getAttribute('data-filter');
-        cards.forEach(function(card) {
-          const tipo = card.getAttribute('data-estado-tipo');
-          if (filter === 'todos') {
-            card.style.display = 'grid';
-          } else if (filter === 'activo') {
-            card.style.display = (tipo === 'activo' || tipo === 'vigente') ? 'grid' : 'none';
-          } else if (filter === 'completado') {
-            card.style.display = (tipo === 'completado' || tipo === 'finalizado') ? 'grid' : 'none';
-          }
+    const idioma = root.getAttribute('data-idioma') || 'es';
+    const waNum = root.getAttribute('data-wa-num') || '51960332958';
+    const lblTodos = root.getAttribute('data-lbl-todos') || 'Todos';
+    const lblActivos = root.getAttribute('data-lbl-activos') || 'Activos';
+    const lblCompletados = root.getAttribute('data-lbl-completados') || 'Finalizados';
+    const lblOficial = root.getAttribute('data-lbl-oficial') || 'Oficial C.Ps.P. 49425';
+    const lblModalidad = root.getAttribute('data-lbl-modalidad') || 'Presencial y Online';
+    const btnReservar = root.getAttribute('data-btn-reservar') || 'Reservar por WhatsApp';
+
+    let currentFilter = 'todos';
+
+    function resolverTxt(val: any, lang = idioma) {
+      if (!val) return '';
+      if (typeof val === 'string') return val;
+      return val[lang] || val.es || val.en || '';
+    }
+
+    function aplicarFiltro(filter: string) {
+      currentFilter = filter;
+      const tabButtons = document.querySelectorAll('.catalogo-anuncios__tab-btn');
+      const cards = document.querySelectorAll('.ad-full-card');
+
+      tabButtons.forEach(b => {
+        if (b.getAttribute('data-filter') === filter) {
+          b.classList.add('is-active');
+        } else {
+          b.classList.remove('is-active');
+        }
+      });
+
+      cards.forEach((card: any) => {
+        const tipo = card.getAttribute('data-estado-tipo');
+        if (filter === 'todos') {
+          card.style.display = 'flex';
+        } else if (filter === 'activo') {
+          card.style.display = (tipo === 'activo' || tipo === 'vigente') ? 'flex' : 'none';
+        } else if (filter === 'completado') {
+          card.style.display = (tipo === 'completado' || tipo === 'finalizado') ? 'flex' : 'none';
+        }
+      });
+    }
+
+    function configurarFiltrosTabs() {
+      const tabButtons = document.querySelectorAll('.catalogo-anuncios__tab-btn');
+      tabButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          const filter = btn.getAttribute('data-filter') || 'todos';
+          aplicarFiltro(filter);
         });
       });
+    }
+
+    function hidratarCatalogo(lista: any[]) {
+      if (!Array.isArray(lista)) return;
+
+      const container = document.getElementById('grid-anuncios');
+      if (!container) return;
+
+      const activos = lista.filter(a => a.activo).length;
+      const completados = lista.filter(a => !a.activo).length;
+
+      // Actualizar contadores en tabs cortos
+      const tabTodos = document.getElementById('tabAnunciosTodos');
+      const tabActivos = document.getElementById('tabAnunciosActivos');
+      const tabCompletados = document.getElementById('tabAnunciosCompletados');
+
+      if (tabTodos) tabTodos.textContent = `${lblTodos} (${lista.length})`;
+      if (tabActivos) tabActivos.textContent = `${lblActivos} (${activos})`;
+      if (tabCompletados) tabCompletados.textContent = `${lblCompletados} (${completados})`;
+
+      container.innerHTML = lista.map((ad) => {
+        const isActivo = ad.activo;
+        const estadoTipo = ad.estadoTipo || (isActivo ? 'activo' : 'completado');
+        const tituloTxt = resolverTxt(ad.titulo);
+        const descTxt = resolverTxt(ad.descripcion);
+        const fechaTxt = resolverTxt(ad.fecha);
+        const estadoTxt = resolverTxt(ad.estado);
+        const badgeTxt = resolverTxt(ad.badge);
+        const wsMsgTxt = resolverTxt(ad.wsMsg);
+        const imagenUrl = ad.flyerImg || ad.thumbImg || '/imgwii/psicologa-sofia-consulta.webp';
+
+        return `
+          <article class="ad-full-card" data-estado-tipo="${estadoTipo}">
+            <div class="ad-full-card__media">
+              <img
+                src="${imagenUrl}"
+                alt="${tituloTxt}"
+                class="ad-full-card__img"
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="ad-full-card__overlays">
+                <span class="ad-full-card__status ad-full-card__status--${estadoTipo}">
+                  <span class="ad-full-card__dot"></span>
+                  <span>${estadoTxt}</span>
+                </span>
+                <span class="ad-full-card__badge">${badgeTxt}</span>
+              </div>
+            </div>
+
+            <div class="ad-full-card__body">
+              <div class="ad-full-card__meta-bar">
+                <span class="ad-full-card__date">
+                  <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                  <span>${fechaTxt}</span>
+                </span>
+              </div>
+
+              <h2 class="ad-full-card__title">${tituloTxt}</h2>
+              <p class="ad-full-card__desc">${descTxt}</p>
+
+              <div class="ad-full-card__clinical-box">
+                <div class="ad-full-card__clinical-item">
+                  <i class="fa-solid fa-certificate" aria-hidden="true"></i>
+                  <span>${lblOficial}</span>
+                </div>
+                <div class="ad-full-card__clinical-item">
+                  <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                  <span>${lblModalidad}</span>
+                </div>
+              </div>
+
+              <div class="ad-full-card__actions">
+                <a
+                  href="https://wa.me/${waNum}?text=${encodeURIComponent(wsMsgTxt)}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ad-full-card__btn-wa"
+                >
+                  <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+                  <span>${btnReservar}</span>
+                </a>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      aplicarFiltro(currentFilter);
+    }
+
+    configurarFiltrosTabs();
+
+    // Escuchar evento de actualización canónico
+    window.addEventListener('wi:anuncios-actualizado', (e: any) => {
+      if (Array.isArray(e.detail)) {
+        hidratarCatalogo(e.detail);
+      }
     });
+
+    // Reconciliación con localStorage en 0ms
+    try {
+      const local = localStorage.getItem(STORAGE_KEY_ANUNCIOS);
+      if (local) {
+        const parsed = JSON.parse(local);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          hidratarCatalogo(parsed);
+        }
+      }
+    } catch (e) {}
+
+    // Refrescar en background desde Firestore
+    consultarAnunciosFirestoreFresco().then((frescos) => {
+      if (Array.isArray(frescos) && frescos.length > 0) {
+        hidratarCatalogo(frescos);
+      }
+    }).catch(() => {});
   })();
 </script>

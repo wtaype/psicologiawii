@@ -15,7 +15,29 @@ service cloud.firestore {
       allow delete: if esPersonal();
     }
 
+    // Artículos de Blogs y Guías Clínicas (Español & English)
+    match /blogs/{id} {
+      allow read: if true;
+      allow create, delete: if esPersonal();
+      allow update: if esPersonal() || (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['vistas', 'likes']) &&
+        request.resource.data.vistas >= resource.data.vistas &&
+        request.resource.data.likes >= 0
+      );
+    }
+
+    // Anuncios y Promociones
+    match /anuncios/{id} {
+      allow read: if true;
+      allow write: if esPersonal();
+    }
+
     match /productos/{id} {
+      allow read: if true;
+      allow write: if esPersonal();
+    }
+
+    match /servicios/{id} {
       allow read: if true;
       allow write: if esPersonal();
     }
@@ -31,11 +53,6 @@ service cloud.firestore {
 
     match /correos/{id} {
       allow read, write: if esPersonal();
-    }
-  
-    match /servicios/{id} {
-      allow read: if true;
-      allow write: if esPersonal();
     }
   }
 }

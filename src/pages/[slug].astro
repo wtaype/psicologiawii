@@ -1,25 +1,103 @@
 ---
 // src/pages/[slug].astro
-// Redirección Canónica 301 de Slugs Raíz a /blog/[slug]
-import { consultarBlogsFirestoreFresco } from '../negocio.js';
+// ⚡ Renderizado Nativo de Artículos en Español · Consultorio Psicológico América
+// Máxima Velocidad (0ms redirección) · Rutas Directas /:slug
+import Principal from '../core/layouts/Principal.astro';
+import PostPage from '../feature/blog/components/PostPage.astro';
+import PostSidebar from '../feature/blog/components/PostSidebar.astro';
+import { consultarBlogsFirestoreFresco, datosNegocio } from '../negocio.js';
+import { IDIOMAS, buildRuta, DEFAULT_LANG } from '../core/idioma/idioma';
 
 export async function getStaticPaths() {
-  const allPosts = await consultarBlogsFirestoreFresco();
-  const posts = (allPosts || []).filter((p: any) => (p.lang === 'es' || !p.lang) && p.activo !== false);
+  const blogsData = await consultarBlogsFirestoreFresco();
+  const allPosts = blogsData || [];
+  const posts = allPosts.filter((p: any) => (p.lang === 'es' || !p.lang) && p.activo !== false);
 
   if (!posts || posts.length === 0) {
     return [{
       params: { slug: 'terapia-de-pareja-claves-de-comunicacion-asertiva-y-resolucion-de-conflictos' },
-      props: { targetUrl: '/blog/terapia-de-pareja-claves-de-comunicacion-asertiva-y-resolucion-de-conflictos' }
+      props: { post: {}, related: [], latest: [], prevPost: null, nextPost: null, translationSlug: null, partnerLang: null, rutasIdioma: { es: '/' } }
     }];
   }
 
-  return posts.map((post: any) => ({
-    params: { slug: post.slug },
-    props: { targetUrl: `/blog/${post.slug}` }
-  }));
+  return posts.map((post: any, index: number) => {
+    const related = posts.filter((p: any) => p.categoria === post.categoria && p.slug !== post.slug).slice(0, 5);
+    const latest = posts.filter((p: any) => p.slug !== post.slug).slice(0, 5);
+
+    // Búsqueda dinámica de artículo hermano vinculado en otro idioma (Cluster langId compartido o legacy)
+    const partner = allPosts.find((p: any) => p.lang !== (post.lang || DEFAULT_LANG) && (p.langId === post.langId || p.id === post.langId || p.langId === post.id));
+    const translationSlug = partner ? partner.slug : null;
+    const partnerLang = partner ? (partner.lang || 'en') : null;
+
+    // Generación dinámica de rutas por idioma para el Header
+    const rutasIdioma: Record<string, string> = {
+      es: `/${post.slug || post.id}`
+    };
+
+    Object.keys(IDIOMAS).forEach((code) => {
+      if (code === 'es') return;
+      if (partner && partner.lang === code) {
+        rutasIdioma[code] = buildRuta(`/${partner.slug || partner.id}`, code);
+      } else {
+        rutasIdioma[code] = buildRuta('/blog', code);
+      }
+    });
+
+    return {
+      params: { slug: post.slug },
+      props: {
+        post,
+        related,
+        latest,
+        prevPost: posts[index + 1] || null,
+        nextPost: posts[index - 1] || null,
+        translationSlug,
+        partnerLang,
+        rutasIdioma
+      }
+    };
+  });
 }
 
-const { targetUrl = '/blog' } = Astro.props;
-return Astro.redirect(targetUrl, 301);
+interface Props {
+  post: any;
+  related: any[];
+  latest: any[];
+  prevPost: any;
+  nextPost: any;
+  translationSlug: string | null;
+  partnerLang: string | null;
+  rutasIdioma: Record<string, string>;
+}
+
+const { post, related = [], latest = [], prevPost, nextPost, translationSlug, partnerLang, rutasIdioma } = Astro.props;
+
+const idioma = 'es';
+const ruta = `/${post.slug || post.id}`;
+const pageTitle = `${post.titulo} · ${datosNegocio.nombre}`;
+const pageDesc = post.descripcion || datosNegocio.slogan;
+const pageImg = post.imagenTop || post.imagen || '/imgwii/servicios/psicoterapia-pareja.webp';
 ---
+
+<Principal
+  idioma={idioma}
+  ruta={ruta}
+  rutasIdioma={rutasIdioma}
+  title={pageTitle}
+  description={pageDesc}
+  keywords={Array.isArray(post.keywords) ? post.keywords.join(', ') : (post.keywords || '')}
+  image={pageImg}
+  type="article"
+  articleData={post}
+>
+  <PostPage 
+    post={post} 
+    prevPost={prevPost} 
+    nextPost={nextPost} 
+    lang={idioma} 
+    translationSlug={translationSlug}
+    partnerLang={partnerLang}
+  >
+    <PostSidebar slot="sidebar" post={post} latest={latest} related={related} lang={idioma} />
+  </PostPage>
+</Principal>
