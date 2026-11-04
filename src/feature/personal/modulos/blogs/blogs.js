@@ -443,7 +443,10 @@ Devuelve EXCLUSIVAMENTE un objeto JSON válido con esta estructura:
 `;
 
     try {
-      const data = await consultarJsonGemini(promptTraduccion);
+      const data = await consultarJsonGemini({
+        prompt: promptTraduccion,
+        systemInstruction: 'Eres un traductor y psicólogo clínico profesional bilingüe (español e inglés). Responde EXCLUSIVAMENTE con el objeto JSON solicitado, sin explicaciones ni markdown envolvente.'
+      });
       if (!data || !data.titulo) {
         throw new Error('La respuesta de Gemini no contiene los campos requeridos');
       }

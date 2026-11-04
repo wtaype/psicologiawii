@@ -6,21 +6,25 @@ const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-
 
 /**
  * Consulta general a Gemini 2.5 Flash
- * @param {Object} options
- * @param {string} options.prompt - Prompt principal
- * @param {string} [options.systemInstruction] - Instrucción de sistema opcional
- * @param {string} [options.responseMimeType] - 'application/json' o 'text/plain'
- * @returns {Promise<string>} Texto devuelto por Gemini
+ * Soporta tanto objeto ({ prompt, systemInstruction }) como string directo (prompt)
  */
-export async function consultarGemini({ prompt, systemInstruction = '', responseMimeType = 'text/plain' }) {
+export async function consultarGemini(arg) {
   if (!GEMINI_KEY) {
     throw new Error('No se encontró la variable PUBLIC_GEMINI_KEY en el entorno (.env)');
+  }
+
+  const options = typeof arg === 'string' ? { prompt: arg } : (arg || {});
+  const { prompt = '', systemInstruction = '', responseMimeType = 'text/plain' } = options;
+
+  const textoPrompt = String(prompt || '').trim();
+  if (!textoPrompt) {
+    throw new Error('El prompt enviado a Gemini no puede estar vacío');
   }
 
   const payload = {
     contents: [
       {
-        parts: [{ text: prompt }]
+        parts: [{ text: textoPrompt }]
       }
     ],
     generationConfig: {
@@ -29,9 +33,9 @@ export async function consultarGemini({ prompt, systemInstruction = '', response
     }
   };
 
-  if (systemInstruction) {
+  if (systemInstruction && String(systemInstruction).trim()) {
     payload.systemInstruction = {
-      parts: [{ text: systemInstruction }]
+      parts: [{ text: String(systemInstruction).trim() }]
     };
   }
 
@@ -58,12 +62,12 @@ export async function consultarGemini({ prompt, systemInstruction = '', response
 
 /**
  * Consulta a Gemini forzando y parseando respuesta en formato JSON estructurado
- * @param {Object} options
- * @param {string} options.prompt - Prompt con requerimientos
- * @param {string} [options.systemInstruction] - Reglas estrictas
- * @returns {Promise<any>} Objeto JSON parseado
+ * Soporta tanto objeto ({ prompt, systemInstruction }) como string directo (prompt)
  */
-export async function consultarJsonGemini({ prompt, systemInstruction = '' }) {
+export async function consultarJsonGemini(arg) {
+  const options = typeof arg === 'string' ? { prompt: arg } : (arg || {});
+  const { prompt = '', systemInstruction = '' } = options;
+
   const rawJsonText = await consultarGemini({
     prompt,
     systemInstruction,
@@ -74,7 +78,10 @@ export async function consultarJsonGemini({ prompt, systemInstruction = '' }) {
     return JSON.parse(rawJsonText);
   } catch (err) {
     // Limpieza por si contiene bloques markdown ```json ... ```
-    const cleaned = rawJsonText.replace(/```json/gi, '').replace(/```/g, '').trim();
+    const cleaned = rawJsonText
+      .replace(/```json/gi, '')
+      .replace(/```/g, '')
+      .trim();
     return JSON.parse(cleaned);
   }
 }
