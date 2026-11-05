@@ -59,22 +59,18 @@ const fechaPublicado = (post.publicado || '2026/11/02').toString().replace(/-/g,
             fetchpriority="high"
           />
           <div class="po_hero_over">
-            <a href={catalogUrl} class="po_back" title={t.nav_back}>
-              <i class="fa-solid fa-arrow-left"></i> {t.nav_back}
+            <a href={catalogUrl} class="po_back" title={t.nav_back} aria-label={t.nav_back}>
+              <i class="fa-solid fa-arrow-left"></i>
             </a>
 
             <div class="po_hero_badges">
-              <span class="po_cat_badge">
-                <i class="fa-solid fa-tag"></i> {post.categoria}
-              </span>
-              
               {post.pin && (
-                <span class="po_dest_badge" title={t.pin}>
-                  <i class="fa-solid fa-thumbtack"></i> {t.pin}
+                <span class="po_dest_badge" title={t.pin} aria-label={t.pin}>
+                  <i class="fa-solid fa-thumbtack"></i>
                 </span>
               )}
 
-              <button type="button" class="po_like_btn po_like_sync" title={t.meta_likes}>
+              <button type="button" class="po_like_btn po_like_sync" title={t.meta_likes} aria-label={t.meta_likes}>
                 <i class="fa-solid fa-heart"></i> <span class="po_likes_count_text">{post.likes || 0}</span>
               </button>
             </div>
@@ -83,6 +79,13 @@ const fechaPublicado = (post.publicado || '2026/11/02').toString().replace(/-/g,
 
         <!-- 2. Cabecera del Artículo -->
         <header class="po_header">
+          {post.categoria && (
+            <div class="po_header_cat">
+              <span class="po_header_cat_pill">
+                <i class="fa-solid fa-tag"></i> {post.categoria}
+              </span>
+            </div>
+          )}
           <h1 class="po_titulo">{post.titulo}</h1>
           
           {post.descripcion && (
@@ -255,9 +258,59 @@ const fechaPublicado = (post.publicado || '2026/11/02').toString().replace(/-/g,
       if (postId) {
         import('../../../core/servicios/firebase.js').then(async ({ db }) => {
           const { doc, updateDoc, increment } = await import('firebase/firestore');
-          updateDoc(doc(db, 'blogs', postId), { vistas: increment(1) }).catch(() => {});
+          updateDoc(doc(db, 'blogs', postId), { vistas: increment(1) }).then(() => {
+            try {
+              const raw = localStorage.getItem('wi_blogs_data_v8');
+              if (raw) {
+                const list = JSON.parse(raw);
+                if (Array.isArray(list)) {
+                  const item = list.find((b: any) => b.id === postId || b.postId === postId);
+                  if (item) {
+                    item.vistas = (item.vistas || 0) + 1;
+                    localStorage.setItem('wi_blogs_data_v8', JSON.stringify(list));
+                    window.dispatchEvent(new CustomEvent('wi:blogs-actualizado', { detail: list }));
+                  }
+                }
+              }
+            } catch (e) {}
+          }).catch(() => {});
         }).catch(() => {});
       }
+    }
+
+    // 1.1 Sincronización en segundo plano de vistas y likes oficiales desde Firestore
+    if (postId) {
+      import('../../../core/servicios/firebase.js').then(async ({ db }) => {
+        const { doc, getDoc } = await import('firebase/firestore');
+        getDoc(doc(db, 'blogs', postId)).then((snap) => {
+          if (snap.exists()) {
+            const data = snap.data();
+            const realViews = data.vistas ?? 0;
+            const realLikes = data.likes ?? 0;
+            document.querySelectorAll('.po_vistas_count_text').forEach((el: any) => {
+              el.textContent = String(realViews);
+            });
+            document.querySelectorAll('.po_likes_count_text').forEach((el: any) => {
+              el.textContent = String(realLikes);
+            });
+            try {
+              const raw = localStorage.getItem('wi_blogs_data_v8');
+              if (raw) {
+                const list = JSON.parse(raw);
+                if (Array.isArray(list)) {
+                  const item = list.find((b: any) => b.id === postId || b.postId === postId);
+                  if (item) {
+                    item.vistas = realViews;
+                    item.likes = realLikes;
+                    localStorage.setItem('wi_blogs_data_v8', JSON.stringify(list));
+                    window.dispatchEvent(new CustomEvent('wi:blogs-actualizado', { detail: list }));
+                  }
+                }
+              }
+            } catch (e) {}
+          }
+        }).catch(() => {});
+      }).catch(() => {});
     }
 
     // 2. Galería Lightbox Picasa v2.2 y Modal YouTube
@@ -318,7 +371,22 @@ const fechaPublicado = (post.publicado || '2026/11/02').toString().replace(/-/g,
         if (postId) {
           import('../../../core/servicios/firebase.js').then(async ({ db }) => {
             const { doc, updateDoc, increment } = await import('firebase/firestore');
-            updateDoc(doc(db, 'blogs', postId), { likes: increment(diff) }).catch(() => {});
+            updateDoc(doc(db, 'blogs', postId), { likes: increment(diff) }).then(() => {
+              try {
+                const raw = localStorage.getItem('wi_blogs_data_v8');
+                if (raw) {
+                  const list = JSON.parse(raw);
+                  if (Array.isArray(list)) {
+                    const item = list.find((b: any) => b.id === postId || b.postId === postId);
+                    if (item) {
+                      item.likes = Math.max(0, (item.likes || 0) + diff);
+                      localStorage.setItem('wi_blogs_data_v8', JSON.stringify(list));
+                      window.dispatchEvent(new CustomEvent('wi:blogs-actualizado', { detail: list }));
+                    }
+                  }
+                }
+              } catch (e) {}
+            }).catch(() => {});
           }).catch(() => {});
         }
       });

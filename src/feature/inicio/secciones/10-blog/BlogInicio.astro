@@ -3,7 +3,7 @@
 // 10. SECCIÓN ARTÍCULOS CLÍNICOS & BLOG DE PSICOLOGÍA (GRILLA 4x2)
 // Psicoeducación, guías prácticas y SEO de salud mental con carga diferida imgwii
 // 100% Reactivo · Local-First (0ms) · Sincronizado con Firestore y Cloudflare
-import { resolverTexto } from '../../../../negocio.js';
+import { resolverTexto, consultarBlogsFirestoreFresco } from '../../../../negocio.js';
 import { resolverIdioma, buildRuta } from '../../idioma/idioma.js';
 import { imgwii } from '@widev';
 import blogsSemilla from '../../../../semillas/blogs.json';
@@ -18,9 +18,13 @@ interface Props {
 const { idioma = Astro.props.idioma || Astro.currentLocale || 'es' } = Astro.props;
 const t = resolverIdioma({ es, en }, idioma);
 
-// Tomar los artículos activos correspondientes al idioma para conformar la grilla
-const listaSemilla: any[] = Array.isArray(blogsSemilla) ? blogsSemilla : Object.values(blogsSemilla || {});
-const articulos = listaSemilla
+// Consultar datos frescos desde Firestore en compilación (0ms SSR) con fallback a semillas locales
+const blogsData = await consultarBlogsFirestoreFresco();
+const listaBlogs: any[] = (blogsData && blogsData.length > 0)
+  ? blogsData
+  : (Array.isArray(blogsSemilla) ? blogsSemilla : Object.values(blogsSemilla || {}));
+
+const articulos = listaBlogs
   .filter((b: any) => (b.lang === idioma || (!b.lang && idioma === 'es')) && b.activo !== false)
   .slice(0, 8);
 
@@ -57,9 +61,8 @@ const rutaBlog = buildRuta('/blog', idioma);
         const descTxt = resolverTexto(art.descripcion, idioma);
         const catTxt = resolverTexto(art.categoria, idioma);
         const fechaTxt = art.publicado || '2026-10-26';
-        const numVistas = art.vistas || '1.5k';
-        const numLikes = art.likes || 120;
-        const numComments = art.comentarios || 15;
+        const numVistas = art.vistas ?? 0;
+        const numLikes = art.likes ?? 0;
 
         return (
           <article class="blog-card-item">
@@ -104,10 +107,6 @@ const rutaBlog = buildRuta('/blog', idioma);
                   <span class="blog-stat-item blog-stat-item--likes" title={`${numLikes} me gusta`}>
                     <i class="fa-regular fa-heart" aria-hidden="true"></i>
                     <span>{numLikes}</span>
-                  </span>
-                  <span class="blog-stat-item blog-stat-item--comments" title={`${numComments} comentarios`}>
-                    <i class="fa-regular fa-comment" aria-hidden="true"></i>
-                    <span>{numComments}</span>
                   </span>
                 </div>
               </div>
@@ -163,9 +162,8 @@ const rutaBlog = buildRuta('/blog', idioma);
         const descTxt = resolverTxt(art.descripcion);
         const catTxt = resolverTxt(art.categoria || 'General');
         const fechaTxt = art.publicado || '2026-10-26';
-        const numVistas = art.vistas || '1.5k';
-        const numLikes = art.likes || 120;
-        const numComments = art.comentarios || 15;
+        const numVistas = art.vistas ?? 0;
+        const numLikes = art.likes ?? 0;
         const img = art.imagen || art.imagenTop || '/imgwii/consultorio-interior.webp';
 
         return `
@@ -207,10 +205,6 @@ const rutaBlog = buildRuta('/blog', idioma);
                   <span class="blog-stat-item blog-stat-item--likes" title="${numLikes} me gusta">
                     <i class="fa-regular fa-heart" aria-hidden="true"></i>
                     <span>${numLikes}</span>
-                  </span>
-                  <span class="blog-stat-item blog-stat-item--comments" title="${numComments} comentarios">
-                    <i class="fa-regular fa-comment" aria-hidden="true"></i>
-                    <span>${numComments}</span>
                   </span>
                 </div>
               </div>

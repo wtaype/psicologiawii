@@ -79,12 +79,19 @@
 .po_hero_over {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.5) 0%, transparent 40%, rgba(0,0,0,0.75) 100%);
+  background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, transparent 40%, rgba(0,0,0,0.7) 100%);
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  padding: 2.2vh 2.5vh;
+  padding: 1.8vh 2vh;
   box-sizing: border-box;
+  pointer-events: none;
+}
+
+.po_hero_over a,
+.po_hero_over button,
+.po_hero_over span {
+  pointer-events: auto;
 }
 
 .po_back {
@@ -93,20 +100,22 @@
   color: #ffffff;
   text-decoration: none;
   font-family: var(--ff_P, 'Poppins', sans-serif);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 6px 14px;
+  font-size: 14px;
+  width: 38px;
+  height: 38px;
   border-radius: 1vh;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   transition: all 0.2s ease;
 }
 
 .po_back:hover {
   background: var(--brand-primary, #104356);
-  border-color: var(--brand-primary, #104356);
+  border-color: var(--brand-sky, #38bdf8);
+  transform: scale(1.05);
 }
 
 .po_hero_badges {
@@ -115,61 +124,54 @@
   gap: 8px;
 }
 
-.po_cat_badge {
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
-  color: #ffffff;
-  font-family: var(--ff_P, 'Poppins', sans-serif);
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 5px 12px;
-  border-radius: 1vh;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-}
-
 .po_dest_badge {
-  background: var(--brand-primary, #104356);
-  color: #ffffff;
-  font-family: var(--ff_P, 'Poppins', sans-serif);
-  font-size: 11.5px;
-  font-weight: 700;
-  padding: 5px 12px;
+  background: rgba(16, 67, 86, 0.85);
+  backdrop-filter: blur(8px);
+  color: var(--brand-sky, #38bdf8);
+  font-size: 14px;
+  width: 38px;
+  height: 38px;
   border-radius: 1vh;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  text-decoration: none;
-  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.35);
+  justify-content: center;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   transition: all 0.2s ease;
 }
 
 .po_dest_badge:hover {
-  filter: brightness(1.1);
-  transform: translateY(-1px);
+  filter: brightness(1.2);
+  transform: scale(1.05);
 }
 
 .po_like_btn {
   background: rgba(0, 0, 0, 0.65);
   backdrop-filter: blur(8px);
   color: #ffffff;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   font-family: var(--ff_P, 'Poppins', sans-serif);
-  font-size: 12px;
-  font-weight: 600;
-  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  height: 38px;
+  padding: 0 14px;
   border-radius: 1vh;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 7px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
   transition: all 0.2s ease;
+}
+
+.po_like_btn:hover {
+  background: rgba(0, 0, 0, 0.85);
+  border-color: rgba(254, 1, 73, 0.4);
 }
 
 .po_like_btn i {
   color: #fe0149;
+  font-size: 14px;
   transition: transform 0.2s ease;
 }
 
@@ -178,9 +180,34 @@
 }
 
 .po_like_btn.active {
-  background: #fe0149;
+  background: rgba(254, 1, 73, 0.18);
   border-color: #fe0149;
-  color: #fff;
+}
+
+.po_header_cat {
+  margin-bottom: 1.2vh;
+  display: flex;
+}
+
+.po_header_cat_pill {
+  background: var(--bg-surface-elevated, #1043561a);
+  border: 1px solid var(--border-card, #38bdf833);
+  color: var(--brand-sky, #38bdf8);
+  font-family: var(--ff_P, 'Poppins', sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 1vh;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  letter-spacing: 0.02em;
+}
+
+[data-theme="luz"] .po_header_cat_pill {
+  background: #f0f9ff;
+  border-color: #bae6fd;
+  color: #0284c7;
 }
 
 .po_like_btn.active i {
