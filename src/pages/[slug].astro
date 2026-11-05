@@ -25,7 +25,15 @@ export async function getStaticPaths() {
     const latest = posts.filter((p: any) => p.slug !== post.slug).slice(0, 5);
 
     // Búsqueda dinámica de artículo hermano vinculado en otro idioma (Cluster langId compartido o legacy)
-    const partner = allPosts.find((p: any) => p.lang !== (post.lang || DEFAULT_LANG) && (p.langId === post.langId || p.id === post.langId || p.langId === post.id));
+    const partner = allPosts.find((p: any) => 
+      p.lang !== (post.lang || DEFAULT_LANG) && 
+      p.activo !== false &&
+      (
+        (post.langId && p.langId && p.langId === post.langId) || 
+        (post.langId && p.id === post.langId) || 
+        (p.langId && p.langId === post.id)
+      )
+    );
     const translationSlug = partner ? partner.slug : null;
     const partnerLang = partner ? (partner.lang || 'en') : null;
 
@@ -36,8 +44,17 @@ export async function getStaticPaths() {
 
     Object.keys(IDIOMAS).forEach((code) => {
       if (code === 'es') return;
-      if (partner && partner.lang === code) {
-        rutasIdioma[code] = buildRuta(`/${partner.slug || partner.id}`, code);
+      const partnerForLang = allPosts.find((p: any) => 
+        p.lang === code && 
+        p.activo !== false &&
+        (
+          (post.langId && p.langId && p.langId === post.langId) || 
+          (post.langId && p.id === post.langId) || 
+          (p.langId && p.langId === post.id)
+        )
+      );
+      if (partnerForLang) {
+        rutasIdioma[code] = buildRuta(`/${partnerForLang.slug || partnerForLang.id}`, code);
       } else {
         rutasIdioma[code] = buildRuta('/blog', code);
       }

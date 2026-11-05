@@ -79,19 +79,94 @@ export function actualizarAuthUi(smile) {
 }
 
 /**
- * Switcher de idiomas dinámico preservando ruta y anclas
+ * Switcher de idiomas dinámico preservando ruta, clusters langId de blog y anclas
  */
 function initLanguageSwitcher() {
   document.querySelectorAll('.header-pill-group a[data-lang]').forEach((btn) => {
     btn.addEventListener('click', (e) => {
       const targetLang = btn.getAttribute('data-lang');
       if (!targetLang) return;
+
+      // 1. Detección prioritaria de lectura de artículo de blog (.po_wrap)
+      const postEl = document.querySelector('.po_wrap');
+      if (postEl) {
+        e.preventDefault();
+        const currentLang = postEl.getAttribute('data-lang') || 'es';
+        if (targetLang === currentLang) return;
+
+        const currentLangId = postEl.getAttribute('data-lang-id');
+        const currentPostId = postEl.getAttribute('data-id');
+        const tSlug = postEl.getAttribute('data-translation-slug');
+        const partnerLang = postEl.getAttribute('data-partner-lang');
+
+        // A. Buscar en localStorage si hay un hermano activo con el mismo langId o cluster
+        let targetSlug = '';
+        if (currentLangId || currentPostId) {
+          try {
+            const raw = localStorage.getItem('wi_blogs_data_v8');
+            if (raw) {
+              const blogs = JSON.parse(raw);
+              if (Array.isArray(blogs)) {
+                const partner = blogs.find(b => 
+                  b.activo !== false && 
+                  b.lang === targetLang && 
+                  (
+                    (currentLangId && b.langId === currentLangId) || 
+                    (currentLangId && b.id === currentLangId) || 
+                    (currentPostId && b.langId === currentPostId)
+                  )
+                );
+                if (partner && (partner.slug || partner.id)) {
+                  targetSlug = partner.slug || partner.id;
+                }
+              }
+            }
+          } catch (err) {}
+        }
+
+        // B. Si no está en localStorage, verificar el data-translation-slug del build
+        if (!targetSlug && tSlug && partnerLang === targetLang) {
+          targetSlug = tSlug;
+        }
+
+        // C. Si no está en datos de post, revisar si el propio botón ya tiene un href válido de build time
+        if (!targetSlug) {
+          const btnHref = btn.getAttribute('href');
+          if (btnHref && btnHref !== '#' && btnHref !== '/' && btnHref !== '/en' && !btnHref.includes('/' + (postEl.getAttribute('data-slug') || ''))) {
+            window.location.href = btnHref;
+            return;
+          }
+        }
+
+        // D. Redirección final segura: al artículo hermano en el idioma destino o al catálogo
+        if (targetSlug) {
+          const dest = targetLang === 'es' ? `/${targetSlug}` : `/${targetLang}/${targetSlug}`;
+          window.location.href = dest;
+        } else {
+          // Si no existe traducción para este artículo, ir al catálogo de ese idioma (Cero 404)
+          const dest = targetLang === 'es' ? '/blog' : `/${targetLang}/blog`;
+          window.location.href = dest;
+        }
+        return;
+      }
+
+      // 2. Si el botón ya tiene un href explícito (p.ej. rutasIdioma en otras páginas)
+      const explicitHref = btn.getAttribute('href');
+      const hash = window.location.hash || '';
+
+      if (explicitHref && explicitHref !== '#' && !explicitHref.startsWith('javascript:')) {
+        e.preventDefault();
+        const urlDest = explicitHref.includes('#') || !hash ? explicitHref : (explicitHref + hash);
+        window.location.href = urlDest;
+        return;
+      }
+
+      // 3. Fallback estándar para páginas generales con preservación de anclas
       e.preventDefault();
       const pathActual = window.location.pathname.replace(/\/$/, '') || '/';
       let limpia = pathActual;
       if (limpia === '/en') limpia = '/';
       else if (limpia.startsWith('/en/')) limpia = limpia.slice(3) || '/';
-      const hash = window.location.hash || '';
 
       const dest = targetLang === 'es' 
         ? limpia 

@@ -54,15 +54,18 @@ const whatsappDirectLink = `https://wa.me/${wsNumeroDrawer}?text=${wsMsgDrawer}`
     <div class="flex items-center gap-2">
       <!-- Selector Dinámico de Idiomas Móvil -->
       <div class="header-pill-group" title="Idioma / Language">
-        {Object.entries(IDIOMAS).map(([code, info]) => (
-          <a 
-            href={buildRuta(rutaBase, code)} 
-            data-lang={code}
-            class={`header-pill-btn ${idioma === code ? 'active' : ''}`}
-          >
-            {code.toUpperCase()}
-          </a>
-        ))}
+        {Object.entries(IDIOMAS).map(([code, info]) => {
+          const hrefDestino = (rutasIdioma && rutasIdioma[code]) ? rutasIdioma[code] : buildRuta(rutaBase, code);
+          return (
+            <a 
+              href={hrefDestino} 
+              data-lang={code}
+              class={`header-pill-btn ${idioma === code ? 'active' : ''}`}
+            >
+              {code.toUpperCase()}
+            </a>
+          );
+        })}
       </div>
 
       <button onclick="window.cerrarDrawer && window.cerrarDrawer()" aria-label="Cerrar Menú" class="drawer-close-btn">

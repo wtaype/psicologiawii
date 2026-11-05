@@ -42,7 +42,7 @@ const fechaPublicado = (post.publicado || '2026/11/02').toString().replace(/-/g,
 <!-- Barra de progreso de lectura en el viewport (en el fondo, estilo Workwii) -->
 <div class="po_progress_bar" id="po_progress"></div>
 
-<div class="po_wrap page-container" data-slug={postSlug} data-lang={lang} data-id={post.id} data-translation-slug={translationSlug || ''} data-partner-lang={partnerLang || ''}>
+<div class="po_wrap page-container" data-slug={postSlug} data-lang={lang} data-id={post.id} data-lang-id={post.langId || ''} data-translation-slug={translationSlug || ''} data-partner-lang={partnerLang || ''}>
   <div class="po_layout">
     
     <!-- COLUMNA PRINCIPAL DE LECTURA (IZQUIERDA) -->
@@ -208,14 +208,39 @@ const fechaPublicado = (post.publicado || '2026/11/02').toString().replace(/-/g,
     const postId = postEl.dataset.id;
     if (!slug) return;
 
-    // 0. Sincronizar Switcher de Idioma del Header con el post traducido (Escalable para N idiomas)
+    // 0. Sincronizar Switcher de Idioma del Header y Drawer con el post vinculado por langId
     const tSlug = postEl.dataset.translationSlug;
     const partnerLang = postEl.dataset.partnerLang;
+    const currentLangId = postEl.dataset.langId;
+    const currentLang = postEl.dataset.lang || 'es';
+
     if (tSlug && partnerLang) {
       const targetHref = partnerLang === 'es' ? `/${tSlug}` : `/${partnerLang}/${tSlug}`;
       document.querySelectorAll(`.header-pill-group [data-lang="${partnerLang}"]`).forEach((btn: any) => {
         btn.setAttribute('href', targetHref);
       });
+    }
+
+    // Comprobar dinámicamente en localStorage (wi_blogs_data_v8) si hay un artículo hermano por langId
+    if (currentLangId) {
+      try {
+        const localBlogs = getls('wi_blogs_data_v8') || [];
+        if (Array.isArray(localBlogs) && localBlogs.length > 0) {
+          const partner = localBlogs.find((b: any) => 
+            b.activo !== false && 
+            b.estado === 'publicado' &&
+            b.lang !== currentLang && 
+            (b.langId === currentLangId || b.id === currentLangId || (postId && b.langId === postId))
+          );
+          if (partner && (partner.slug || partner.id)) {
+            const pLang = partner.lang || (currentLang === 'es' ? 'en' : 'es');
+            const targetHref = pLang === 'es' ? `/${partner.slug || partner.id}` : `/${pLang}/${partner.slug || partner.id}`;
+            document.querySelectorAll(`.header-pill-group [data-lang="${pLang}"]`).forEach((btn: any) => {
+              btn.setAttribute('href', targetHref);
+            });
+          }
+        }
+      } catch (e) {}
     }
 
     // 1. Registro de Vista Real (1 vista por sesión de usuario para evitar spam de recargas)
